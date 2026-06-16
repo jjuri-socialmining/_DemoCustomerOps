@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DemoCustomerOps — Public Web Workspace</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #161922;
+    --border: #262b36;
+    --text: #e6e8ec;
+    --muted: #9aa3b2;
+    --accent: #5eb1ff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  header {
+    padding: 3rem 1.5rem 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    margin: 0 0 0.5rem;
+    font-size: 1.9rem;
+    letter-spacing: -0.02em;
+  }
+  header p {
+    margin: 0;
+    color: var(--muted);
+    max-width: 640px;
+    margin-inline: auto;
+  }
+  main {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .card {
+    display: block;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.15s ease;
+  }
+  .card:hover {
+    border-color: var(--accent);
+  }
+  .card h2 {
+    margin: 0 0 0.4rem;
+    font-size: 1.05rem;
+    color: var(--accent);
+  }
+  .card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  section {
+    margin-top: 2.5rem;
+  }
+  section h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  code {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.1rem 0.4rem;
+    font-size: 0.9em;
+  }
+  footer {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+  }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>DemoCustomerOps — Public Web Workspace</h1>
+  <p>This space hosts demos, documentation, deliverables, and progress updates published from this project, served directly via GitHub Pages.</p>
+</header>
+
+<main>
+  <div class="grid">
+    <a class="card" href="pages/">
+      <h2>Pages</h2>
+      <p>Standalone documentation and informational pages.</p>
+    </a>
+    <a class="card" href="projects/">
+      <h2>Projects</h2>
+      <p>Project-specific deliverables and writeups.</p>
+    </a>
+    <a class="card" href="demos/">
+      <h2>Demos</h2>
+      <p>Interactive demos and prototypes.</p>
+    </a>
+    <a class="card" href="assets/">
+      <h2>Assets</h2>
+      <p>Shared images, styles, and static resources.</p>
+    </a>
+  </div>
+
+  <section>
+    <h2>Featured</h2>
+    <div class="grid">
+      <a class="card" href="Dashboard_GemeloDigital_SIGMA.html">
+        <h2>Digital Twin Dashboard Demo</h2>
+        <p>SIGMA digital twin dashboard demo.</p>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>About this workspace</h2>
+    <p>
+      Everything under <code>web/</code> in this repository is published automatically to
+      GitHub Pages whenever changes land on the <code>main</code> branch. Drop new HTML pages,
+      demos, or static assets into the matching folder above and they become publicly viewable
+      once the deploy workflow runs.
+    </p>
+  </section>
+</main>
+
+<footer>
+  Published from the <code>web/</code> directory via GitHub Actions + GitHub Pages.
+</footer>
+
+</body>
+</html>

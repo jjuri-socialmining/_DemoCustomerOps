@@ -1,0 +1,36 @@
+# Environment & secrets
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+secrets/
+credentials.json
+token.json
+*.token
+
+# macOS
+.DS_Store
+
+# Temp & logs
+tmp/
+*.log
+logs/
+
+# Dependencies & build artifacts
+node_modules/
+.venv/
+venv/
+dist/
+build/
+
+# Local AI assistant settings (machine-specific, not for sharing)
+.claude/settings.local.json
+
+# Confidential business/client documents — kept local only, never published
+_dis/
+_vDemoCustomerOps/
+_sDemoCustomerOps/

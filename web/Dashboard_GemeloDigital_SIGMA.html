@@ -1,0 +1,610 @@
+<!-- SIGMA Digital Twins — Panel de Gemelo Digital
+     Propuestas de dashboard para [PROYECTO] · Tratamiento de minerales carbonáceos (proceso RIL)
+     Datos representativos — reemplazar con KPIs reales del laboratorio/piloto. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SIGMA · Gemelo Digital — Panel de Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#06141F; --bg2:#081E30; --panel:#0C2438; --panel2:#0F2B43; --panelhi:#123653;
+    --edge:#1B3F5E; --edge2:#15334D; --grid:#173249;
+    --text:#E8F1FA; --muted:#85A0BC; --muted2:#5C788F;
+    --cyan:#2FE6D0; --cyan2:#13B8A6; --lime:#93E24C; --blue:#4FA8FF; --violet:#A98BFF;
+    --amber:#FFB02E; --red:#FF5A6A; --green:#37D27D; --white:#EAF4FF;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+    --disp:'Chakra Petch',var(--sans); --sans:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:var(--sans); color:var(--text); -webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(1100px 520px at 78% -8%, rgba(47,230,208,.10), transparent 60%),
+      radial-gradient(900px 480px at 8% 4%, rgba(79,168,255,.08), transparent 55%),
+      linear-gradient(180deg,#06141F,#04101A 60%);
+    min-height:100vh;
+  }
+  a{color:inherit}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:18px;
+    padding:12px 22px; background:rgba(6,17,27,.82); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--edge2);
+  }
+  .brand{font-family:var(--disp); font-weight:700; letter-spacing:.5px; font-size:21px; line-height:1; white-space:nowrap}
+  .brand b{color:#fff}
+  .brand span{color:var(--cyan); font-weight:600; font-size:12px; display:block; letter-spacing:3px; margin-top:3px; text-transform:uppercase}
+  .brand .bar{display:inline-block; width:4px; height:34px; background:linear-gradient(var(--cyan),var(--lime)); border-radius:2px; margin-right:11px; vertical-align:middle; box-shadow:0 0 12px rgba(47,230,208,.55)}
+  .tabs{display:flex; gap:6px; margin-left:8px; overflow:auto; scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{
+    font-family:var(--sans); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer;
+    background:transparent; border:1px solid transparent; padding:8px 14px; border-radius:9px; white-space:nowrap;
+    transition:.16s;
+  }
+  .tabs button:hover{color:var(--text); background:rgba(255,255,255,.03)}
+  .tabs button.active{color:#05131D; background:linear-gradient(180deg,var(--cyan),var(--cyan2)); box-shadow:0 4px 16px rgba(47,230,208,.28)}
+  .status{margin-left:auto; display:flex; align-items:center; gap:14px; font-size:12px}
+  .live{display:flex; align-items:center; gap:7px; font-weight:700; letter-spacing:1px; color:var(--lime)}
+  .live i{width:8px; height:8px; border-radius:50%; background:var(--lime); box-shadow:0 0 0 0 rgba(147,226,76,.7); animation:pulse 1.8s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(147,226,76,.55)}70%{box-shadow:0 0 0 7px rgba(147,226,76,0)}100%{box-shadow:0 0 0 0 rgba(147,226,76,0)}}
+  .chip{padding:5px 10px; border:1px solid var(--edge); border-radius:8px; color:var(--muted); font-weight:600}
+  .chip b{color:var(--text)}
+
+  /* ---------- layout ---------- */
+  main{padding:20px 22px 8px; max-width:1320px; margin:0 auto}
+  .view{display:none; animation:fade .3s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
+  .eyebrow{font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--muted2); margin:2px 0 14px}
+  .eyebrow b{color:var(--cyan)}
+  .sectlbl{font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted2); margin:22px 2px 12px; display:flex; align-items:center; gap:10px}
+  .sectlbl::after{content:""; flex:1; height:1px; background:linear-gradient(90deg,var(--edge2),transparent)}
+
+  .grid{display:grid; gap:14px}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--edge); border-radius:14px; padding:16px}
+  .card h3{margin:0 0 12px; font-size:13px; font-weight:700; letter-spacing:.3px; display:flex; align-items:center; gap:8px}
+  .card h3 small{margin-left:auto; font-size:11px; font-weight:600; color:var(--muted)}
+
+  .pill{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; letter-spacing:.3px}
+  .pill::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor}
+  .ok{color:var(--green); background:rgba(55,210,125,.12)}
+  .warn{color:var(--amber); background:rgba(255,176,46,.12)}
+  .crit{color:var(--red); background:rgba(255,90,106,.13)}
+  .info{color:var(--blue); background:rgba(79,168,255,.12)}
+  .gem{color:var(--cyan); background:rgba(47,230,208,.12)}
+
+  /* KPI tiles */
+  .kpis{grid-template-columns:repeat(5,1fr)}
+  .tile{background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--edge); border-radius:13px; padding:14px; position:relative; overflow:hidden}
+  .tile .lbl{font-size:11px; color:var(--muted); font-weight:600; letter-spacing:.4px; text-transform:uppercase}
+  .tile .val{font-family:var(--mono); font-weight:700; font-size:30px; line-height:1.1; margin:7px 0 3px; letter-spacing:-1px}
+  .tile .val u{text-decoration:none; font-size:14px; color:var(--muted); font-weight:500}
+  .tile .sub{font-size:11.5px; color:var(--muted); font-family:var(--mono)}
+  .tile .sub b{color:var(--cyan)}
+  .tile .spark{position:absolute; right:10px; bottom:10px; opacity:.9}
+  .tile .top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px}
+
+  .two{grid-template-columns:1fr 360px}
+  .legend{display:flex; gap:16px; font-size:11.5px; color:var(--muted); font-weight:600}
+  .legend i{display:inline-block; width:18px; height:3px; border-radius:2px; vertical-align:middle; margin-right:6px}
+
+  /* Sasha / AI */
+  .sasha .who{display:flex; align-items:center; gap:11px; margin-bottom:11px}
+  .sasha .av{width:40px; height:40px; border-radius:11px; background:radial-gradient(circle at 35% 30%,#1a4a6b,#0a2233); border:1px solid var(--cyan2); display:grid; place-items:center; box-shadow:0 0 18px rgba(47,230,208,.25)}
+  .sasha .av b{font-family:var(--disp); color:var(--cyan); font-size:18px}
+  .sasha .who div b{font-size:13px}
+  .sasha .who div span{font-size:11px; color:var(--muted); display:block}
+  .verdict{font-size:13px; line-height:1.5; color:#D7E6F4; background:rgba(47,230,208,.05); border-left:2px solid var(--cyan2); padding:10px 12px; border-radius:0 8px 8px 0; margin-bottom:10px}
+  .verdict b{color:var(--cyan)}
+  .conf{display:flex; align-items:center; gap:9px; font-size:11px; color:var(--muted); margin-bottom:11px; font-weight:600}
+  .conf .track{flex:1; height:6px; background:#0a2032; border-radius:4px; overflow:hidden}
+  .conf .fill{height:100%; width:91%; background:linear-gradient(90deg,var(--cyan2),var(--cyan)); border-radius:4px}
+  .action{font-size:12px; font-weight:700; color:#06141F; background:linear-gradient(180deg,var(--lime),#6fc433); padding:9px 12px; border-radius:9px; text-align:center}
+
+  /* alerts */
+  .alert{display:flex; gap:11px; padding:10px 0; border-bottom:1px solid var(--edge2)}
+  .alert:last-child{border:0}
+  .alert .ic{width:30px; height:30px; border-radius:8px; flex:none; display:grid; place-items:center; font-size:15px; font-weight:800}
+  .alert .ic.c{background:rgba(255,90,106,.14); color:var(--red)}
+  .alert .ic.w{background:rgba(255,176,46,.14); color:var(--amber)}
+  .alert .ic.o{background:rgba(55,210,125,.14); color:var(--green)}
+  .alert .tx b{font-size:12.5px; display:block}
+  .alert .tx span{font-size:11.5px; color:var(--muted)}
+
+  /* bars (alternatives / generic) */
+  .barrow{display:grid; grid-template-columns:130px 1fr 56px; align-items:center; gap:10px; margin:9px 0; font-size:12px}
+  .barrow .nm{color:var(--muted); font-weight:600}
+  .bartrack{height:10px; background:#0a2032; border-radius:6px; overflow:hidden}
+  .barfill{height:100%; border-radius:6px; transition:width 1s cubic-bezier(.2,.7,.2,1)}
+  .barrow .vv{font-family:var(--mono); font-weight:700; text-align:right}
+
+  /* balance strip */
+  .balance{grid-template-columns:repeat(7,1fr); gap:10px}
+  .bcell{background:var(--panel); border:1px solid var(--edge2); border-radius:11px; padding:11px}
+  .bcell .l{font-size:10.5px; color:var(--muted2); text-transform:uppercase; letter-spacing:.4px; font-weight:600}
+  .bcell .v{font-family:var(--mono); font-weight:700; font-size:18px; margin-top:5px}
+  .bcell .v u{text-decoration:none; font-size:11px; color:var(--muted); font-weight:500}
+
+  /* ---------- DMS / turnos ---------- */
+  .shifthead{display:flex; flex-wrap:wrap; align-items:center; gap:14px; background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--edge); border-radius:13px; padding:14px 16px; margin-bottom:16px}
+  .shifthead .big{font-family:var(--disp); font-weight:700; font-size:18px}
+  .shifthead .arrow{color:var(--cyan); font-weight:800; font-size:18px}
+  .dms{grid-template-columns:repeat(5,1fr)}
+  .dcol h4{margin:0 0 4px; font-size:13px; display:flex; align-items:center; gap:7px}
+  .dcol .ico{font-size:14px}
+  .gaugewrap{display:grid; place-items:center; padding:4px 0 2px}
+  .dstat{display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted); margin:4px 2px; font-family:var(--mono)}
+  .dstat b{color:var(--text)}
+  .prev{font-size:11px; color:var(--muted); text-align:center; margin-top:6px; font-family:var(--mono)}
+  .prev b.up{color:var(--green)} .prev b.dn{color:var(--red)}
+  .events .ev{display:flex; gap:12px; padding:9px 0; border-bottom:1px solid var(--edge2); font-size:12.5px}
+  .events .ev:last-child{border:0}
+  .events .t{font-family:var(--mono); color:var(--cyan); font-weight:600; flex:none; width:54px}
+  .handcard textarea{width:100%; background:#081d2d; border:1px solid var(--edge); border-radius:9px; color:var(--text); font-family:var(--sans); font-size:12.5px; padding:10px; resize:vertical; min-height:64px}
+  .handcard .row{display:flex; gap:10px; margin-top:8px}
+  .handcard .btn{font-size:12px; font-weight:700; padding:8px 14px; border-radius:9px; border:0; cursor:pointer}
+  .btn.p{background:linear-gradient(180deg,var(--cyan),var(--cyan2)); color:#05131D}
+  .btn.s{background:transparent; border:1px solid var(--edge); color:var(--muted)}
+
+  /* ---------- phone ---------- */
+  .phonewrap{display:flex; justify-content:center; gap:34px; flex-wrap:wrap; align-items:flex-start}
+  .phone{width:330px; background:linear-gradient(180deg,#0a1d2c,#071521); border:1px solid var(--edge); border-radius:34px; padding:12px; box-shadow:0 30px 70px rgba(0,0,0,.5), inset 0 0 0 1px rgba(47,230,208,.05)}
+  .phone .notch{width:120px; height:22px; background:#04101a; border-radius:0 0 14px 14px; margin:-12px auto 8px}
+  .phone .scr{background:linear-gradient(180deg,#05131e,#06151f); border-radius:24px; padding:14px; min-height:560px}
+  .ph-top{display:flex; align-items:center; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:12px}
+  .ph-top .liveops{font-family:var(--disp); font-weight:700; letter-spacing:1px; color:var(--text); font-size:12px}
+  .critbig{background:radial-gradient(120% 120% at 50% 0%,rgba(47,230,208,.10),transparent 60%); border:1px solid var(--edge); border-radius:18px; padding:18px; text-align:center; margin-bottom:12px; position:relative}
+  .critbig .k{font-size:11px; color:var(--muted); font-weight:700; letter-spacing:1px; text-transform:uppercase}
+  .critbig .ring{margin:8px auto 4px}
+  .critbig .num{font-family:var(--mono); font-weight:700; font-size:44px; letter-spacing:-2px; line-height:1}
+  .critbig .meta{font-size:11.5px; color:var(--muted); font-family:var(--mono); margin-top:6px}
+  .critbig .meta b{color:var(--cyan)}
+  .ph-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px}
+  .ph-stat{background:#0a1f30; border:1px solid var(--edge2); border-radius:12px; padding:10px}
+  .ph-stat .l{font-size:9.5px; color:var(--muted2); text-transform:uppercase; letter-spacing:.3px; font-weight:600}
+  .ph-stat .v{font-family:var(--mono); font-weight:700; font-size:17px; margin-top:4px}
+  .ph-card{background:#0a1f30; border:1px solid var(--edge2); border-radius:14px; padding:12px; margin-bottom:10px}
+  .ph-card .hd{display:flex; align-items:center; gap:8px; font-size:11px; font-weight:700; color:var(--muted); letter-spacing:.5px; text-transform:uppercase; margin-bottom:8px}
+  .ph-card .ai{font-size:12.5px; line-height:1.45}
+  .ph-card .ai b{color:var(--amber)}
+  .ph-nav{display:flex; justify-content:space-around; padding-top:8px; border-top:1px solid var(--edge2); color:var(--muted2); font-size:17px}
+  .phone-note{max-width:300px; color:var(--muted); font-size:12.5px; line-height:1.6}
+  .phone-note b{color:var(--text)}
+
+  /* ---------- HUD analytics ---------- */
+  .hudrow{grid-template-columns:repeat(5,1fr)}
+  .hudbig{background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--edge); border-radius:12px; padding:13px; text-align:center}
+  .hudbig .l{font-size:10.5px; color:var(--cyan); font-weight:700; letter-spacing:.6px; text-transform:uppercase}
+  .hudbig .v{font-family:var(--mono); font-weight:700; font-size:26px; margin-top:6px; letter-spacing:-1px}
+  .hudbig .v u{text-decoration:none; font-size:12px; color:var(--muted); font-weight:500}
+  .donutwrap{display:flex; align-items:center; gap:16px}
+  .dlegend{font-size:12px}
+  .dlegend .li{display:flex; align-items:center; gap:8px; margin:6px 0; color:var(--muted)}
+  .dlegend .li i{width:10px; height:10px; border-radius:3px}
+  .dlegend .li b{color:var(--text); margin-left:auto; font-family:var(--mono)}
+  table.heat{width:100%; border-collapse:collapse; font-size:11.5px}
+  table.heat th{color:var(--muted); font-weight:600; text-align:center; padding:6px 4px; font-size:10.5px; text-transform:uppercase; letter-spacing:.3px}
+  table.heat td{text-align:center; padding:5px 4px; font-family:var(--mono); font-weight:600; border-radius:5px}
+  table.heat td.nm{text-align:left; color:var(--text); font-family:var(--sans); font-weight:600}
+  .donuts3{display:flex; justify-content:space-around; flex-wrap:wrap; gap:10px}
+  .donutmini{text-align:center; font-size:11px; color:var(--muted)}
+  .donutmini b{display:block; color:var(--text); font-size:12px; margin-top:4px}
+
+  footer{max-width:1320px; margin:8px auto 0; padding:16px 22px 30px; color:var(--muted2); font-size:11.5px; line-height:1.6; border-top:1px solid var(--edge2)}
+  footer b{color:var(--muted)}
+  .ribbon{display:inline-block; background:rgba(255,176,46,.1); color:var(--amber); border:1px solid rgba(255,176,46,.25); border-radius:7px; padding:3px 9px; font-size:11px; font-weight:700; letter-spacing:.3px}
+
+  @media(max-width:1080px){ .kpis,.dms,.hudrow{grid-template-columns:repeat(3,1fr)} .two,.balance{grid-template-columns:1fr} .balance{grid-template-columns:repeat(3,1fr)} }
+  @media(max-width:680px){ .kpis,.dms,.hudrow,.balance{grid-template-columns:1fr 1fr} .topbar{flex-wrap:wrap} .status{order:3; width:100%} }
+</style>
+
+<header class="topbar">
+  <div class="brand"><span class="bar"></span><b>SIGMA</b><span>Digital Twins</span></div>
+  <nav class="tabs" id="tabs">
+    <button data-v="control" class="active">Sala de Control</button>
+    <button data-v="turnos">Tablero de Turnos</button>
+    <button data-v="movil">Vista Móvil</button>
+    <button data-v="hud">Analítica</button>
+  </nav>
+  <div class="status">
+    <span class="live"><i></i>LIVE</span>
+    <span class="chip">Turno <b id="shiftNow">A</b></span>
+    <span class="chip mono" id="clock">--:--:--</span>
+  </div>
+</header>
+
+<main>
+  <!-- ================= SALA DE CONTROL ================= -->
+  <section class="view active" id="control">
+    <div class="eyebrow">Sala de Control — <b>Gemelo Digital</b> · [PROYECTO] · Proceso RIL para minerales carbonáceos</div>
+
+    <div class="grid kpis">
+      <div class="tile">
+        <div class="top"><div class="lbl">Recuperación Au</div><span class="pill warn">−1.2 pts</span></div>
+        <div class="val">90.8<u>%</u></div>
+        <div class="sub">Gemelo <b>92.0%</b> · Meta 92%</div>
+        <div class="spark" data-spark="89.0,90.2,90.0,91.1,90.6,90.2,90.8" data-col="--cyan"></div>
+      </div>
+      <div class="tile">
+        <div class="top"><div class="lbl">Carbón orgánico (TOC)</div><span class="pill crit">alto</span></div>
+        <div class="val">3.6<u>%</u></div>
+        <div class="sub">Umbral 3.5% · preg-robbing</div>
+        <div class="spark" data-spark="2.9,3.1,3.0,3.4,3.6,3.5,3.6" data-col="--red"></div>
+      </div>
+      <div class="tile">
+        <div class="top"><div class="lbl">Carga de resina</div><span class="pill warn">86%</span></div>
+        <div class="val">86<u>%</u></div>
+        <div class="sub">Saturación est. <b>4.2 h</b></div>
+        <div class="spark" data-spark="62,68,73,78,82,84,86" data-col="--amber"></div>
+      </div>
+      <div class="tile">
+        <div class="top"><div class="lbl">Throughput</div><span class="pill ok">en rango</span></div>
+        <div class="val">5 940<u>tpd</u></div>
+        <div class="sub">Meta 6 000 tpd · 99%</div>
+        <div class="spark" data-spark="5900,6010,5950,5880,5990,5920,5940" data-col="--green"></div>
+      </div>
+      <div class="tile">
+        <div class="top"><div class="lbl">Ley de cabeza Au</div><span class="pill info">2.8 g/t</span></div>
+        <div class="val">2.8<u>g/t</u></div>
+        <div class="sub">Rango 2–5 g/t</div>
+        <div class="spark" data-spark="2.6,2.9,2.7,2.8,3.0,2.7,2.8" data-col="--blue"></div>
+      </div>
+    </div>
+
+    <div class="grid two" style="margin-top:14px">
+      <div>
+        <div class="card">
+          <h3>Recuperación de Au — Real vs Gemelo (24 h)
+            <small class="legend"><span><i style="background:var(--white)"></i>Real</span><span><i style="background:var(--cyan)"></i>Gemelo</span></small>
+          </h3>
+          <div id="recoveryChart"></div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <h3>Alternativas del Trade-Off <small>recuperación · OPEX · CAPEX (relativo)</small></h3>
+          <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.5px;margin:2px 0 8px">RECUPERACIÓN DE Au (%)</div>
+          <div class="barrow"><span class="nm">Caso base (CIL)</span><div class="bartrack"><div class="barfill" style="background:#5C788F" data-w="78"></div></div><span class="vv">78%</span></div>
+          <div class="barrow"><span class="nm">Alt 1 · RIL O/F</span><div class="bartrack"><div class="barfill" style="background:linear-gradient(90deg,var(--cyan2),var(--cyan))" data-w="91"></div></div><span class="vv">91%</span></div>
+          <div class="barrow"><span class="nm">Alt 2 · RIL U/F esp.</span><div class="bartrack"><div class="barfill" style="background:linear-gradient(90deg,var(--cyan2),var(--lime))" data-w="93"></div></div><span class="vv">93%</span></div>
+          <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.5px;margin:14px 0 8px">OPEX RELATIVO (menor es mejor)</div>
+          <div class="barrow"><span class="nm">Caso base</span><div class="bartrack"><div class="barfill" style="background:#5C788F" data-w="60"></div></div><span class="vv">1.00</span></div>
+          <div class="barrow"><span class="nm">Alt 1</span><div class="bartrack"><div class="barfill" style="background:var(--amber)" data-w="78"></div></div><span class="vv">1.30</span></div>
+          <div class="barrow"><span class="nm">Alt 2</span><div class="bartrack"><div class="barfill" style="background:var(--green)" data-w="52"></div></div><span class="vv">0.87</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card sasha">
+          <h3>Asistente IA</h3>
+          <div class="who">
+            <div class="av"><b>S</b></div>
+            <div><b>Sasha</b><span>Veredicto asistido · validado por Ing. de procesos</span></div>
+          </div>
+          <div class="verdict">Recuperación <b>1.2 pts</b> bajo el gemelo. Causa probable: pico de carbón orgánico (3.6%) a las <b>02:10</b> en Turno B. La resina está al 86% de carga. Acción: subir dosis de resina <b>+8%</b> y verificar P80 del O/F del ciclón.</div>
+          <div class="conf">Confianza del diagnóstico <div class="track"><div class="fill"></div></div> 91%</div>
+          <div class="action">Acción recomendada: ajustar dosis de resina</div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h3>Alertas predictivas</h3>
+          <div class="alert"><div class="ic c">!</div><div class="tx"><b>Resina cerca de saturación</b><span>86% de capacidad · saturación est. 4.2 h · riesgo de pérdida de Au en relaves</span></div></div>
+          <div class="alert"><div class="ic w">▲</div><div class="tx"><b>TOC sobre umbral</b><span>Alimentación 3.6% &gt; 3.5% · efecto preg-robbing</span></div></div>
+          <div class="alert"><div class="ic w">▲</div><div class="tx"><b>P80 sobre objetivo</b><span>78 µm vs 75 µm · revisar carga circulante</span></div></div>
+          <div class="alert"><div class="ic o">✓</div><div class="tx"><b>Espesador en rango</b><span>49% sólidos · objetivo 50%</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sectlbl">Balance de proceso — masa · agua · reactivos · energía</div>
+    <div class="grid balance">
+      <div class="bcell"><div class="l">Cianuro (NaCN)</div><div class="v">0.42<u> kg/t</u></div></div>
+      <div class="bcell"><div class="l">Reactivo elución</div><div class="v">128<u> L/día</u></div></div>
+      <div class="bcell"><div class="l">Repos. resina</div><div class="v">18<u> L/día</u></div></div>
+      <div class="bcell"><div class="l">Agua de proceso</div><div class="v">310<u> m³/h</u></div></div>
+      <div class="bcell"><div class="l">Energía</div><div class="v">11.8<u> MW</u></div></div>
+      <div class="bcell"><div class="l">P80 molienda</div><div class="v">78<u> µm</u></div></div>
+      <div class="bcell"><div class="l">Au en relaves</div><div class="v">0.28<u> g/t</u></div></div>
+    </div>
+  </section>
+
+  <!-- ================= TABLERO DE TURNOS (DMS) ================= -->
+  <section class="view" id="turnos">
+    <div class="eyebrow">Tablero de Turnos — <b>Entrega / Handover</b> · estilo Daily Management System (Lean)</div>
+    <div class="shifthead">
+      <div class="big">Turno B · Noche</div>
+      <span class="chip">19:00 – 07:00</span>
+      <span class="arrow">→ entrega a</span>
+      <div class="big" style="color:var(--cyan)">Turno A · Día</div>
+      <span class="chip mono">15 jun 2026</span>
+      <span class="pill ok" style="margin-left:auto">0 incidentes de seguridad</span>
+    </div>
+
+    <div class="grid dms">
+      <div class="card dcol"><h4><span class="ico">🛡️</span>Seguridad</h4>
+        <div class="gaugewrap" data-gauge='{"v":100,"min":0,"max":100,"unit":"%","good":"high"}'></div>
+        <div class="dstat"><span>Cumplim.</span><b>100%</b></div>
+        <div class="prev">Turno previo: 100% <b class="up">▲</b></div>
+      </div>
+      <div class="card dcol"><h4><span class="ico">🥇</span>Recuperación Au</h4>
+        <div class="gaugewrap" data-gauge='{"v":90.2,"min":84,"max":95,"unit":"%","good":"high","t1":89,"t2":92}'></div>
+        <div class="dstat"><span>Actual</span><b>90.2%</b></div>
+        <div class="dstat"><span>Meta</span><b>92%</b></div>
+        <div class="prev">Turno A: 91.4% <b class="dn">▼ 1.2</b></div>
+      </div>
+      <div class="card dcol"><h4><span class="ico">⚙️</span>Throughput</h4>
+        <div class="gaugewrap" data-gauge='{"v":2930,"min":0,"max":3250,"unit":"t","good":"high","t1":2600,"t2":2900}'></div>
+        <div class="dstat"><span>Tonelaje</span><b>2 930 t</b></div>
+        <div class="dstat"><span>Meta</span><b>3 000 t</b></div>
+        <div class="prev">Turno A: 3 010 t <b class="dn">▼</b></div>
+      </div>
+      <div class="card dcol"><h4><span class="ico">🧪</span>Carga Resina</h4>
+        <div class="gaugewrap" data-gauge='{"v":86,"min":0,"max":100,"unit":"%","good":"low","t1":80,"t2":90}'></div>
+        <div class="dstat"><span>Carga</span><b>86%</b></div>
+        <div class="dstat"><span>Límite</span><b>90%</b></div>
+        <div class="prev">Turno A: 74% <b class="dn">▲ 12</b></div>
+      </div>
+      <div class="card dcol"><h4><span class="ico">💧</span>Reactivos</h4>
+        <div class="gaugewrap" data-gauge='{"v":0.45,"min":0.30,"max":0.60,"unit":"","good":"low","t1":0.42,"t2":0.50}'></div>
+        <div class="dstat"><span>NaCN</span><b>0.45 kg/t</b></div>
+        <div class="dstat"><span>Objetivo</span><b>0.42</b></div>
+        <div class="prev">Turno A: 0.41 <b class="dn">▲</b></div>
+      </div>
+    </div>
+
+    <div class="grid two" style="margin-top:16px">
+      <div class="card events">
+        <h3>Eventos del turno <small>causas raíz · trazabilidad</small></h3>
+        <div class="ev"><span class="t">02:10</span><div><b>Pico de carbón orgánico (TOC 3.6%)</b><br><span style="color:var(--muted);font-size:11.5px">Lote de stockpile M3BH. Caída de recuperación de ~1.5 pts. Resina forzada a mayor carga.</span></div></div>
+        <div class="ev"><span class="t">03:40</span><div><b>P80 sube a 80 µm</b><br><span style="color:var(--muted);font-size:11.5px">Aumento de carga circulante en nido de ciclones. Ajuste de presión pendiente.</span></div></div>
+        <div class="ev"><span class="t">05:20</span><div><b>Carga de resina supera 85%</b><br><span style="color:var(--muted);font-size:11.5px">Alerta predictiva emitida. Recomendado adelantar elución.</span></div></div>
+      </div>
+      <div class="card handcard">
+        <h3>Captura de cambio de turno</h3>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5">Información fresca registrada por el turno saliente para el entrante. Alimenta el gemelo y el historial de causas.</div>
+        <textarea placeholder="Pendientes para Turno A: adelantar elución de resina; verificar dosificación tras pico de TOC; revisar presión de ciclones...">Pendiente: adelantar elución de resina (carga 86%). Verificar dosificación post-pico TOC. Revisar presión nido de ciclones (P80 a 80 µm).</textarea>
+        <div class="row"><button class="btn p">Registrar entrega</button><button class="btn s">Adjuntar lectura</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= VISTA MÓVIL ================= -->
+  <section class="view" id="movil">
+    <div class="eyebrow">Vista Móvil — <b>Live Ops</b> · un KPI crítico en grande + resumen operativo</div>
+    <div class="phonewrap">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="scr">
+          <div class="ph-top"><span class="liveops">☰ LIVE OPS · [CLIENTE]</span><span class="live"><i></i>LIVE</span></div>
+          <div class="critbig">
+            <div class="k">Recuperación de Au · crítico</div>
+            <div class="ring" id="phoneRing"></div>
+            <div class="num" style="color:var(--cyan)">90.8<span style="font-size:20px;color:var(--muted)">%</span></div>
+            <div class="meta">Gemelo <b>92.0%</b> · Meta 92% · <span style="color:var(--amber)">−1.2 pts</span></div>
+          </div>
+          <div class="ph-grid">
+            <div class="ph-stat"><div class="l">Throughput</div><div class="v">5 940<span style="font-size:10px;color:var(--muted)"> tpd</span></div></div>
+            <div class="ph-stat"><div class="l">Resina</div><div class="v" style="color:var(--amber)">86%</div></div>
+            <div class="ph-stat"><div class="l">TOC</div><div class="v" style="color:var(--red)">3.6%</div></div>
+          </div>
+          <div class="ph-card">
+            <div class="hd">◆ AI Insight · Sasha</div>
+            <div class="ai"><b>Resina cerca de saturación.</b> Saturación estimada en 4.2 h — riesgo de pérdida de Au en relaves. Acción: subir dosis +8%.<br><span style="color:var(--muted);font-size:11px">Confianza 91%</span></div>
+          </div>
+          <div class="ph-card">
+            <div class="hd" style="justify-content:space-between"><span>⚡ Energía</span><span class="mono" style="color:var(--text)">11.8 MW</span></div>
+            <div id="phoneSpark"></div>
+            <div style="font-size:11px;color:var(--muted);margin-top:6px">−4% vs turno anterior</div>
+          </div>
+          <div class="ph-nav"><span>⬡</span><span style="color:var(--cyan)">▣</span><span>◔</span><span>⚙</span></div>
+        </div>
+      </div>
+      <div class="phone-note">
+        <p><b>Concepto (foto 3):</b> en el celular, un único KPI crítico domina la pantalla —aquí la recuperación de Au, que es el indicador que decide la rentabilidad del proceso— con el valor del gemelo y la meta justo debajo.</p>
+        <p>El resto sigue el formato compacto de tarjetas: throughput, carga de resina, TOC, el panel de IA (Sasha) y energía con tendencia. Pensado para que el gerente o el jefe de turno lo lleve <b>en la palma de la mano</b>, en planta o fuera de ella.</p>
+        <p style="color:var(--muted2)">El KPI crítico es configurable: puede fijarse en carga de resina o pérdida de Au en relaves según la prioridad del momento.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ANALÍTICA (HUD) ================= -->
+  <section class="view" id="hud">
+    <div class="eyebrow">Analítica — <b>Dominios y desempeño</b> · vista ejecutiva HUD (foto 4)</div>
+    <div class="grid hudrow">
+      <div class="hudbig"><div class="l">Recuperación Au</div><div class="v">90.8<u>%</u></div></div>
+      <div class="hudbig"><div class="l">Oro recuperado</div><div class="v">486<u> oz/día</u></div></div>
+      <div class="hudbig"><div class="l">Tonelaje día</div><div class="v">5 940<u> tpd</u></div></div>
+      <div class="hudbig"><div class="l">Au en relaves</div><div class="v">0.28<u> g/t</u></div></div>
+      <div class="hudbig"><div class="l">Disponibilidad</div><div class="v">96.4<u>%</u></div></div>
+    </div>
+
+    <div class="grid two" style="margin-top:14px">
+      <div class="card">
+        <h3>Mezcla de alimentación por tipo de mineral</h3>
+        <div class="donutwrap">
+          <div id="feedDonut"></div>
+          <div class="dlegend">
+            <div class="li"><i style="background:var(--red)"></i>M3BH · alto C (2.73 g/t)<b>34%</b></div>
+            <div class="li"><i style="background:var(--amber)"></i>M3BM · medio C (2.14 g/t)<b>41%</b></div>
+            <div class="li"><i style="background:var(--green)"></i>M3BL · bajo C (1.20 g/t)<b>25%</b></div>
+          </div>
+        </div>
+        <div class="sectlbl" style="margin:16px 2px 10px">Recuperación por tipo de mineral</div>
+        <div class="barrow"><span class="nm">M3BH (alto C)</span><div class="bartrack"><div class="barfill" style="background:var(--red)" data-w="82"></div></div><span class="vv">82%</span></div>
+        <div class="barrow"><span class="nm">M3BM (medio C)</span><div class="bartrack"><div class="barfill" style="background:var(--amber)" data-w="89"></div></div><span class="vv">89%</span></div>
+        <div class="barrow"><span class="nm">M3BL (bajo C)</span><div class="bartrack"><div class="barfill" style="background:var(--green)" data-w="94"></div></div><span class="vv">94%</span></div>
+      </div>
+
+      <div class="card">
+        <h3>Recuperación por turno (últimos 5)</h3>
+        <div class="donuts3" id="shiftDonuts"></div>
+        <div class="sectlbl" style="margin:16px 2px 10px">Desempeño por dominio · recuperación (%)</div>
+        <table class="heat">
+          <thead><tr><th style="text-align:left">Dominio</th><th>00–06</th><th>06–12</th><th>12–18</th><th>18–24</th></tr></thead>
+          <tbody id="heatBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span class="ribbon">⚠ Datos representativos</span> &nbsp; Los valores mostrados son ejemplos para ilustrar el diseño y deben reemplazarse con los KPIs reales del programa de pruebas de laboratorio y piloto.<br>
+  <b>SIGMA Digital Twins Consulting Inc.</b> · Documento confidencial sujeto a NDA · Las cuatro vistas corresponden al Producto 2 (Dashboard) y Producto 3 (Inteligencia con IA + entorno 3D) de la propuesta.
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var V={cyan:'#2FE6D0',cyan2:'#13B8A6',lime:'#93E24C',blue:'#4FA8FF',amber:'#FFB02E',red:'#FF5A6A',green:'#37D27D',white:'#EAF4FF',muted:'#85A0BC',grid:'#173249'};
+  function cv(name){return V[(name||'').replace('--','')]||name;}
+
+  /* ---- tabs ---- */
+  var tabs=document.getElementById('tabs');
+  tabs.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    [].forEach.call(tabs.children,function(x){x.classList.remove('active')});
+    b.classList.add('active');
+    [].forEach.call(document.querySelectorAll('.view'),function(v){v.classList.remove('active')});
+    document.getElementById(b.dataset.v).classList.add('active');
+    animateBars();
+  });
+
+  /* ---- clock + shift ---- */
+  function tick(){
+    var d=new Date();
+    var p=function(n){return (n<10?'0':'')+n;};
+    document.getElementById('clock').textContent=p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());
+    var h=d.getHours();
+    document.getElementById('shiftNow').textContent=(h>=7&&h<19)?'A':'B';
+  }
+  tick(); setInterval(tick,1000);
+
+  /* ---- sparkline ---- */
+  function spark(vals,col,w,h){
+    w=w||72;h=h||26;
+    var min=Math.min.apply(0,vals),max=Math.max.apply(0,vals),r=(max-min)||1;
+    var pts=vals.map(function(v,i){return [i*(w/(vals.length-1)), h-2-((v-min)/r)*(h-4)];});
+    var d=pts.map(function(p,i){return (i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1);}).join(' ');
+    var area=d+' L'+w+' '+h+' L0 '+h+' Z';
+    var c=cv(col);
+    return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'">'+
+      '<path d="'+area+'" fill="'+c+'" opacity=".10"/>'+
+      '<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'+
+      '<circle cx="'+pts[pts.length-1][0].toFixed(1)+'" cy="'+pts[pts.length-1][1].toFixed(1)+'" r="2.4" fill="'+c+'"/></svg>';
+  }
+  [].forEach.call(document.querySelectorAll('[data-spark]'),function(el){
+    var vals=el.dataset.spark.split(',').map(Number);
+    el.innerHTML=spark(vals,el.dataset.col);
+  });
+
+  /* ---- recovery line chart (real vs gemelo) ---- */
+  (function(){
+    var W=720,H=250,L=44,R=16,T=18,B=30, pw=W-L-R, ph=H-T-B;
+    var lo=88,hi=94;
+    function Y(v){return T+ph-((v-lo)/(hi-lo))*ph;}
+    function X(t){return L+(t/24)*pw;}
+    var real=[[0,91.4],[2,90.1],[4,90.6],[6,91.0],[8,91.2],[10,91.1],[12,91.3],[14,91.0],[16,90.9],[18,90.4],[20,90.2],[22,90.6],[24,90.8]];
+    var gem =[[0,92.1],[2,92.0],[4,92.0],[6,92.1],[8,92.2],[10,92.1],[12,92.0],[14,92.1],[16,92.0],[18,91.9],[20,92.0],[22,92.1],[24,92.0]];
+    function path(a){return a.map(function(p,i){return (i?'L':'M')+X(p[0]).toFixed(1)+' '+Y(p[1]).toFixed(1);}).join(' ');}
+    var s='<svg width="100%" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="display:block">';
+    for(var g=lo;g<=hi;g++){var y=Y(g);s+='<line x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'" stroke="'+V.grid+'" stroke-width="1"/>';s+='<text x="'+(L-8)+'" y="'+(y+3)+'" fill="'+V.muted+'" font-size="10" text-anchor="end" font-family="monospace">'+g+'</text>';}
+    ['00','04','08','12','16','20','24'].forEach(function(lb,i){var x=X(i*4);s+='<text x="'+x+'" y="'+(H-10)+'" fill="'+V.muted+'" font-size="10" text-anchor="middle" font-family="monospace">'+lb+'</text>';});
+    // target band
+    s+='<line x1="'+L+'" y1="'+Y(92)+'" x2="'+(W-R)+'" y2="'+Y(92)+'" stroke="'+V.cyan2+'" stroke-width="1" stroke-dasharray="2 4" opacity=".5"/>';
+    // TOC spike marker at t=2
+    s+='<line x1="'+X(2)+'" y1="'+T+'" x2="'+X(2)+'" y2="'+(T+ph)+'" stroke="'+V.red+'" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/>';
+    s+='<text x="'+(X(2)+6)+'" y="'+(T+14)+'" fill="'+V.red+'" font-size="10" font-family="monospace">Pico TOC 3.6%</text>';
+    // areas + lines
+    s+='<path d="'+path(real)+' L'+X(24)+' '+(T+ph)+' L'+L+' '+(T+ph)+' Z" fill="'+V.white+'" opacity=".05"/>';
+    s+='<path d="'+path(gem)+'" fill="none" stroke="'+V.cyan+'" stroke-width="2.4" stroke-linejoin="round"/>';
+    s+='<path d="'+path(real)+'" fill="none" stroke="'+V.white+'" stroke-width="2.4" stroke-linejoin="round"/>';
+    real.forEach(function(p){s+='<circle cx="'+X(p[0])+'" cy="'+Y(p[1])+'" r="2.2" fill="'+V.white+'"/>';});
+    s+='</svg>';
+    document.getElementById('recoveryChart').innerHTML=s;
+  })();
+
+  /* ---- gauges (DMS) ---- */
+  function pol(cx,cy,r,deg){var a=(deg-180)*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+  function arc(cx,cy,r,a0,a1){var p0=pol(cx,cy,r,a0),p1=pol(cx,cy,r,a1);var large=(a1-a0)>180?1:0;return 'M'+p0[0].toFixed(1)+' '+p0[1].toFixed(1)+' A '+r+' '+r+' 0 '+large+' 1 '+p1[0].toFixed(1)+' '+p1[1].toFixed(1);}
+  function gauge(o){
+    var W=180,Hh=112,cx=90,cy=98,r=72,sw=13;
+    var frac=Math.max(0,Math.min(1,(o.v-o.min)/(o.max-o.min)));
+    var deg=frac*180;
+    var t1=o.t1!=null?(o.t1-o.min)/(o.max-o.min):0.6, t2=o.t2!=null?(o.t2-o.min)/(o.max-o.min):0.85;
+    var zlow=cv(V.red),zmid=cv(V.amber),zhi=cv(V.green);
+    if(o.good==='low'){var tmp=zlow;zlow=zhi;zhi=tmp;}
+    var s='<svg width="'+W+'" height="'+Hh+'" viewBox="0 0 '+W+' '+Hh+'">';
+    s+='<path d="'+arc(cx,cy,r,0,180)+'" stroke="#0a2233" stroke-width="'+sw+'" fill="none" stroke-linecap="round"/>';
+    s+='<path d="'+arc(cx,cy,r,0,t1*180)+'" stroke="'+zlow+'" stroke-width="'+sw+'" fill="none"/>';
+    s+='<path d="'+arc(cx,cy,r,t1*180,t2*180)+'" stroke="'+zmid+'" stroke-width="'+sw+'" fill="none"/>';
+    s+='<path d="'+arc(cx,cy,r,t2*180,180)+'" stroke="'+zhi+'" stroke-width="'+sw+'" fill="none"/>';
+    var np=pol(cx,cy,r-4,deg);
+    s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+np[0].toFixed(1)+'" y2="'+np[1].toFixed(1)+'" stroke="#EAF4FF" stroke-width="3" stroke-linecap="round"/>';
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="#EAF4FF"/>';
+    var disp=(o.v>=100?Math.round(o.v):(o.v>=10?o.v.toFixed(0):o.v.toFixed(2)));
+    s+='<text x="'+cx+'" y="'+(cy-14)+'" fill="#EAF4FF" font-size="22" font-weight="700" text-anchor="middle" font-family="monospace">'+disp+'<tspan font-size="11" fill="'+V.muted+'">'+(o.unit||'')+'</tspan></text>';
+    s+='</svg>';
+    return s;
+  }
+  [].forEach.call(document.querySelectorAll('[data-gauge]'),function(el){el.innerHTML=gauge(JSON.parse(el.dataset.gauge));});
+
+  /* ---- phone radial ---- */
+  (function(){
+    var el=document.getElementById('phoneRing'); if(!el)return;
+    var R=46,C=2*Math.PI*R,frac=0.908;
+    el.innerHTML='<svg width="120" height="120" viewBox="0 0 120 120"><circle cx="60" cy="60" r="'+R+'" fill="none" stroke="#0a2233" stroke-width="9"/><circle cx="60" cy="60" r="'+R+'" fill="none" stroke="'+V.cyan+'" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-frac))+'" transform="rotate(-90 60 60)"/><circle cx="60" cy="14" r="3" fill="'+V.amber+'"/></svg>';
+    document.getElementById('phoneSpark').innerHTML=spark([12.4,12.1,12.0,11.6,11.9,11.7,11.8],'--cyan',252,40);
+  })();
+
+  /* ---- HUD donuts ---- */
+  function donutMulti(segs,size){
+    size=size||150;var r=58,C=2*Math.PI*r,off=0,cx=size/2,cy=size/2;
+    var s='<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">';
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#0a2233" stroke-width="20"/>';
+    segs.forEach(function(g){
+      var len=g.v/100*C;
+      s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+cv(g.c)+'" stroke-width="20" stroke-dasharray="'+len+' '+(C-len)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 '+cx+' '+cy+')"/>';
+      off+=len;
+    });
+    s+='<text x="'+cx+'" y="'+(cy-2)+'" fill="#EAF4FF" font-size="20" font-weight="700" text-anchor="middle" font-family="monospace">100%</text>';
+    s+='<text x="'+cx+'" y="'+(cy+15)+'" fill="'+V.muted+'" font-size="10" text-anchor="middle">alimentación</text></svg>';
+    return s;
+  }
+  var fd=document.getElementById('feedDonut');
+  if(fd)fd.innerHTML=donutMulti([{v:34,c:V.red},{v:41,c:V.amber},{v:25,c:V.green}]);
+
+  function radial(val,col,label,size){
+    size=size||92;var r=size/2-9,C=2*Math.PI*r,frac=val/100,cx=size/2;
+    return '<div class="donutmini"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'"><circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="#0a2233" stroke-width="8"/><circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="'+cv(col)+'" stroke-width="8" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-frac))+'" transform="rotate(-90 '+cx+' '+cx+')"/><text x="'+cx+'" y="'+(cx+4)+'" fill="#EAF4FF" font-size="16" font-weight="700" text-anchor="middle" font-family="monospace">'+val+'</text></svg><b>'+label+'</b></div>';
+  }
+  var sd=document.getElementById('shiftDonuts');
+  if(sd){
+    var shifts=[['B-3',91,'--green'],['B-2',90,'--green'],['B-1',91,'--green'],['A',91.4,'--cyan'],['B',90.2,'--amber']];
+    sd.innerHTML=shifts.map(function(x){return radial(Math.round(x[1]),x[2],'Turno '+x[0]);}).join('');
+  }
+
+  /* ---- heatmap ---- */
+  var hb=document.getElementById('heatBody');
+  if(hb){
+    var rows=[['M3BH',[80,83,82,82]],['M3BM',[88,90,89,88]],['M3BL',[93,95,94,93]]];
+    function hcol(v){ if(v>=92)return 'rgba(55,210,125,'+(0.25+(v-90)/30)+')'; if(v>=86)return 'rgba(255,176,46,.22)'; return 'rgba(255,90,106,.22)'; }
+    hb.innerHTML=rows.map(function(r){
+      return '<tr><td class="nm">'+r[0]+'</td>'+r[1].map(function(v){return '<td style="background:'+hcol(v)+'">'+v+'</td>';}).join('')+'</tr>';
+    }).join('');
+  }
+
+  /* ---- animate bars on view ---- */
+  function animateBars(){
+    [].forEach.call(document.querySelectorAll('.view.active .barfill'),function(b){
+      b.style.width='0%';
+      requestAnimationFrame(function(){requestAnimationFrame(function(){b.style.width=(b.dataset.w||0)+'%';});});
+    });
+  }
+  animateBars();
+})();
+</script>
