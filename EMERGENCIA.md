@@ -15,7 +15,9 @@ para regresar **rápido** a la última versión impecable y respaldada.
 La versión "impeque demo para el cliente" está marcada con una **etiqueta (tag) de Git**:
 
 ```
-ANCLA:  demo-cliente-v1
+ANCLA:    demo-cliente-v1
+CREADA:   miércoles 17 de junio de 2026, 09:34 (PDT / UTC-7)
+ESTADO:   trabajos terminados — demo Dashboard SIGMA estable para el cliente
 ```
 
 Es un punto congelado en el tiempo. Siempre puedes volver a él.
@@ -118,3 +120,4 @@ git push origin demo-cliente-v2
 ---
 
 _Última ancla creada: `demo-cliente-v1` — demo del Dashboard SIGMA para el cliente._
+_Fecha de creación: miércoles 17 de junio de 2026, 09:34 (PDT). Trabajos terminados._
