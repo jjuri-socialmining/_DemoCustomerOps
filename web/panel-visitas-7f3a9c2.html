@@ -59,8 +59,9 @@
     background:var(--panel);border:1px solid var(--border);border-radius:8px;
     color:var(--text);padding:.5rem .8rem;font-size:.85rem;min-width:220px;
   }
-  .tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px}
-  table{border-collapse:collapse;width:100%;font-size:.82rem;white-space:nowrap}
+  .tablewrap{overflow:auto;max-height:62vh;border:1px solid var(--border);border-radius:10px}
+  table{border-collapse:collapse;width:100%;font-size:.82rem}
+  td{vertical-align:top}
   th,td{padding:.55rem .7rem;text-align:left;border-bottom:1px solid var(--border)}
   th{background:var(--panel2);color:var(--muted);position:sticky;top:0;font-weight:600;cursor:pointer;user-select:none}
   th:hover{color:var(--text)}
@@ -153,7 +154,7 @@
 
   // Lee solo los ids indicados, con concurrencia baja + reintentos. Devuelve {records,fails}.
   function fetchRecords(ids, onProgress){
-    var out={}, i=0, CONC=3, fails=0, done=0, total=ids.length;
+    var out={}, i=0, CONC=6, fails=0, done=0, total=ids.length;
     function one(){
       if(i>=ids.length) return Promise.resolve();
       var id=ids[i++];
@@ -179,22 +180,29 @@
     app.innerHTML='<div class="center">Cargando visitas…</div>';
     listAllBinIds(col)
       .then(function(ids){
-        if(ids.length===0){ state.rows=[]; state._fails=0; return render(); }
+        if(ids.length===0){ state.rows=[]; state._fails=0; state._loading=0; return render(); }
         // Solo leemos los registros que no estén ya en caché (carga incremental).
         var missing=ids.filter(function(id){ return !cache[id]; });
-        function finish(fails){
+        // 1) Mostrar al INSTANTE lo ya cacheado (cargas siguientes = inmediatas)
+        state.rows=ids.map(function(id){ return cache[id]; }).filter(Boolean);
+        state._fails=0; state._loading=missing.length;
+        if(state.rows.length) render();
+        if(missing.length===0){
           try{ localStorage.setItem(cacheKey, JSON.stringify(cache)); }catch(e){}
-          state.rows=ids.map(function(id){ return cache[id]; }).filter(Boolean);
-          state._fails=fails||0;
-          render();
+          state._loading=0; return render();
         }
-        if(missing.length===0){ return finish(0); }
-        app.innerHTML='<div class="center">Leyendo '+missing.length+' registro(s) nuevo(s) de '+ids.length+'…'+
-          '<br><span id="prog" class="muted"></span></div>';
+        // 2) Traer en segundo plano solo lo que falta
+        if(!state.rows.length){
+          app.innerHTML='<div class="center">Leyendo '+missing.length+' registro(s)…'+
+            '<br><span id="prog" class="muted"></span></div>';
+        }
         return fetchRecords(missing,function(d,t){ var p=document.getElementById("prog"); if(p) p.textContent=d+" / "+t; })
           .then(function(res){
             Object.keys(res.records).forEach(function(id){ cache[id]=res.records[id]; });
-            finish(res.fails);
+            try{ localStorage.setItem(cacheKey, JSON.stringify(cache)); }catch(e){}
+            state.rows=ids.map(function(id){ return cache[id]; }).filter(Boolean);
+            state._fails=res.fails||0; state._loading=0;
+            render();
           });
       })
       .catch(function(e){
@@ -248,7 +256,7 @@
     var head=
       '<header>'+
         '<h1>📊 Panel de Visitas</h1>'+
-        '<span class="muted">'+total+' registros</span>'+
+        '<span class="muted">'+total+' registros'+(state._loading?' · actualizando '+state._loading+'…':'')+'</span>'+
         '<span class="sp"></span>'+
         '<button id="b_refresh">↻ Actualizar</button>'+
         '<button id="b_csv">⤓ CSV</button>'+
@@ -279,10 +287,17 @@
       breakdown("🔗 Origen / Campaña",refs,total)+
     '</div>';
 
+    // Campos combinados para una tabla compacta (el detalle completo va al CSV)
+    rows.forEach(function(r){
+      r._what = r.event_type==="click" ? (r.target_label||r.target_text||r.target_href||"")
+                                       : (r.page_title||r.page||"");
+      r._loc  = [r.city, r.country].filter(Boolean).join(", ");
+      r._nav  = [r.browser, r.os].filter(Boolean).join(" · ");
+    });
+
     var cols=[
-      ["ts_iso","Fecha/Hora"],["event_type","Evento"],["page_title","Página"],["target_label","Click en"],
-      ["device_label","Dispositivo"],["os","SO"],["browser","Navegador"],["country","País"],
-      ["city","Ciudad"],["ip","IP"],["referrer","Origen"],["visit_count","#"]
+      ["ts_iso","Fecha"],["event_type","Evento"],["_what","Qué"],
+      ["device_label","Dispositivo"],["_loc","Ubicación"],["_nav","Navegador / SO"]
     ];
 
     var f=state.filter.toLowerCase();
@@ -306,16 +321,10 @@
       return '<tr>'+
         '<td>'+esc(when)+'</td>'+
         '<td>'+evBadge(r.event_type)+'</td>'+
-        '<td>'+esc(r.page_title||r.page||"")+'</td>'+
-        '<td>'+esc(r.event_type==="click"?(r.target_label||r.target_text||r.target_href||""):"")+'</td>'+
+        '<td>'+esc(r._what)+'</td>'+
         '<td>'+esc(r.device_label||"")+' '+devPill(r.device_type)+'</td>'+
-        '<td>'+esc(r.os||"")+'</td>'+
-        '<td>'+esc((r.browser||"")+" "+(r.browser_version||""))+'</td>'+
-        '<td>'+esc(r.country||"")+'</td>'+
-        '<td>'+esc(r.city||"")+'</td>'+
-        '<td>'+esc(r.ip||"")+'</td>'+
-        '<td>'+esc(r.referrer||"")+'</td>'+
-        '<td>'+esc(r.visit_count||1)+'</td>'+
+        '<td>'+esc(r._loc)+'</td>'+
+        '<td>'+esc(r._nav)+'</td>'+
       '</tr>';
     }).join("");
 
