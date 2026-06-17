@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Visitas</title>
+<meta name="robots" content="noindex, nofollow">
+<!--
+  ─────────────────────────────────────────────────────────────────────────────
+  PÁGINA DE REPORTE (URL secreta — solo para ti)
+  Lee la colección de JSONBin y muestra el reporte acumulado de visitas.
+
+  SEGURIDAD: este archivo NO contiene la Master Key. Te la pide al abrir y la
+  guarda solo en tu navegador (localStorage). Por eso publicarlo es seguro:
+  quien no tenga la llave no ve ningún dato.
+
+  Para verlo: abre esta URL e ingresa tu Collection ID + Master Key (X-Master-Key).
+  Guía: tools/visit-tracker/SETUP.md
+  ─────────────────────────────────────────────────────────────────────────────
+-->
+<style>
+  :root{
+    --bg:#0f1115; --panel:#161922; --panel2:#1c212c; --border:#262b36;
+    --text:#e6e8ec; --muted:#9aa3b2; --accent:#5eb1ff; --green:#4ade80;
+    --amber:#fbbf24; --red:#f87171;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;
+  }
+  header{
+    padding:1.4rem 1.5rem;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+  }
+  header h1{margin:0;font-size:1.25rem;letter-spacing:-.02em}
+  header .sp{flex:1}
+  button{
+    background:var(--panel2);color:var(--text);border:1px solid var(--border);
+    border-radius:8px;padding:.5rem .9rem;font-size:.85rem;cursor:pointer;
+    transition:border-color .15s;
+  }
+  button:hover{border-color:var(--accent)}
+  button.primary{background:var(--accent);color:#06101f;border-color:var(--accent);font-weight:600}
+  main{max-width:1200px;margin:0 auto;padding:1.5rem}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem}
+  .card .n{font-size:1.7rem;font-weight:700;letter-spacing:-.02em}
+  .card .l{color:var(--muted);font-size:.8rem;margin-top:.2rem}
+  .breakdowns{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-bottom:1.5rem}
+  .bd{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem}
+  .bd h3{margin:0 0 .7rem;font-size:.9rem;color:var(--accent)}
+  .bd .row{display:flex;justify-content:space-between;font-size:.85rem;padding:.2rem 0;color:var(--muted)}
+  .bd .row b{color:var(--text);font-weight:600}
+  .bar{height:6px;border-radius:4px;background:var(--accent);opacity:.5;margin-top:2px}
+  .toolbar{display:flex;gap:.6rem;align-items:center;margin-bottom:.8rem;flex-wrap:wrap}
+  input[type=text]{
+    background:var(--panel);border:1px solid var(--border);border-radius:8px;
+    color:var(--text);padding:.5rem .8rem;font-size:.85rem;min-width:220px;
+  }
+  .tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px}
+  table{border-collapse:collapse;width:100%;font-size:.82rem;white-space:nowrap}
+  th,td{padding:.55rem .7rem;text-align:left;border-bottom:1px solid var(--border)}
+  th{background:var(--panel2);color:var(--muted);position:sticky;top:0;font-weight:600;cursor:pointer;user-select:none}
+  th:hover{color:var(--text)}
+  tr:hover td{background:var(--panel)}
+  .pill{display:inline-block;padding:.1rem .5rem;border-radius:20px;font-size:.72rem;border:1px solid var(--border)}
+  .pill.cel{color:var(--green);border-color:rgba(74,222,128,.4)}
+  .pill.pc{color:var(--accent);border-color:rgba(94,177,255,.4)}
+  .pill.tab{color:var(--amber);border-color:rgba(251,191,36,.4)}
+  .muted{color:var(--muted)}
+  /* Gate (login de la llave) */
+  .gate{max-width:440px;margin:8vh auto;background:var(--panel);border:1px solid var(--border);
+    border-radius:14px;padding:2rem}
+  .gate h2{margin:0 0 .4rem;font-size:1.2rem}
+  .gate p{color:var(--muted);font-size:.88rem;margin:0 0 1.2rem}
+  .gate label{display:block;font-size:.8rem;color:var(--muted);margin:.8rem 0 .3rem}
+  .gate input{width:100%}
+  .gate button{width:100%;margin-top:1.3rem}
+  .err{color:var(--red);font-size:.83rem;margin-top:.8rem;min-height:1.2em}
+  .center{text-align:center;color:var(--muted);padding:3rem 1rem}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+(function(){
+  "use strict";
+  var LIST = "https://api.jsonbin.io/v3/c/", BIN = "https://api.jsonbin.io/v3/b/";
+  var LS_KEY="__sigma_report_key", LS_COL="__sigma_report_col";
+  var app = document.getElementById("app");
+  var state = { rows:[], sortKey:"ts_iso", sortDir:-1, filter:"" };
+
+  /* ───────────── GATE: pide Collection ID + Master Key ───────────── */
+  function gate(msg){
+    app.innerHTML =
+      '<div class="gate">'+
+        '<h2>🔒 Panel de Visitas</h2>'+
+        '<p>Ingresa tus credenciales de JSONBin. Se guardan solo en este navegador, nunca en el sitio.</p>'+
+        '<label>Collection ID</label><input id="g_col" type="text" placeholder="65f...">'+
+        '<label>Master Key (X-Master-Key)</label><input id="g_key" type="text" placeholder="$2a$10$...">'+
+        '<button class="primary" id="g_go">Entrar</button>'+
+        '<div class="err">'+(msg||"")+'</div>'+
+      '</div>';
+    document.getElementById("g_go").onclick=function(){
+      var col=document.getElementById("g_col").value.trim();
+      var key=document.getElementById("g_key").value.trim();
+      if(!col||!key){ gate("Completa ambos campos."); return; }
+      try{ localStorage.setItem(LS_COL,col); localStorage.setItem(LS_KEY,key); }catch(e){}
+      load();
+    };
+    var pc=localStorage.getItem(LS_COL); if(pc) document.getElementById("g_col").value=pc;
+  }
+  function clearKey(){ try{localStorage.removeItem(LS_KEY);localStorage.removeItem(LS_COL);}catch(e){} gate("Credenciales borradas."); }
+
+  /* ───────────── Carga de datos desde JSONBin ───────────── */
+  function headers(){ return {"X-Master-Key":localStorage.getItem(LS_KEY)||""}; }
+
+  function listAllBinIds(col){
+    var ids=[];
+    function page(after){
+      var url=LIST+encodeURIComponent(col)+"/bins"+(after?("/"+after):"");
+      return fetch(url,{headers:headers()}).then(function(r){
+        if(r.status===401||r.status===403) throw new Error("auth");
+        if(!r.ok) throw new Error("http "+r.status);
+        return r.json();
+      }).then(function(arr){
+        if(!Array.isArray(arr)||arr.length===0) return ids;
+        arr.forEach(function(b){ ids.push(b.record); });
+        if(arr.length<10) return ids;            // última página
+        return page(arr[arr.length-1].record);   // siguiente página
+      });
+    }
+    return page(null);
+  }
+
+  function fetchBins(ids){
+    var out=[], i=0, CONC=6;
+    function one(){
+      if(i>=ids.length) return Promise.resolve();
+      var id=ids[i++];
+      return fetch(BIN+id+"/latest",{headers:headers()})
+        .then(function(r){ return r.ok?r.json():null; })
+        .then(function(j){ if(j&&j.record) out.push(j.record); })
+        .catch(function(){})
+        .then(one);
+    }
+    var workers=[]; for(var w=0;w<CONC;w++) workers.push(one());
+    return Promise.all(workers).then(function(){ return out; });
+  }
+
+  function load(){
+    var col=localStorage.getItem(LS_COL), key=localStorage.getItem(LS_KEY);
+    if(!col||!key){ return gate(); }
+    app.innerHTML='<div class="center">Cargando visitas…</div>';
+    listAllBinIds(col)
+      .then(function(ids){
+        if(ids.length===0){ state.rows=[]; return render(); }
+        app.innerHTML='<div class="center">Leyendo '+ids.length+' visitas…</div>';
+        return fetchBins(ids).then(function(rows){ state.rows=rows; render(); });
+      })
+      .catch(function(e){
+        if(String(e.message)==="auth"){ return gate("Credenciales inválidas. Revisa Collection ID y Master Key."); }
+        app.innerHTML='<div class="center">Error al cargar: '+e.message+
+          ' &nbsp; <button onclick="location.reload()">Reintentar</button></div>';
+      });
+  }
+
+  /* ───────────── Helpers de render ───────────── */
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  function tally(rows,fn){
+    var m={}; rows.forEach(function(r){ var k=fn(r)||"(n/d)"; m[k]=(m[k]||0)+1; });
+    return Object.keys(m).map(function(k){return {k:k,n:m[k]};}).sort(function(a,b){return b.n-a.n;});
+  }
+
+  function breakdown(title,items,total){
+    var rows=items.slice(0,8).map(function(it){
+      var pct=total?Math.round(it.n*100/total):0;
+      return '<div class="row"><span>'+esc(it.k)+'</span><b>'+it.n+'</b></div>'+
+             '<div class="bar" style="width:'+pct+'%"></div>';
+    }).join("");
+    return '<div class="bd"><h3>'+title+'</h3>'+(rows||'<div class="row">Sin datos</div>')+'</div>';
+  }
+
+  function devPill(t){
+    var c=t==="Celular"?"cel":(t==="Tablet"?"tab":"pc");
+    return '<span class="pill '+c+'">'+esc(t||"?")+'</span>';
+  }
+  function evBadge(t){
+    if(t==="click") return '<span class="pill tab">👆 click</span>';
+    return '<span class="pill pc">👁 página</span>';
+  }
+
+  function render(){
+    var rows=state.rows;
+    var total=rows.length;
+    var pageviews=rows.filter(function(r){return (r.event_type||"pageview")!=="click";});
+    var clicks=rows.filter(function(r){return r.event_type==="click";});
+    var uniq=Object.keys(rows.reduce(function(a,r){a[r.visitor_id||r.ip||Math.random()]=1;return a;},{})).length;
+    var ret=rows.filter(function(r){return r.returning;}).length;
+    var countries=tally(rows,function(r){return r.country;});
+    var devices=tally(rows,function(r){return r.device_label||r.device_type;});
+    var browsers=tally(rows,function(r){return r.browser;});
+    var refs=tally(rows,function(r){return (r.params&&(r.params.utm_source))||r.referrer;});
+    var pages=tally(pageviews,function(r){return r.page_title||r.page||r.page_url;});
+    var clickTargets=tally(clicks,function(r){return r.target_label||r.target_text||r.target_href;});
+
+    var head=
+      '<header>'+
+        '<h1>📊 Panel de Visitas</h1>'+
+        '<span class="muted">'+total+' registros</span>'+
+        '<span class="sp"></span>'+
+        '<button id="b_refresh">↻ Actualizar</button>'+
+        '<button id="b_csv">⤓ CSV</button>'+
+        '<button id="b_logout">Salir</button>'+
+      '</header>';
+
+    if(total===0){
+      app.innerHTML=head+'<main><div class="center">Aún no hay visitas registradas.<br>'+
+        'Comparte el link de captura y vuelve a actualizar.</div></main>';
+      wire(); return;
+    }
+
+    var cards=
+      '<div class="cards">'+
+        '<div class="card"><div class="n">'+pageviews.length+'</div><div class="l">Visitas (páginas)</div></div>'+
+        '<div class="card"><div class="n">'+clicks.length+'</div><div class="l">Clicks</div></div>'+
+        '<div class="card"><div class="n">'+uniq+'</div><div class="l">Visitantes únicos</div></div>'+
+        '<div class="card"><div class="n">'+ret+'</div><div class="l">Retornos</div></div>'+
+        '<div class="card"><div class="n">'+countries.length+'</div><div class="l">Países</div></div>'+
+      '</div>';
+
+    var bds='<div class="breakdowns">'+
+      breakdown("📄 Páginas más visitadas",pages,pageviews.length)+
+      breakdown("👆 Clicks más populares (qué les llama la atención)",clickTargets,clicks.length)+
+      breakdown("🌎 País",countries,total)+
+      breakdown("📱 Dispositivo",devices,total)+
+      breakdown("🧭 Navegador",browsers,total)+
+      breakdown("🔗 Origen / Campaña",refs,total)+
+    '</div>';
+
+    var cols=[
+      ["ts_iso","Fecha/Hora"],["event_type","Evento"],["page_title","Página"],["target_label","Click en"],
+      ["device_label","Dispositivo"],["os","SO"],["browser","Navegador"],["country","País"],
+      ["city","Ciudad"],["ip","IP"],["referrer","Origen"],["visit_count","#"]
+    ];
+
+    var f=state.filter.toLowerCase();
+    var view=rows.filter(function(r){
+      if(!f) return true;
+      return JSON.stringify(r).toLowerCase().indexOf(f)>=0;
+    }).slice().sort(function(a,b){
+      var x=a[state.sortKey], y=b[state.sortKey];
+      if(x==null)x=""; if(y==null)y="";
+      return (x>y?1:x<y?-1:0)*state.sortDir;
+    });
+
+    var thead=cols.map(function(c){
+      var arrow=state.sortKey===c[0]?(state.sortDir>0?" ▲":" ▼"):"";
+      return '<th data-k="'+c[0]+'">'+c[1]+arrow+'</th>';
+    }).join("");
+
+    var body=view.map(function(r){
+      var dt=r.ts_iso?new Date(r.ts_iso):null;
+      var when=dt?(dt.toLocaleDateString()+" "+dt.toLocaleTimeString().slice(0,5)):esc(r.ts_local||"");
+      return '<tr>'+
+        '<td>'+esc(when)+'</td>'+
+        '<td>'+evBadge(r.event_type)+'</td>'+
+        '<td>'+esc(r.page_title||r.page||"")+'</td>'+
+        '<td>'+esc(r.event_type==="click"?(r.target_label||r.target_text||r.target_href||""):"")+'</td>'+
+        '<td>'+esc(r.device_label||"")+' '+devPill(r.device_type)+'</td>'+
+        '<td>'+esc(r.os||"")+'</td>'+
+        '<td>'+esc((r.browser||"")+" "+(r.browser_version||""))+'</td>'+
+        '<td>'+esc(r.country||"")+'</td>'+
+        '<td>'+esc(r.city||"")+'</td>'+
+        '<td>'+esc(r.ip||"")+'</td>'+
+        '<td>'+esc(r.referrer||"")+'</td>'+
+        '<td>'+esc(r.visit_count||1)+'</td>'+
+      '</tr>';
+    }).join("");
+
+    app.innerHTML=head+'<main>'+cards+bds+
+      '<div class="toolbar">'+
+        '<input id="f" type="text" placeholder="Filtrar (país, IP, ciudad, campaña…)" value="'+esc(state.filter)+'">'+
+        '<span class="muted">'+view.length+' de '+total+'</span>'+
+      '</div>'+
+      '<div class="tablewrap"><table><thead><tr>'+thead+'</tr></thead><tbody>'+body+'</tbody></table></div>'+
+    '</main>';
+    wire();
+  }
+
+  function toCSV(){
+    var rows=state.rows; if(!rows.length) return "";
+    var keys=["ts_iso","ts_local","event_type","page","page_title","page_url",
+      "target_label","target_text","target_href","visitor_id","visit_count","returning","device_label","device_type",
+      "os","browser","browser_version","ip","ip_type","country","country_code","region","city","postal",
+      "latitude","longitude","isp","org","asn","geo_timezone","timezone","language","screen","viewport",
+      "pixel_ratio","cpu_cores","device_memory_gb","touch_points","net_type","referrer","landing_url",
+      "user_agent","geo_source"];
+    var utm=["utm_source","utm_medium","utm_campaign","utm_term","utm_content"];
+    var head=keys.concat(utm).join(",");
+    var lines=rows.map(function(r){
+      var cells=keys.map(function(k){ return q(r[k]); });
+      var p=r.params||{};
+      utm.forEach(function(u){ cells.push(q(p[u])); });
+      return cells.join(",");
+    });
+    return head+"\n"+lines.join("\n");
+    function q(v){ if(v==null)return ""; v=String(v).replace(/"/g,'""'); return /[",\n]/.test(v)?'"'+v+'"':v; }
+  }
+
+  function wire(){
+    var r=document.getElementById("b_refresh"); if(r) r.onclick=load;
+    var lo=document.getElementById("b_logout"); if(lo) lo.onclick=clearKey;
+    var cs=document.getElementById("b_csv"); if(cs) cs.onclick=function(){
+      var blob=new Blob([toCSV()],{type:"text/csv;charset=utf-8"});
+      var a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);
+      a.download="visitas_"+new Date().toISOString().slice(0,10)+".csv";
+      a.click();
+    };
+    var f=document.getElementById("f"); if(f) f.oninput=function(){ state.filter=f.value; render();
+      var nf=document.getElementById("f"); if(nf){ nf.focus(); nf.setSelectionRange(nf.value.length,nf.value.length);} };
+    document.querySelectorAll("th[data-k]").forEach(function(th){
+      th.onclick=function(){
+        var k=th.getAttribute("data-k");
+        if(state.sortKey===k) state.sortDir*=-1; else { state.sortKey=k; state.sortDir=1; }
+        render();
+      };
+    });
+  }
+
+  /* ───────────── arranque ───────────── */
+  if(localStorage.getItem(LS_KEY)&&localStorage.getItem(LS_COL)) load(); else gate();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGMA · Gemelo Digital</title>
+<meta name="robots" content="noindex, nofollow">
+<!--
+  ─────────────────────────────────────────────────────────────────────────────
+  PÁGINA DE CAPTURA (link público para compartir)
+  Registra cada visita (IP, ubicación, dispositivo, navegador, referido, UTM…)
+  en una colección de JSONBin y luego redirige al Dashboard real.
+
+  CONFIGURACIÓN  →  edita el bloque CONFIG de abajo con tus datos de JSONBin.
+  Guía paso a paso: tools/visit-tracker/SETUP.md
+
+  Seguridad: la CREATE_KEY es una Access Key con permiso SOLO de "Bin Create".
+  Aunque alguien vea este código, no puede leer ni borrar las visitas guardadas.
+  ─────────────────────────────────────────────────────────────────────────────
+-->
+<style>
+  :root{
+    --bg:#0f1115; --panel:#161922; --border:#262b36;
+    --text:#e6e8ec; --muted:#9aa3b2; --accent:#5eb1ff;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:flex; align-items:center; justify-content:center;
+    flex-direction:column; text-align:center; padding:2rem;
+  }
+  .rig{
+    width:130px;height:auto;margin-bottom:1.3rem;overflow:visible;
+    filter:drop-shadow(0 8px 20px rgba(94,177,255,.28));
+  }
+  .dirt{opacity:0}
+  .d1{animation:fall1 1.5s ease-in infinite}
+  .d2{animation:fall2 1.5s ease-in .5s infinite}
+  .d3{animation:fall3 1.5s ease-in .9s infinite}
+  @keyframes fall1{0%{opacity:0;transform:translate(0,0)}15%{opacity:1}100%{opacity:0;transform:translate(-4px,22px)}}
+  @keyframes fall2{0%{opacity:0;transform:translate(0,0)}15%{opacity:1}100%{opacity:0;transform:translate(3px,24px)}}
+  @keyframes fall3{0%{opacity:0;transform:translate(0,0)}15%{opacity:1}100%{opacity:0;transform:translate(0,20px)}}
+  h1{margin:0 0 .4rem;font-size:1.4rem;letter-spacing:-.02em}
+  p{margin:0;color:var(--muted);max-width:420px}
+  /* El loader es la rueda de cangilones de la rotopala (gira en el SVG) */
+  .skip{margin-top:1.4rem;font-size:.85rem}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+  <svg class="rig" viewBox="0 0 140 112" role="img" aria-label="Rotopala excavando">
+    <defs>
+      <g id="bk"><path d="M31.4 26.2 q2.6 -1.4 5.2 0 l-0.7 3.6 q-1.9 0.9 -3.8 0 z" fill="#5eb1ff"/></g>
+    </defs>
+    <!-- sombra en el suelo -->
+    <ellipse cx="80" cy="105" rx="47" ry="5" fill="#000" opacity=".35"/>
+    <!-- orugas -->
+    <rect x="40" y="86" width="84" height="16" rx="8" fill="#2b3240" stroke="#3f4858" stroke-width="1.5"/>
+    <circle cx="54" cy="94" r="4.4" fill="#4a5466"/><circle cx="74" cy="94" r="4.4" fill="#4a5466"/>
+    <circle cx="94" cy="94" r="4.4" fill="#4a5466"/><circle cx="112" cy="94" r="4.4" fill="#4a5466"/>
+    <!-- casa de máquinas + cabina + contrapeso -->
+    <rect x="72" y="60" width="38" height="27" rx="4" fill="#2f6fd0" stroke="#1d4e9e" stroke-width="1.5"/>
+    <rect x="95" y="64" width="11" height="9" rx="1.5" fill="#1c2530"/>
+    <rect x="106" y="66" width="7" height="17" rx="1.5" fill="#255cb6" stroke="#1d4e9e"/>
+    <!-- pluma hacia la rueda + tirante -->
+    <line x1="76" y1="66" x2="34" y2="40" stroke="#1d4e9e" stroke-width="7" stroke-linecap="round"/>
+    <line x1="76" y1="66" x2="34" y2="40" stroke="#2f6fd0" stroke-width="3.5" stroke-linecap="round"/>
+    <line x1="88" y1="60" x2="40" y2="31" stroke="#6b7686" stroke-width="1.6"/>
+    <!-- resplandor de la rueda -->
+    <circle cx="34" cy="40" r="16" fill="#5eb1ff" opacity=".16"/>
+    <!-- RUEDA DE CANGILONES (gira) -->
+    <g>
+      <animateTransform attributeName="transform" type="rotate" from="0 34 40" to="360 34 40" dur="3.6s" repeatCount="indefinite"/>
+      <circle cx="34" cy="40" r="12" fill="none" stroke="#5eb1ff" stroke-width="3" stroke-dasharray="5 4.4"/>
+      <circle cx="34" cy="40" r="12" fill="none" stroke="#2f6fd0" stroke-width="1"/>
+      <use href="#bk"/><use href="#bk" transform="rotate(45 34 40)"/><use href="#bk" transform="rotate(90 34 40)"/>
+      <use href="#bk" transform="rotate(135 34 40)"/><use href="#bk" transform="rotate(180 34 40)"/>
+      <use href="#bk" transform="rotate(225 34 40)"/><use href="#bk" transform="rotate(270 34 40)"/>
+      <use href="#bk" transform="rotate(315 34 40)"/>
+      <line x1="34" y1="40" x2="34" y2="29" stroke="#5eb1ff" stroke-width="1.4"/>
+      <line x1="34" y1="40" x2="45" y2="40" stroke="#5eb1ff" stroke-width="1.4"/>
+      <line x1="34" y1="40" x2="34" y2="51" stroke="#5eb1ff" stroke-width="1.4"/>
+      <line x1="34" y1="40" x2="23" y2="40" stroke="#5eb1ff" stroke-width="1.4"/>
+      <circle cx="34" cy="40" r="3.2" fill="#cfe6ff" stroke="#5eb1ff" stroke-width="1.2"/>
+    </g>
+    <!-- tierra excavada cayendo -->
+    <circle class="dirt d1" cx="33" cy="54" r="1.8" fill="#9c6b3f"/>
+    <circle class="dirt d2" cx="36" cy="55" r="1.5" fill="#7d5430"/>
+    <circle class="dirt d3" cx="31" cy="55" r="1.4" fill="#b07d4a"/>
+  </svg>
+  <h1>SIGMA · Gemelo Digital</h1>
+  <p>Preparando tu acceso a la demostración interactiva…</p>
+  <p class="skip"><a id="manual" href="Dashboard_GemeloDigital_SIGMA.html">Continuar ahora →</a></p>
+
+<script src="assets/track.js"></script>
+<script>
+  /* Splash: espera a que el tracker registre el pageview y luego redirige */
+  (function(){
+    "use strict";
+    var REDIRECT_URL = "Dashboard_GemeloDigital_SIGMA.html"; // "" = quedarse en esta página
+    var MIN_SPLASH_MS = 2200;
+    var started = Date.now();
+    function go(){
+      var wait = Math.max(0, MIN_SPLASH_MS - (Date.now() - started));
+      setTimeout(function(){ if (REDIRECT_URL) location.replace(REDIRECT_URL); }, wait);
+    }
+    if (window.SigmaTrack && SigmaTrack.ready) { SigmaTrack.ready.then(go, go); }
+    else { go(); }
+    setTimeout(go, 7000); // red de seguridad si algo cuelga
+  })();
+</script>
+</body>
+</html>
