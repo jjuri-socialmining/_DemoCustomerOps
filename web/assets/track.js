@@ -155,7 +155,8 @@
 
   /* ---------- estado compartido por página ---------- */
   var visitor = getVisitor(), dev = parseUA(), brw = browserData();
-  var geoPromise = fetchGeo();   // UNA sola llamada de geo por carga de página
+  var geoCache = null;
+  var geoPromise = fetchGeo().then(function (g) { geoCache = g; return g; });  // UNA sola llamada de geo
 
   function build(eventType, geo, extra) {
     return Object.assign({
@@ -165,8 +166,11 @@
     }, pageInfo(), dev, brw, geo, extra || {});
   }
 
-  function log(eventType, extra) {
+  function log(eventType, extra) {            // espera la geo (la página se queda → seguro)
     return geoPromise.then(function (geo) { return send(build(eventType, geo, extra)); });
+  }
+  function logNow(eventType, extra) {         // dispara YA, sin esperar geo (clicks que navegan)
+    return send(build(eventType, geoCache || {}, extra));
   }
 
   /* ---------- pageview automático ---------- */
@@ -180,7 +184,7 @@
       if (!a) return;
       var text = (a.textContent || "").replace(/\s+/g, " ").trim().slice(0, 80);
       var label = a.getAttribute("data-track") || text || a.getAttribute("aria-label") || "(sin texto)";
-      log("click", {
+      logNow("click", {
         target_href: a.getAttribute("href") || "",
         target_text: text,
         target_label: label
