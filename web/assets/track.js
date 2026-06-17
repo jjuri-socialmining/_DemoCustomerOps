@@ -184,11 +184,22 @@
       if (!a) return;
       var text = (a.textContent || "").replace(/\s+/g, " ").trim().slice(0, 80);
       var label = a.getAttribute("data-track") || text || a.getAttribute("aria-label") || "(sin texto)";
-      logNow("click", {
-        target_href: a.getAttribute("href") || "",
-        target_text: text,
-        target_label: label
-      });
+      var href = a.getAttribute("href") || "";
+      var p = logNow("click", { target_href: href, target_text: text, target_label: label });
+
+      // Si el click navega en ESTA pestaña, esperamos a que el registro salga:
+      // el POST cross-origin (con preflight CORS) se cancela si la página navega antes.
+      var sameTabNav = a.tagName === "A" && a.href && e.button === 0 &&
+        !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey &&
+        (!a.target || a.target === "_self") &&
+        !/^(#|mailto:|tel:|javascript:)/i.test(href);
+      if (sameTabNav) {
+        e.preventDefault();
+        var dest = a.href, done = false;
+        var go = function () { if (done) return; done = true; window.location.href = dest; };
+        p.then(go, go);
+        setTimeout(go, 700);   // failsafe: nunca bloquea la navegación más de 700ms
+      }
     }, true);
   }
 

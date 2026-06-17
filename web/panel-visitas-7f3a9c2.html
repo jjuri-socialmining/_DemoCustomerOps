@@ -118,16 +118,30 @@
 
   /* ───────────── Carga de datos desde JSONBin ───────────── */
   function headers(){ return {"X-Master-Key":localStorage.getItem(LS_KEY)||""}; }
+  function sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
+
+  // fetch con reintentos + backoff (tolera el rate limit del plan gratis).
+  function fetchJSON(url, tries){
+    tries = tries==null ? 4 : tries;
+    function attempt(n){
+      return fetch(url,{headers:headers()}).then(function(r){
+        if(r.status===401||r.status===403){ var ae=new Error("auth"); ae.fatal=true; throw ae; }
+        if(!r.ok) throw new Error("http "+r.status);
+        return r.json();
+      }).catch(function(e){
+        if(e.fatal) throw e;
+        if(n>=tries) throw e;
+        return sleep(350*Math.pow(2,n)).then(function(){ return attempt(n+1); });
+      });
+    }
+    return attempt(0);
+  }
 
   function listAllBinIds(col){
     var ids=[];
     function page(after){
       var url=LIST+encodeURIComponent(col)+"/bins"+(after?("/"+after):"");
-      return fetch(url,{headers:headers()}).then(function(r){
-        if(r.status===401||r.status===403) throw new Error("auth");
-        if(!r.ok) throw new Error("http "+r.status);
-        return r.json();
-      }).then(function(arr){
+      return fetchJSON(url).then(function(arr){
         if(!Array.isArray(arr)||arr.length===0) return ids;
         arr.forEach(function(b){ ids.push(b.record); });
         if(arr.length<10) return ids;            // última página
@@ -137,34 +151,55 @@
     return page(null);
   }
 
-  function fetchBins(ids){
-    var out=[], i=0, CONC=6;
+  // Lee solo los ids indicados, con concurrencia baja + reintentos. Devuelve {records,fails}.
+  function fetchRecords(ids, onProgress){
+    var out={}, i=0, CONC=3, fails=0, done=0, total=ids.length;
     function one(){
       if(i>=ids.length) return Promise.resolve();
       var id=ids[i++];
-      return fetch(BIN+id+"/latest",{headers:headers()})
-        .then(function(r){ return r.ok?r.json():null; })
-        .then(function(j){ if(j&&j.record) out.push(j.record); })
-        .catch(function(){})
-        .then(one);
+      return fetchJSON(BIN+id+"/latest").then(function(j){
+        if(j&&j.record) out[id]=j.record;
+      }).catch(function(e){
+        if(e.fatal) throw e;
+        fails++;
+      }).then(function(){
+        done++; if(onProgress) onProgress(done,total);
+        return one();
+      });
     }
-    var workers=[]; for(var w=0;w<CONC;w++) workers.push(one());
-    return Promise.all(workers).then(function(){ return out; });
+    var ws=[]; for(var w=0;w<CONC;w++) ws.push(one());
+    return Promise.all(ws).then(function(){ return {records:out, fails:fails}; });
   }
 
   function load(){
     var col=localStorage.getItem(LS_COL), key=localStorage.getItem(LS_KEY);
     if(!col||!key){ return gate(); }
+    var cacheKey="__sigma_cache_"+col, cache={};
+    try{ cache=JSON.parse(localStorage.getItem(cacheKey)||"{}"); }catch(e){ cache={}; }
     app.innerHTML='<div class="center">Cargando visitas…</div>';
     listAllBinIds(col)
       .then(function(ids){
-        if(ids.length===0){ state.rows=[]; return render(); }
-        app.innerHTML='<div class="center">Leyendo '+ids.length+' visitas…</div>';
-        return fetchBins(ids).then(function(rows){ state.rows=rows; render(); });
+        if(ids.length===0){ state.rows=[]; state._fails=0; return render(); }
+        // Solo leemos los registros que no estén ya en caché (carga incremental).
+        var missing=ids.filter(function(id){ return !cache[id]; });
+        function finish(fails){
+          try{ localStorage.setItem(cacheKey, JSON.stringify(cache)); }catch(e){}
+          state.rows=ids.map(function(id){ return cache[id]; }).filter(Boolean);
+          state._fails=fails||0;
+          render();
+        }
+        if(missing.length===0){ return finish(0); }
+        app.innerHTML='<div class="center">Leyendo '+missing.length+' registro(s) nuevo(s) de '+ids.length+'…'+
+          '<br><span id="prog" class="muted"></span></div>';
+        return fetchRecords(missing,function(d,t){ var p=document.getElementById("prog"); if(p) p.textContent=d+" / "+t; })
+          .then(function(res){
+            Object.keys(res.records).forEach(function(id){ cache[id]=res.records[id]; });
+            finish(res.fails);
+          });
       })
       .catch(function(e){
-        if(String(e.message)==="auth"){ return gate("Credenciales inválidas. Revisa Collection ID y Master Key."); }
-        app.innerHTML='<div class="center">Error al cargar: '+e.message+
+        if(e.fatal||String(e.message)==="auth"){ return gate("Credenciales inválidas. Revisa Collection ID y Master Key."); }
+        app.innerHTML='<div class="center">Error al cargar: '+esc(e.message)+
           ' &nbsp; <button onclick="location.reload()">Reintentar</button></div>';
       });
   }
@@ -284,7 +319,10 @@
       '</tr>';
     }).join("");
 
-    app.innerHTML=head+'<main>'+cards+bds+
+    var warn = state._fails ? '<div style="background:#3a1d1d;border:1px solid #f87171;color:#fca5a5;'+
+      'border-radius:8px;padding:.6rem .9rem;margin-bottom:1rem;font-size:.85rem">⚠ '+state._fails+
+      ' registro(s) no se pudieron leer (rate limit). Pulsa ↻ Actualizar para completarlos.</div>' : '';
+    app.innerHTML=head+'<main>'+warn+cards+bds+
       '<div class="toolbar">'+
         '<input id="f" type="text" placeholder="Filtrar (país, IP, ciudad, campaña…)" value="'+esc(state.filter)+'">'+
         '<span class="muted">'+view.length+' de '+total+'</span>'+
