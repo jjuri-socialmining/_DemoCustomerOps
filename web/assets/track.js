@@ -138,8 +138,8 @@
     return { page: location.pathname, page_title: document.title || "(sin título)", page_url: location.href };
   }
 
-  /* ---------- envío a JSONBin ---------- */
-  function send(payload) {
+  /* ---------- POST a JSONBin (un evento = un bin) ---------- */
+  function postBin(payload) {
     if (!CONFIG.COLLECTION_ID || /PEGA_AQUI/.test(CONFIG.COLLECTION_ID) ||
         !CONFIG.CREATE_KEY || /PEGA_AQUI/.test(CONFIG.CREATE_KEY)) {
       console.warn("[track] Sin configurar — evento no enviado:", payload.event_type, payload.page);
@@ -152,6 +152,24 @@
       body: JSON.stringify(payload), keepalive: true
     }).then(function (r) { return r.ok; }).catch(function () { return false; });
   }
+
+  /* ---------- bandeja de salida (outbox) en localStorage ----------
+     Garantiza que ningún evento se pierda: si un click navega antes de
+     enviarse, queda guardado y se manda al cargar la próxima página.
+     Cada evento se envía EXACTAMENTE una vez (se quita sólo al confirmar). */
+  var OUTBOX = "__sigma_outbox";
+  function obRead() { try { return JSON.parse(localStorage.getItem(OUTBOX) || "[]"); } catch (e) { return []; } }
+  function obWrite(a) { try { localStorage.setItem(OUTBOX, JSON.stringify(a.slice(-200))); } catch (e) {} }
+  function enqueue(payload) {
+    var eid = "e_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
+    var a = obRead(); a.push({ eid: eid, payload: payload }); obWrite(a);
+    return eid;
+  }
+  function dequeue(eid) { obWrite(obRead().filter(function (it) { return it.eid !== eid; })); }
+  function trySend(item) {
+    return postBin(item.payload).then(function (ok) { if (ok) dequeue(item.eid); return ok; });
+  }
+  function flushOutbox() { return Promise.all(obRead().map(trySend)); }
 
   /* ---------- estado compartido por página ---------- */
   var visitor = getVisitor(), dev = parseUA(), brw = browserData();
@@ -166,15 +184,14 @@
     }, pageInfo(), dev, brw, geo, extra || {});
   }
 
-  function log(eventType, extra) {            // espera la geo (la página se queda → seguro)
-    return geoPromise.then(function (geo) { return send(build(eventType, geo, extra)); });
-  }
-  function logNow(eventType, extra) {         // dispara YA, sin esperar geo (clicks que navegan)
-    return send(build(eventType, geoCache || {}, extra));
-  }
+  // Al cargar: reenvía lo que quedó pendiente (p. ej. clicks que navegaron).
+  flushOutbox();
 
-  /* ---------- pageview automático ---------- */
-  var ready = log("pageview");
+  /* ---------- pageview automático (espera geo: la página se queda) ---------- */
+  var ready = geoPromise.then(function (geo) {
+    var payload = build("pageview", geo, {});
+    return trySend({ eid: enqueue(payload), payload: payload });
+  });
 
   /* ---------- tracking de clicks ---------- */
   if (CONFIG.TRACK_CLICKS) {
@@ -185,24 +202,25 @@
       var text = (a.textContent || "").replace(/\s+/g, " ").trim().slice(0, 80);
       var label = a.getAttribute("data-track") || text || a.getAttribute("aria-label") || "(sin texto)";
       var href = a.getAttribute("href") || "";
-      var p = logNow("click", { target_href: href, target_text: text, target_label: label });
+      var payload = build("click", geoCache || {}, { target_href: href, target_text: text, target_label: label });
+      var eid = enqueue(payload);   // guardado al instante (sobrevive a la navegación)
 
-      // Si el click navega en ESTA pestaña, esperamos a que el registro salga:
-      // el POST cross-origin (con preflight CORS) se cancela si la página navega antes.
       var sameTabNav = a.tagName === "A" && a.href && e.button === 0 &&
         !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey &&
         (!a.target || a.target === "_self") &&
         !/^(#|mailto:|tel:|javascript:)/i.test(href);
-      if (sameTabNav) {
-        e.preventDefault();
-        var dest = a.href, done = false;
-        var go = function () { if (done) return; done = true; window.location.href = dest; };
-        p.then(go, go);
-        setTimeout(go, 700);   // failsafe: nunca bloquea la navegación más de 700ms
-      }
+
+      // Si navega en la misma pestaña: NO enviamos ahora (se mandaría a medias / duplicado).
+      // Queda en el outbox y se envía al cargar la página destino → exactamente una vez.
+      // Si la página se queda (target=_blank, botón, ancla): enviamos ya.
+      if (!sameTabNav) { trySend({ eid: eid, payload: payload }); }
     }, true);
   }
 
-  /* ---------- API pública (para usos manuales, ej. bienvenida) ---------- */
-  window.SigmaTrack = { ready: ready, log: log, config: CONFIG };
+  /* ---------- API pública ---------- */
+  function log(eventType, extra) {
+    var payload = build(eventType, geoCache || {}, extra);
+    return trySend({ eid: enqueue(payload), payload: payload });
+  }
+  window.SigmaTrack = { ready: ready, log: log, flush: flushOutbox, config: CONFIG };
 })();
