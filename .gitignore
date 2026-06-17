@@ -34,3 +34,11 @@ build/
 _dis/
 _vDemoCustomerOps/
 _sDemoCustomerOps/
+
+# Confidential internal proposal pipeline — pricing, day-rates & internal notes.
+# This repo is PUBLIC: these must never be published. Kept local only.
+staging/
+build_*.js
+package.json
+package-lock.json
+tools/
