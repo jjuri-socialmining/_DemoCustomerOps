@@ -273,6 +273,26 @@
     border:1px solid var(--edge); border-radius:6px; padding:3px 7px; cursor:pointer; letter-spacing:.5px}
   .hm-auto.on{color:#05131D; background:linear-gradient(180deg,var(--cyan),var(--cyan2)); border-color:var(--cyan)}
   @media(max-width:860px){ .hm-ctrl{display:none} }
+  /* énfasis al cambiar de estado + validación IA + tasa de muestreo */
+  @keyframes popfx{0%{transform:scale(1)}30%{transform:scale(1.2)}100%{transform:scale(1)}}
+  .pop{animation:popfx .5s ease; transform-origin:left center}
+  .verdict{min-height:118px}
+  .confnote{font-size:11px; color:var(--muted2); line-height:1.45; margin:7px 0 2px}
+  .confnote b{color:var(--cyan)}
+  .aivalrow{display:flex; align-items:center; gap:9px; margin-top:9px; flex-wrap:wrap}
+  .aibtn{font-family:var(--sans); font-size:11.5px; font-weight:700; color:var(--cyan); background:transparent;
+    border:1px solid var(--cyan2); border-radius:8px; padding:6px 11px; cursor:pointer; transition:.15s}
+  .aibtn:hover{background:rgba(47,230,208,.08)}
+  .aibtn.done{color:#05131D; background:linear-gradient(180deg,var(--green),#2bb869); border-color:var(--green); cursor:default}
+  .recrate{display:flex; align-items:center; gap:8px; margin-top:8px; font-size:11px; color:var(--muted); font-family:var(--mono)}
+  .recrate .live{font-size:11px}
+  .hm-hint{font-size:10.5px; font-weight:700; color:var(--cyan); white-space:nowrap; cursor:pointer;
+    text-shadow:0 0 8px rgba(47,230,208,.4); animation:handbob 1.15s ease-in-out infinite}
+  @keyframes handbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  .ph-rec{display:flex; align-items:center; gap:7px; margin-bottom:12px; font-size:9.5px; color:var(--muted); font-weight:600}
+  .ph-rec input[type=range]{flex:1; accent-color:var(--cyan); cursor:pointer; min-width:0}
+  .ph-rec-l{white-space:nowrap; color:var(--cyan)}
+  .ph-rec-v{color:var(--text); font-weight:700; white-space:nowrap}
 </style>
 
 <div id="heartPulse"></div>
@@ -305,6 +325,7 @@
       <input type="range" id="recSlider" min="84" max="93" step="0.1" value="90.8" aria-label="Recuperación Au (control manual)">
       <span class="hm-val mono" id="recSliderVal">90.8%</span>
       <button class="hm-auto on" id="recAuto" type="button">AUTO</button>
+      <span class="hm-hint" id="hmHint">👆 simulá · ¿qué pasa si…?</span>
     </div>
     <span class="live"><i></i>LIVE</span>
     <span class="chip">Turno <b id="shiftNow">A</b></span>
@@ -357,6 +378,7 @@
             <small class="legend"><span><i style="background:var(--white)"></i>Real</span><span><i style="background:var(--cyan)"></i>Gemelo</span></small>
           </h3>
           <div id="recoveryChart"></div>
+          <div class="recrate" id="recoveryRate"><span class="live"><i></i>Adquisición en vivo</span> · 1 muestra / 4 s</div>
         </div>
         <div class="card" style="margin-top:14px">
           <h3>Alternativas del Trade-Off <small>recuperación · OPEX · CAPEX (relativo)</small></h3>
@@ -376,11 +398,13 @@
           <h3>Asistente IA</h3>
           <div class="who">
             <div class="av"><b>S</b></div>
-            <div><b>Sasha</b><span>Veredicto asistido · validado por Ing. de procesos</span></div>
+            <div><b>Sasha</b><span id="aiWho">Veredicto asistido · pendiente de validación</span></div>
           </div>
           <div class="verdict" id="aiVerdict">Recuperación <b>1.2 pts</b> bajo el gemelo. Causa probable: pico de carbón orgánico (3.6%) a las <b>02:10</b> en Turno B. La resina está al 86% de carga. Acción: subir dosis de resina <b>+8%</b> y verificar P80 del O/F del ciclón.</div>
-          <div class="conf">Confianza del diagnóstico <div class="track"><div class="fill" id="aiConfFill"></div></div> <span id="aiConfVal">91%</span></div>
+          <div class="conf">Confianza del diagnóstico <div class="track"><div class="fill" id="aiConfFill"></div></div> <span id="aiConfVal">90%</span></div>
+          <div class="confnote" id="aiConfNote">IA <b>90%</b>. La validación del Ing. de procesos la lleva a 99%; el 1% es decisión del metalurgista en terreno.</div>
           <div class="action" id="aiAction">Acción recomendada: ajustar dosis de resina</div>
+          <div class="aivalrow"><button class="aibtn" id="aiValidate" type="button">✓ Validar (Ing. de procesos)</button><span id="aiValBadge" class="pill ok" style="display:none">Validado · 99%</span></div>
         </div>
 
         <div class="card" style="margin-top:14px">
@@ -480,6 +504,11 @@
             <div class="ring" id="phoneRing"></div>
             <div class="num" style="color:var(--cyan)">90.8<span style="font-size:20px;color:var(--muted)">%</span></div>
             <div class="meta">Gemelo <b>92.0%</b> · Meta 92% · <span style="color:var(--amber)">−1.2 pts</span></div>
+          </div>
+          <div class="ph-rec">
+            <span class="ph-rec-l">Rec Au · simulá 👆</span>
+            <input type="range" id="recSliderM" min="84" max="93" step="0.1" value="90.8" aria-label="Recuperación Au (móvil)">
+            <span class="ph-rec-v mono" id="recSliderMVal">90.8%</span>
           </div>
           <div class="ph-grid">
             <div class="ph-stat"><div class="l">Throughput</div><div class="v">5 940<span style="font-size:10px;color:var(--muted)"> tpd</span></div></div>
@@ -751,7 +780,8 @@
 
   /* ---------- estado del proceso (planta de oro · RIL) ---------- */
   var S={recovery:90.8,gemelo:92.0,toc:3.6,tocSpike:0,resin:86,throughput:5940,
-         headGrade:2.8,energy:11.8,p80:78,tailAu:0.28,avail:96.4,nacn:0.42,water:310,recManual:null};
+         headGrade:2.8,energy:11.8,p80:78,tailAu:0.28,avail:96.4,nacn:0.42,water:310,
+         elution:128,resinRepo:18,aiValidated:false,recManual:null};
 
   function stepModel(){
     if(S.tocSpike>0){S.tocSpike--;} else if(rnd()<0.035){S.tocSpike=Math.round(6+rnd()*8);}
@@ -774,6 +804,8 @@
     S.avail=clamp(S.avail+(96.4-S.avail)*0.05+gauss()*0.12,95.4,97.6);
     S.nacn=clamp(S.nacn+(0.43-S.nacn)*0.06+gauss()*0.006,0.36,0.52);
     S.water=clamp(S.water+(310-S.water)*0.05+gauss()*3,295,326);
+    S.elution=clamp(S.elution+(128-S.elution)*0.05+gauss()*2,118,140);
+    S.resinRepo=clamp(S.resinRepo+(18-S.resinRepo)*0.06+gauss()*0.5,14,24);
     S.goldOz=S.throughput*S.headGrade*S.recovery/100/31.1035;   // oz/día = t/d · g/t · rec / 31.1
     S._elute=elute;
     return elute;
@@ -787,7 +819,8 @@
   var phNum=$('#movil .critbig .num'), phStats=$all('#movil .ph-grid .ph-stat .v'),
       phRing=$('#phoneRing'), phEnergy=$('#movil .ph-card .hd .mono'), phSparkEl=$('#phoneSpark');
   var aiVerdict=$('#aiVerdict'), aiConfVal=$('#aiConfVal'), aiConfFill=$('#aiConfFill'),
-      aiAction=$('#aiAction'), aiAlerts=$('#aiAlerts'), phAi=$('#movil .ph-card .ai');
+      aiAction=$('#aiAction'), aiAlerts=$('#aiAlerts'), phAi=$('#movil .ph-card .ai'),
+      aiConfNote=$('#aiConfNote'), aiValidateBtn=$('#aiValidate'), aiValBadge=$('#aiValBadge'), aiWho=$('#aiWho');
 
   /* sparklines en vivo (semilla desde data-spark) */
   var SK={};
@@ -799,9 +832,13 @@
 
   /* gauges: cachear config parseada */
   var gCfg=gEls.map(function(el){try{return JSON.parse(el.dataset.gauge);}catch(e){return null;}});
+  var gTarget={};   // objetivo de cada velocímetro (la aguja lo persigue suave)
+  var hbBase=[82,89,94];   // recuperación por tipo de mineral (base para jitter en Analítica)
 
   function setHTML(el,html){ if(el) el.innerHTML=html; }
-  function pill(el,cls,txt){ if(el){ el.className='pill '+cls; el.textContent=txt; } }
+  function popEl(el){ if(!el)return; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+  function pill(el,cls,txt){ if(!el)return; var changed=el.className!=='pill '+cls; el.className='pill '+cls; el.textContent=txt;
+    if(changed){ popEl(el); var t=el.closest&&el.closest('.tile'); if(t)popEl($('.val',t)); } }
   function rollSpark(o,val){ if(!o.el)return; o.vals.push(val); if(o.vals.length>7)o.vals.shift(); o.el.innerHTML=spark(o.vals,o.col); }
   function flash(node){ if(!node)return; node.style.transition='box-shadow .25s'; node.style.boxShadow='0 0 0 1.5px '+V.amber+', 0 0 22px rgba(255,176,46,.35)';
     setTimeout(function(){node.style.boxShadow='';},700); }
@@ -828,13 +865,15 @@
 
     /* --- Balance de proceso --- */
     if(bal[0]) setHTML($('.v',bal[0]),f2(S.nacn)+'<u> kg/t</u>');
+    if(bal[1]) setHTML($('.v',bal[1]),Math.round(S.elution)+'<u> L/día</u>');
+    if(bal[2]) setHTML($('.v',bal[2]),Math.round(S.resinRepo)+'<u> L/día</u>');
     if(bal[3]) setHTML($('.v',bal[3]),thou(S.water)+'<u> m³/h</u>');
     if(bal[4]) setHTML($('.v',bal[4]),f1(S.energy)+'<u> MW</u>');
     if(bal[5]) setHTML($('.v',bal[5]),Math.round(S.p80)+'<u> µm</u>');
     if(bal[6]) setHTML($('.v',bal[6]),f2(S.tailAu)+'<u> g/t</u>');
 
     /* --- Tablero de Turnos: gauges --- */
-    function setGauge(i,v,dtxt){ if(!gEls[i]||!gCfg[i])return; gCfg[i].v=v; gEls[i].innerHTML=gauge(gCfg[i]);
+    function setGauge(i,v,dtxt){ if(!gEls[i]||!gCfg[i])return; gTarget[i]=v;   // la aguja persigue gTarget (loop suave)
       var col=gEls[i].closest('.dcol'); if(col){var b=$('.dstat b',col); if(b)b.textContent=dtxt;} }
     setGauge(1,S.recovery,f1(S.recovery)+'%');
     setGauge(2,S.throughput/2.03,thou(S.throughput/2.03)+' t');
@@ -861,7 +900,26 @@
     /* eventos destacados: flash + (opcional) fila nueva en el log del turno */
     if(S.tocSpike===14 && ctrl[1]) flash(ctrl[1].closest('.tile'));   // recién disparó un pico de TOC
     if(elute){ if(ctrl[2]) flash(ctrl[2].closest('.tile')); pushEvent('Elución de resina ejecutada — carga reiniciada'); }
-    renderAI();   // Sasha + alertas reaccionan al estado (incluye el slider manual)
+    if(S.recManual==null && typeof syncSliders==='function') syncSliders(S.recovery);   // en AUTO los sliders siguen al estado
+    renderAI();    // Sasha + alertas reaccionan al estado (incluye el slider manual)
+    renderHUD();   // Analítica con movimiento (donuts de turno, barras, heatmap)
+  }
+
+  /* --- Analítica con movimiento (sincronizada con el estado) --- */
+  function radial(val,col,label,size){ size=size||92; var r=size/2-9,C=2*Math.PI*r,frac=val/100,cx=size/2;
+    return '<div class="donutmini"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'"><circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="#0a2233" stroke-width="8"/><circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="'+cv(col)+'" stroke-width="8" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-frac))+'" transform="rotate(-90 '+cx+' '+cx+')"/><text x="'+cx+'" y="'+(cx+4)+'" fill="#EAF4FF" font-size="16" font-weight="700" text-anchor="middle" font-family="monospace">'+val+'</text></svg><b>'+label+'</b></div>'; }
+  function hcol(v){ if(v>=92)return 'rgba(55,210,125,'+(0.25+(v-90)/30)+')'; if(v>=86)return 'rgba(255,176,46,.22)'; return 'rgba(255,90,106,.22)'; }
+  function renderHUD(){
+    var rB=clamp(Math.round(S.recovery),84,95), rA=clamp(Math.round(S.recovery+0.6),84,95);
+    var sd=$('#shiftDonuts');
+    if(sd){ var shifts=[['B-3',91,'--green'],['B-2',90,'--green'],['B-1',91,'--green'],['A',rA,'--cyan'],['B',rB,rB>=91?'--green':rB>=89?'--cyan':'--amber']];
+      sd.innerHTML=shifts.map(function(x){return radial(x[1],x[2],'Turno '+x[0]);}).join(''); }
+    var hf=$all('#hud .barfill'), hv=$all('#hud .barrow .vv');
+    hbBase.forEach(function(base,i){ var v=clamp(Math.round(base+gauss()*1.2),base-3,base+3);
+      if(hf[i])hf[i].style.width=v+'%'; if(hv[i])hv[i].textContent=v+'%'; });
+    var heat=$('#heatBody');
+    if(heat){ var rows=[['M3BH',[80,83,82,82]],['M3BM',[88,90,89,88]],['M3BL',[93,95,94,93]]];
+      heat.innerHTML=rows.map(function(r){ return '<tr><td class="nm">'+r[0]+'</td>'+r[1].map(function(v){var vv=clamp(Math.round(v+gauss()*1.0),v-2,v+2);return '<td style="background:'+hcol(vv)+'">'+vv+'</td>';}).join('')+'</tr>'; }).join(''); }
   }
 
   /* log de eventos del turno (cap 6) */
@@ -890,42 +948,68 @@
       'Cola '+S.tailAu.toFixed(2)+' g/t · objetivo ≤ 0.30 g/t'));
     aiAlerts.innerHTML=A.join('');
   }
-  function renderAI(){
+  /* Pool de supuestos del metalurgista (≥10). La IA SIEMPRE propone una causa concreta. */
+  var AIMSG={
+    healthy:[
+      function(g){return {v:'Recuperación alineada con el gemelo (Δ <b>'+g+' pts</b>). <b>Supuesto:</b> alimentación estable y reactivos en dosis; sin lotes de alto carbono en cola. <b>El metalurgista debe:</b> mantener set-points y registrar la corrida como referencia.',a:'Mantener parámetros',tb:'Operación nominal.',t:'Mantener set-points; registrar como referencia.'};},
+      function(g){return {v:'Proceso en régimen (Δ <b>'+g+' pts</b> vs gemelo). <b>Supuesto:</b> molienda y adsorción en ventana óptima. <b>El metalurgista debe:</b> validar el balance metalúrgico y dejar un handover limpio.',a:'Operación en régimen',tb:'En régimen.',t:'Validar balance; handover limpio.'};}
+    ],
+    toc:[
+      function(g){return {v:'<b>Supuesto:</b> pico de carbón orgánico (TOC '+S.toc.toFixed(1)+'%) por un lote alto en C; el turno anterior <b>no segregó ni reportó</b> el cambio de mineral. <b>El metalurgista debe:</b> subir la dosis de resina y verificar el P80 del O/F del ciclón.',a:'Subir dosis de resina + segregar lote',tb:'Pico de TOC (preg-robbing).',t:'Subir resina; segregar lote alto en C.'};},
+      function(g){return {v:'<b>Supuesto:</b> preg-robbing por TOC '+S.toc.toFixed(1)+'%; blending cargado a mineral carbonáceo sin caracterizar. <b>El metalurgista debe:</b> rebalancear el blending hacia bajo C y aumentar la resina activa.',a:'Rebalancear blending + resina activa',tb:'TOC alto en alimentación.',t:'Rebalancear blending; subir resina activa.'};}
+    ],
+    resin:[
+      function(g){return {v:'<b>Supuesto:</b> resina saturada ('+Math.round(S.resin)+'%) — el turno anterior <b>no adelantó la elución</b> pese a la alerta. <b>El metalurgista debe:</b> adelantar la elución y reponer resina fresca.',a:'Adelantar elución de resina',tb:'Resina saturada.',t:'Adelantar elución; reponer resina.'};},
+      function(g){return {v:'<b>Supuesto:</b> capacidad de adsorción al límite ('+Math.round(S.resin)+'%); cola subiendo a '+S.tailAu.toFixed(2)+' g/t. <b>El metalurgista debe:</b> rotar columnas de adsorción y revisar el inventario de resina en circuito.',a:'Rotar columnas / inventario resina',tb:'Adsorción al límite.',t:'Rotar columnas; revisar inventario.'};}
+    ],
+    p80:[
+      function(g){return {v:'<b>Supuesto:</b> molienda gruesa (P80 '+Math.round(S.p80)+' µm) por carga circulante alta; <b>presión de ciclones sin ajustar</b> desde el turno previo. <b>El metalurgista debe:</b> ajustar la presión del nido de ciclones y revisar la densidad de pulpa.',a:'Ajustar presión de ciclones',tb:'Molienda gruesa.',t:'Ajustar ciclones; revisar densidad.'};},
+      function(g){return {v:'<b>Supuesto:</b> liberación incompleta (P80 '+Math.round(S.p80)+' µm) por lifters desgastados o tonelaje sobre diseño. <b>El metalurgista debe:</b> bajar el tonelaje al SAG y evaluar el estado de los revestimientos.',a:'Bajar tonelaje SAG / revisar lifters',tb:'Liberación incompleta.',t:'Bajar tonelaje SAG; revisar lifters.'};}
+    ],
+    tail:[
+      function(g){return {v:'<b>Supuesto:</b> pérdida de Au en relaves (cola '+S.tailAu.toFixed(2)+' g/t) por <b>subdosificación de NaCN</b>. <b>El metalurgista debe:</b> verificar la dosificación de cianuro y el ORP del circuito.',a:'Verificar NaCN / ORP',tb:'Au alto en relaves.',t:'Verificar NaCN y ORP.'};},
+      function(g){return {v:'<b>Supuesto:</b> cola alta ('+S.tailAu.toFixed(2)+' g/t) por residencia insuficiente en adsorción. <b>El metalurgista debe:</b> subir el nivel de carbón/resina activa y revisar el caudal a relaves.',a:'Subir carbón activo / revisar caudal',tb:'Residencia insuficiente.',t:'Subir carbón activo; revisar caudal.'};}
+    ],
+    rebuscado:[
+      function(g){return {v:'<b>Supuesto:</b> micro-finos de pirita consumiendo cianuro (cianicidas) aún no reflejados en el TOC. <b>El metalurgista debe:</b> subir el cianuro libre y controlar el ORP del circuito.',a:'Subir cianuro libre / controlar ORP',tb:'Cianicidas (pirita fina).',t:'Subir cianuro libre; controlar ORP.'};},
+      function(g){return {v:'<b>Supuesto:</b> arrastre de arcillas que ensucia la resina y frena la cinética de adsorción. <b>El metalurgista debe:</b> ajustar el floculante y revisar la turbidez del O/F.',a:'Ajustar floculante / revisar turbidez',tb:'Arcillas en circuito.',t:'Ajustar floculante; revisar turbidez.'};},
+      function(g){return {v:'<b>Supuesto:</b> baja temperatura en elución que reduce la desorción del oro. <b>El metalurgista debe:</b> verificar el intercambiador de calor y la temperatura de columna.',a:'Verificar temperatura de elución',tb:'Elución fría.',t:'Verificar intercambiador y T° de columna.'};},
+      function(g){return {v:'<b>Supuesto:</b> pre-aireación insuficiente que deja el oro parcialmente pasivado. <b>El metalurgista debe:</b> aumentar el caudal de aire/oxígeno al circuito de lixiviación.',a:'Aumentar aireación del circuito',tb:'Oro pasivado.',t:'Aumentar aire/O₂ al circuito.'};}
+    ],
+    danger:[
+      function(g){return {v:'<b>⚠ Riesgo crítico:</b> la caída de <b>'+g+' pts</b> es compatible con <b>falla incipiente del molino de bolas</b> (vibración/temperatura de descanso). El gemelo controla pocas variables in-situ, pero <b>predice</b> el efecto en cascada: P80 disparándose, sobrecarga del nido de ciclones y fuga masiva de Au a relaves en horas. <b>El metalurgista debe:</b> inspeccionar el molino YA y bajar tonelaje para evitar parada no programada.',a:'PARO PREVENTIVO molino de bolas + bajar tonelaje',tb:'⚠ Posible falla del molino de bolas.',t:'Inspeccionar molino YA; bajar tonelaje.'};},
+      function(g){return {v:'<b>⚠ Riesgo crítico:</b> patrón consistente con <b>colapso de la cama de carbón/resina</b> en adsorción. Con las variables autorizadas el gemelo <b>proyecta</b>: Au libre directo a relaves y espesador desestabilizado. <b>El metalurgista debe:</b> detener la alimentación a adsorción y activar el circuito de contingencia.',a:'Contingencia adsorción + detener alimentación',tb:'⚠ Colapso de adsorción.',t:'Detener alimentación; activar contingencia.'};},
+      function(g){return {v:'<b>⚠ Riesgo crítico:</b> caída brusca sin causa de molienda — firma de <b>pérdida de cianuro por derrame/evento</b>. El gemelo <b>predice</b> lixiviación detenida y oro sin recuperar aguas abajo. <b>El metalurgista debe:</b> aislar el área, verificar el balance de NaCN y dar aviso a medio ambiente.',a:'Aislar área + verificar balance NaCN',tb:'⚠ Posible derrame de cianuro.',t:'Aislar área; verificar NaCN; avisar a MA.'};},
+      function(g){return {v:'<b>⚠ Riesgo crítico:</b> firma de <b>rotura de hidrociclón / obstrucción mayor</b> en el nido. Con pocas variables in-situ el gemelo <b>predice</b> cortocircuito de gruesos y caída en cascada de la recuperación. <b>El metalurgista debe:</b> conmutar a ciclones de respaldo e inspeccionar el nido de inmediato.',a:'Conmutar ciclones de respaldo',tb:'⚠ Rotura de hidrociclón.',t:'Conmutar a ciclones de respaldo.'};}
+    ]
+  };
+  var aiVarIdx=0, aiLastBranch='';
+  function aiBranch(){
     var gap=Math.max(0,S.gemelo-S.recovery);
-    var cToc=Math.max(0,S.toc-3.5)*3.0, cResin=Math.max(0,S.resin-82)*0.06,
-        cP80=Math.max(0,S.p80-75)*0.10, cTail=Math.max(0,S.tailAu-0.28)*8;
-    var expl=cToc+cResin+cP80+cTail;
-    var arr=[['toc',cToc],['resin',cResin],['p80',cP80],['tail',cTail]].sort(function(a,b){return b[1]-a[1];});
-    var primary=arr[0][0], unexplained=gap>expl+0.7, g=gap.toFixed(1), verdict, action, conf, tip, tipB;
-    if(gap<0.6){
-      verdict='Recuperación alineada con el gemelo (Δ <b>'+g+' pts</b>). <b>Supuesto:</b> alimentación y reactivos estables, sin lotes de alto carbono en cola. <b>Riesgo bajo</b> — mantener dosificación y vigilar la curva de resina.';
-      action='Sin acción — mantener parámetros'; conf=94; tipB='Operación nominal.'; tip='Mantener dosificación y vigilar la resina.';
-    } else if(unexplained){
-      verdict='Recuperación <b>'+g+' pts</b> bajo el gemelo, <b>sin causa de proceso clara</b> (TOC, resina y P80 en rango). <b>Supuesto:</b> lectura errónea de instrumentación o <b>muestreo no representativo del turno anterior</b>. <b>Riesgo:</b> ajustar dosis sobre un dato falso. <b>Acción:</b> validar el lazo de Au en línea y re-muestrear antes de tocar reactivos.';
-      action='Acción recomendada: validar instrumentación / re-muestrear'; conf=clamp(Math.round(84-gap*4),66,84);
-      tipB='Caída sin causa de proceso.'; tip='Validar instrumentación / muestreo del turno anterior antes de actuar.';
-    } else if(primary==='toc'){
-      verdict='Recuperación <b>'+g+' pts</b> bajo el gemelo. <b>Supuesto:</b> pico de carbón orgánico (TOC '+S.toc.toFixed(1)+'%) por un lote alto en C; probablemente el turno anterior <b>no segregó ni reportó</b> el cambio de mineral. <b>Riesgo:</b> preg-robbing — oro re-adsorbido al carbón. <b>Acción:</b> subir dosis de resina y verificar P80 del O/F del ciclón.';
-      action='Acción recomendada: subir dosis de resina + segregar lote'; conf=clamp(Math.round(82+(cToc/(gap+0.2))*14),80,96);
-      tipB='Pico de TOC (preg-robbing).'; tip='Subir dosis de resina; segregar el lote alto en C.';
-    } else if(primary==='resin'){
-      verdict='Recuperación <b>'+g+' pts</b> bajo el gemelo. <b>Supuesto:</b> resina saturada ('+Math.round(S.resin)+'%) — el turno anterior <b>no adelantó la elución</b> pese a la alerta. <b>Riesgo:</b> pérdida de Au en relaves (cola '+S.tailAu.toFixed(2)+' g/t). <b>Acción:</b> adelantar elución y reponer resina fresca.';
-      action='Acción recomendada: adelantar elución de resina'; conf=clamp(Math.round(82+(cResin/(gap+0.2))*14),80,96);
-      tipB='Resina saturada.'; tip='Adelantar elución — riesgo de Au en relaves.';
-    } else if(primary==='p80'){
-      verdict='Recuperación <b>'+g+' pts</b> bajo el gemelo. <b>Supuesto:</b> molienda gruesa (P80 '+Math.round(S.p80)+' µm) por carga circulante alta; <b>presión del nido de ciclones sin ajustar</b> desde el turno previo. <b>Riesgo:</b> liberación incompleta del oro. <b>Acción:</b> ajustar presión de ciclones y revisar densidad de pulpa.';
-      action='Acción recomendada: ajustar presión de ciclones'; conf=clamp(Math.round(82+(cP80/(gap+0.2))*14),80,95);
-      tipB='Molienda gruesa.'; tip='Ajustar presión de ciclones; revisar densidad.';
-    } else {
-      verdict='Recuperación <b>'+g+' pts</b> bajo el gemelo. <b>Supuesto:</b> pérdida de Au en relaves (cola '+S.tailAu.toFixed(2)+' g/t) por <b>subdosificación de NaCN</b> o resina al límite; posible muestreo del turno anterior <b>no representativo</b>. <b>Riesgo:</b> menor producción de oro fino. <b>Acción:</b> verificar dosificación de cianuro y carga de resina.';
-      action='Acción recomendada: verificar dosificación NaCN'; conf=clamp(Math.round(82+(cTail/(gap+0.2))*14),80,95);
-      tipB='Au alto en relaves.'; tip='Verificar dosificación de NaCN / carga de resina.';
-    }
+    if(typeof health==='function' && health()<40) return {k:'danger',gap:gap};   // estado crítico ⇒ catástrofe predicha
+    if(gap<0.5) return {k:'healthy',gap:gap};
+    var c=[['toc',Math.max(0,S.toc-3.5)*3.0],['resin',Math.max(0,S.resin-82)*0.06],
+           ['p80',Math.max(0,S.p80-75)*0.10],['tail',Math.max(0,S.tailAu-0.28)*8]].sort(function(a,b){return b[1]-a[1];});
+    return {k:c[0][1]>=0.25?c[0][0]:'rebuscado', gap:gap};
+  }
+  function renderAI(){
+    var b=aiBranch(), g=b.gap.toFixed(1);
+    if(b.k!==aiLastBranch){ aiLastBranch=b.k; aiVarIdx++; S.aiValidated=false; }   // nuevo diagnóstico ⇒ re-validar
+    var pool=AIMSG[b.k]||AIMSG.healthy, m=pool[aiVarIdx%pool.length](g);
+    var verdict = b.k==='healthy' ? m.v : ('Recuperación <b>'+g+' pts</b> bajo el gemelo. '+m.v);
+    var conf = S.aiValidated ? 99 : (b.k==='healthy'?95:(b.k==='rebuscado'?89:90));
+    var note = S.aiValidated
+      ? '✓ Validado por Ing. de procesos → <b>99%</b>. El <b>1% restante</b> queda al criterio del metalurgista en terreno (variables in-situ, casos rebuscados).'
+      : 'IA <b>'+conf+'%</b> con los datos del gemelo. La <b>validación del Ing. de procesos</b> la lleva a <b>99%</b>; el <b>1%</b> es decisión del metalurgista en terreno.';
     if(aiVerdict) aiVerdict.innerHTML=verdict;
     if(aiConfVal) aiConfVal.textContent=conf+'%';
     if(aiConfFill) aiConfFill.style.width=conf+'%';
-    if(aiAction) aiAction.textContent=action;
-    if(phAi) phAi.innerHTML='<b>'+tipB+'</b> '+tip+'<br><span style="color:var(--muted);font-size:11px">Confianza '+conf+'%</span>';
+    if(aiConfNote) aiConfNote.innerHTML=note;
+    if(aiAction) aiAction.textContent='Acción recomendada: '+m.a;
+    if(phAi) phAi.innerHTML='<b>'+m.tb+'</b> '+m.t+'<br><span style="color:var(--muted);font-size:11px">Confianza '+conf+'%'+(S.aiValidated?' · validado':'')+'</span>';
+    if(aiValidateBtn){ aiValidateBtn.textContent=S.aiValidated?'✓ Validado por Ing. de procesos':'✓ Validar (Ing. de procesos)'; aiValidateBtn.classList.toggle('done',!!S.aiValidated); }
+    if(aiWho) aiWho.textContent='Veredicto asistido · '+(S.aiValidated?'validado por Ing. de procesos':'pendiente de validación');
+    if(aiValBadge) aiValBadge.style.display=S.aiValidated?'inline-flex':'none';
     renderAlerts();
   }
 
@@ -937,7 +1021,7 @@
   function rgba(c,a){return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')';}
   function health(){           // 0 (crítico) – 100 (sano), derivada del estado de planta
     var h=100;
-    h-=Math.max(0,(92-S.recovery))*7.5;     // recuperación bajo meta
+    h-=Math.max(0,(92-S.recovery))*9;       // recuperación bajo meta (peso alto → DANGER alcanzable)
     h-=Math.max(0,(S.toc-3.5))*13;          // TOC sobre umbral
     h-=Math.max(0,(S.resin-85))*1.2;        // saturación de resina
     h-=Math.max(0,(96-S.avail))*4;          // disponibilidad
@@ -950,8 +1034,8 @@
   function healthState(h){
     if(h>=82)return {k:'FINE',m:'Operación nominal — desviación mínima.'};
     if(h>=60)return {k:'CAUTION',m:'Desviación moderada, no crítica.'};
-    if(h>=38)return {k:'CAUTION',m:'Desviación significativa — atención.'};
-    return {k:'DANGER',m:'Riesgo crítico — intervención inmediata.'};
+    if(h>=40)return {k:'CAUTION',m:'Desviación significativa — atención.'};
+    return {k:'DANGER',m:'Riesgo crítico — posible falla mayor de equipo; intervención inmediata.'};
   }
   function setupHealth(){
     var cv=document.getElementById('ecgCanvas'); if(!cv)return;
@@ -998,13 +1082,46 @@
     requestAnimationFrame(frame);
   }
   /* control manual de Recuperación Au → arrastra la salud (Caution↔Danger) de forma suave */
-  (function(){
-    var sl=document.getElementById('recSlider'), sv=document.getElementById('recSliderVal'), au=document.getElementById('recAuto');
-    if(!sl)return;
-    sl.addEventListener('input',function(){ S.recManual=parseFloat(sl.value); S.recovery=S.recManual;
-      if(sv)sv.textContent=f1(S.recManual)+'%'; if(au){au.classList.remove('on'); au.textContent='MANUAL';} render(false); });
-    if(au) au.addEventListener('click',function(){ S.recManual=null; au.classList.add('on'); au.textContent='AUTO'; });
-  })();
+  /* ---- control de Recuperación Au: slider en topbar + slider en el celular, sincronizados ---- */
+  var recAutoBtn=document.getElementById('recAuto'), hmHintEl=document.getElementById('hmHint');
+  var recSliderEls=[document.getElementById('recSlider'), document.getElementById('recSliderM')];
+  var recValEls=[document.getElementById('recSliderVal'), document.getElementById('recSliderMVal')];
+  function syncSliders(v){ recSliderEls.forEach(function(s){ if(s)s.value=v.toFixed(1); }); recValEls.forEach(function(e){ if(e)e.textContent=v.toFixed(1)+'%'; }); }
+  function setManualUI(){ if(recAutoBtn){ recAutoBtn.classList.remove('on'); recAutoBtn.textContent='MANUAL'; } if(hmHintEl) hmHintEl.style.display='none'; }
+  function applyRec(v){ S.recManual=v; S.recovery=v; syncSliders(v); setManualUI(); render(false); }   // sincroniza TODAS las vistas al instante
+  recSliderEls.forEach(function(s){ if(s) s.addEventListener('input',function(){ applyRec(parseFloat(s.value)); }); });
+  if(recAutoBtn) recAutoBtn.addEventListener('click',function(){ S.recManual=null; recAutoBtn.classList.add('on'); recAutoBtn.textContent='AUTO'; });
+
+  /* validación del Ing. de procesos → la confianza sube a 99% */
+  if(aiValidateBtn) aiValidateBtn.addEventListener('click',function(){ S.aiValidated=true; renderAI(); });
+
+  /* velocímetros del Tablero de Turnos: la aguja persigue el objetivo (planta corriendo) */
+  setInterval(function(){ [1,2,3,4].forEach(function(i){ if(!gEls[i]||!gCfg[i]||gTarget[i]==null)return;
+    var cur=gCfg[i].v, tg=gTarget[i]; if(Math.abs(tg-cur)>0.005){ gCfg[i].v=cur+(tg-cur)*0.14; gEls[i].innerHTML=gauge(gCfg[i]); } }); }, 120);
+
+  /* gráfico Recuperación 24h con muestreo en vivo + velocidad de adquisición */
+  var recEl=$('#recoveryChart'), recRate=$('#recoveryRate'), SAMPLE_MS=4000, lastSample=Date.now();
+  var recSeries=(function(){ var R=[91.4,90.1,90.6,91.0,91.2,91.1,91.3,91.0,90.9,90.4,90.2,90.6,90.8],
+      G=[92.1,92.0,92.0,92.1,92.2,92.1,92.0,92.1,92.0,91.9,92.0,92.1,92.0], a=[]; for(var i=0;i<R.length;i++)a.push({r:R[i],g:G[i]}); return a; })();
+  function drawRecovery(){
+    if(!recEl)return; var W=720,H=250,L=44,Rr=16,T=18,B=30, pw=W-L-Rr, ph=H-T-B, lo=88,hi=94, n=recSeries.length;
+    function Y(v){return T+ph-((v-lo)/(hi-lo))*ph;} function X(i){return L+(i/(n-1))*pw;}
+    function path(k){return recSeries.map(function(p,i){return (i?'L':'M')+X(i).toFixed(1)+' '+Y(p[k]).toFixed(1);}).join(' ');}
+    var s='<svg width="100%" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="display:block">';
+    for(var gl=lo;gl<=hi;gl++){var y=Y(gl);s+='<line x1="'+L+'" y1="'+y+'" x2="'+(W-Rr)+'" y2="'+y+'" stroke="#173249" stroke-width="1"/>';s+='<text x="'+(L-8)+'" y="'+(y+3)+'" fill="#85A0BC" font-size="10" text-anchor="end" font-family="monospace">'+gl+'</text>';}
+    s+='<line x1="'+L+'" y1="'+Y(92)+'" x2="'+(W-Rr)+'" y2="'+Y(92)+'" stroke="#13B8A6" stroke-width="1" stroke-dasharray="2 4" opacity=".5"/>';
+    s+='<path d="'+path('g')+'" fill="none" stroke="#2FE6D0" stroke-width="2.4" stroke-linejoin="round"/>';
+    s+='<path d="'+path('r')+' L'+X(n-1).toFixed(1)+' '+(T+ph)+' L'+L+' '+(T+ph)+' Z" fill="#EAF4FF" opacity=".05"/>';
+    s+='<path d="'+path('r')+'" fill="none" stroke="#EAF4FF" stroke-width="2.4" stroke-linejoin="round"/>';
+    recSeries.forEach(function(p,i){var last=i===n-1;s+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(p.r).toFixed(1)+'" r="'+(last?3.4:2.2)+'" fill="#EAF4FF"'+(last?' stroke="#2FE6D0" stroke-width="1.6"':'')+'/>';});
+    s+='<text x="'+(X(n-1)-3).toFixed(1)+'" y="'+(T+9)+'" fill="#2FE6D0" font-size="9" text-anchor="end" font-family="monospace">ahora</text>';
+    s+='</svg>'; recEl.innerHTML=s;
+  }
+  drawRecovery();
+  setInterval(function(){ recSeries.push({r:S.recovery,g:S.gemelo}); if(recSeries.length>16)recSeries.shift(); lastSample=Date.now(); drawRecovery(); }, SAMPLE_MS);
+  setInterval(function(){ if(recRate){ var ago=Math.round((Date.now()-lastSample)/1000);
+    recRate.innerHTML='<span class="live"><i></i>Adquisición en vivo</span> · 1 muestra / '+(SAMPLE_MS/1000)+' s · '+recSeries.length+' pts · última: hace '+ago+' s'; } }, 1000);
+
   setupHealth();
 
   /* ---------- loop ---------- */
