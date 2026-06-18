@@ -297,7 +297,7 @@
 
     var cols=[
       ["ts_iso","Fecha"],["event_type","Evento"],["_what","Qué"],
-      ["device_label","Dispositivo"],["_loc","Ubicación"],["_nav","Navegador / SO"]
+      ["device_label","Dispositivo"],["_loc","Ubicación"],["ip","IP"],["_nav","Navegador / SO"]
     ];
 
     var f=state.filter.toLowerCase();
@@ -324,6 +324,7 @@
         '<td>'+esc(r._what)+'</td>'+
         '<td>'+esc(r.device_label||"")+' '+devPill(r.device_type)+'</td>'+
         '<td>'+esc(r._loc)+'</td>'+
+        '<td class="muted">'+esc(r.ip||"—")+'</td>'+
         '<td>'+esc(r._nav)+'</td>'+
       '</tr>';
     }).join("");
