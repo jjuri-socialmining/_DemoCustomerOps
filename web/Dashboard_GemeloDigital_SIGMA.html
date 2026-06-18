@@ -330,7 +330,7 @@
   @media(max-width:680px){ .sixsig .ssgrid{grid-template-columns:repeat(2,1fr)} }
   /* ---------- layout con sidebar (orden tipo admin) ---------- */
   .topright{margin-left:auto; display:flex; align-items:center; gap:12px}
-  .shell{display:flex; align-items:flex-start; max-width:1320px; margin:0 auto}
+  .shell{display:flex; align-items:flex-start}   /* full-width: sidebar y live-ops alineados a los bordes (como SIGMA arriba) */
   .sidebar{width:200px; flex:none; padding:16px 10px; border-right:1px solid var(--edge2); background:rgba(8,30,48,.4); align-self:stretch}
   .sidebar .tabs{flex-direction:column; gap:5px; overflow:visible; margin:0}
   .sidebar .tabs button{width:100%; text-align:left; padding:11px 14px; font-size:13.5px}
@@ -1337,16 +1337,18 @@
 <script>function googleTranslateElementInit(){ new google.translate.TranslateElement({pageLanguage:'es', includedLanguages:'es,en,fr', autoDisplay:false, layout:google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element'); }</script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script>
-/* Selector de idioma custom (ES/EN/FR) que maneja Google Translate por debajo */
+/* Selector de idioma ES/EN/FR — método confiable: cookie googtrans + recarga */
 (function(){
   var picks=[].slice.call(document.querySelectorAll('.langpick button'));
   if(!picks.length)return;
+  function curLang(){ var m=document.cookie.match(/googtrans=\/[a-z]+\/([a-z]+)/); return (m&&m[1])?m[1]:'es'; }
   function setLang(l){
-    var c=document.querySelector('.goog-te-combo');
-    if(c){ c.value=l; c.dispatchEvent(new Event('change')); }
-    picks.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-lang')===l); });
+    document.cookie='googtrans=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    if(l!=='es') document.cookie='googtrans=/es/'+l+';path=/';
+    location.reload();
   }
   picks.forEach(function(b){ b.addEventListener('click',function(){ setLang(b.getAttribute('data-lang')); }); });
+  var cur=curLang(); picks.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-lang')===cur); });
 })();
 </script>
 
