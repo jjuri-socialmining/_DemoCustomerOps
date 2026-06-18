@@ -303,6 +303,19 @@
   .maturity .msep{color:var(--muted2)}
   .maturity .mnote{margin-left:auto; color:var(--muted2); font-family:var(--mono)}
   @media(max-width:680px){ .maturity .mnote{display:none} .maturity{font-size:10px} }
+  /* chat con Sasha */
+  .aichat{margin-top:11px; border-top:1px solid var(--edge2); padding-top:10px}
+  .aichat-log{max-height:150px; overflow:auto; display:flex; flex-direction:column; gap:6px; margin-bottom:8px}
+  .aichat-log:empty{display:none}
+  .cmsg{font-size:12px; line-height:1.45; padding:7px 10px; border-radius:9px; max-width:92%}
+  .cmsg.you{align-self:flex-end; background:rgba(47,230,208,.12); color:var(--text)}
+  .cmsg.bot{align-self:flex-start; background:var(--panel2); border:1px solid var(--edge2); color:var(--muted)}
+  .cmsg.bot b{color:var(--cyan)}
+  .aichat-row{display:flex; gap:7px}
+  .aichat-row input{flex:1; min-width:0; background:#081d2d; border:1px solid var(--edge); border-radius:9px; color:var(--text); font-family:var(--sans); font-size:12.5px; padding:8px 10px}
+  .aichat-row button{background:linear-gradient(180deg,var(--cyan),var(--cyan2)); color:#05131D; border:0; border-radius:9px; padding:0 14px; font-weight:700; cursor:pointer; font-size:13px}
+  /* en celular: el Asistente IA va justo después de los KPIs */
+  @media(max-width:680px){ #control .grid.two > div:last-child{order:-1} }
 </style>
 
 <div id="heartPulse"></div>
@@ -423,6 +436,13 @@
           <div class="confnote" id="aiConfNote">IA <b>90%</b>. La validación del Ing. de procesos la lleva a 99%; el 1% es decisión del metalurgista en terreno.</div>
           <div class="action" id="aiAction">Acción recomendada: ajustar dosis de resina</div>
           <div class="aivalrow"><button class="aibtn" id="aiValidate" type="button">✓ Validar (Ing. de procesos)</button><span id="aiValBadge" class="pill ok" style="display:none">Validado · 99%</span></div>
+          <div class="aichat">
+            <div class="aichat-log" id="aiChatLog"></div>
+            <div class="aichat-row">
+              <input id="aiChatInput" type="text" placeholder="Preguntale a Sasha…" autocomplete="off">
+              <button id="aiChatSend" type="button" title="Enviar">➤</button>
+            </div>
+          </div>
         </div>
 
         <div class="card" style="margin-top:14px">
@@ -745,6 +765,8 @@
 })();
 </script>
 
+<!-- Sincronización en tiempo real entre dispositivos (MQTT sobre WebSocket) -->
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 <!-- ====== Simulación de planta en tiempo real (datos representativos, animados) ====== -->
 <script>
 (function(){
@@ -1073,8 +1095,8 @@
       if(S.recManual!=null) S.recovery+=(S.recManual-S.recovery)*0.08;   // easing hacia el valor manual
       disp+=(health()-disp)*0.05;                                        // salud mostrada, transición suave
       var hp=clamp(disp/100,0,1), col=healthColor(disp), st=healthState(disp);
-      var bpm=lerp(104,48,hp), amp=lerp(0.5,1.0,hp), nz=lerp(0.08,0.012,hp);   // peor salud → más rápido/errático
-      var npx=Math.max(1,Math.round(0.045*dt)), cyc=bpm/60/1000, prevAcc=acc;  // scroll lento
+      var bpm=50, amp=0.92, nz=lerp(0.05,0.015,hp);   // velocidad y altura de pico CONSTANTES (estilo RE); la salud solo cambia el color
+      var npx=Math.max(1,Math.round(0.020*dt)), cyc=bpm/60/1000, prevAcc=acc;  // scroll lento fijo
       for(var i=0;i<npx;i++){ var sa=acc+(i+1)/npx*(cyc*dt);
         buf.push(hg/2 - (ecg(sa%1)*amp + (Math.random()-0.5)*nz)*(hg*0.6)); }
       acc+=cyc*dt;
@@ -1094,18 +1116,23 @@
     requestAnimationFrame(frame);
   }
   /* control manual de Recuperación Au → arrastra la salud (Caution↔Danger) de forma suave */
-  /* ---- control de Recuperación Au: slider en topbar + slider en el celular, sincronizados ---- */
+  /* ---- control de Recuperación Au + sincronización en tiempo real entre dispositivos ---- */
   var recAutoBtn=document.getElementById('recAuto'), hmHintEl=document.getElementById('hmHint');
   var recSliderEls=[document.getElementById('recSlider'), document.getElementById('recSliderM')];
   var recValEls=[document.getElementById('recSliderVal'), document.getElementById('recSliderMVal')];
+  var net={ id:Math.random().toString(36).slice(2), pub:function(){} };
   function syncSliders(v){ recSliderEls.forEach(function(s){ if(s)s.value=v.toFixed(1); }); recValEls.forEach(function(e){ if(e)e.textContent=v.toFixed(1)+'%'; }); }
   function setManualUI(){ if(recAutoBtn){ recAutoBtn.classList.remove('on'); recAutoBtn.textContent='MANUAL'; } if(hmHintEl) hmHintEl.style.display='none'; }
-  function applyRec(v){ S.recManual=v; S.recovery=v; syncSliders(v); setManualUI(); render(false); }   // sincroniza TODAS las vistas al instante
+  function setAutoUI(){ if(recAutoBtn){ recAutoBtn.classList.add('on'); recAutoBtn.textContent='AUTO'; } }
+  function broadcast(){ try{ net.pub({from:net.id, s:S}); }catch(e){} }   // comparte el estado con los otros dispositivos
+  function applyRec(v){ S.recManual=v; S.recovery=v; syncSliders(v); setManualUI(); render(false); broadcast(); }   // sincroniza TODAS las vistas + dispositivos
+  function applyRemote(s){ if(!s)return; for(var k in s){ if(s.hasOwnProperty(k)) S[k]=s[k]; }   // estado recibido de otro dispositivo
+    syncSliders(S.recovery); if(S.recManual==null) setAutoUI(); else setManualUI(); render(false); }
   recSliderEls.forEach(function(s){ if(s) s.addEventListener('input',function(){ applyRec(parseFloat(s.value)); }); });
-  if(recAutoBtn) recAutoBtn.addEventListener('click',function(){ S.recManual=null; recAutoBtn.classList.add('on'); recAutoBtn.textContent='AUTO'; });
+  if(recAutoBtn) recAutoBtn.addEventListener('click',function(){ S.recManual=null; setAutoUI(); render(false); broadcast(); });
 
   /* validación del Ing. de procesos → la confianza sube a 99% */
-  if(aiValidateBtn) aiValidateBtn.addEventListener('click',function(){ S.aiValidated=true; renderAI(); });
+  if(aiValidateBtn) aiValidateBtn.addEventListener('click',function(){ S.aiValidated=true; renderAI(); broadcast(); });
 
   /* velocímetros del Tablero de Turnos: la aguja persigue el objetivo (planta corriendo) */
   setInterval(function(){ [1,2,3,4].forEach(function(i){ if(!gEls[i]||!gCfg[i]||gTarget[i]==null)return;
@@ -1133,6 +1160,30 @@
   setInterval(function(){ recSeries.push({r:S.recovery,g:S.gemelo}); if(recSeries.length>16)recSeries.shift(); lastSample=Date.now(); drawRecovery(); }, SAMPLE_MS);
   setInterval(function(){ if(recRate){ var ago=Math.round((Date.now()-lastSample)/1000);
     recRate.innerHTML='<span class="live"><i></i>Adquisición en vivo</span> · 1 muestra / '+(SAMPLE_MS/1000)+' s · '+recSeries.length+' pts · última: hace '+ago+' s'; } }, 1000);
+
+  /* ---- sincronización en tiempo real PC ⇄ celular (MQTT sobre WebSocket, broker público; sin backend) ---- */
+  (function(){
+    if(typeof mqtt==='undefined') return;   // sin la librería → solo local
+    var TOPIC='sigma/democustomerops/sync/v1';
+    try{
+      var c=mqtt.connect('wss://broker.hivemq.com:8884/mqtt',{clientId:'sigma_'+net.id, reconnectPeriod:4000, connectTimeout:8000});
+      c.on('connect',function(){ c.subscribe(TOPIC); net.pub=function(m){ try{ c.publish(TOPIC, JSON.stringify(m)); }catch(e){} }; });
+      c.on('message',function(t,p){ try{ var m=JSON.parse(p.toString()); if(m && m.from!==net.id && m.s) applyRemote(m.s); }catch(e){} });
+    }catch(e){}
+  })();
+
+  /* ---- chat con Sasha (placeholder) ---- */
+  (function(){
+    var inp=document.getElementById('aiChatInput'), btn=document.getElementById('aiChatSend'), log=document.getElementById('aiChatLog');
+    if(!inp||!btn||!log)return;
+    function esc(s){ return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+    function send(){ var q=(inp.value||'').trim(); if(!q)return; inp.value='';
+      log.innerHTML+='<div class="cmsg you">'+esc(q)+'</div>'+
+        '<div class="cmsg bot">🚧 <b>En construcción.</b> Pronto vas a tener el poder de las mejores IA del mercado en un solo chat — preguntale a Sasha lo que quieras sobre la planta.</div>';
+      log.scrollTop=log.scrollHeight; }
+    btn.addEventListener('click',send);
+    inp.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); send(); } });
+  })();
 
   setupHealth();
 
