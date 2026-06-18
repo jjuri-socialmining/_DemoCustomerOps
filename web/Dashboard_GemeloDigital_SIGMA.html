@@ -870,9 +870,7 @@
   var hbBase=[82,89,94];   // recuperación por tipo de mineral (base para jitter en Analítica)
 
   function setHTML(el,html){ if(el) el.innerHTML=html; }
-  function popEl(el){ if(!el)return; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
-  function pill(el,cls,txt){ if(!el)return; var changed=el.className!=='pill '+cls; el.className='pill '+cls; el.textContent=txt;
-    if(changed){ popEl(el); var t=el.closest&&el.closest('.tile'); if(t)popEl($('.val',t)); } }
+  function pill(el,cls,txt){ if(!el)return; el.className='pill '+cls; el.textContent=txt; }   // sin "pop" (el latido en las tiles molestaba)
   function rollSpark(o,val){ if(!o.el)return; o.vals.push(val); if(o.vals.length>7)o.vals.shift(); o.el.innerHTML=spark(o.vals,o.col); }
   function flash(node){ if(!node)return; node.style.transition='box-shadow .25s'; node.style.boxShadow='0 0 0 1.5px '+V.amber+', 0 0 22px rgba(255,176,46,.35)';
     setTimeout(function(){node.style.boxShadow='';},700); }
