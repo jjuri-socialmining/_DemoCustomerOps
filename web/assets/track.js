@@ -133,6 +133,15 @@
       });
   }
 
+  /* ---------- IPv4 explícita (ipwho.is puede devolver IPv6, que "parece una máscara") ---------- */
+  function fetchIPv4() {
+    return Promise.race([
+      fetch("https://api4.ipify.org?format=json").then(function (r) { return r.json(); })
+        .then(function (j) { return (j && j.ip) ? j.ip : null; }),
+      new Promise(function (res) { setTimeout(function () { res(null); }, CONFIG.GEO_TIMEOUT_MS); })
+    ]).catch(function () { return null; });
+  }
+
   /* ---------- info de la página actual ---------- */
   function pageInfo() {
     return { page: location.pathname, page_title: document.title || "(sin título)", page_url: location.href };
@@ -175,21 +184,23 @@
   var visitor = getVisitor(), dev = parseUA(), brw = browserData();
   var geoCache = null;
   var geoPromise = fetchGeo().then(function (g) { geoCache = g; return g; });  // UNA sola llamada de geo
+  var ipv4Cache = null;
+  var ipv4Promise = fetchIPv4().then(function (v) { ipv4Cache = v; return v; });  // IPv4 legible, separada de la geo
 
   function build(eventType, geo, extra) {
     return Object.assign({
       event_type: eventType, ts_iso: new Date().toISOString(), ts_local: new Date().toString(),
       visitor_id: visitor.id, visit_count: visitor.visit_count, returning: visitor.returning,
       params: getParams()
-    }, pageInfo(), dev, brw, geo, extra || {});
+    }, pageInfo(), dev, brw, geo, { ipv4: ipv4Cache }, extra || {});
   }
 
   // Al cargar: reenvía lo que quedó pendiente (p. ej. clicks que navegaron).
   flushOutbox();
 
   /* ---------- pageview automático (espera geo: la página se queda) ---------- */
-  var ready = geoPromise.then(function (geo) {
-    var payload = build("pageview", geo, {});
+  var ready = Promise.all([geoPromise, ipv4Promise]).then(function (arr) {
+    var payload = build("pageview", arr[0], {});
     return trySend({ eid: enqueue(payload), payload: payload });
   });
 
