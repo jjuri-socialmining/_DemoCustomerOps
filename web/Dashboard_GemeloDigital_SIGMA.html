@@ -363,6 +363,8 @@
   .langpick button:not(:last-child){border-right:1px solid var(--edge)}
   .langpick button:hover{color:var(--text)}
   .langpick button.active{background:linear-gradient(180deg,var(--cyan),var(--cyan2)); color:#05131D}
+  /* en mobile: ocultar selector de idioma y la sección "Otras demos" */
+  @media(max-width:760px){ .langsel{display:none} .sidebar .side-sec, .sidebar .side-link{display:none} }
   /* el widget de Google queda FUERA DE PANTALLA (funcional) — lo manejamos desde el selector custom */
   #google_translate_element{position:absolute!important; left:-9999px; top:-9999px; width:1px; height:1px; overflow:hidden}
   .goog-te-banner-frame{display:none!important}
