@@ -49,8 +49,7 @@
   }
   .tabs button:hover{color:var(--text); background:rgba(255,255,255,.03)}
   .tabs button.active{color:#05131D; background:linear-gradient(180deg,var(--cyan),var(--cyan2)); box-shadow:0 4px 16px rgba(47,230,208,.28)}
-  .status{flex-basis:100%; display:flex; align-items:center; justify-content:flex-end; gap:14px; flex-wrap:wrap; font-size:12px;
-    padding-top:10px; margin-top:4px; border-top:1px solid var(--edge2)}   /* franja "live ops" a la derecha (2º nivel) */
+  .status{order:2; margin-left:auto; display:flex; align-items:center; gap:14px; flex-wrap:wrap; font-size:12px}   /* live-ops arriba, derecha */
   .hmon-wrap{display:flex; flex-direction:column; align-items:center; gap:3px}
   .demo-badge{font-family:var(--mono); font-size:9px; font-weight:700; letter-spacing:2.5px; color:var(--amber);
     border:1px solid rgba(255,176,46,.4); background:rgba(255,176,46,.08); border-radius:5px; padding:1px 9px}
@@ -357,16 +356,16 @@
   .dropdown-menu a{display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:8px; font-size:13px; font-weight:600; color:var(--text); text-decoration:none}
   .dropdown-menu a:hover{background:rgba(139,92,246,.2)}
   /* selector de idioma (Google Translate) */
-  .langsel{margin-left:auto; display:flex; align-items:center; gap:7px}
+  .langsel{order:3; display:flex; align-items:center; gap:7px}
   .langpick{display:inline-flex; border:1px solid var(--edge); border-radius:9px; overflow:hidden; background:var(--panel2)}
   .langpick button{background:transparent; color:var(--muted); border:0; padding:5px 10px; font-size:11px; font-weight:700;
     letter-spacing:.5px; cursor:pointer; font-family:var(--sans); transition:.12s}
   .langpick button:not(:last-child){border-right:1px solid var(--edge)}
   .langpick button:hover{color:var(--text)}
   .langpick button.active{background:linear-gradient(180deg,var(--cyan),var(--cyan2)); color:#05131D}
-  /* el widget de Google queda oculto: lo manejamos desde el selector custom */
-  #google_translate_element{display:none}
-  .goog-te-banner-frame, .skiptranslate{display:none!important}
+  /* el widget de Google queda FUERA DE PANTALLA (funcional) — lo manejamos desde el selector custom */
+  #google_translate_element{position:absolute!important; left:-9999px; top:-9999px; width:1px; height:1px; overflow:hidden}
+  .goog-te-banner-frame{display:none!important}
   body{top:0!important}
 </style>
 
@@ -425,7 +424,7 @@
       <button data-v="hud">Analítica</button>
     </nav>
     <div class="side-sec">Otras demos</div>
-    <a class="side-link" href="https://full-web-demo.web.app/#/dashboard/analytics" target="_blank" rel="noopener" data-track="Demo: páginas clásicas">↗ Páginas clásicas</a>
+    <a class="side-link" href="https://full-web-demo.web.app/#/dashboard/analytics" target="_blank" rel="noopener" data-track="Demo: más demos">↗ Más demos</a>
     <a class="side-link" href="https://sig.sea.gob.cl/mapaLineasBaseEIA/" target="_blank" rel="noopener" data-track="Mundo GIS (SEA)">🌎 Mundo GIS</a>
   </aside>
   <div class="content">
