@@ -49,8 +49,8 @@
   }
   .tabs button:hover{color:var(--text); background:rgba(255,255,255,.03)}
   .tabs button.active{color:#05131D; background:linear-gradient(180deg,var(--cyan),var(--cyan2)); box-shadow:0 4px 16px rgba(47,230,208,.28)}
-  .status{order:2; margin-left:auto; display:flex; align-items:center; gap:14px; flex-wrap:wrap; font-size:12px}   /* live-ops arriba, derecha */
-  .hmon-wrap{display:flex; flex-direction:column; align-items:center; gap:3px}
+  .status{order:2; display:flex; align-items:center; gap:14px; flex-wrap:wrap; font-size:12px}   /* live-ops arriba, derecha */
+  .hmon-wrap{order:2; margin-left:auto; display:flex; flex-direction:column; align-items:center; gap:3px}   /* monitor lidera el grupo derecho */
   .demo-badge{font-family:var(--mono); font-size:9px; font-weight:700; letter-spacing:2.5px; color:var(--amber);
     border:1px solid rgba(255,176,46,.4); background:rgba(255,176,46,.08); border-radius:5px; padding:1px 9px}
 
@@ -365,6 +365,13 @@
   .langpick button.active{background:linear-gradient(180deg,var(--cyan),var(--cyan2)); color:#05131D}
   /* en mobile: ocultar selector de idioma y la sección "Otras demos" */
   @media(max-width:760px){ .langsel{display:none} .sidebar .side-sec, .sidebar .side-link{display:none} }
+  /* en mobile: monitor de salud a la derecha de Salas 3D (cabe achicando) */
+  @media(max-width:680px){
+    .hmon-wrap{order:1; margin-left:0}
+    .brand span{display:none}
+    .hmon{width:120px; height:34px}
+    .demo-badge{font-size:8px; padding:1px 7px; letter-spacing:1.5px}
+  }
   /* el widget de Google queda FUERA DE PANTALLA (funcional) — lo manejamos desde el selector custom */
   #google_translate_element{position:absolute!important; left:-9999px; top:-9999px; width:1px; height:1px; overflow:hidden}
   .goog-te-banner-frame{display:none!important}
@@ -395,15 +402,16 @@
     <div id="google_translate_element"></div>
   </div>
 
-  <div class="status">
-    <div class="hmon-wrap">
-      <div class="hmon" id="healthMon" title="Estado de salud de la planta">
-        <canvas id="ecgCanvas"></canvas>
-        <span class="hm-state" id="hmState">FINE</span>
-        <span class="hm-scan"></span>
-      </div>
-      <span class="demo-badge">DEMO</span>
+  <div class="hmon-wrap">
+    <div class="hmon" id="healthMon" title="Estado de salud de la planta">
+      <canvas id="ecgCanvas"></canvas>
+      <span class="hm-state" id="hmState">FINE</span>
+      <span class="hm-scan"></span>
     </div>
+    <span class="demo-badge">DEMO</span>
+  </div>
+
+  <div class="status">
     <div class="hm-ctrl">
       <label for="recSlider">Rec Au</label>
       <input type="range" id="recSlider" min="84" max="93" step="0.1" value="90.8" aria-label="Recuperación Au (control manual)">
