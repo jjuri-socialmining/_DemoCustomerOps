@@ -392,15 +392,6 @@
     </div>
   </div>
 
-  <div class="langsel" title="Idioma / Language">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>
-    <div class="langpick">
-      <button data-lang="es" class="active" type="button">ES</button>
-      <button data-lang="en" type="button">EN</button>
-      <button data-lang="fr" type="button">FR</button>
-    </div>
-    <div id="google_translate_element"></div>
-  </div>
 
   <div class="hmon-wrap">
     <div class="hmon" id="healthMon" title="Estado de salud de la planta">
@@ -1340,25 +1331,6 @@
   if(!btn||!menu)return;
   btn.addEventListener('click',function(e){ e.stopPropagation(); menu.classList.toggle('open'); });
   document.addEventListener('click',function(e){ if(dd && !dd.contains(e.target)) menu.classList.remove('open'); });
-})();
-</script>
-
-<!-- Selector de idioma · traducción ES↔EN (Google Translate) -->
-<script>function googleTranslateElementInit(){ new google.translate.TranslateElement({pageLanguage:'es', includedLanguages:'es,en,fr', autoDisplay:false, layout:google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element'); }</script>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<script>
-/* Selector de idioma ES/EN/FR — método confiable: cookie googtrans + recarga */
-(function(){
-  var picks=[].slice.call(document.querySelectorAll('.langpick button'));
-  if(!picks.length)return;
-  function curLang(){ var m=document.cookie.match(/googtrans=\/[a-z]+\/([a-z]+)/); return (m&&m[1])?m[1]:'es'; }
-  function setLang(l){
-    document.cookie='googtrans=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    if(l!=='es') document.cookie='googtrans=/es/'+l+';path=/';
-    location.reload();
-  }
-  picks.forEach(function(b){ b.addEventListener('click',function(){ setLang(b.getAttribute('data-lang')); }); });
-  var cur=curLang(); picks.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-lang')===cur); });
 })();
 </script>
 
