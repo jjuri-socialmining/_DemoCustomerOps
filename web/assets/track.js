@@ -17,7 +17,7 @@
   /* ════════════════════ CONFIG — EDITA ESTO (una sola vez) ═══════════════════ */
   var CONFIG = {
     COLLECTION_ID: "6a32d727da38895dfed1c6c9",
-    CREATE_KEY:    "$2a$10$LOGhMpuOlNat8H5NlVHpTeQeat0UNupxkwwlhPpjSieFUB0tGouJS",
+    CREATE_KEY:    "$2a$10$GZXDddQfBmo1UmmKj/Tmwe.agDHu7gfjGGbSIbTJg4iAceXFiXxYm",
     GEO_TIMEOUT_MS: 4000,
     TRACK_CLICKS: true            // false = solo cuenta visitas, no clicks
   };
