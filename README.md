@@ -38,6 +38,26 @@ To publish something new:
 Pages should work standalone (open the file directly in a browser) and when
 served by GitHub Pages — no required build step or external dependencies.
 
+### Preview locally or share an ephemeral demo
+
+GitHub Pages above is the **persistent** path (public URL, survives the
+session). For a quick local check before pushing, or to show work-in-progress
+live without publishing it, use the **ephemeral** path:
+
+```bash
+# Local preview — open http://localhost:8000 (verified working, no deps)
+cd web && python3 -m http.server 8000
+
+# Share that preview live during a call (URL dies when you close it).
+# Requires cloudflared: `brew install cloudflared` (not installed by default)
+cloudflared tunnel --url http://localhost:8000
+```
+
+Rule: only sanitized demos go to the public Pages URL. Real client/business
+data stays local (tracker records live in private JSONBin bins; the visits
+panel is unlisted) — share it via the ephemeral tunnel only for the duration
+of a call, never by committing it to `web/`.
+
 ## Working with AI assistants
 
 This repo is set up to be worked on by AI coding assistants (GitHub Copilot,
