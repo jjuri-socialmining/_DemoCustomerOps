@@ -378,17 +378,19 @@
             <div class="av"><b>S</b></div>
             <div><b>Sasha</b><span>Veredicto asistido · validado por Ing. de procesos</span></div>
           </div>
-          <div class="verdict">Recuperación <b>1.2 pts</b> bajo el gemelo. Causa probable: pico de carbón orgánico (3.6%) a las <b>02:10</b> en Turno B. La resina está al 86% de carga. Acción: subir dosis de resina <b>+8%</b> y verificar P80 del O/F del ciclón.</div>
-          <div class="conf">Confianza del diagnóstico <div class="track"><div class="fill"></div></div> 91%</div>
-          <div class="action">Acción recomendada: ajustar dosis de resina</div>
+          <div class="verdict" id="aiVerdict">Recuperación <b>1.2 pts</b> bajo el gemelo. Causa probable: pico de carbón orgánico (3.6%) a las <b>02:10</b> en Turno B. La resina está al 86% de carga. Acción: subir dosis de resina <b>+8%</b> y verificar P80 del O/F del ciclón.</div>
+          <div class="conf">Confianza del diagnóstico <div class="track"><div class="fill" id="aiConfFill"></div></div> <span id="aiConfVal">91%</span></div>
+          <div class="action" id="aiAction">Acción recomendada: ajustar dosis de resina</div>
         </div>
 
         <div class="card" style="margin-top:14px">
           <h3>Alertas predictivas</h3>
+          <div id="aiAlerts">
           <div class="alert"><div class="ic c">!</div><div class="tx"><b>Resina cerca de saturación</b><span>86% de capacidad · saturación est. 4.2 h · riesgo de pérdida de Au en relaves</span></div></div>
           <div class="alert"><div class="ic w">▲</div><div class="tx"><b>TOC sobre umbral</b><span>Alimentación 3.6% &gt; 3.5% · efecto preg-robbing</span></div></div>
           <div class="alert"><div class="ic w">▲</div><div class="tx"><b>P80 sobre objetivo</b><span>78 µm vs 75 µm · revisar carga circulante</span></div></div>
           <div class="alert"><div class="ic o">✓</div><div class="tx"><b>Espesador en rango</b><span>49% sólidos · objetivo 50%</span></div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -784,6 +786,8 @@
   var hud =$all('#hud .grid.hudrow .hudbig .v');
   var phNum=$('#movil .critbig .num'), phStats=$all('#movil .ph-grid .ph-stat .v'),
       phRing=$('#phoneRing'), phEnergy=$('#movil .ph-card .hd .mono'), phSparkEl=$('#phoneSpark');
+  var aiVerdict=$('#aiVerdict'), aiConfVal=$('#aiConfVal'), aiConfFill=$('#aiConfFill'),
+      aiAction=$('#aiAction'), aiAlerts=$('#aiAlerts'), phAi=$('#movil .ph-card .ai');
 
   /* sparklines en vivo (semilla desde data-spark) */
   var SK={};
@@ -857,6 +861,7 @@
     /* eventos destacados: flash + (opcional) fila nueva en el log del turno */
     if(S.tocSpike===14 && ctrl[1]) flash(ctrl[1].closest('.tile'));   // recién disparó un pico de TOC
     if(elute){ if(ctrl[2]) flash(ctrl[2].closest('.tile')); pushEvent('Elución de resina ejecutada — carga reiniciada'); }
+    renderAI();   // Sasha + alertas reaccionan al estado (incluye el slider manual)
   }
 
   /* log de eventos del turno (cap 6) */
@@ -867,6 +872,61 @@
     row.innerHTML='<span class="t">'+p(d.getHours())+':'+p(d.getMinutes())+'</span><div><b>'+txt+'</b></div>';
     var h3=$('h3',evWrap); if(h3&&h3.nextSibling) evWrap.insertBefore(row,h3.nextSibling); else evWrap.appendChild(row);
     var rows=$all('.ev',evWrap); for(var i=6;i<rows.length;i++) rows[i].remove();
+  }
+
+  /* ---------- Asistente IA (Sasha) + alertas predictivas, reactivos al estado/slider ---------- */
+  function alertRow(sev,title,sub){ var ic=sev==='c'?'!':sev==='w'?'▲':'✓';
+    return '<div class="alert"><div class="ic '+sev+'">'+ic+'</div><div class="tx"><b>'+title+'</b><span>'+sub+'</span></div></div>'; }
+  function renderAlerts(){
+    if(!aiAlerts)return;
+    var satH=clamp((92-S.resin)/1.4,0.4,9), A=[];
+    A.push(alertRow(S.resin>88?'c':S.resin>82?'w':'o', 'Resina '+(S.resin>88?'cerca de saturación':S.resin>82?'en vigilancia':'en rango'),
+      Math.round(S.resin)+'% de capacidad · saturación est. '+satH.toFixed(1)+' h'+(S.resin>82?' · riesgo de pérdida de Au en relaves':'')));
+    A.push(alertRow(S.toc>3.7?'c':S.toc>3.5?'w':'o', 'TOC '+(S.toc>3.5?'sobre umbral':'en rango'),
+      'Alimentación '+S.toc.toFixed(1)+'% '+(S.toc>3.5?'&gt; 3.5% · efecto preg-robbing':'≤ 3.5% · normal')));
+    A.push(alertRow(S.p80>80?'c':S.p80>77?'w':'o', 'P80 '+(S.p80>77?'sobre objetivo':'en objetivo'),
+      Math.round(S.p80)+' µm vs 75 µm'+(S.p80>77?' · revisar carga circulante':' · en rango')));
+    A.push(alertRow(S.tailAu>0.32?'c':S.tailAu>0.30?'w':'o', 'Au en relaves '+(S.tailAu>0.30?'elevado':'en rango'),
+      'Cola '+S.tailAu.toFixed(2)+' g/t · objetivo ≤ 0.30 g/t'));
+    aiAlerts.innerHTML=A.join('');
+  }
+  function renderAI(){
+    var gap=Math.max(0,S.gemelo-S.recovery);
+    var cToc=Math.max(0,S.toc-3.5)*3.0, cResin=Math.max(0,S.resin-82)*0.06,
+        cP80=Math.max(0,S.p80-75)*0.10, cTail=Math.max(0,S.tailAu-0.28)*8;
+    var expl=cToc+cResin+cP80+cTail;
+    var arr=[['toc',cToc],['resin',cResin],['p80',cP80],['tail',cTail]].sort(function(a,b){return b[1]-a[1];});
+    var primary=arr[0][0], unexplained=gap>expl+0.7, g=gap.toFixed(1), verdict, action, conf, tip, tipB;
+    if(gap<0.6){
+      verdict='Recuperación alineada con el gemelo (Δ <b>'+g+' pts</b>). <b>Supuesto:</b> alimentación y reactivos estables, sin lotes de alto carbono en cola. <b>Riesgo bajo</b> — mantener dosificación y vigilar la curva de resina.';
+      action='Sin acción — mantener parámetros'; conf=94; tipB='Operación nominal.'; tip='Mantener dosificación y vigilar la resina.';
+    } else if(unexplained){
+      verdict='Recuperación <b>'+g+' pts</b> bajo el gemelo, <b>sin causa de proceso clara</b> (TOC, resina y P80 en rango). <b>Supuesto:</b> lectura errónea de instrumentación o <b>muestreo no representativo del turno anterior</b>. <b>Riesgo:</b> ajustar dosis sobre un dato falso. <b>Acción:</b> validar el lazo de Au en línea y re-muestrear antes de tocar reactivos.';
+      action='Acción recomendada: validar instrumentación / re-muestrear'; conf=clamp(Math.round(84-gap*4),66,84);
+      tipB='Caída sin causa de proceso.'; tip='Validar instrumentación / muestreo del turno anterior antes de actuar.';
+    } else if(primary==='toc'){
+      verdict='Recuperación <b>'+g+' pts</b> bajo el gemelo. <b>Supuesto:</b> pico de carbón orgánico (TOC '+S.toc.toFixed(1)+'%) por un lote alto en C; probablemente el turno anterior <b>no segregó ni reportó</b> el cambio de mineral. <b>Riesgo:</b> preg-robbing — oro re-adsorbido al carbón. <b>Acción:</b> subir dosis de resina y verificar P80 del O/F del ciclón.';
+      action='Acción recomendada: subir dosis de resina + segregar lote'; conf=clamp(Math.round(82+(cToc/(gap+0.2))*14),80,96);
+      tipB='Pico de TOC (preg-robbing).'; tip='Subir dosis de resina; segregar el lote alto en C.';
+    } else if(primary==='resin'){
+      verdict='Recuperación <b>'+g+' pts</b> bajo el gemelo. <b>Supuesto:</b> resina saturada ('+Math.round(S.resin)+'%) — el turno anterior <b>no adelantó la elución</b> pese a la alerta. <b>Riesgo:</b> pérdida de Au en relaves (cola '+S.tailAu.toFixed(2)+' g/t). <b>Acción:</b> adelantar elución y reponer resina fresca.';
+      action='Acción recomendada: adelantar elución de resina'; conf=clamp(Math.round(82+(cResin/(gap+0.2))*14),80,96);
+      tipB='Resina saturada.'; tip='Adelantar elución — riesgo de Au en relaves.';
+    } else if(primary==='p80'){
+      verdict='Recuperación <b>'+g+' pts</b> bajo el gemelo. <b>Supuesto:</b> molienda gruesa (P80 '+Math.round(S.p80)+' µm) por carga circulante alta; <b>presión del nido de ciclones sin ajustar</b> desde el turno previo. <b>Riesgo:</b> liberación incompleta del oro. <b>Acción:</b> ajustar presión de ciclones y revisar densidad de pulpa.';
+      action='Acción recomendada: ajustar presión de ciclones'; conf=clamp(Math.round(82+(cP80/(gap+0.2))*14),80,95);
+      tipB='Molienda gruesa.'; tip='Ajustar presión de ciclones; revisar densidad.';
+    } else {
+      verdict='Recuperación <b>'+g+' pts</b> bajo el gemelo. <b>Supuesto:</b> pérdida de Au en relaves (cola '+S.tailAu.toFixed(2)+' g/t) por <b>subdosificación de NaCN</b> o resina al límite; posible muestreo del turno anterior <b>no representativo</b>. <b>Riesgo:</b> menor producción de oro fino. <b>Acción:</b> verificar dosificación de cianuro y carga de resina.';
+      action='Acción recomendada: verificar dosificación NaCN'; conf=clamp(Math.round(82+(cTail/(gap+0.2))*14),80,95);
+      tipB='Au alto en relaves.'; tip='Verificar dosificación de NaCN / carga de resina.';
+    }
+    if(aiVerdict) aiVerdict.innerHTML=verdict;
+    if(aiConfVal) aiConfVal.textContent=conf+'%';
+    if(aiConfFill) aiConfFill.style.width=conf+'%';
+    if(aiAction) aiAction.textContent=action;
+    if(phAi) phAi.innerHTML='<b>'+tipB+'</b> '+tip+'<br><span style="color:var(--muted);font-size:11px">Confianza '+conf+'%</span>';
+    renderAlerts();
   }
 
   /* ---------- Monitor de salud de planta (estilo RE) ---------- */
