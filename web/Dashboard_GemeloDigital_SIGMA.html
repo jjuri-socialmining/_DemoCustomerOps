@@ -255,6 +255,23 @@
 
   @media(max-width:1080px){ .kpis,.dms,.hudrow{grid-template-columns:repeat(3,1fr)} .two,.balance{grid-template-columns:1fr} .balance{grid-template-columns:repeat(3,1fr)} }
   @media(max-width:680px){ .kpis,.dms,.hudrow,.balance{grid-template-columns:1fr 1fr} .topbar{flex-wrap:wrap} .status{order:3; width:100%} }
+
+  /* ---------- Monitor de salud de planta (estilo RE, en la barra superior) ---------- */
+  .hmon{position:relative; width:176px; height:48px; border-radius:8px; overflow:hidden; flex:none;
+    border:1px solid #143a26; background:repeating-linear-gradient(180deg,#06170e 0,#06170e 3px,#0a2014 3px,#0a2014 4px);
+    box-shadow:inset 0 0 18px rgba(0,0,0,.65), inset 0 0 0 1px rgba(55,210,125,.05)}
+  .hmon canvas{display:block; width:100%; height:100%}
+  .hmon .hm-state{position:absolute; left:10px; bottom:4px; font-family:var(--disp); font-weight:700;
+    font-size:15px; letter-spacing:2px; color:var(--green); text-shadow:0 0 9px currentColor; pointer-events:none; line-height:1}
+  .hmon .hm-scan{position:absolute; inset:0; pointer-events:none; background:radial-gradient(130% 90% at 50% 0%,transparent 55%,rgba(0,0,0,.42))}
+  .hm-ctrl{display:flex; align-items:center; gap:7px; font-size:11px; color:var(--muted); font-weight:600; white-space:nowrap}
+  .hm-ctrl label{letter-spacing:.4px}
+  .hm-ctrl input[type=range]{width:92px; accent-color:var(--cyan); cursor:pointer; vertical-align:middle}
+  .hm-ctrl .hm-val{color:var(--text); min-width:48px; text-align:right}
+  .hm-auto{font-family:var(--mono); font-size:10px; font-weight:700; color:var(--muted); background:transparent;
+    border:1px solid var(--edge); border-radius:6px; padding:3px 7px; cursor:pointer; letter-spacing:.5px}
+  .hm-auto.on{color:#05131D; background:linear-gradient(180deg,var(--cyan),var(--cyan2)); border-color:var(--cyan)}
+  @media(max-width:860px){ .hm-ctrl{display:none} }
 </style>
 
 <header class="topbar">
@@ -276,6 +293,17 @@
   </a>
 
   <div class="status">
+    <div class="hmon" id="healthMon" title="Estado de salud de la planta">
+      <canvas id="ecgCanvas"></canvas>
+      <span class="hm-state" id="hmState">FINE</span>
+      <span class="hm-scan"></span>
+    </div>
+    <div class="hm-ctrl">
+      <label for="recSlider">Rec Au</label>
+      <input type="range" id="recSlider" min="84" max="93" step="0.1" value="90.8" aria-label="Recuperación Au (control manual)">
+      <span class="hm-val mono" id="recSliderVal">90.8%</span>
+      <button class="hm-auto on" id="recAuto" type="button">AUTO</button>
+    </div>
     <span class="live"><i></i>LIVE</span>
     <span class="chip">Turno <b id="shiftNow">A</b></span>
     <span class="chip mono" id="clock">--:--:--</span>
@@ -719,7 +747,7 @@
 
   /* ---------- estado del proceso (planta de oro · RIL) ---------- */
   var S={recovery:90.8,gemelo:92.0,toc:3.6,tocSpike:0,resin:86,throughput:5940,
-         headGrade:2.8,energy:11.8,p80:78,tailAu:0.28,avail:96.4,nacn:0.42,water:310};
+         headGrade:2.8,energy:11.8,p80:78,tailAu:0.28,avail:96.4,nacn:0.42,water:310,recManual:null};
 
   function stepModel(){
     if(S.tocSpike>0){S.tocSpike--;} else if(rnd()<0.035){S.tocSpike=Math.round(6+rnd()*8);}
@@ -728,9 +756,11 @@
     var elute=false;
     S.resin=clamp(S.resin+0.012+rnd()*0.03,55,93);
     if(S.resin>=91 || (S.resin>87 && rnd()<0.004)){S.resin=60+rnd()*4; elute=true;}
-    var pen=Math.max(0,(S.toc-3.5))*2.2+Math.max(0,(S.resin-85))*0.05;
-    var recT=91.6-pen+(elute?0.4:0);
-    S.recovery=clamp(S.recovery+(recT-S.recovery)*0.10+gauss()*0.06,88.4,92.3);
+    if(S.recManual==null){   // en AUTO el modelo conduce la recuperación; en MANUAL la fija el slider
+      var pen=Math.max(0,(S.toc-3.5))*2.2+Math.max(0,(S.resin-85))*0.05;
+      var recT=91.6-pen+(elute?0.4:0);
+      S.recovery=clamp(S.recovery+(recT-S.recovery)*0.10+gauss()*0.06,88.4,92.3);
+    }
     S.gemelo=clamp(92.0+gauss()*0.03,91.8,92.2);
     S.throughput=clamp(S.throughput+(5950-S.throughput)*0.05+gauss()*22,5820,6080);
     S.headGrade=clamp(S.headGrade+(2.8-S.headGrade)*0.06+gauss()*0.05,2.4,3.2);
@@ -836,6 +866,68 @@
     var h3=$('h3',evWrap); if(h3&&h3.nextSibling) evWrap.insertBefore(row,h3.nextSibling); else evWrap.appendChild(row);
     var rows=$all('.ev',evWrap); for(var i=6;i<rows.length;i++) rows[i].remove();
   }
+
+  /* ---------- Monitor de salud de planta (estilo RE) ---------- */
+  function lerp(a,b,t){return a+(b-a)*t;}
+  function hx(c){return [parseInt(c.slice(1,3),16),parseInt(c.slice(3,5),16),parseInt(c.slice(5,7),16)];}
+  function mix(c1,c2,t){var a=hx(c1),b=hx(c2);return 'rgb('+Math.round(lerp(a[0],b[0],t))+','+Math.round(lerp(a[1],b[1],t))+','+Math.round(lerp(a[2],b[2],t))+')';}
+  function health(){           // 0 (crítico) – 100 (sano), derivada del estado de planta
+    var h=100;
+    h-=Math.max(0,(92-S.recovery))*7.5;     // recuperación bajo meta
+    h-=Math.max(0,(S.toc-3.5))*13;          // TOC sobre umbral
+    h-=Math.max(0,(S.resin-85))*1.2;        // saturación de resina
+    h-=Math.max(0,(96-S.avail))*4;          // disponibilidad
+    h-=Math.max(0,(S.tailAu-0.30))*110;     // pérdida de Au en relaves
+    return clamp(h,0,100);
+  }
+  // Colores RE: verde (Fine) → verde-lima (Caution) → naranja (Caution) → rojo (Danger), interpolados suave
+  function healthColor(h){ var G='#46E07A',L='#BFE24C',O='#FFA52E',R='#FF4B4B';
+    if(h>=75)return mix(L,G,(h-75)/25); if(h>=50)return mix(O,L,(h-50)/25); if(h>=25)return mix(R,O,(h-25)/25); return R; }
+  function healthState(h){
+    if(h>=82)return {k:'FINE',m:'Operación nominal — desviación mínima.'};
+    if(h>=60)return {k:'CAUTION',m:'Desviación moderada, no crítica.'};
+    if(h>=38)return {k:'CAUTION',m:'Desviación significativa — atención.'};
+    return {k:'DANGER',m:'Riesgo crítico — intervención inmediata.'};
+  }
+  function setupHealth(){
+    var cv=document.getElementById('ecgCanvas'); if(!cv)return;
+    var ctx=cv.getContext('2d'), w=176,hg=48,dpr=1;
+    function fit(){ dpr=window.devicePixelRatio||1; var r=cv.getBoundingClientRect();
+      w=Math.max(60,r.width||176); hg=Math.max(28,r.height||48);
+      cv.width=Math.round(w*dpr); cv.height=Math.round(hg*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); }
+    fit(); window.addEventListener('resize',fit);
+    var buf=[]; for(var i=0;i<Math.ceil(w);i++) buf.push(hg/2);
+    var phase=0,last=performance.now(),disp=health();
+    var stEl=document.getElementById('hmState'), monEl=document.getElementById('healthMon');
+    function ecg(t){ function g(c,wd,a){var d=(t-c)/wd;return a*Math.exp(-d*d*4);}   // P-QRS-T sintético
+      return g(0.17,0.045,0.10)-g(0.30,0.018,0.18)+g(0.34,0.016,1.0)-g(0.38,0.02,0.30)+g(0.62,0.075,0.22); }
+    function frame(now){
+      var dt=Math.min(60,now-last); last=now;
+      if(S.recManual!=null) S.recovery+=(S.recManual-S.recovery)*0.08;   // easing suave hacia el valor manual
+      disp+=(health()-disp)*0.05;                                        // salud mostrada con transición suave
+      var hp=clamp(disp/100,0,1), col=healthColor(disp), st=healthState(disp);
+      var bpm=lerp(140,60,hp), amp=lerp(0.5,1.0,hp), nz=lerp(0.09,0.015,hp);   // peor salud → más rápido/errático
+      var npx=Math.max(1,Math.round(0.10*dt)), cyc=bpm/60/1000;
+      for(var i=0;i<npx;i++){ phase=(phase+cyc*(dt/npx))%1;
+        buf.push(hg/2 - (ecg(phase)*amp + (Math.random()-0.5)*nz)*(hg*0.62)); }
+      var cap=Math.ceil(w); while(buf.length>cap) buf.shift();
+      ctx.clearRect(0,0,w,hg); ctx.lineWidth=1.8; ctx.strokeStyle=col; ctx.shadowColor=col; ctx.shadowBlur=6; ctx.lineJoin='round';
+      ctx.beginPath(); for(var x=0;x<buf.length;x++){ x?ctx.lineTo(x,buf[x]):ctx.moveTo(0,buf[x]); } ctx.stroke(); ctx.shadowBlur=0;
+      if(stEl){ stEl.textContent=st.k; stEl.style.color=col; }
+      if(monEl) monEl.title='Salud de planta · '+st.k+' — '+st.m;
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  /* control manual de Recuperación Au → arrastra la salud (Caution↔Danger) de forma suave */
+  (function(){
+    var sl=document.getElementById('recSlider'), sv=document.getElementById('recSliderVal'), au=document.getElementById('recAuto');
+    if(!sl)return;
+    sl.addEventListener('input',function(){ S.recManual=parseFloat(sl.value); S.recovery=S.recManual;
+      if(sv)sv.textContent=f1(S.recManual)+'%'; if(au){au.classList.remove('on'); au.textContent='MANUAL';} render(false); });
+    if(au) au.addEventListener('click',function(){ S.recManual=null; au.classList.add('on'); au.textContent='AUTO'; });
+  })();
+  setupHealth();
 
   /* ---------- loop ---------- */
   function tick(){ var e=stepModel(); render(e); }
