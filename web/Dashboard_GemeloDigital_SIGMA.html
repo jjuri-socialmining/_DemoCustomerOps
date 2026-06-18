@@ -124,7 +124,8 @@
   .card h3{margin:0 0 12px; font-size:13px; font-weight:700; letter-spacing:.3px; display:flex; align-items:center; gap:8px}
   .card h3 small{margin-left:auto; font-size:11px; font-weight:600; color:var(--muted)}
 
-  .pill{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; letter-spacing:.3px}
+  .pill{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; letter-spacing:.3px; white-space:nowrap}
+  .tile .top .pill{font-size:9.5px; padding:3px 7px; flex:none}   /* "en rango" no se parte ni agranda la tile */
   .pill::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor}
   .ok{color:var(--green); background:rgba(55,210,125,.12)}
   .warn{color:var(--amber); background:rgba(255,176,46,.12)}
@@ -588,7 +589,7 @@
     </div>
 
     <div class="card sixsig" id="sixSig" style="margin-top:14px">
-      <h3>Capacidad de proceso · Lean Six Sigma <small>recuperación de Au vs LSL 88%</small></h3>
+      <h3>Capacidad de proceso · Lean Six Sigma <small>recuperación de Au vs LSL 90%</small></h3>
       <div class="ssgrid">
         <div class="sscell"><div class="ssv" id="ssSigma">—</div><div class="ssl">Nivel σ</div></div>
         <div class="sscell"><div class="ssv" id="ssCpk">—</div><div class="ssl">Cpk</div></div>
@@ -722,7 +723,7 @@
     var np=pol(cx,cy,r-4,deg);
     s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+np[0].toFixed(1)+'" y2="'+np[1].toFixed(1)+'" stroke="#EAF4FF" stroke-width="3" stroke-linecap="round"/>';
     s+='<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="#EAF4FF"/>';
-    var dv=(o.disp!=null?o.disp:o.v), disp=(dv>=100?Math.round(dv):(dv>=10?dv.toFixed(0):dv.toFixed(2)));
+    var dv=(o.disp!=null?o.disp:o.v), disp=(o.fmt?o.fmt(dv):(dv>=100?Math.round(dv):(dv>=10?dv.toFixed(0):dv.toFixed(2))));
     s+='<text x="'+cx+'" y="'+(cy-14)+'" fill="#EAF4FF" font-size="22" font-weight="700" text-anchor="middle" font-family="monospace">'+disp+'<tspan font-size="11" fill="'+V.muted+'">'+(o.unit||'')+'</tspan></text>';
     s+='</svg>';
     return s;
@@ -827,7 +828,7 @@
     var np=pol(cx,cy,r-4,deg);
     s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+np[0].toFixed(1)+'" y2="'+np[1].toFixed(1)+'" stroke="#EAF4FF" stroke-width="3" stroke-linecap="round"/>';
     s+='<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="#EAF4FF"/>';
-    var dv=(o.disp!=null?o.disp:o.v), disp=(dv>=100?Math.round(dv):(dv>=10?dv.toFixed(0):dv.toFixed(2)));
+    var dv=(o.disp!=null?o.disp:o.v), disp=(o.fmt?o.fmt(dv):(dv>=100?Math.round(dv):(dv>=10?dv.toFixed(0):dv.toFixed(2))));
     s+='<text x="'+cx+'" y="'+(cy-14)+'" fill="#EAF4FF" font-size="22" font-weight="700" text-anchor="middle" font-family="monospace">'+disp+'<tspan font-size="11" fill="'+V.muted+'">'+(o.unit||'')+'</tspan></text></svg>';
     return s;
   }
@@ -888,6 +889,12 @@
   var gCfg=gEls.map(function(el){try{return JSON.parse(el.dataset.gauge);}catch(e){return null;}});
   var gTarget={};   // objetivo de cada velocímetro (la aguja lo persigue suave)
   var hbBase=[82,89,94];   // recuperación por tipo de mineral (base para jitter en Analítica)
+  var gStat={};     // readout (dato de abajo) por velocímetro, se mueve junto con la aguja
+  (function(){
+    var nf={ 1:function(v){return v.toFixed(1);}, 2:function(v){return thou(v);}, 3:function(v){return ''+Math.round(v);}, 4:function(v){return v.toFixed(2);} };
+    var sf={ 1:function(v){return v.toFixed(1)+'%';}, 2:function(v){return thou(v)+' t';}, 3:function(v){return Math.round(v)+'%';}, 4:function(v){return v.toFixed(2)+' kg/t';} };
+    [1,2,3,4].forEach(function(i){ if(gCfg[i]){ gCfg[i].fmt=nf[i]; var col=gEls[i]&&gEls[i].closest('.dcol'); gStat[i]={el:col?col.querySelector('.dstat b'):null, fmt:sf[i]}; } });
+  })();
 
   function setHTML(el,html){ if(el) el.innerHTML=html; }
   function pill(el,cls,txt){ if(!el)return; el.className='pill '+cls; el.textContent=txt; }   // sin "pop" (el latido en las tiles molestaba)
@@ -980,7 +987,7 @@
     return d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274)))); }   // P(X>z) normal estándar
   function renderSixSigma(){
     var elS=document.getElementById('ssSigma'); if(!elS || typeof recSeries==='undefined' || !recSeries || recSeries.length<3) return;
-    var LSL=88, xs=recSeries.map(function(p){return p.r;});                            // límite inferior de especificación
+    var LSL=90, xs=recSeries.map(function(p){return p.r;});                            // límite inferior de especificación
     var m=xs.reduce(function(a,b){return a+b;},0)/xs.length;
     var sd=Math.sqrt(xs.reduce(function(a,b){return a+(b-m)*(b-m);},0)/xs.length); if(sd<0.15)sd=0.15;
     var Z=(m-LSL)/sd, Zd=clamp(Z,0,6), cpk=clamp(Z/3,0,2), dpmo=Math.min(1e6,Math.max(0,Math.round(normTail(Z)*1e6))), yld=(1-normTail(Z))*100;
@@ -992,7 +999,7 @@
     var elN=document.getElementById('ssNote');
     if(elN) elN.innerHTML = Z>=4.5 ? 'Proceso <b>capaz</b> (≥4.5σ): variación bajo control respecto al LSL 88%. Mantener.'
       : Z>=3 ? 'Proceso <b>marginal</b> (3–4.5σ): reducir variación o desplazar la media (Kaizen / DMAIC).'
-      : '<b>Fuera de control</b> (&lt;3σ): la recuperación se acerca o cruza el LSL 88% — acción inmediata.';
+      : '<b>Fuera de control</b> (&lt;3σ): la recuperación se acerca o cruza el LSL 90% — acción inmediata.';
   }
 
   /* log de eventos del turno (cap 6) */
@@ -1175,12 +1182,16 @@
   if(aiValidateBtn) aiValidateBtn.addEventListener('click',function(){ S.aiValidated=true; renderAI(); localTouch(); });
 
   /* velocímetros del Tablero de Turnos: la aguja persigue el objetivo (planta corriendo) */
-  var gWig={};
-  setInterval(function(){ [1,2,3,4].forEach(function(i){ if(!gEls[i]||!gCfg[i]||gTarget[i]==null)return;
-    var span=(gCfg[i].max-gCfg[i].min);                                       // aguja con random-walk amplio (sensor real); lectura estable
-    gWig[i]=(gWig[i]||0)*0.78 + (Math.random()-0.5)*span*0.032;
-    gCfg[i].disp=gTarget[i];                                                   // el número no salta, solo la aguja
-    var tg=gTarget[i]+gWig[i], cur=gCfg[i].v; gCfg[i].v=cur+(tg-cur)*0.32; gEls[i].innerHTML=gauge(gCfg[i]); }); }, 80);
+  var gWig={}, gLive={}, gLastRead=0;
+  setInterval(function(){ var now=Date.now(), refresh=(now-gLastRead>=600); if(refresh)gLastRead=now;
+    [1,2,3,4].forEach(function(i){ if(!gEls[i]||!gCfg[i]||gTarget[i]==null)return;
+      var span=(gCfg[i].max-gCfg[i].min);
+      if(gLive[i]==null) gLive[i]=gTarget[i];
+      if(refresh){ gWig[i]=(gWig[i]||0)*0.7 + (Math.random()-0.5)*span*0.022;   // nueva lectura cada 600 ms (realista)
+        gLive[i]=gTarget[i]+gWig[i];
+        if(gStat[i]&&gStat[i].el) gStat[i].el.textContent=gStat[i].fmt(gLive[i]); }   // el dato de abajo se mueve con la aguja
+      gCfg[i].disp=gLive[i];                                                    // número = lectura (cuadran)
+      var cur=gCfg[i].v; gCfg[i].v=cur+(gLive[i]-cur)*0.2; gEls[i].innerHTML=gauge(gCfg[i]); }); }, 80);
 
   /* gráfico Recuperación 24h con muestreo en vivo + velocidad de adquisición */
   var recEl=$('#recoveryChart'), recRate=$('#recoveryRate'), SAMPLE_MS=4000, lastSample=Date.now();
