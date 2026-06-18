@@ -210,7 +210,16 @@
   .btn.s{background:transparent; border:1px solid var(--edge); color:var(--muted)}
 
   /* ---------- phone ---------- */
-  .phonewrap{display:flex; justify-content:center; flex-wrap:wrap; align-items:flex-start}
+  .phonewrap{display:flex; justify-content:center; flex-wrap:wrap; align-items:flex-start; gap:28px}
+  .phoneframe{position:relative; width:390px; max-width:100%; height:760px; border:11px solid #0a1d2c; border-radius:38px;
+    overflow:hidden; background:#05131e; box-shadow:0 30px 70px rgba(0,0,0,.5), inset 0 0 0 1px rgba(47,230,208,.06); flex:none}
+  .phoneframe .phone-notch{position:absolute; top:0; left:50%; transform:translateX(-50%); width:120px; height:20px;
+    background:#0a1d2c; border-radius:0 0 14px 14px; z-index:2}
+  .phoneframe iframe{width:100%; height:100%; border:0; display:block; background:#05131e}
+  .phone-note2{max-width:300px; color:var(--muted); font-size:12.5px; line-height:1.6; align-self:center}
+  .phone-note2 b{color:var(--text)}
+  @media(max-width:760px){ .phoneframe{width:100%; height:560px; border-width:0; border-radius:14px}
+    .phoneframe .phone-notch{display:none} .phone-note2{display:none} }
   .phone{width:392px; max-width:100%; background:transparent; border:0; border-radius:18px; padding:0; box-shadow:none}
   .phone .notch{display:none}
   .phone .scr{background:linear-gradient(180deg,#05131e,#06151f); border:1px solid var(--edge); border-radius:18px; padding:16px; min-height:auto}
@@ -605,39 +614,13 @@
 
   <!-- ================= VISTA MÓVIL ================= -->
   <section class="view" id="movil">
-    <div class="eyebrow">Vista Móvil — <b>Live Ops</b> · vista real en tu celular · un KPI crítico + resumen operativo</div>
+    <div class="eyebrow">Vista Móvil — así se ve el dashboard <b>de verdad en un celular</b> · mismo tablero, auto-ajustado a la pantalla (no una maqueta)</div>
     <div class="phonewrap">
-      <div class="phone">
-        <div class="scr">
-          <div class="ph-top"><span class="liveops">☰ LIVE OPS · [CLIENTE]</span><span class="live"><i></i>LIVE</span></div>
-          <div class="critbig">
-            <div class="k">Recuperación de Au · crítico</div>
-            <div class="ring" id="phoneRing"></div>
-            <div class="num" style="color:var(--cyan)">90.8<span style="font-size:20px;color:var(--muted)">%</span></div>
-            <div class="meta">Gemelo <b>92.0%</b> · Meta 92% · <span style="color:var(--amber)">−1.2 pts</span></div>
-          </div>
-          <div class="ph-rec">
-            <span class="ph-rec-l">Rec Au · simulá 👆</span>
-            <input type="range" id="recSliderM" min="84" max="93" step="0.1" value="90.8" aria-label="Recuperación Au (móvil)">
-            <span class="ph-rec-v mono" id="recSliderMVal">90.8%</span>
-          </div>
-          <div class="ph-grid">
-            <div class="ph-stat"><div class="l">Throughput</div><div class="v">5 940<span style="font-size:10px;color:var(--muted)"> tpd</span></div></div>
-            <div class="ph-stat"><div class="l">Resina</div><div class="v" style="color:var(--amber)">86%</div></div>
-            <div class="ph-stat"><div class="l">TOC</div><div class="v" style="color:var(--red)">3.6%</div></div>
-          </div>
-          <div class="ph-card">
-            <div class="hd">◆ AI Insight · Sasha</div>
-            <div class="ai"><b>Resina cerca de saturación.</b> Saturación estimada en 4.2 h — riesgo de pérdida de Au en relaves. Acción: subir dosis +8%.<br><span style="color:var(--muted);font-size:11px">Confianza 91%</span></div>
-          </div>
-          <div class="ph-card">
-            <div class="hd" style="justify-content:space-between"><span>⚡ Energía</span><span class="mono" style="color:var(--text)">11.8 MW</span></div>
-            <div id="phoneSpark"></div>
-            <div style="font-size:11px;color:var(--muted);margin-top:6px">−4% vs turno anterior</div>
-          </div>
-          <div class="ph-nav"><span>⬡</span><span style="color:var(--cyan)">▣</span><span>◔</span><span>⚙</span></div>
-        </div>
+      <div class="phoneframe">
+        <div class="phone-notch"></div>
+        <iframe id="mobileFrame" title="Vista real del dashboard en un celular"></iframe>
       </div>
+      <div class="phone-note2">Es el <b>mismo dashboard</b> renderizado a ancho de teléfono (≈390 px) dentro de un iframe: refleja exactamente cómo se ve y se auto-ajusta en el celular del gerente o jefe de turno — podés tocarlo y desplazarlo.</div>
     </div>
   </section>
 
@@ -1288,7 +1271,7 @@
     var chip=document.getElementById('syncChip');
     function setChip(txt,col){ if(chip){ chip.textContent=txt; chip.style.color=col||''; chip.style.borderColor=col||''; } }
     setChip('sync…');
-    if(typeof mqtt==='undefined'){ setChip('sync local'); return; }   // sin la librería → solo local
+    if(typeof mqtt==='undefined' || /[?&]embed=mobile/.test(location.search)){ setChip('sync local'); return; }   // sin lib o embebido → solo local
     var TOPIC='sigma/democustomerops/sync/v1';
     try{
       var c=mqtt.connect('wss://broker.emqx.io:8084/mqtt',{clientId:'sigma_'+net.id, reconnectPeriod:4000, connectTimeout:8000, clean:true});
@@ -1331,6 +1314,14 @@
   if(!btn||!menu)return;
   btn.addEventListener('click',function(e){ e.stopPropagation(); menu.classList.toggle('open'); });
   document.addEventListener('click',function(e){ if(dd && !dd.contains(e.target)) menu.classList.remove('open'); });
+})();
+</script>
+
+<!-- Vista Móvil: iframe del dashboard real a ancho de celular (embed=mobile evita la recursión) -->
+<script>
+(function(){
+  var isEmbed=/[?&]embed=mobile/.test(location.search), mf=document.getElementById('mobileFrame');
+  if(mf && !isEmbed) mf.src='Dashboard_GemeloDigital_SIGMA.html?embed=mobile';
 })();
 </script>
 
