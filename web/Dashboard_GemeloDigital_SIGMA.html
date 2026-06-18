@@ -326,35 +326,55 @@
   .ssnote{font-size:11.5px; color:var(--muted); line-height:1.45}
   .ssnote b{color:var(--text)}
   @media(max-width:680px){ .sixsig .ssgrid{grid-template-columns:repeat(2,1fr)} }
+  /* ---------- layout con sidebar (orden tipo admin) ---------- */
+  .topright{margin-left:auto; display:flex; align-items:center; gap:12px}
+  .shell{display:flex; align-items:flex-start; max-width:1320px; margin:0 auto}
+  .sidebar{width:200px; flex:none; padding:16px 10px; border-right:1px solid var(--edge2); background:rgba(8,30,48,.4); align-self:stretch}
+  .sidebar .tabs{flex-direction:column; gap:5px; overflow:visible; margin:0}
+  .sidebar .tabs button{width:100%; text-align:left; padding:11px 14px; font-size:13.5px}
+  .sidebar .side-sec{font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted2); margin:16px 8px 7px}
+  .sidebar .side-link{display:block; padding:10px 14px; border-radius:9px; font-size:13px; font-weight:600; color:var(--muted); text-decoration:none}
+  .sidebar .side-link:hover{color:var(--text); background:rgba(255,255,255,.04)}
+  .content{flex:1; min-width:0}
+  .content > main{max-width:none; padding:18px 20px 8px}
+  .content > .maturity{max-width:none; margin:0}
+  .content > footer{max-width:none}
+  @media(max-width:760px){ .shell{flex-direction:column}
+    .sidebar{width:100%; border-right:0; border-bottom:1px solid var(--edge2); padding:10px}
+    .sidebar .tabs{flex-direction:row; flex-wrap:wrap} .sidebar .tabs button{width:auto} }
+  /* dropdown "Salas 3D" */
+  .dropdown{position:relative}
+  #salas3dBtn{animation:none}
+  .dropdown-menu{position:absolute; top:calc(100% + 6px); right:0; background:var(--panel2); border:1px solid var(--edge);
+    border-radius:11px; padding:6px; min-width:180px; display:none; z-index:40; box-shadow:0 16px 44px rgba(0,0,0,.55)}
+  .dropdown-menu.open{display:block}
+  .dropdown-menu a{display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:8px; font-size:13px; font-weight:600; color:var(--text); text-decoration:none}
+  .dropdown-menu a:hover{background:rgba(139,92,246,.2)}
+  /* selector de idioma (Google Translate) */
+  .langsel{display:flex; align-items:center}
+  .goog-te-banner-frame, .goog-te-gadget-icon, #goog-gt-tt, .goog-te-balloon-frame, .goog-logo-link{display:none!important}
+  body{top:0!important}
+  .goog-te-gadget{font-size:0!important; color:transparent!important; line-height:0!important}
+  .goog-te-gadget .goog-te-combo{margin:0!important; background:var(--panel2); color:var(--text); border:1px solid var(--edge);
+    border-radius:8px; padding:5px 8px; font-size:12px; font-family:var(--sans); cursor:pointer}
 </style>
 
 <div id="heartPulse"></div>
 <header class="topbar">
   <a class="brand" href="https://jjuri-socialmining.github.io/_DemoCustomerOps/Dashboard_GemeloDigital_SIGMA.html" style="text-decoration:none" title="Ir al Dashboard del Gemelo Digital"><span class="bar"></span><b>SIGMA</b><span>Digital Twins</span></a>
-  <nav class="tabs" id="tabs">
-    <button data-v="control" class="active">Sala de Control</button>
-    <button data-v="turnos">Tablero de Turnos</button>
-    <button data-v="movil">Vista Móvil</button>
-    <button data-v="hud">Analítica</button>
-  </nav>
-
-  <a class="btn-3d-portal" href="https://framevr.io/classroomjorge" target="_blank" rel="noopener" data-track="Planta 3D (FrameVR)">
-    <svg class="cube-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-      <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-      <line x1="12" y1="22.08" x2="12" y2="12"/>
-    </svg>
-    Planta 3D
-  </a>
-
-  <a class="btn-3d-portal" href="https://framevr.io/emptysdt#conference-3" target="_blank" rel="noopener" data-track="SalaReu 3D (FrameVR)">
-    <svg class="cube-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-      <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-      <line x1="12" y1="22.08" x2="12" y2="12"/>
-    </svg>
-    SalaReu 3D
-  </a>
+  <div class="topright">
+    <div class="dropdown" id="salas3d">
+      <button class="btn-3d-portal" id="salas3dBtn" type="button">
+        <svg class="cube-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        Salas 3D ▾
+      </button>
+      <div class="dropdown-menu" id="salas3dMenu">
+        <a href="https://framevr.io/classroomjorge" target="_blank" rel="noopener" data-track="Planta 3D (FrameVR)">⬡ Planta 3D</a>
+        <a href="https://framevr.io/emptysdt#conference-3" target="_blank" rel="noopener" data-track="SalaReu 3D (FrameVR)">⬡ SalaReu 3D</a>
+      </div>
+    </div>
+    <div class="langsel" title="Idioma / Language"><div id="google_translate_element"></div></div>
+  </div>
 
   <div class="status">
     <div class="hmon" id="healthMon" title="Estado de salud de la planta">
@@ -374,6 +394,20 @@
     <span class="chip mono" id="clock">--:--:--</span>
   </div>
 </header>
+
+<div class="shell">
+  <aside class="sidebar">
+    <nav class="tabs" id="tabs">
+      <button data-v="control" class="active">Sala de Control</button>
+      <button data-v="turnos">Tablero de Turnos</button>
+      <button data-v="movil">Vista Móvil</button>
+      <button data-v="hud">Analítica</button>
+    </nav>
+    <div class="side-sec">Otras demos</div>
+    <a class="side-link" href="https://full-web-demo.web.app/#/views/profile" target="_blank" rel="noopener" data-track="Demo: páginas clásicas">↗ Páginas clásicas</a>
+    <a class="side-link" href="https://sig.sea.gob.cl/mapaLineasBaseEIA/" target="_blank" rel="noopener" data-track="Mundo GIS (SEA)">🌎 Mundo GIS</a>
+  </aside>
+  <div class="content">
 
 <div class="maturity" id="maturity">
   <span class="ml">Madurez del gemelo</span>
@@ -642,6 +676,8 @@
   <span class="ribbon">⚠ Datos representativos</span> &nbsp; Los valores mostrados son ejemplos para ilustrar el diseño y deben reemplazarse con los KPIs reales del programa de pruebas de laboratorio y piloto.<br>
   <b>SIGMA Digital Twins Consulting Inc.</b> · Documento confidencial sujeto a NDA · Las cuatro vistas corresponden al Producto 2 (Dashboard) y Producto 3 (Inteligencia con IA + entorno 3D) de la propuesta.
 </footer>
+  </div><!-- /.content -->
+</div><!-- /.shell -->
 
 <script>
 (function(){
@@ -1266,6 +1302,20 @@
   setInterval(tick,2200);
 })();
 </script>
+
+<!-- Menú "Salas 3D" -->
+<script>
+(function(){
+  var btn=document.getElementById('salas3dBtn'), menu=document.getElementById('salas3dMenu'), dd=document.getElementById('salas3d');
+  if(!btn||!menu)return;
+  btn.addEventListener('click',function(e){ e.stopPropagation(); menu.classList.toggle('open'); });
+  document.addEventListener('click',function(e){ if(dd && !dd.contains(e.target)) menu.classList.remove('open'); });
+})();
+</script>
+
+<!-- Selector de idioma · traducción ES↔EN (Google Translate) -->
+<script>function googleTranslateElementInit(){ new google.translate.TranslateElement({pageLanguage:'es', includedLanguages:'es,en', autoDisplay:false, layout:google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element'); }</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <!-- Registro de visitas y clicks (SIGMA tracker) -->
 <script src="assets/track.js?v=6"></script>
