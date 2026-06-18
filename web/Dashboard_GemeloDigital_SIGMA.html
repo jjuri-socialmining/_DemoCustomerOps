@@ -353,6 +353,7 @@
     <span class="live"><i></i>LIVE</span>
     <span class="chip">Turno <b id="shiftNow">A</b></span>
     <span class="chip mono" id="clock">--:--:--</span>
+    <span class="chip mono" id="syncChip" title="Sincronización entre dispositivos (PC ⇄ celular)">sync…</span>
   </div>
 </header>
 
@@ -1118,23 +1119,26 @@
   var recAutoBtn=document.getElementById('recAuto'), hmHintEl=document.getElementById('hmHint');
   var recSliderEls=[document.getElementById('recSlider'), document.getElementById('recSliderM')];
   var recValEls=[document.getElementById('recSliderVal'), document.getElementById('recSliderMVal')];
-  var net={ id:Math.random().toString(36).slice(2), pub:function(){} };
+  var net={ id:Math.random().toString(36).slice(2), pub:function(){}, myTouch:0, amSource:false };
   function syncSliders(v){ recSliderEls.forEach(function(s){ if(s)s.value=v.toFixed(1); }); recValEls.forEach(function(e){ if(e)e.textContent=v.toFixed(1)+'%'; }); }
   function setManualUI(){ if(recAutoBtn){ recAutoBtn.classList.remove('on'); recAutoBtn.textContent='MANUAL'; } if(hmHintEl) hmHintEl.style.display='none'; }
   function setAutoUI(){ if(recAutoBtn){ recAutoBtn.classList.add('on'); recAutoBtn.textContent='AUTO'; } }
-  function broadcast(){ try{ net.pub({from:net.id, s:S}); }catch(e){} }   // comparte el estado con los otros dispositivos
-  function applyRec(v){ S.recManual=v; S.recovery=v; syncSliders(v); setManualUI(); render(false); broadcast(); }   // sincroniza TODAS las vistas + dispositivos
+  function broadcast(){ try{ net.pub({from:net.id, t:net.myTouch, s:S}); }catch(e){} }   // comparte el estado con los otros dispositivos
+  function localTouch(){ net.myTouch=Date.now(); net.amSource=true; broadcast(); }   // este dispositivo pasa a ser la fuente de verdad
+  function applyRec(v){ S.recManual=v; S.recovery=v; syncSliders(v); setManualUI(); render(false); localTouch(); }   // sincroniza TODAS las vistas + dispositivos
   function applyRemote(s){ if(!s)return; for(var k in s){ if(s.hasOwnProperty(k)) S[k]=s[k]; }   // estado recibido de otro dispositivo
     syncSliders(S.recovery); if(S.recManual==null) setAutoUI(); else setManualUI(); render(false); }
   recSliderEls.forEach(function(s){ if(s) s.addEventListener('input',function(){ applyRec(parseFloat(s.value)); }); });
-  if(recAutoBtn) recAutoBtn.addEventListener('click',function(){ S.recManual=null; setAutoUI(); render(false); broadcast(); });
+  if(recAutoBtn) recAutoBtn.addEventListener('click',function(){ S.recManual=null; setAutoUI(); render(false); localTouch(); });
 
   /* validación del Ing. de procesos → la confianza sube a 99% */
-  if(aiValidateBtn) aiValidateBtn.addEventListener('click',function(){ S.aiValidated=true; renderAI(); broadcast(); });
+  if(aiValidateBtn) aiValidateBtn.addEventListener('click',function(){ S.aiValidated=true; renderAI(); localTouch(); });
 
   /* velocímetros del Tablero de Turnos: la aguja persigue el objetivo (planta corriendo) */
-  setInterval(function(){ [1,2,3,4].forEach(function(i){ if(!gEls[i]||!gCfg[i]||gTarget[i]==null)return;
-    var cur=gCfg[i].v, tg=gTarget[i]; if(Math.abs(tg-cur)>0.005){ gCfg[i].v=cur+(tg-cur)*0.14; gEls[i].innerHTML=gauge(gCfg[i]); } }); }, 120);
+  setInterval(function(){ var now=Date.now(); [1,2,3,4].forEach(function(i){ if(!gEls[i]||!gCfg[i]||gTarget[i]==null)return;
+    var span=(gCfg[i].max-gCfg[i].min);                                       // micro-temblor: instrumento midiendo
+    var wig=(Math.sin(now/700+i*1.7)*0.6 + (Math.random()-0.5))*span*0.006;
+    var tg=gTarget[i]+wig, cur=gCfg[i].v; gCfg[i].v=cur+(tg-cur)*0.2; gEls[i].innerHTML=gauge(gCfg[i]); }); }, 100);
 
   /* gráfico Recuperación 24h con muestreo en vivo + velocidad de adquisición */
   var recEl=$('#recoveryChart'), recRate=$('#recoveryRate'), SAMPLE_MS=4000, lastSample=Date.now();
@@ -1161,13 +1165,21 @@
 
   /* ---- sincronización en tiempo real PC ⇄ celular (MQTT sobre WebSocket, broker público; sin backend) ---- */
   (function(){
-    if(typeof mqtt==='undefined') return;   // sin la librería → solo local
+    var chip=document.getElementById('syncChip');
+    function setChip(txt,col){ if(chip){ chip.textContent=txt; chip.style.color=col||''; chip.style.borderColor=col||''; } }
+    setChip('sync…');
+    if(typeof mqtt==='undefined'){ setChip('sync local'); return; }   // sin la librería → solo local
     var TOPIC='sigma/democustomerops/sync/v1';
     try{
-      var c=mqtt.connect('wss://broker.hivemq.com:8884/mqtt',{clientId:'sigma_'+net.id, reconnectPeriod:4000, connectTimeout:8000});
-      c.on('connect',function(){ c.subscribe(TOPIC); net.pub=function(m){ try{ c.publish(TOPIC, JSON.stringify(m)); }catch(e){} }; });
-      c.on('message',function(t,p){ try{ var m=JSON.parse(p.toString()); if(m && m.from!==net.id && m.s) applyRemote(m.s); }catch(e){} });
-    }catch(e){}
+      var c=mqtt.connect('wss://broker.emqx.io:8084/mqtt',{clientId:'sigma_'+net.id, reconnectPeriod:4000, connectTimeout:8000, clean:true});
+      c.on('connect',function(){ c.subscribe(TOPIC); net.pub=function(m){ try{ c.publish(TOPIC, JSON.stringify(m)); }catch(e){} };
+        setChip('🔗 sync ON','#37D27D'); if(net.amSource) broadcast(); });
+      c.on('reconnect',function(){ setChip('sync…','#FFB02E'); });
+      c.on('offline',function(){ setChip('sync OFF','#FF5A6A'); });
+      c.on('error',function(){ setChip('sync OFF','#FF5A6A'); });
+      c.on('message',function(t,p){ try{ var m=JSON.parse(p.toString());
+        if(m && m.from!==net.id && m.s && (m.t||0)>net.myTouch){ net.myTouch=m.t||0; net.amSource=false; applyRemote(m.s); } }catch(e){} });
+    }catch(e){ setChip('sync OFF','#FF5A6A'); }
   })();
 
   /* ---- chat con Sasha (placeholder) ---- */
@@ -1186,7 +1198,7 @@
   setupHealth();
 
   /* ---------- loop ---------- */
-  function tick(){ var e=stepModel(); render(e); }
+  function tick(){ var e=stepModel(); render(e); if(net.amSource) broadcast(); }   // la fuente retransmite cada tick
   setTimeout(tick,700);
   setInterval(tick,2200);
 })();
