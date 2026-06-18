@@ -49,8 +49,11 @@
   }
   .tabs button:hover{color:var(--text); background:rgba(255,255,255,.03)}
   .tabs button.active{color:#05131D; background:linear-gradient(180deg,var(--cyan),var(--cyan2)); box-shadow:0 4px 16px rgba(47,230,208,.28)}
-  .status{flex-basis:100%; display:flex; align-items:center; gap:14px; flex-wrap:wrap; font-size:12px;
-    padding-top:10px; margin-top:4px; border-top:1px solid var(--edge2)}   /* franja "live ops" propia (2º nivel) */
+  .status{flex-basis:100%; display:flex; align-items:center; justify-content:flex-end; gap:14px; flex-wrap:wrap; font-size:12px;
+    padding-top:10px; margin-top:4px; border-top:1px solid var(--edge2)}   /* franja "live ops" a la derecha (2º nivel) */
+  .hmon-wrap{display:flex; flex-direction:column; align-items:center; gap:3px}
+  .demo-badge{font-family:var(--mono); font-size:9px; font-weight:700; letter-spacing:2.5px; color:var(--amber);
+    border:1px solid rgba(255,176,46,.4); background:rgba(255,176,46,.08); border-radius:5px; padding:1px 9px}
 
   /* ---- 3D Portal Button ---- */
   .btn-3d-portal{
@@ -344,43 +347,61 @@
     .sidebar .tabs{flex-direction:row; flex-wrap:wrap} .sidebar .tabs button{width:auto} }
   /* dropdown "Salas 3D" */
   .dropdown{position:relative}
-  #salas3dBtn{animation:none}
+  /* efecto 3D del botón Salas 3D: profundidad + brillo + perspectiva al hover */
+  #salas3dBtn{transform-style:preserve-3d; perspective:500px}
+  #salas3dBtn:hover{transform:translateY(-2px) rotateX(8deg)}
+  #salas3dBtn:active{transform:translateY(3px) rotateX(0deg)}
   .dropdown-menu{position:absolute; top:calc(100% + 6px); right:0; background:var(--panel2); border:1px solid var(--edge);
     border-radius:11px; padding:6px; min-width:180px; display:none; z-index:40; box-shadow:0 16px 44px rgba(0,0,0,.55)}
   .dropdown-menu.open{display:block}
   .dropdown-menu a{display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:8px; font-size:13px; font-weight:600; color:var(--text); text-decoration:none}
   .dropdown-menu a:hover{background:rgba(139,92,246,.2)}
   /* selector de idioma (Google Translate) */
-  .langsel{display:flex; align-items:center}
-  .goog-te-banner-frame, .goog-te-gadget-icon, #goog-gt-tt, .goog-te-balloon-frame, .goog-logo-link{display:none!important}
+  .langsel{margin-left:auto; display:flex; align-items:center; gap:7px}
+  .langpick{display:inline-flex; border:1px solid var(--edge); border-radius:9px; overflow:hidden; background:var(--panel2)}
+  .langpick button{background:transparent; color:var(--muted); border:0; padding:5px 10px; font-size:11px; font-weight:700;
+    letter-spacing:.5px; cursor:pointer; font-family:var(--sans); transition:.12s}
+  .langpick button:not(:last-child){border-right:1px solid var(--edge)}
+  .langpick button:hover{color:var(--text)}
+  .langpick button.active{background:linear-gradient(180deg,var(--cyan),var(--cyan2)); color:#05131D}
+  /* el widget de Google queda oculto: lo manejamos desde el selector custom */
+  #google_translate_element{display:none}
+  .goog-te-banner-frame, .skiptranslate{display:none!important}
   body{top:0!important}
-  .goog-te-gadget{font-size:0!important; color:transparent!important; line-height:0!important}
-  .goog-te-gadget .goog-te-combo{margin:0!important; background:var(--panel2); color:var(--text); border:1px solid var(--edge);
-    border-radius:8px; padding:5px 8px; font-size:12px; font-family:var(--sans); cursor:pointer}
 </style>
 
 <div id="heartPulse"></div>
 <header class="topbar">
   <a class="brand" href="https://jjuri-socialmining.github.io/_DemoCustomerOps/Dashboard_GemeloDigital_SIGMA.html" style="text-decoration:none" title="Ir al Dashboard del Gemelo Digital"><span class="bar"></span><b>SIGMA</b><span>Digital Twins</span></a>
-  <div class="topright">
-    <div class="dropdown" id="salas3d">
-      <button class="btn-3d-portal" id="salas3dBtn" type="button">
-        <svg class="cube-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-        Salas 3D ▾
-      </button>
-      <div class="dropdown-menu" id="salas3dMenu">
-        <a href="https://framevr.io/classroomjorge" target="_blank" rel="noopener" data-track="Planta 3D (FrameVR)">⬡ Planta 3D</a>
-        <a href="https://framevr.io/emptysdt#conference-3" target="_blank" rel="noopener" data-track="SalaReu 3D (FrameVR)">⬡ SalaReu 3D</a>
-      </div>
+  <div class="dropdown" id="salas3d">
+    <button class="btn-3d-portal" id="salas3dBtn" type="button">
+      <svg class="cube-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      Salas 3D ▾
+    </button>
+    <div class="dropdown-menu" id="salas3dMenu">
+      <a href="https://framevr.io/classroomjorge" target="_blank" rel="noopener" data-track="Planta 3D (FrameVR)">⬡ Planta 3D</a>
+      <a href="https://framevr.io/emptysdt#conference-3" target="_blank" rel="noopener" data-track="SalaReu 3D (FrameVR)">⬡ SalaReu 3D</a>
     </div>
-    <div class="langsel" title="Idioma / Language"><div id="google_translate_element"></div></div>
+  </div>
+
+  <div class="langsel" title="Idioma / Language">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>
+    <div class="langpick">
+      <button data-lang="es" class="active" type="button">ES</button>
+      <button data-lang="en" type="button">EN</button>
+      <button data-lang="fr" type="button">FR</button>
+    </div>
+    <div id="google_translate_element"></div>
   </div>
 
   <div class="status">
-    <div class="hmon" id="healthMon" title="Estado de salud de la planta">
-      <canvas id="ecgCanvas"></canvas>
-      <span class="hm-state" id="hmState">FINE</span>
-      <span class="hm-scan"></span>
+    <div class="hmon-wrap">
+      <div class="hmon" id="healthMon" title="Estado de salud de la planta">
+        <canvas id="ecgCanvas"></canvas>
+        <span class="hm-state" id="hmState">FINE</span>
+        <span class="hm-scan"></span>
+      </div>
+      <span class="demo-badge">DEMO</span>
     </div>
     <div class="hm-ctrl">
       <label for="recSlider">Rec Au</label>
@@ -404,7 +425,7 @@
       <button data-v="hud">Analítica</button>
     </nav>
     <div class="side-sec">Otras demos</div>
-    <a class="side-link" href="https://full-web-demo.web.app/#/views/profile" target="_blank" rel="noopener" data-track="Demo: páginas clásicas">↗ Páginas clásicas</a>
+    <a class="side-link" href="https://full-web-demo.web.app/#/dashboard/analytics" target="_blank" rel="noopener" data-track="Demo: páginas clásicas">↗ Páginas clásicas</a>
     <a class="side-link" href="https://sig.sea.gob.cl/mapaLineasBaseEIA/" target="_blank" rel="noopener" data-track="Mundo GIS (SEA)">🌎 Mundo GIS</a>
   </aside>
   <div class="content">
@@ -1314,8 +1335,21 @@
 </script>
 
 <!-- Selector de idioma · traducción ES↔EN (Google Translate) -->
-<script>function googleTranslateElementInit(){ new google.translate.TranslateElement({pageLanguage:'es', includedLanguages:'es,en', autoDisplay:false, layout:google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element'); }</script>
+<script>function googleTranslateElementInit(){ new google.translate.TranslateElement({pageLanguage:'es', includedLanguages:'es,en,fr', autoDisplay:false, layout:google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element'); }</script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script>
+/* Selector de idioma custom (ES/EN/FR) que maneja Google Translate por debajo */
+(function(){
+  var picks=[].slice.call(document.querySelectorAll('.langpick button'));
+  if(!picks.length)return;
+  function setLang(l){
+    var c=document.querySelector('.goog-te-combo');
+    if(c){ c.value=l; c.dispatchEvent(new Event('change')); }
+    picks.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-lang')===l); });
+  }
+  picks.forEach(function(b){ b.addEventListener('click',function(){ setLang(b.getAttribute('data-lang')); }); });
+})();
+</script>
 
 <!-- Registro de visitas y clicks (SIGMA tracker) -->
 <script src="assets/track.js?v=6"></script>
