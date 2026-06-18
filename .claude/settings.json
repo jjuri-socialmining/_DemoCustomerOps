@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=\"${CLAUDE_PROJECT_DIR:-.}/.claude/startup.md\"; [ -s \"$f\" ] && jq -Rs --arg p \"$(basename \"${CLAUDE_PROJECT_DIR:-$PWD}\")\" '{hookSpecificOutput:{hookEventName:\"SessionStart\",additionalContext:(\"[\"+$p+\" · arranque] \"+.)}}' \"$f\" 2>/dev/null || true",
+            "statusMessage": "Cargando próximo paso del repo…"
+          }
+        ]
+      }
+    ]
+  }
+}
