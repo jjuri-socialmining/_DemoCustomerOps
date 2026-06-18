@@ -272,11 +272,11 @@
   .hm-auto{font-family:var(--mono); font-size:10px; font-weight:700; color:var(--muted); background:transparent;
     border:1px solid var(--edge); border-radius:6px; padding:3px 7px; cursor:pointer; letter-spacing:.5px}
   .hm-auto.on{color:#05131D; background:linear-gradient(180deg,var(--cyan),var(--cyan2)); border-color:var(--cyan)}
-  @media(max-width:860px){ .hm-ctrl{display:none} }
+  @media(max-width:860px){ .hm-ctrl{flex-wrap:wrap; width:100%} .hm-ctrl input[type=range]{flex:1; min-width:130px} }
   /* énfasis al cambiar de estado + validación IA + tasa de muestreo */
   @keyframes popfx{0%{transform:scale(1)}30%{transform:scale(1.2)}100%{transform:scale(1)}}
   .pop{animation:popfx .5s ease; transform-origin:left center}
-  .verdict{min-height:118px}
+  .verdict{height:150px; overflow-y:auto}   /* altura fija → el dashboard no crece/encoge al cambiar el diagnóstico */
   .confnote{font-size:11px; color:var(--muted2); line-height:1.45; margin:7px 0 2px}
   .confnote b{color:var(--cyan)}
   .aivalrow{display:flex; align-items:center; gap:9px; margin-top:9px; flex-wrap:wrap}
@@ -346,9 +346,9 @@
     <div class="hm-ctrl">
       <label for="recSlider">Rec Au</label>
       <input type="range" id="recSlider" min="84" max="93" step="0.1" value="90.8" aria-label="Recuperación Au (control manual)">
+      <span class="hm-hint" id="hmHint">👈 Simular</span>
       <span class="hm-val mono" id="recSliderVal">90.8%</span>
       <button class="hm-auto on" id="recAuto" type="button">AUTO</button>
-      <span class="hm-hint" id="hmHint">👆 simulá · ¿qué pasa si…?</span>
     </div>
     <span class="live"><i></i>LIVE</span>
     <span class="chip">Turno <b id="shiftNow">A</b></span>
