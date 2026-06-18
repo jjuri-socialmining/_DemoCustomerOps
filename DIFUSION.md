@@ -52,3 +52,39 @@ Link del demo: https://jjuri-socialmining.github.io/_DemoCustomerOps/Dashboard_G
 > **Nota sobre automatización:** estas plantillas quedan versionadas acá para
 > reuso inmediato. El envío automático (WhatsApp Business API / n8n / etc.) es un
 > paso aparte; ver "próximos pasos" en Todoist.
+
+---
+
+## 3) Solicitud de datos reales al ingeniero (para alimentar el gemelo)
+
+> Hola [Nombre] 👋
+>
+> Estoy terminando el tablero del *Gemelo Digital* de la planta. Tiene un *semáforo
+> de salud de la planta* con 4 estados (verde→rojo). Te los dejo definidos en
+> términos de proceso para que me confirmes los *umbrales reales* y los valores:
+>
+> *Estados de salud de la planta*
+> 🟢 *Bien (nominal):* recuperación en meta, KPIs en rango, sin desviaciones relevantes.
+> 🟡 *Cuidado (moderado):* desviación moderada pero controlada — un KPI fuera de
+>    rango (p.ej. recuperación unos pts bajo la meta), sin riesgo inmediato.
+> 🟠 *Cuidado (significativo):* desviación marcada — varios KPIs fuera de rango o
+>    caída clara de recuperación; requiere acción del turno.
+> 🔴 *Peligro (crítico):* la planta cerca de un límite inaceptable (LSL) o con
+>    riesgo de falla de equipo; una desviación más = pérdida grave / parada.
+>
+> *Lo que necesito que confirmes (umbrales):*
+> • ¿A cuántos *puntos bajo la meta de recuperación* pasamos de Bien → Cuidado → Peligro?
+> • ¿Qué otros disparadores son *críticos* (rojo)? (resina saturada, P80 alto, falla
+>   de molino, pérdida de cianuro, etc.)
+>
+> *Y los valores reales (un típico + rango alcanza):*
+> • Recuperación de Au: meta (%) y mínimo aceptable / LSL.
+> • Ley de cabeza Au (g/t) · Throughput (tpd) · TOC (umbral) · Carga de resina (% y
+>   saturación) · P80 (µm) · Au en relaves (g/t) · Disponibilidad (%).
+> • Balance: NaCN (kg/t), agua (m³/h), energía (MW), elución (L/día), reposición de
+>   resina (L/día).
+> • Mezcla de alimentación por tipo de mineral (%) y su recuperación típica.
+> • 2-3 causas raíz reales frecuentes del turno (para el asistente IA).
+>
+> Si tenés un export (Excel/CSV) de las últimas semanas, mejor — lo conecto directo.
+> Con esto el tablero pasa de demo a herramienta real de tu operación. ¡Gracias!
