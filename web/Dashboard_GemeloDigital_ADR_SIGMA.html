@@ -438,7 +438,8 @@
   <div class="content">
 
 <style>
-  .dlbtns{display:flex; gap:7px; align-items:center; margin-right:14px}
+  .dlbtns{display:flex; gap:7px; align-items:center; margin-left:auto; margin-right:12px}
+  .maturity .mnote{margin-left:0}
   .dlbtn{display:inline-flex; align-items:center; gap:5px; font-family:var(--sans); font-size:11px; font-weight:700;
     letter-spacing:.3px; color:var(--cyan); text-decoration:none; padding:5px 10px; border-radius:8px;
     border:1px solid var(--cyan2); background:rgba(47,230,208,.06); white-space:nowrap; transition:.15s}
@@ -447,16 +448,16 @@
   @media(max-width:680px){ .dlbtns{margin-right:8px} .dlbtn span{display:none} .dlbtn{padding:5px 8px} }
 </style>
 <div class="maturity" id="maturity">
+  <span class="ml">Madurez del gemelo</span>
+  <span class="mstep">Modelo</span><span class="msep">&rsaquo;</span>
+  <span class="mstep on" title="Flujo de datos real -> modelo, una sola via.">Digital Shadow</span><span class="msep">&rsaquo;</span>
+  <span class="mstep">Gemelo Digital</span>
   <span class="dlbtns">
     <a class="dlbtn" href="reportes/Reporte_ADR_Calculado_SIGMA.pdf" download title="Descargar reporte de datos calculados (PDF)">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>PDF</span></a>
     <a class="dlbtn" href="reportes/Balance_Planta_ADR_SIGMA.xlsx" download title="Descargar balance de planta ADR (Excel)">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Excel</span></a>
   </span>
-  <span class="ml">Madurez del gemelo</span>
-  <span class="mstep">Modelo</span><span class="msep">&rsaquo;</span>
-  <span class="mstep on" title="Flujo de datos real -> modelo, una sola via.">Digital Shadow</span><span class="msep">&rsaquo;</span>
-  <span class="mstep">Gemelo Digital</span>
   <span class="mnote">flujo real &rarr; modelo (1 v&iacute;a) &middot; P3 &middot; Nivel 1</span>
 </div>
 
