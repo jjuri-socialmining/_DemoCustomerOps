@@ -1,0 +1,886 @@
+<!-- SIGMA Digital Twins - Panel de Gemelo Digital (variante ADR / Heap Leach)
+     Cliente (anonimizado). Datos ilustrativos - reemplazar con KPIs reales. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SIGMA - Gemelo Digital ADR - Panel de Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#06141F; --bg2:#081E30; --panel:#0C2438; --panel2:#0F2B43; --panelhi:#123653;
+    --edge:#1B3F5E; --edge2:#15334D; --grid:#173249;
+    --text:#E8F1FA; --muted:#85A0BC; --muted2:#5C788F;
+    --cyan:#2FE6D0; --cyan2:#13B8A6; --lime:#93E24C; --blue:#4FA8FF; --violet:#A98BFF;
+    --amber:#FFB02E; --red:#FF5A6A; --green:#37D27D; --white:#EAF4FF;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+    --disp:'Chakra Petch',var(--sans); --sans:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:var(--sans); color:var(--text); -webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(1100px 520px at 78% -8%, rgba(47,230,208,.10), transparent 60%),
+      radial-gradient(900px 480px at 8% 4%, rgba(79,168,255,.08), transparent 55%),
+      linear-gradient(180deg,#06141F,#04101A 60%);
+    min-height:100vh;
+  }
+  a{color:inherit}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:12px; flex-wrap:wrap; row-gap:9px;
+    padding:12px 22px; background:rgba(6,17,27,.82); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--edge2);
+  }
+  .brand{font-family:var(--disp); font-weight:700; letter-spacing:.5px; font-size:21px; line-height:1; white-space:nowrap}
+  .brand b{color:#fff}
+  .brand span{color:var(--cyan); font-weight:600; font-size:12px; display:block; letter-spacing:3px; margin-top:3px; text-transform:uppercase}
+  .brand .bar{display:inline-block; width:4px; height:34px; background:linear-gradient(var(--cyan),var(--lime)); border-radius:2px; margin-right:11px; vertical-align:middle; box-shadow:0 0 12px rgba(47,230,208,.55)}
+  .tabs{display:flex; gap:6px; margin-left:8px; overflow:auto; scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{
+    font-family:var(--sans); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer;
+    background:transparent; border:1px solid transparent; padding:8px 14px; border-radius:9px; white-space:nowrap;
+    transition:.16s;
+  }
+  .tabs button:hover{color:var(--text); background:rgba(255,255,255,.03)}
+  .tabs button.active{color:#05131D; background:linear-gradient(180deg,var(--cyan),var(--cyan2)); box-shadow:0 4px 16px rgba(47,230,208,.28)}
+  .status{order:2; display:flex; align-items:center; gap:14px; flex-wrap:wrap; font-size:12px}   /* live-ops arriba, derecha */
+  .hmon-wrap{order:2; margin-left:auto; display:flex; flex-direction:column; align-items:center; gap:3px}   /* monitor lidera el grupo derecho */
+  .demo-badge{font-family:var(--mono); font-size:9px; font-weight:700; letter-spacing:2.5px; color:var(--amber);
+    border:1px solid rgba(255,176,46,.4); background:rgba(255,176,46,.08); border-radius:5px; padding:1px 9px}
+
+  /* ---- 3D Portal Button ---- */
+  .btn-3d-portal{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--sans); font-size:13px; font-weight:700; letter-spacing:.4px;
+    color:#fff; text-decoration:none; white-space:nowrap;
+    padding:9px 17px 9px 14px; border-radius:11px; cursor:pointer;
+    background:linear-gradient(155deg,#8b5cf6 0%,#6d28d9 55%,#4c1d95 100%);
+    border:1px solid rgba(167,139,250,.5);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.22),
+      0 4px 0 #2e1065,
+      0 7px 20px rgba(109,40,217,.55),
+      0 0 36px rgba(139,92,246,.18);
+    position:relative; overflow:hidden;
+    transform:translateY(0);
+    transition:transform .13s ease, box-shadow .13s ease;
+  }
+  .btn-3d-portal::before{
+    content:''; position:absolute; top:0; left:0; right:0; height:42%;
+    background:linear-gradient(rgba(255,255,255,.14),transparent);
+    border-radius:10px 10px 0 0; pointer-events:none;
+  }
+  .btn-3d-portal:hover{
+    transform:translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.22),
+      0 6px 0 #2e1065,
+      0 12px 28px rgba(109,40,217,.65),
+      0 0 48px rgba(139,92,246,.28);
+  }
+  .btn-3d-portal:active{
+    transform:translateY(3px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.15),
+      0 1px 0 #2e1065,
+      0 3px 10px rgba(109,40,217,.4);
+  }
+  .btn-3d-portal .cube-icon{
+    flex-shrink:0;
+    animation:cube-spin 3.5s linear infinite;
+    filter:drop-shadow(0 0 5px rgba(216,180,254,.7));
+  }
+  @keyframes cube-spin{
+    0%,100%{transform:rotateY(0deg) scale(1)}
+    25%{transform:rotateY(15deg) scale(1.08)}
+    75%{transform:rotateY(-15deg) scale(1.08)}
+  }
+  @keyframes portal-glow{
+    0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 4px 0 #2e1065,0 7px 20px rgba(109,40,217,.55),0 0 36px rgba(139,92,246,.18)}
+    50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 4px 0 #2e1065,0 7px 24px rgba(109,40,217,.7),0 0 52px rgba(139,92,246,.38)}
+  }
+  .btn-3d-portal{animation:portal-glow 2.4s ease-in-out infinite}
+  .live{display:flex; align-items:center; gap:7px; font-weight:700; letter-spacing:1px; color:var(--lime)}
+  .live i{width:8px; height:8px; border-radius:50%; background:var(--lime); box-shadow:0 0 0 0 rgba(147,226,76,.7); animation:pulse 1.8s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(147,226,76,.55)}70%{box-shadow:0 0 0 7px rgba(147,226,76,0)}100%{box-shadow:0 0 0 0 rgba(147,226,76,0)}}
+  .chip{padding:5px 10px; border:1px solid var(--edge); border-radius:8px; color:var(--muted); font-weight:600}
+  .chip b{color:var(--text)}
+
+  /* ---------- layout ---------- */
+  main{padding:20px 22px 8px; max-width:1320px; margin:0 auto}
+  .view{display:none; animation:fade .3s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
+  .eyebrow{font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--muted2); margin:2px 0 14px}
+  .eyebrow b{color:var(--cyan)}
+  .sectlbl{font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted2); margin:22px 2px 12px; display:flex; align-items:center; gap:10px}
+  .sectlbl::after{content:""; flex:1; height:1px; background:linear-gradient(90deg,var(--edge2),transparent)}
+
+  .grid{display:grid; gap:14px}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--edge); border-radius:14px; padding:16px}
+  .card h3{margin:0 0 12px; font-size:13px; font-weight:700; letter-spacing:.3px; display:flex; align-items:center; gap:8px}
+  .card h3 small{margin-left:auto; font-size:11px; font-weight:600; color:var(--muted)}
+
+  .pill{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; letter-spacing:.3px; white-space:nowrap}
+  .tile .top .pill{font-size:9.5px; padding:3px 7px; flex:none}   /* "en rango" no se parte ni agranda la tile */
+  .pill::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor}
+  .ok{color:var(--green); background:rgba(55,210,125,.12)}
+  .warn{color:var(--amber); background:rgba(255,176,46,.12)}
+  .crit{color:var(--red); background:rgba(255,90,106,.13)}
+  .info{color:var(--blue); background:rgba(79,168,255,.12)}
+  .gem{color:var(--cyan); background:rgba(47,230,208,.12)}
+
+  /* KPI tiles */
+  .kpis{grid-template-columns:repeat(5,1fr)}
+  .tile{background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--edge); border-radius:13px; padding:14px; position:relative; overflow:hidden}
+  .tile .lbl{font-size:11px; color:var(--muted); font-weight:600; letter-spacing:.4px; text-transform:uppercase}
+  .tile .val{font-family:var(--mono); font-weight:700; font-size:30px; line-height:1.1; margin:7px 0 3px; letter-spacing:-1px}
+  .tile .val u{text-decoration:none; font-size:14px; color:var(--muted); font-weight:500}
+  .tile .sub{font-size:11.5px; color:var(--muted); font-family:var(--mono)}
+  .tile .sub b{color:var(--cyan)}
+  .tile .spark{position:absolute; right:10px; bottom:10px; opacity:.9}
+  .tile .top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px}
+
+  .two{grid-template-columns:1fr 360px}
+  .legend{display:flex; gap:16px; font-size:11.5px; color:var(--muted); font-weight:600}
+  .legend i{display:inline-block; width:18px; height:3px; border-radius:2px; vertical-align:middle; margin-right:6px}
+
+  /* Sasha / AI */
+  .sasha .who{display:flex; align-items:center; gap:11px; margin-bottom:11px}
+  .sasha .av{width:40px; height:40px; border-radius:11px; background:radial-gradient(circle at 35% 30%,#1a4a6b,#0a2233); border:1px solid var(--cyan2); display:grid; place-items:center; box-shadow:0 0 18px rgba(47,230,208,.25)}
+  .sasha .av b{font-family:var(--disp); color:var(--cyan); font-size:18px}
+  .sasha .who div b{font-size:13px}
+  .sasha .who div span{font-size:11px; color:var(--muted); display:block}
+  .verdict{font-size:13px; line-height:1.5; color:#D7E6F4; background:rgba(47,230,208,.05); border-left:2px solid var(--cyan2); padding:10px 12px; border-radius:0 8px 8px 0; margin-bottom:10px}
+  .verdict b{color:var(--cyan)}
+  .conf{display:flex; align-items:center; gap:9px; font-size:11px; color:var(--muted); margin-bottom:11px; font-weight:600}
+  .conf .track{flex:1; height:6px; background:#0a2032; border-radius:4px; overflow:hidden}
+  .conf .fill{height:100%; width:91%; background:linear-gradient(90deg,var(--cyan2),var(--cyan)); border-radius:4px}
+  .action{font-size:12px; font-weight:700; color:#06141F; background:linear-gradient(180deg,var(--lime),#6fc433); padding:9px 12px; border-radius:9px; text-align:center}
+
+  /* alerts */
+  .alert{display:flex; gap:11px; padding:10px 0; border-bottom:1px solid var(--edge2)}
+  .alert:last-child{border:0}
+  .alert .ic{width:30px; height:30px; border-radius:8px; flex:none; display:grid; place-items:center; font-size:15px; font-weight:800}
+  .alert .ic.c{background:rgba(255,90,106,.14); color:var(--red)}
+  .alert .ic.w{background:rgba(255,176,46,.14); color:var(--amber)}
+  .alert .ic.o{background:rgba(55,210,125,.14); color:var(--green)}
+  .alert .tx b{font-size:12.5px; display:block}
+  .alert .tx span{font-size:11.5px; color:var(--muted)}
+
+  /* bars (alternatives / generic) */
+  .barrow{display:grid; grid-template-columns:130px 1fr 56px; align-items:center; gap:10px; margin:9px 0; font-size:12px}
+  .barrow .nm{color:var(--muted); font-weight:600}
+  .bartrack{height:10px; background:#0a2032; border-radius:6px; overflow:hidden}
+  .barfill{height:100%; border-radius:6px; transition:width 1s cubic-bezier(.2,.7,.2,1)}
+  .barrow .vv{font-family:var(--mono); font-weight:700; text-align:right}
+
+  /* balance strip */
+  .balance{grid-template-columns:repeat(7,1fr); gap:10px}
+  .bcell{background:var(--panel); border:1px solid var(--edge2); border-radius:11px; padding:11px}
+  .bcell .l{font-size:10.5px; color:var(--muted2); text-transform:uppercase; letter-spacing:.4px; font-weight:600}
+  .bcell .v{font-family:var(--mono); font-weight:700; font-size:18px; margin-top:5px}
+  .bcell .v u{text-decoration:none; font-size:11px; color:var(--muted); font-weight:500}
+
+  /* ---------- DMS / turnos ---------- */
+  .shifthead{display:flex; flex-wrap:wrap; align-items:center; gap:14px; background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--edge); border-radius:13px; padding:14px 16px; margin-bottom:16px}
+  .shifthead .big{font-family:var(--disp); font-weight:700; font-size:18px}
+  .shifthead .arrow{color:var(--cyan); font-weight:800; font-size:18px}
+  .dms{grid-template-columns:repeat(5,1fr)}
+  .dcol h4{margin:0 0 4px; font-size:13px; display:flex; align-items:center; gap:7px}
+  .dcol .ico{font-size:14px}
+  .gaugewrap{display:grid; place-items:center; padding:4px 0 2px}
+  .dstat{display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted); margin:4px 2px; font-family:var(--mono)}
+  .dstat b{color:var(--text)}
+  .prev{font-size:11px; color:var(--muted); text-align:center; margin-top:6px; font-family:var(--mono)}
+  .prev b.up{color:var(--green)} .prev b.dn{color:var(--red)}
+  .events .ev{display:flex; gap:12px; padding:9px 0; border-bottom:1px solid var(--edge2); font-size:12.5px}
+  .events .ev:last-child{border:0}
+  .events .t{font-family:var(--mono); color:var(--cyan); font-weight:600; flex:none; width:54px}
+  .handcard textarea{width:100%; background:#081d2d; border:1px solid var(--edge); border-radius:9px; color:var(--text); font-family:var(--sans); font-size:12.5px; padding:10px; resize:vertical; min-height:64px}
+  .handcard .row{display:flex; gap:10px; margin-top:8px}
+  .handcard .btn{font-size:12px; font-weight:700; padding:8px 14px; border-radius:9px; border:0; cursor:pointer}
+  .btn.p{background:linear-gradient(180deg,var(--cyan),var(--cyan2)); color:#05131D}
+  .btn.s{background:transparent; border:1px solid var(--edge); color:var(--muted)}
+
+  /* ---------- phone ---------- */
+  .phonewrap{display:flex; justify-content:center; flex-wrap:wrap; align-items:flex-start; gap:28px}
+  .phoneframe{position:relative; width:390px; max-width:100%; height:760px; border:11px solid #0a1d2c; border-radius:38px;
+    overflow:hidden; background:#05131e; box-shadow:0 30px 70px rgba(0,0,0,.5), inset 0 0 0 1px rgba(47,230,208,.06); flex:none}
+  .phoneframe .phone-notch{position:absolute; top:0; left:50%; transform:translateX(-50%); width:120px; height:20px;
+    background:#0a1d2c; border-radius:0 0 14px 14px; z-index:2}
+  .phoneframe iframe{width:100%; height:100%; border:0; display:block; background:#05131e}
+  .phone-note2{max-width:300px; color:var(--muted); font-size:12.5px; line-height:1.6; align-self:center}
+  .phone-note2 b{color:var(--text)}
+  @media(max-width:760px){ .phoneframe{width:100%; height:560px; border-width:0; border-radius:14px}
+    .phoneframe .phone-notch{display:none} .phone-note2{display:none} }
+  .phone{width:392px; max-width:100%; background:transparent; border:0; border-radius:18px; padding:0; box-shadow:none}
+  .phone .notch{display:none}
+  .phone .scr{background:linear-gradient(180deg,#05131e,#06151f); border:1px solid var(--edge); border-radius:18px; padding:16px; min-height:auto}
+  .ph-top{display:flex; align-items:center; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:12px}
+  .ph-top .liveops{font-family:var(--disp); font-weight:700; letter-spacing:1px; color:var(--text); font-size:12px}
+  .critbig{background:radial-gradient(120% 120% at 50% 0%,rgba(47,230,208,.10),transparent 60%); border:1px solid var(--edge); border-radius:18px; padding:18px; text-align:center; margin-bottom:12px; position:relative}
+  .critbig .k{font-size:11px; color:var(--muted); font-weight:700; letter-spacing:1px; text-transform:uppercase}
+  .critbig .ring{margin:8px auto 4px}
+  .critbig .num{font-family:var(--mono); font-weight:700; font-size:44px; letter-spacing:-2px; line-height:1}
+  .critbig .meta{font-size:11.5px; color:var(--muted); font-family:var(--mono); margin-top:6px}
+  .critbig .meta b{color:var(--cyan)}
+  .ph-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px}
+  .ph-stat{background:#0a1f30; border:1px solid var(--edge2); border-radius:12px; padding:10px}
+  .ph-stat .l{font-size:9.5px; color:var(--muted2); text-transform:uppercase; letter-spacing:.3px; font-weight:600}
+  .ph-stat .v{font-family:var(--mono); font-weight:700; font-size:17px; margin-top:4px}
+  .ph-card{background:#0a1f30; border:1px solid var(--edge2); border-radius:14px; padding:12px; margin-bottom:10px}
+  .ph-card .hd{display:flex; align-items:center; gap:8px; font-size:11px; font-weight:700; color:var(--muted); letter-spacing:.5px; text-transform:uppercase; margin-bottom:8px}
+  .ph-card .ai{font-size:12.5px; line-height:1.45}
+  .ph-card .ai b{color:var(--amber)}
+  .ph-nav{display:flex; justify-content:space-around; padding-top:8px; border-top:1px solid var(--edge2); color:var(--muted2); font-size:17px}
+  .phone-note{max-width:300px; color:var(--muted); font-size:12.5px; line-height:1.6}
+  .phone-note b{color:var(--text)}
+
+  /* ---------- HUD analytics ---------- */
+  .hudrow{grid-template-columns:repeat(5,1fr)}
+  .hudbig{background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--edge); border-radius:12px; padding:13px; text-align:center}
+  .hudbig .l{font-size:10.5px; color:var(--cyan); font-weight:700; letter-spacing:.6px; text-transform:uppercase}
+  .hudbig .v{font-family:var(--mono); font-weight:700; font-size:26px; margin-top:6px; letter-spacing:-1px}
+  .hudbig .v u{text-decoration:none; font-size:12px; color:var(--muted); font-weight:500}
+  .donutwrap{display:flex; align-items:center; gap:16px}
+  .dlegend{font-size:12px}
+  .dlegend .li{display:flex; align-items:center; gap:8px; margin:6px 0; color:var(--muted)}
+  .dlegend .li i{width:10px; height:10px; border-radius:3px}
+  .dlegend .li b{color:var(--text); margin-left:auto; font-family:var(--mono)}
+  table.heat{width:100%; border-collapse:collapse; font-size:11.5px}
+  table.heat th{color:var(--muted); font-weight:600; text-align:center; padding:6px 4px; font-size:10.5px; text-transform:uppercase; letter-spacing:.3px}
+  table.heat td{text-align:center; padding:5px 4px; font-family:var(--mono); font-weight:600; border-radius:5px}
+  table.heat td.nm{text-align:left; color:var(--text); font-family:var(--sans); font-weight:600}
+  .donuts3{display:flex; justify-content:space-around; flex-wrap:wrap; gap:10px}
+  .donutmini{text-align:center; font-size:11px; color:var(--muted)}
+  .donutmini b{display:block; color:var(--text); font-size:12px; margin-top:4px}
+
+  footer{max-width:1320px; margin:8px auto 0; padding:16px 22px 30px; color:var(--muted2); font-size:11.5px; line-height:1.6; border-top:1px solid var(--edge2)}
+  footer b{color:var(--muted)}
+  .ribbon{display:inline-block; background:rgba(255,176,46,.1); color:var(--amber); border:1px solid rgba(255,176,46,.25); border-radius:7px; padding:3px 9px; font-size:11px; font-weight:700; letter-spacing:.3px}
+
+  @media(max-width:1080px){ .kpis,.dms,.hudrow{grid-template-columns:repeat(3,1fr)} .two,.balance{grid-template-columns:1fr} .balance{grid-template-columns:repeat(3,1fr)} }
+  @media(max-width:680px){ .kpis,.dms,.hudrow,.balance{grid-template-columns:1fr 1fr} .topbar{flex-wrap:wrap} .status{order:3; width:100%} }
+
+  /* ---------- Monitor de salud de planta (estilo RE, en la barra superior) ---------- */
+  .hmon{position:relative; width:142px; height:40px; border-radius:7px; overflow:hidden; flex:none;
+    border:1px solid #143a26; background:repeating-linear-gradient(180deg,#06170e 0,#06170e 3px,#0a2014 3px,#0a2014 4px);
+    box-shadow:inset 0 0 16px rgba(0,0,0,.65), inset 0 0 0 1px rgba(55,210,125,.05)}
+  .hmon canvas{display:block; width:100%; height:100%}
+  .hmon .hm-state{position:absolute; left:8px; bottom:3px; font-family:var(--disp); font-weight:700;
+    font-size:12.5px; letter-spacing:1.5px; color:var(--green); text-shadow:0 0 8px currentColor; pointer-events:none; line-height:1}
+  #heartPulse{position:fixed; top:0; left:0; right:0; height:2px; opacity:0; pointer-events:none; z-index:45}
+  .hmon .hm-scan{position:absolute; inset:0; pointer-events:none; background:radial-gradient(130% 90% at 50% 0%,transparent 55%,rgba(0,0,0,.42))}
+  .hm-ctrl{display:flex; align-items:center; gap:7px; font-size:11px; color:var(--muted); font-weight:600; white-space:nowrap}
+  .hm-ctrl label{letter-spacing:.4px}
+  .hm-ctrl input[type=range]{width:92px; accent-color:var(--cyan); cursor:pointer; vertical-align:middle}
+  .hm-ctrl .hm-val{color:var(--text); min-width:48px; text-align:right}
+  .hm-auto{font-family:var(--mono); font-size:10px; font-weight:700; color:var(--muted); background:transparent;
+    border:1px solid var(--edge); border-radius:6px; padding:3px 7px; cursor:pointer; letter-spacing:.5px}
+  .hm-auto.on{color:#05131D; background:linear-gradient(180deg,var(--cyan),var(--cyan2)); border-color:var(--cyan)}
+  @media(max-width:860px){ .hm-ctrl{flex-wrap:wrap; width:100%} .hm-ctrl input[type=range]{flex:1; min-width:130px} }
+  /* énfasis al cambiar de estado + validación IA + tasa de muestreo */
+  @keyframes popfx{0%{transform:scale(1)}30%{transform:scale(1.2)}100%{transform:scale(1)}}
+  .pop{animation:popfx .5s ease; transform-origin:left center}
+  .verdict{height:150px; overflow-y:auto}   /* altura fija → el dashboard no crece/encoge al cambiar el diagnóstico */
+  .confnote{font-size:11px; color:var(--muted2); line-height:1.45; margin:7px 0 2px}
+  .confnote b{color:var(--cyan)}
+  .aivalrow{display:flex; align-items:center; gap:9px; margin-top:9px; flex-wrap:wrap}
+  .aibtn{font-family:var(--sans); font-size:11.5px; font-weight:700; color:var(--cyan); background:transparent;
+    border:1px solid var(--cyan2); border-radius:8px; padding:6px 11px; cursor:pointer; transition:.15s}
+  .aibtn:hover{background:rgba(47,230,208,.08)}
+  .aibtn.done{color:#05131D; background:linear-gradient(180deg,var(--green),#2bb869); border-color:var(--green); cursor:default}
+  .recrate{display:flex; align-items:center; gap:8px; margin-top:8px; font-size:11px; color:var(--muted); font-family:var(--mono)}
+  .recrate .live{font-size:11px}
+  .hm-hint{font-size:10.5px; font-weight:700; color:var(--cyan); white-space:nowrap; cursor:pointer;
+    text-shadow:0 0 8px rgba(47,230,208,.4); animation:handbob 1.15s ease-in-out infinite}
+  @keyframes handbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  .ph-rec{display:flex; align-items:center; gap:7px; margin-bottom:12px; font-size:9.5px; color:var(--muted); font-weight:600}
+  .ph-rec input[type=range]{flex:1; accent-color:var(--cyan); cursor:pointer; min-width:0}
+  .ph-rec-l{white-space:nowrap; color:var(--cyan)}
+  .ph-rec-v{color:var(--text); font-weight:700; white-space:nowrap}
+  /* madurez del gemelo: Modelo › Digital Shadow › Gemelo */
+  .maturity{display:flex; align-items:center; gap:8px; flex-wrap:wrap; max-width:1320px; margin:0 auto;
+    padding:7px 22px; font-size:11px; color:var(--muted2); border-bottom:1px solid var(--edge2); background:rgba(8,30,48,.4)}
+  .maturity .ml{font-weight:700; letter-spacing:.4px; text-transform:uppercase; font-size:10px; color:var(--muted)}
+  .maturity .mstep{font-weight:700; color:var(--muted)}
+  .maturity .mstep.on{color:#05131D; background:linear-gradient(180deg,var(--cyan),var(--cyan2)); padding:2px 9px; border-radius:6px;
+    box-shadow:0 2px 10px rgba(47,230,208,.25)}
+  .maturity .msep{color:var(--muted2)}
+  .maturity .mnote{margin-left:auto; color:var(--muted2); font-family:var(--mono)}
+  @media(max-width:680px){ .maturity .mnote{display:none} .maturity{font-size:10px} }
+  /* chat con Sasha */
+  .aichat{margin-top:11px; border-top:1px solid var(--edge2); padding-top:10px}
+  .aichat-log{max-height:150px; overflow:auto; display:flex; flex-direction:column; gap:6px; margin-bottom:8px}
+  .aichat-log:empty{display:none}
+  .cmsg{font-size:12px; line-height:1.45; padding:7px 10px; border-radius:9px; max-width:92%}
+  .cmsg.you{align-self:flex-end; background:rgba(47,230,208,.12); color:var(--text)}
+  .cmsg.bot{align-self:flex-start; background:var(--panel2); border:1px solid var(--edge2); color:var(--muted)}
+  .cmsg.bot b{color:var(--cyan)}
+  .aichat-row{display:flex; gap:7px}
+  .aichat-row input{flex:1; min-width:0; background:#081d2d; border:1px solid var(--edge); border-radius:9px; color:var(--text); font-family:var(--sans); font-size:12.5px; padding:8px 10px}
+  .aichat-row button{background:linear-gradient(180deg,var(--cyan),var(--cyan2)); color:#05131D; border:0; border-radius:9px; padding:0 14px; font-weight:700; cursor:pointer; font-size:13px}
+  /* en celular: el Asistente IA va justo después de los KPIs */
+  @media(max-width:680px){ #control .grid.two > div:last-child{order:-1} }
+  /* indicador de capacidad de proceso Lean Six Sigma */
+  .sixsig .ssgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:9px}
+  .sscell{background:var(--panel); border:1px solid var(--edge2); border-radius:11px; padding:11px; text-align:center}
+  .ssv{font-family:var(--mono); font-weight:700; font-size:22px; letter-spacing:-.5px}
+  .ssl{font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; margin-top:3px}
+  .ssnote{font-size:11.5px; color:var(--muted); line-height:1.45}
+  .ssnote b{color:var(--text)}
+  @media(max-width:680px){ .sixsig .ssgrid{grid-template-columns:repeat(2,1fr)} }
+  /* ---------- layout con sidebar (orden tipo admin) ---------- */
+  .topright{margin-left:auto; display:flex; align-items:center; gap:12px}
+  .shell{display:flex; align-items:flex-start}   /* full-width: sidebar y live-ops alineados a los bordes (como SIGMA arriba) */
+  .sidebar{width:200px; flex:none; padding:16px 10px; border-right:1px solid var(--edge2); background:rgba(8,30,48,.4); align-self:stretch}
+  .sidebar .tabs{flex-direction:column; gap:5px; overflow:visible; margin:0}
+  .sidebar .tabs button{width:100%; text-align:left; padding:11px 14px; font-size:13.5px}
+  .sidebar .side-sec{font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted2); margin:16px 8px 7px}
+  .sidebar .side-link{display:block; padding:10px 14px; border-radius:9px; font-size:13px; font-weight:600; color:var(--muted); text-decoration:none}
+  .sidebar .side-link:hover{color:var(--text); background:rgba(255,255,255,.04)}
+  .content{flex:1; min-width:0}
+  .content > main{max-width:none; padding:18px 20px 8px}
+  .content > .maturity{max-width:none; margin:0}
+  .content > footer{max-width:none}
+  @media(max-width:760px){ .shell{flex-direction:column}
+    .sidebar{width:100%; border-right:0; border-bottom:1px solid var(--edge2); padding:10px}
+    .sidebar .tabs{flex-direction:row; flex-wrap:wrap} .sidebar .tabs button{width:auto} }
+  /* dropdown "Salas 3D" */
+  .dropdown{position:relative}
+  /* efecto 3D del botón Salas 3D: profundidad + brillo + perspectiva al hover */
+  #salas3dBtn{transform-style:preserve-3d; perspective:500px}
+  #salas3dBtn:hover{transform:translateY(-2px) rotateX(8deg)}
+  #salas3dBtn:active{transform:translateY(3px) rotateX(0deg)}
+  .dropdown-menu{position:absolute; top:calc(100% + 6px); right:0; background:var(--panel2); border:1px solid var(--edge);
+    border-radius:11px; padding:6px; min-width:180px; display:none; z-index:40; box-shadow:0 16px 44px rgba(0,0,0,.55)}
+  .dropdown-menu.open{display:block}
+  .dropdown-menu a{display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:8px; font-size:13px; font-weight:600; color:var(--text); text-decoration:none}
+  .dropdown-menu a:hover{background:rgba(139,92,246,.2)}
+  /* selector de idioma (Google Translate) */
+  .langsel{order:3; display:flex; align-items:center; gap:7px}
+  .langpick{display:inline-flex; border:1px solid var(--edge); border-radius:9px; overflow:hidden; background:var(--panel2)}
+  .langpick button{background:transparent; color:var(--muted); border:0; padding:5px 10px; font-size:11px; font-weight:700;
+    letter-spacing:.5px; cursor:pointer; font-family:var(--sans); transition:.12s}
+  .langpick button:not(:last-child){border-right:1px solid var(--edge)}
+  .langpick button:hover{color:var(--text)}
+  .langpick button.active{background:linear-gradient(180deg,var(--cyan),var(--cyan2)); color:#05131D}
+  /* en mobile: ocultar selector de idioma y la sección "Otras demos" */
+  @media(max-width:760px){ .langsel{display:none} .sidebar .side-sec, .sidebar .side-link{display:none} }
+  /* en mobile: monitor de salud a la derecha de Salas 3D (cabe achicando) */
+  @media(max-width:680px){
+    .hmon-wrap{order:1; margin-left:0}
+    .brand span{display:none}
+    .hmon{width:120px; height:34px}
+    .demo-badge{font-size:8px; padding:1px 7px; letter-spacing:1.5px}
+  }
+  /* el widget de Google queda FUERA DE PANTALLA (funcional) — lo manejamos desde el selector custom */
+  #google_translate_element{position:absolute!important; left:-9999px; top:-9999px; width:1px; height:1px; overflow:hidden}
+  .goog-te-banner-frame{display:none!important}
+  body{top:0!important}
+</style>
+
+<div id="heartPulse"></div>
+<header class="topbar">
+  <a class="brand" href="#" style="text-decoration:none" title="Gemelo Digital ADR"><span class="bar"></span><b>SIGMA</b><span>Digital Twins</span></a>
+  <div class="dropdown" id="salas3d">
+    <button class="btn-3d-portal" id="salas3dBtn" type="button">
+      <svg class="cube-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      Salas 3D &#9662;
+    </button>
+    <div class="dropdown-menu" id="salas3dMenu">
+      <a href="https://framevr.io/classroomjorge" target="_blank" rel="noopener">&#11041; Planta 3D</a>
+      <a href="https://framevr.io/emptysdt#conference-3" target="_blank" rel="noopener">&#11041; SalaReu 3D</a>
+    </div>
+  </div>
+
+  <div class="hmon-wrap">
+    <div class="hmon" id="healthMon" title="Estado de salud de la planta">
+      <canvas id="ecgCanvas"></canvas>
+      <span class="hm-state" id="hmState">FINE</span>
+      <span class="hm-scan"></span>
+    </div>
+    <span class="demo-badge">DEMO</span>
+  </div>
+
+  <div class="status">
+    <div class="hm-ctrl">
+      <label for="recSlider">Flujo ADR</label>
+      <input type="range" id="recSlider" min="500" max="850" step="1" value="690" aria-label="Flujo a planta ADR (control manual)">
+      <span class="hm-hint" id="hmHint">&#128072; Simular</span>
+      <span class="hm-val mono" id="recSliderVal">690 m&#179;/h</span>
+      <button class="hm-auto on" id="recAuto" type="button">AUTO</button>
+    </div>
+    <span class="live"><i></i>LIVE</span>
+    <span class="chip">Turno <b id="shiftNow">A</b></span>
+    <span class="chip mono" id="clock">--:--:--</span>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar">
+    <nav class="tabs" id="tabs">
+      <button data-v="control" class="active">Sala de Control</button>
+      <button data-v="turnos">Tablero de Turnos</button>
+      <button data-v="movil">Vista M&oacute;vil</button>
+      <button data-v="hud">Anal&iacute;tica</button>
+    </nav>
+    <div class="side-sec">Otras demos</div>
+    <a class="side-link" href="https://full-web-demo.web.app/#/dashboard/analytics" target="_blank" rel="noopener">&#8599; M&aacute;s demos</a>
+    <a class="side-link" href="https://sig.sea.gob.cl/mapaLineasBaseEIA/" target="_blank" rel="noopener">&#127758; Mundo GIS</a>
+  </aside>
+  <div class="content">
+
+<div class="maturity" id="maturity">
+  <span class="ml">Madurez del gemelo</span>
+  <span class="mstep">Modelo</span><span class="msep">&rsaquo;</span>
+  <span class="mstep on" title="Flujo de datos real -> modelo, una sola via.">Digital Shadow</span><span class="msep">&rsaquo;</span>
+  <span class="mstep">Gemelo Digital</span>
+  <span class="mnote">flujo real &rarr; modelo (1 v&iacute;a) &middot; P3 &middot; Nivel 1</span>
+</div>
+
+<main>
+  <!-- ================= SALA DE CONTROL ================= -->
+  <section class="view active" id="control">
+    <div class="eyebrow">Sala de Control &mdash; <b>Gemelo Digital</b> &middot; Cliente &middot; Lixiviaci&oacute;n en pilas + Planta ADR (columnas de carb&oacute;n)</div>
+
+    <div class="grid kpis">
+      <div class="tile">
+        <div class="top"><div class="lbl">Producci&oacute;n Au (d&iacute;a)</div><span class="pill warn">&minus;15%</span></div>
+        <div class="val">142<u>oz</u></div>
+        <div class="sub">Target <b>168 oz</b> &middot; 85%</div>
+        <div class="spark" data-spark="162,159,160,157,155,148,142" data-col="--cyan"></div>
+      </div>
+      <div class="tile">
+        <div class="top"><div class="lbl">Eficiencia adsorci&oacute;n ADR</div><span class="pill ok">en rango</span></div>
+        <div class="val">92.5<u>%</u></div>
+        <div class="sub">Rica 0.31 &rarr; Barren <b>0.024</b> ppm</div>
+        <div class="spark" data-spark="93.1,92.8,92.4,92.9,92.2,92.6,92.5" data-col="--green"></div>
+      </div>
+      <div class="tile">
+        <div class="top"><div class="lbl">Flujo planta ADR</div><span class="pill warn">bajo</span></div>
+        <div class="val">690<u>m&#179;/h</u></div>
+        <div class="sub">Objetivo 750 &middot; 92%</div>
+        <div class="spark" data-spark="843,757,768,704,651,693,690" data-col="--amber"></div>
+      </div>
+      <div class="tile">
+        <div class="top"><div class="lbl">Inventario Au en carb&oacute;n</div><span class="pill info">2 740 oz</span></div>
+        <div class="val">2 740<u>oz</u></div>
+        <div class="sub">80 t carb&oacute;n &middot; 5 columnas</div>
+        <div class="spark" data-spark="2620,2680,2700,2710,2720,2735,2740" data-col="--blue"></div>
+      </div>
+      <div class="tile">
+        <div class="top"><div class="lbl">CN en riego</div><span class="pill ok">en rango</span></div>
+        <div class="val">285<u>ppm</u></div>
+        <div class="sub">&Oacute;ptimo 280&ndash;320 ppm</div>
+        <div class="spark" data-spark="306,293,287,290,283,288,285" data-col="--cyan"></div>
+      </div>
+    </div>
+
+    <div class="grid two" style="margin-top:14px">
+      <div>
+        <div class="card">
+          <h3>Producci&oacute;n Au &mdash; Real vs Target (15 d&iacute;as)
+            <small class="legend"><span><i style="background:var(--white)"></i>Real</span><span><i style="background:var(--cyan)"></i>Target</span></small>
+          </h3>
+          <div id="recoveryChart"></div>
+          <div class="recrate" id="recoveryRate"><span class="live"><i></i>Adquisici&oacute;n en vivo</span> &middot; balance ADR 1/turno</div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <h3>Carga del circuito de carb&oacute;n <small>columnas en serie C1 &rarr; C5</small></h3>
+          <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.5px;margin:2px 0 8px">CARGA DE CARB&Oacute;N POR COLUMNA (g Au/t)</div>
+          <div class="barrow"><span class="nm">C1 (cabeza)</span><div class="bartrack"><div class="barfill" style="background:linear-gradient(90deg,var(--cyan2),var(--cyan))" data-w="96"></div></div><span class="vv">2 300</span></div>
+          <div class="barrow"><span class="nm">C2</span><div class="bartrack"><div class="barfill" style="background:linear-gradient(90deg,var(--cyan2),var(--cyan))" data-w="62"></div></div><span class="vv">1 480</span></div>
+          <div class="barrow"><span class="nm">C3</span><div class="bartrack"><div class="barfill" style="background:var(--amber)" data-w="38"></div></div><span class="vv">910</span></div>
+          <div class="barrow"><span class="nm">C4</span><div class="bartrack"><div class="barfill" style="background:var(--amber)" data-w="19"></div></div><span class="vv">460</span></div>
+          <div class="barrow"><span class="nm">C5 (cola)</span><div class="bartrack"><div class="barfill" style="background:#5C788F" data-w="8"></div></div><span class="vv">185</span></div>
+          <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.5px;margin:14px 0 8px">CUMPLIMIENTO DE PRODUCCI&Oacute;N (%)</div>
+          <div class="barrow"><span class="nm">D&iacute;a</span><div class="bartrack"><div class="barfill" style="background:var(--red)" data-w="85"></div></div><span class="vv">85%</span></div>
+          <div class="barrow"><span class="nm">Mes</span><div class="bartrack"><div class="barfill" style="background:var(--red)" data-w="61"></div></div><span class="vv">61%</span></div>
+          <div class="barrow"><span class="nm">A&ntilde;o</span><div class="bartrack"><div class="barfill" style="background:var(--amber)" data-w="88"></div></div><span class="vv">88%</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card sasha">
+          <h3>Asistente IA</h3>
+          <div class="who">
+            <div class="av"><b>S</b></div>
+            <div><b>Sasha</b><span id="aiWho">Veredicto asistido &middot; pendiente de validaci&oacute;n</span></div>
+          </div>
+          <div class="verdict" id="aiVerdict">Producci&oacute;n del d&iacute;a <b>15% bajo target</b> (142 vs 168 oz). Causa probable: ca&iacute;da de flujo a planta ADR (<b>690 m&#179;/h</b>, obj. 750) por <b>corte de energ&iacute;a programado</b> a las 02:40 y congelamiento parcial de l&iacute;neas de riego. El barren subi&oacute; a <b>0.05 ppm</b>. Acci&oacute;n: priorizar deshielo de l&iacute;neas y normalizar flujo; verificar el totalizador (descuento 8%).</div>
+          <div class="conf">Confianza del diagn&oacute;stico <div class="track"><div class="fill" id="aiConfFill"></div></div> <span id="aiConfVal">88%</span></div>
+          <div class="confnote" id="aiConfNote">IA <b>88%</b>. La validaci&oacute;n del Ing. de procesos la lleva a 99%; el 1% es decisi&oacute;n del metalurgista en terreno.</div>
+          <div class="action" id="aiAction">Acci&oacute;n recomendada: normalizar flujo a ADR</div>
+          <div class="aivalrow"><button class="aibtn" id="aiValidate" type="button">&#10003; Validar (Ing. de procesos)</button><span id="aiValBadge" class="pill ok" style="display:none">Validado &middot; 99%</span></div>
+          <div class="aichat">
+            <div class="aichat-log" id="aiChatLog"></div>
+            <div class="aichat-row">
+              <input id="aiChatInput" type="text" placeholder="Preguntale a Sasha&hellip;" autocomplete="off">
+              <button id="aiChatSend" type="button" title="Enviar">&#10148;</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h3>Alertas predictivas</h3>
+          <div id="aiAlerts">
+          <div class="alert"><div class="ic c">!</div><div class="tx"><b>Flujo ADR bajo objetivo</b><span>690 m&#179;/h vs 750 &middot; corte de energ&iacute;a &middot; &minus;80 oz/d&iacute;a estimado</span></div></div>
+          <div class="alert"><div class="ic w">&#9650;</div><div class="tx"><b>Barren sobre objetivo</b><span>0.05 ppm &gt; 0.04 &middot; movimiento de carb&oacute;n en columnas &middot; p&eacute;rdida de Au</span></div></div>
+          <div class="alert"><div class="ic w">&#9650;</div><div class="tx"><b>Desviaci&oacute;n de totalizador</b><span>Descuento 8% al flujo &middot; revisar instrumentaci&oacute;n</span></div></div>
+          <div class="alert"><div class="ic o">&#10003;</div><div class="tx"><b>CN y pH en riego en rango</b><span>285 ppm &middot; pH 10.25</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sectlbl">Balance de proceso &mdash; soluci&oacute;n &middot; reactivos &middot; agua</div>
+    <div class="grid balance">
+      <div class="bcell"><div class="l">Cianuro (NaCN)</div><div class="v">0.38<u> kg/t</u></div></div>
+      <div class="bcell"><div class="l">Cal</div><div class="v">0.85<u> kg/t</u></div></div>
+      <div class="bcell"><div class="l">Soda c&aacute;ustica</div><div class="v">340<u> kg/d&iacute;a</u></div></div>
+      <div class="bcell"><div class="l">&Aacute;cido (HCl)</div><div class="v">210<u> kg/d&iacute;a</u></div></div>
+      <div class="bcell"><div class="l">Agua de proceso</div><div class="v">690<u> m&#179;/h</u></div></div>
+      <div class="bcell"><div class="l">TR global</div><div class="v">16.7<u> L/h&middot;m&#178;</u></div></div>
+      <div class="bcell"><div class="l">Au en barren</div><div class="v">0.024<u> ppm</u></div></div>
+    </div>
+  </section>
+
+  <!-- ================= TABLERO DE TURNOS (DMS) ================= -->
+  <section class="view" id="turnos">
+    <div class="eyebrow">Tablero de Turnos &mdash; <b>Reporte Operacional</b> &middot; Pilas | ADR &middot; estilo Daily Management System (Lean)</div>
+    <div class="shifthead">
+      <div class="big">Turno B &middot; Noche</div>
+      <span class="chip">19:00 &ndash; 07:00</span>
+      <span class="arrow">&rarr; entrega a</span>
+      <div class="big" style="color:var(--cyan)">Turno A &middot; D&iacute;a</div>
+      <span class="chip mono">15 mar 2026</span>
+      <span class="pill ok" style="margin-left:auto">0 incidentes de seguridad</span>
+    </div>
+
+    <div class="grid dms">
+      <div class="card dcol"><h4><span class="ico">&#128737;</span>Seguridad</h4>
+        <div class="gaugewrap" data-gauge='{"v":100,"min":0,"max":100,"unit":"%","good":"high"}'></div>
+        <div class="dstat"><span>Cumplim.</span><b>100%</b></div>
+        <div class="prev">Turno previo: 100% <b class="up">&#9650;</b></div>
+      </div>
+      <div class="card dcol"><h4><span class="ico">&#129351;</span>Producci&oacute;n Au</h4>
+        <div class="gaugewrap" data-gauge='{"v":142,"min":0,"max":200,"unit":"oz","good":"high","t1":130,"t2":160}'></div>
+        <div class="dstat"><span>Oz/turno</span><b>142 oz</b></div>
+        <div class="dstat"><span>Target</span><b>168 oz</b></div>
+        <div class="prev">Turno A: 156 oz <b class="dn">&#9660; 14</b></div>
+      </div>
+      <div class="card dcol"><h4><span class="ico">&#128167;</span>Flujo ADR</h4>
+        <div class="gaugewrap" data-gauge='{"v":690,"min":0,"max":900,"unit":"","good":"high","t1":600,"t2":750}'></div>
+        <div class="dstat"><span>Flujo</span><b>690 m&#179;/h</b></div>
+        <div class="dstat"><span>Objetivo</span><b>750</b></div>
+        <div class="prev">Turno A: 768 m&#179;/h <b class="dn">&#9660;</b></div>
+      </div>
+      <div class="card dcol"><h4><span class="ico">&#9879;</span>Eficiencia adsorci&oacute;n</h4>
+        <div class="gaugewrap" data-gauge='{"v":92.5,"min":80,"max":100,"unit":"%","good":"high","t1":88,"t2":93}'></div>
+        <div class="dstat"><span>Actual</span><b>92.5%</b></div>
+        <div class="dstat"><span>Objetivo</span><b>93%</b></div>
+        <div class="prev">Turno A: 93.1% <b class="dn">&#9660;</b></div>
+      </div>
+      <div class="card dcol"><h4><span class="ico">&#129514;</span>NaCN</h4>
+        <div class="gaugewrap" data-gauge='{"v":0.38,"min":0.30,"max":0.60,"unit":"","good":"low","t1":0.42,"t2":0.50}'></div>
+        <div class="dstat"><span>Consumo</span><b>0.38 kg/t</b></div>
+        <div class="dstat"><span>Objetivo</span><b>0.42</b></div>
+        <div class="prev">Turno A: 0.40 <b class="dn">&#9660;</b></div>
+      </div>
+    </div>
+
+    <div class="grid two" style="margin-top:16px">
+      <div class="card events">
+        <h3>Eventos del turno <small>causas ra&iacute;z &middot; trazabilidad</small></h3>
+        <div class="ev"><span class="t">02:40</span><div><b>Corte de energ&iacute;a programado</b><br><span style="color:var(--muted);font-size:11.5px">Flujo a pilas cae de 960 a 700 m&#179;/h. Menos soluci&oacute;n procesada: &minus;~80 oz/d&iacute;a.</span></div></div>
+        <div class="ev"><span class="t">04:10</span><div><b>Congelamiento parcial de l&iacute;neas de riego</b><br><span style="color:var(--muted);font-size:11.5px">Clima. Ca&iacute;da adicional de flujo a planta ADR. Deshielo en curso.</span></div></div>
+        <div class="ev"><span class="t">05:30</span><div><b>Desviaci&oacute;n de totalizador</b><br><span style="color:var(--muted);font-size:11.5px">Se aplica descuento de 8% al flujo. Pendiente verificar / calibrar instrumento.</span></div></div>
+      </div>
+      <div class="card handcard">
+        <h3>Captura de cambio de turno</h3>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5">Informaci&oacute;n fresca registrada por el turno saliente para el entrante. Alimenta el gemelo y el historial de causas.</div>
+        <textarea>Pendiente: normalizar flujo a pilas tras corte de energia; deshielo de lineas de riego; verificar/calibrar totalizador (descuento 8%). Vigilar barren (0.05 ppm) por movimiento de carbon en columnas.</textarea>
+        <div class="row"><button class="btn p">Registrar entrega</button><button class="btn s">Adjuntar lectura</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= VISTA MOVIL ================= -->
+  <section class="view" id="movil">
+    <div class="eyebrow">Vista M&oacute;vil &mdash; as&iacute; se ve el dashboard <b>de verdad en un celular</b> &middot; mismo tablero, auto-ajustado a la pantalla</div>
+    <div class="phonewrap">
+      <div class="phoneframe">
+        <div class="phone-notch"></div>
+        <iframe id="mobileFrame" title="Vista real del dashboard en un celular"></iframe>
+      </div>
+      <div class="phone-note2">Es el <b>mismo dashboard</b> renderizado a ancho de tel&eacute;fono (&asymp;390 px) dentro de un iframe: refleja c&oacute;mo se ve y se auto-ajusta en el celular del gerente o jefe de turno.</div>
+    </div>
+  </section>
+
+  <!-- ================= ANALITICA (HUD) ================= -->
+  <section class="view" id="hud">
+    <div class="eyebrow">Anal&iacute;tica &mdash; <b>Dominios y desempe&ntilde;o</b> &middot; vista ejecutiva HUD</div>
+    <div class="grid hudrow">
+      <div class="hudbig"><div class="l">Producci&oacute;n Au d&iacute;a</div><div class="v">142<u> oz</u></div></div>
+      <div class="hudbig"><div class="l">Eficiencia adsorci&oacute;n</div><div class="v">92.5<u>%</u></div></div>
+      <div class="hudbig"><div class="l">Flujo pilas</div><div class="v">820<u> m&#179;/h</u></div></div>
+      <div class="hudbig"><div class="l">Au en barren</div><div class="v">0.024<u> ppm</u></div></div>
+      <div class="hudbig"><div class="l">Disponibilidad</div><div class="v">94.0<u>%</u></div></div>
+    </div>
+
+    <div class="card sixsig" id="sixSig" style="margin-top:14px">
+      <h3>Capacidad de proceso &middot; Lean Six Sigma <small>producci&oacute;n Au/d&iacute;a vs piso 140 oz</small></h3>
+      <div class="ssgrid">
+        <div class="sscell"><div class="ssv" id="ssSigma">&mdash;</div><div class="ssl">Nivel &sigma;</div></div>
+        <div class="sscell"><div class="ssv" id="ssCpk">&mdash;</div><div class="ssl">Cpk</div></div>
+        <div class="sscell"><div class="ssv" id="ssDpmo">&mdash;</div><div class="ssl">DPMO</div></div>
+        <div class="sscell"><div class="ssv" id="ssYield">&mdash;</div><div class="ssl">Yield</div></div>
+      </div>
+      <div class="ssnote" id="ssNote">Capacidad de corto plazo calculada sobre la variaci&oacute;n de la producci&oacute;n diaria.</div>
+    </div>
+
+    <div class="grid two" style="margin-top:14px">
+      <div class="card">
+        <h3>Inventario de carb&oacute;n por origen</h3>
+        <div class="donutwrap">
+          <div id="feedDonut"></div>
+          <div class="dlegend">
+            <div class="li"><i style="background:var(--cyan)"></i>Columnas CIC (C1&ndash;C5)<b>62%</b></div>
+            <div class="li"><i style="background:var(--blue)"></i>Tolva 1<b>9%</b></div>
+            <div class="li"><i style="background:var(--amber)"></i>Tolva 2<b>14%</b></div>
+            <div class="li"><i style="background:var(--green)"></i>Elución / TE<b>15%</b></div>
+          </div>
+        </div>
+        <div class="sectlbl" style="margin:16px 2px 10px">Eficiencia de adsorci&oacute;n por etapa</div>
+        <div class="barrow"><span class="nm">Cabeza (C1&ndash;C2)</span><div class="bartrack"><div class="barfill" style="background:var(--green)" data-w="96"></div></div><span class="vv">96%</span></div>
+        <div class="barrow"><span class="nm">Media (C3&ndash;C4)</span><div class="bartrack"><div class="barfill" style="background:var(--amber)" data-w="90"></div></div><span class="vv">90%</span></div>
+        <div class="barrow"><span class="nm">Cola (C5)</span><div class="bartrack"><div class="barfill" style="background:var(--red)" data-w="80"></div></div><span class="vv">80%</span></div>
+      </div>
+
+      <div class="card">
+        <h3>Eficiencia de adsorci&oacute;n por turno (&uacute;ltimos 5)</h3>
+        <div class="donuts3" id="shiftDonuts"></div>
+        <div class="sectlbl" style="margin:16px 2px 10px">Eficiencia de adsorci&oacute;n por etapa &middot; franja horaria (%)</div>
+        <table class="heat">
+          <thead><tr><th style="text-align:left">Etapa</th><th>00&ndash;06</th><th>06&ndash;12</th><th>12&ndash;18</th><th>18&ndash;24</th></tr></thead>
+          <tbody id="heatBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span class="ribbon">&#9888; Datos representativos</span> &nbsp; Los valores mostrados son ilustrativos para el dise&ntilde;o del gemelo y deben reemplazarse con los KPIs reales del cliente.<br>
+  <b>SIGMA Digital Twins Consulting Inc.</b> &middot; Documento confidencial sujeto a NDA &middot; Variante <b>ADR / Heap Leach</b> del panel de gemelo digital.
+</footer>
+  </div><!-- /.content -->
+</div><!-- /.shell -->
+
+
+<script>
+(function(){
+  "use strict";
+  var V={cyan:'#2FE6D0',cyan2:'#13B8A6',lime:'#93E24C',blue:'#4FA8FF',amber:'#FFB02E',red:'#FF5A6A',green:'#37D27D',white:'#EAF4FF',muted:'#85A0BC',grid:'#173249'};
+  function cv(n){return V[(n||'').replace('--','')]||n;}
+  function $(s,r){return (r||document).querySelector(s);}
+  function $all(s,r){return [].slice.call((r||document).querySelectorAll(s));}
+  function clamp(x,a,b){return x<a?a:x>b?b:x;}
+  function rnd(){return Math.random();}
+  function gauss(){return (rnd()+rnd()+rnd()+rnd()-2)/2;}
+  function thou(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ');}
+  function f1(n){return n.toFixed(1);}
+
+  /* ---- tabs ---- */
+  var tabs=$('#tabs');
+  tabs.addEventListener('click',function(e){var b=e.target.closest('button'); if(!b)return;
+    $all('button',tabs).forEach(function(x){x.classList.remove('active');}); b.classList.add('active');
+    $all('.view').forEach(function(v){v.classList.remove('active');}); $('#'+b.dataset.v).classList.add('active'); animateBars();});
+
+  /* ---- dropdown Salas 3D ---- */
+  var dd=$('#salas3d'), ddBtn=$('#salas3dBtn'), ddMenu=$('#salas3dMenu');
+  if(ddBtn){ ddBtn.addEventListener('click',function(){ddMenu.classList.toggle('open');});
+    document.addEventListener('click',function(e){ if(dd && !dd.contains(e.target)) ddMenu.classList.remove('open'); }); }
+
+  /* ---- clock + shift ---- */
+  function tick(){var d=new Date(),p=function(n){return(n<10?'0':'')+n;};
+    $('#clock').textContent=p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());
+    $('#shiftNow').textContent=(d.getHours()>=7&&d.getHours()<19)?'A':'B';}
+  tick(); setInterval(tick,1000);
+
+  /* ---- mobile iframe ---- */
+  var mf=$('#mobileFrame'); if(mf) mf.src=location.pathname.split('/').pop()||'Dashboard_GemeloDigital_ADR_SIGMA.html';
+
+  /* ---- sparkline ---- */
+  function spark(vals,col,w,h){ w=w||72;h=h||26;
+    var mn=Math.min.apply(0,vals),mx=Math.max.apply(0,vals),r=(mx-mn)||1;
+    var pts=vals.map(function(v,i){return [i*(w/(vals.length-1)), h-2-((v-mn)/r)*(h-4)];});
+    var d=pts.map(function(p,i){return (i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1);}).join(' ');
+    var c=cv(col);
+    return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'">'+
+      '<path d="'+d+' L'+w+' '+h+' L0 '+h+' Z" fill="'+c+'" opacity=".10"/>'+
+      '<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'+
+      '<circle cx="'+pts[pts.length-1][0].toFixed(1)+'" cy="'+pts[pts.length-1][1].toFixed(1)+'" r="2.4" fill="'+c+'"/></svg>';
+  }
+  $all('[data-spark]').forEach(function(el){ el.innerHTML=spark(el.dataset.spark.split(',').map(Number),el.dataset.col); });
+
+  /* ---- production line chart (real vs target) ---- */
+  (function(){
+    var W=720,H=250,L=44,R=16,T=18,B=30,pw=W-L-R,ph=H-T-B, lo=120,hi=180, target=168;
+    function Y(v){return T+ph-((v-lo)/(hi-lo))*ph;}
+    function X(t){return L+(t/14)*pw;}
+    var real=[[0,162],[1,159],[2,164],[3,158],[4,161],[5,160],[6,157],[7,163],[8,159],[9,155],[10,151],[11,142],[12,138],[13,145],[14,142]];
+    function path(a){return a.map(function(p,i){return (i?'L':'M')+X(p[0]).toFixed(1)+' '+Y(p[1]).toFixed(1);}).join(' ');}
+    var s='<svg width="100%" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="display:block">';
+    for(var g=lo;g<=hi;g+=10){var y=Y(g);s+='<line x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'" stroke="'+V.grid+'" stroke-width="1"/>';s+='<text x="'+(L-8)+'" y="'+(y+3)+'" fill="'+V.muted+'" font-size="10" text-anchor="end" font-family="monospace">'+g+'</text>';}
+    [['D1',0],['D4',3],['D7',6],['D10',9],['D13',12],['D15',14]].forEach(function(o){var x=X(o[1]);s+='<text x="'+x+'" y="'+(H-10)+'" fill="'+V.muted+'" font-size="10" text-anchor="middle" font-family="monospace">'+o[0]+'</text>';});
+    s+='<line x1="'+L+'" y1="'+Y(target)+'" x2="'+(W-R)+'" y2="'+Y(target)+'" stroke="'+V.cyan+'" stroke-width="1.6" stroke-dasharray="2 4" opacity=".7"/>';
+    s+='<text x="'+(W-R)+'" y="'+(Y(target)-5)+'" fill="'+V.cyan+'" font-size="10" text-anchor="end" font-family="monospace">Target '+target+'</text>';
+    s+='<line x1="'+X(11)+'" y1="'+T+'" x2="'+X(11)+'" y2="'+(T+ph)+'" stroke="'+V.red+'" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/>';
+    s+='<text x="'+(X(11)-6)+'" y="'+(T+14)+'" fill="'+V.red+'" font-size="10" text-anchor="end" font-family="monospace">Corte energ&iacute;a</text>';
+    s+='<path d="'+path(real)+' L'+X(14)+' '+(T+ph)+' L'+L+' '+(T+ph)+' Z" fill="'+V.white+'" opacity=".05"/>';
+    s+='<path d="'+path(real)+'" fill="none" stroke="'+V.white+'" stroke-width="2.4" stroke-linejoin="round"/>';
+    real.forEach(function(p){s+='<circle cx="'+X(p[0])+'" cy="'+Y(p[1])+'" r="2.2" fill="'+V.white+'"/>';});
+    s+='</svg>';
+    $('#recoveryChart').innerHTML=s;
+  })();
+
+  /* ---- gauges ---- */
+  function pol(cx,cy,r,deg){var a=(deg-180)*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+  function arc(cx,cy,r,a0,a1){var p0=pol(cx,cy,r,a0),p1=pol(cx,cy,r,a1);var lg=(a1-a0)>180?1:0;return 'M'+p0[0].toFixed(1)+' '+p0[1].toFixed(1)+' A '+r+' '+r+' 0 '+lg+' 1 '+p1[0].toFixed(1)+' '+p1[1].toFixed(1);}
+  function gauge(o){
+    var W=180,Hh=112,cx=90,cy=98,r=72,sw=13, frac=clamp((o.v-o.min)/(o.max-o.min),0,1), deg=frac*180;
+    var t1=o.t1!=null?(o.t1-o.min)/(o.max-o.min):0.6, t2=o.t2!=null?(o.t2-o.min)/(o.max-o.min):0.85;
+    var zl=V.red,zm=V.amber,zh=V.green; if(o.good==='low'){var t=zl;zl=zh;zh=t;}
+    var s='<svg width="'+W+'" height="'+Hh+'" viewBox="0 0 '+W+' '+Hh+'">';
+    s+='<path d="'+arc(cx,cy,r,0,180)+'" stroke="#0a2233" stroke-width="'+sw+'" fill="none" stroke-linecap="round"/>';
+    s+='<path d="'+arc(cx,cy,r,0,t1*180)+'" stroke="'+zl+'" stroke-width="'+sw+'" fill="none"/>';
+    s+='<path d="'+arc(cx,cy,r,t1*180,t2*180)+'" stroke="'+zm+'" stroke-width="'+sw+'" fill="none"/>';
+    s+='<path d="'+arc(cx,cy,r,t2*180,180)+'" stroke="'+zh+'" stroke-width="'+sw+'" fill="none"/>';
+    var np=pol(cx,cy,r-4,deg);
+    s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+np[0].toFixed(1)+'" y2="'+np[1].toFixed(1)+'" stroke="#EAF4FF" stroke-width="3" stroke-linecap="round"/>';
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="#EAF4FF"/>';
+    var dv=o.v, disp=(dv>=100?Math.round(dv):(dv>=10?dv.toFixed(0):dv.toFixed(2)));
+    s+='<text x="'+cx+'" y="'+(cy-14)+'" fill="#EAF4FF" font-size="22" font-weight="700" text-anchor="middle" font-family="monospace">'+disp+'<tspan font-size="11" fill="'+V.muted+'">'+(o.unit||'')+'</tspan></text></svg>';
+    return s;
+  }
+  $all('[data-gauge]').forEach(function(el){try{el.innerHTML=gauge(JSON.parse(el.dataset.gauge));}catch(e){}});
+
+  /* ---- donuts ---- */
+  function donutMulti(segs,size){ size=size||150;var r=58,C=2*Math.PI*r,off=0,cx=size/2,cy=size/2;
+    var s='<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">';
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#0a2233" stroke-width="20"/>';
+    segs.forEach(function(g){var len=g.v/100*C;
+      s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+cv(g.c)+'" stroke-width="20" stroke-dasharray="'+len+' '+(C-len)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 '+cx+' '+cy+')"/>'; off+=len;});
+    s+='<text x="'+cx+'" y="'+(cy-2)+'" fill="#EAF4FF" font-size="20" font-weight="700" text-anchor="middle" font-family="monospace">80 t</text>';
+    s+='<text x="'+cx+'" y="'+(cy+15)+'" fill="'+V.muted+'" font-size="10" text-anchor="middle">carb&oacute;n</text></svg>'; return s;}
+  var fd=$('#feedDonut'); if(fd)fd.innerHTML=donutMulti([{v:62,c:V.cyan},{v:9,c:V.blue},{v:14,c:V.amber},{v:15,c:V.green}]);
+
+  function radial(val,col,label,size){ size=size||92;var r=size/2-9,C=2*Math.PI*r,frac=val/100,cx=size/2;
+    return '<div class="donutmini"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'"><circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="#0a2233" stroke-width="8"/><circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="'+cv(col)+'" stroke-width="8" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-frac))+'" transform="rotate(-90 '+cx+' '+cx+')"/><text x="'+cx+'" y="'+(cx+4)+'" fill="#EAF4FF" font-size="16" font-weight="700" text-anchor="middle" font-family="monospace">'+val+'</text></svg><b>'+label+'</b></div>';}
+  var sd=$('#shiftDonuts');
+  if(sd){var shifts=[['B-3',93,'--green'],['B-2',92,'--green'],['B-1',91,'--green'],['A',93,'--cyan'],['B',90,'--amber']];
+    sd.innerHTML=shifts.map(function(x){return radial(x[1],x[2],'Turno '+x[0]);}).join('');}
+
+  /* ---- heatmap ---- */
+  var hb=$('#heatBody');
+  if(hb){var rows=[['Cabeza (C1-C2)',[96,97,95,96]],['Media (C3-C4)',[90,91,89,90]],['Cola (C5)',[80,82,78,80]]];
+    function hcol(v){ if(v>=92)return 'rgba(55,210,125,'+(0.25+(v-90)/30)+')'; if(v>=86)return 'rgba(255,176,46,.22)'; return 'rgba(255,90,106,.22)'; }
+    hb.innerHTML=rows.map(function(r){return '<tr><td class="nm">'+r[0]+'</td>'+r[1].map(function(v){return '<td style="background:'+hcol(v)+'">'+v+'</td>';}).join('')+'</tr>';}).join('');}
+
+  /* ---- Six Sigma sobre produccion oz/dia ---- */
+  function normTail(z){ if(z<0)return 1-normTail(-z); var t=1/(1+0.2316419*z), d=0.3989423*Math.exp(-z*z/2);
+    return d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274)))); }
+  (function(){
+    var elS=$('#ssSigma'); if(!elS)return;
+    var LSL=140, xs=[162,159,164,158,161,160,157,163,159,155,151,142,138,145,142];
+    var m=xs.reduce(function(a,b){return a+b;},0)/xs.length;
+    var sd=Math.sqrt(xs.reduce(function(a,b){return a+(b-m)*(b-m);},0)/xs.length); if(sd<0.15)sd=0.15;
+    var Z=(m-LSL)/sd, Zd=clamp(Z,0,6), cpk=clamp(Z/3,0,2), dpmo=Math.min(1e6,Math.max(0,Math.round(normTail(Z)*1e6))), yld=(1-normTail(Z))*100;
+    var col=Z>=4.5?'#37D27D':Z>=3?'#FFB02E':'#FF5A6A';
+    elS.textContent=Zd.toFixed(1)+'σ'; elS.style.color=col;
+    var elC=$('#ssCpk'); if(elC){elC.textContent=cpk.toFixed(2); elC.style.color=col;}
+    var elD=$('#ssDpmo'); if(elD)elD.textContent=dpmo>=1000?(Math.round(dpmo/1000)+'k'):dpmo;
+    var elY=$('#ssYield'); if(elY)elY.textContent=(yld>99.9?yld.toFixed(3):yld.toFixed(1))+'%';
+    var elN=$('#ssNote');
+    if(elN)elN.innerHTML = Z>=4.5 ? 'Proceso <b>capaz</b> (&ge;4.5&sigma;): producci&oacute;n estable sobre el piso. Mantener.'
+      : Z>=3 ? 'Proceso <b>marginal</b> (3&ndash;4.5&sigma;): reducir variaci&oacute;n o subir la media (Kaizen / DMAIC).'
+      : '<b>Fuera de control</b> (&lt;3&sigma;): la producci&oacute;n cae cerca o bajo el piso de 140 oz &mdash; acci&oacute;n inmediata.';
+  })();
+
+  /* ---- animate bars ---- */
+  function animateBars(){ $all('.view.active .barfill').forEach(function(b){ b.style.width='0%';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){b.style.width=(b.dataset.w||0)+'%';});}); }); }
+  animateBars();
+
+  /* ---- AI validar + chat ---- */
+  var vbtn=$('#aiValidate');
+  if(vbtn)vbtn.addEventListener('click',function(){ vbtn.classList.add('done'); vbtn.textContent='✓ Validado';
+    $('#aiConfVal').textContent='99%'; $('#aiConfFill').style.width='99%'; var bd=$('#aiValBadge'); if(bd)bd.style.display='inline-flex';
+    $('#aiWho').textContent='Veredicto validado por Ing. de procesos'; });
+  var canned={'flujo':'El flujo a ADR est&aacute; en 690 m&#179;/h vs objetivo 750. Prioridad: deshielo de l&iacute;neas y normalizar tras el corte de energ&iacute;a.',
+    'barren':'El barren subi&oacute; a 0.05 ppm por movimiento de carb&oacute;n en columnas. Revisar perfil de carga C1&ndash;C5.',
+    'totalizador':'Se aplic&oacute; un descuento de 8% al flujo por desviaci&oacute;n del totalizador. Es un tema de instrumentaci&oacute;n, no de proceso.',
+    'cn':'CN en riego 285 ppm, dentro del &oacute;ptimo (280&ndash;320). pH 10.25, en rango.'};
+  var ci=$('#aiChatInput'), cs=$('#aiChatSend'), cl=$('#aiChatLog');
+  function send(){ if(!ci||!ci.value.trim())return; var q=ci.value.trim(); ci.value='';
+    cl.innerHTML+='<div class="cmsg you">'+q+'</div>';
+    var a='Seg&uacute;n el balance ADR del turno, revis&aacute; flujo, barren y totalizador. Pregunt&aacute; por "flujo", "barren", "totalizador" o "cn".';
+    var lq=q.toLowerCase(); for(var k in canned){ if(lq.indexOf(k)>=0){a=canned[k];break;} }
+    cl.innerHTML+='<div class="cmsg bot"><b>Sasha:</b> '+a+'</div>'; cl.scrollTop=cl.scrollHeight; }
+  if(cs)cs.addEventListener('click',send);
+  if(ci)ci.addEventListener('keydown',function(e){if(e.key==='Enter')send();});
+  var cf=$('#aiConfFill'); if(cf)cf.style.width='88%';
+
+  /* ---- health monitor ECG (simple) ---- */
+  (function(){
+    var cvs=$('#ecgCanvas'); if(!cvs)return; var ctx=cvs.getContext('2d');
+    function size(){ var r=cvs.getBoundingClientRect(); cvs.width=r.width*2; cvs.height=r.height*2; ctx.setTransform(2,0,0,2,0,0); }
+    size(); window.addEventListener('resize',size);
+    var state='FINE', col=V.green, t=0, buf=[];
+    function setHealth(prod,target,flow,flowObj){
+      var h=100; h-=Math.max(0,(target-prod))/target*120; h-=Math.max(0,(flowObj-flow))/flowObj*60; h=clamp(h,0,100);
+      if(h>=70){state='FINE';col=V.green;} else if(h>=45){state='WATCH';col=V.amber;} else {state='RISK';col=V.red;}
+      var el=$('#hmState'); if(el){el.textContent=state; el.style.color=col;}
+    }
+    function beat(x){ var p=x%60; if(p<8)return Math.sin(p/8*Math.PI)*3; if(p<14){var q=(p-8)/6; return q<0.3?-q*18:(q<0.6?(q-0.3)*90-5:(0.9-q)*60+22);} return 0; }
+    function frame(){ var w=cvs.width/2,hh=cvs.height/2; t+=1.4; var y=hh/2 - beat(t)*1.3 + Math.sin(t/9)*0.6;
+      buf.push(y); if(buf.length>w)buf.shift();
+      ctx.clearRect(0,0,w,hh); ctx.strokeStyle=col; ctx.lineWidth=1.6; ctx.shadowColor=col; ctx.shadowBlur=6; ctx.beginPath();
+      for(var i=0;i<buf.length;i++){ if(i===0)ctx.moveTo(0,buf[i]); else ctx.lineTo(i,buf[i]); } ctx.stroke();
+      requestAnimationFrame(frame); }
+    setHealth(142,168,690,750); frame();
+    window.__setHealth=setHealth;
+  })();
+
+  /* ---- slider Flujo ADR ---- */
+  (function(){
+    var sl=$('#recSlider'), val=$('#recSliderVal'), auto=$('#recAuto'), t0=$all('#control .grid.kpis .tile')[0],
+        t2=$all('#control .grid.kpis .tile')[2];
+    function apply(flow){
+      if(val)val.textContent=Math.round(flow)+' m³/h';
+      var prod=clamp(Math.round(40+flow*0.148),60,200);   // produccion ~ funcion del flujo
+      if(t0){ $('.val',t0).innerHTML=prod+'<u>oz</u>'; var pct=Math.round(prod/168*100);
+        $('.sub',t0).innerHTML='Target <b>168 oz</b> &middot; '+pct+'%';
+        var pl=$('.pill',t0), d=prod-168; pl.className='pill '+(d<=-30?'crit':d<=-8?'warn':'ok'); pl.textContent=(d>=0?'+':'−')+Math.abs(Math.round(d/168*100))+'%'; }
+      if(t2){ $('.val',t2).innerHTML=Math.round(flow)+'<u>m³/h</u>'; var fp=$('.pill',t2);
+        fp.className='pill '+(flow<650?'crit':flow<730?'warn':'ok'); fp.textContent=flow<730?'bajo':'en rango'; }
+      if(window.__setHealth)window.__setHealth(prod,168,flow,750);
+    }
+    if(sl){ sl.addEventListener('input',function(){ if(auto)auto.classList.remove('on'); apply(+sl.value); }); }
+    if(auto){ var iv=null;
+      function run(){ iv=setInterval(function(){ var f=clamp(+sl.value+gauss()*8,560,820); sl.value=Math.round(f); apply(f); },2200); }
+      auto.addEventListener('click',function(){ auto.classList.toggle('on');
+        if(auto.classList.contains('on')){run();} else if(iv){clearInterval(iv);iv=null;} });
+      run(); }
+  })();
+})();
+</script>
+
