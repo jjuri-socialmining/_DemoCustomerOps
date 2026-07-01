@@ -55,6 +55,30 @@ Link del demo: https://jjuri-socialmining.github.io/_DemoCustomerOps/Dashboard_G
 
 ---
 
+## 4) Cliente — decisión de proceso (Resina vs ADR/Heap Leach)
+
+> Hola [Nombre] 👋
+>
+> Seguimos avanzando con el *Gemelo Digital* de la planta. Para modelar **su**
+> operación con precisión, preparamos el tablero en dos variantes según el tipo de
+> proceso:
+>
+> 🟦 *Planta Resina* — circuito de molienda/lixiviación con recuperación sobre resina.
+> 🟩 *Planta ADR · Heap Leach* — lixiviación en pilas + planta ADR (columnas de
+>    carbón) y electroobtención.
+>
+> ¿Cuál refleja su operación? *(o ambas, si tienen las dos líneas).* Con su
+> confirmación dejamos *un solo tablero afinado a sus KPIs reales* —producción vs
+> forecast, eficiencia de adsorción, flujos, inventario de carbón, CN/pH— en lugar
+> de los datos de ejemplo de la demo.
+>
+> 👉 Variante ADR: https://jjuri-socialmining.github.io/_DemoCustomerOps/Dashboard_GemeloDigital_ADR_SIGMA.html
+>
+> Cuando me confirme el proceso, le pido un export reciente (Excel/CSV) y lo conecto
+> directo. Quedo atento a sus comentarios.
+
+---
+
 ## 3) Solicitud de datos reales al ingeniero (para alimentar el gemelo)
 
 > Hola [Nombre] 👋
