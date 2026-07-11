@@ -122,6 +122,33 @@
   .a:empty::before{content:"— por completar en la entrevista —";color:var(--muted);font-style:italic}
   .a[contenteditable]:focus{outline:2px solid var(--accent);background:var(--card)}
   .iv-fixed{font-size:12.5px;color:var(--muted);margin-bottom:6px}
+  .iv-link{font-size:13px;margin:2px 0 10px}
+  .iv-link a{font-weight:600}
+  .pending-link{color:var(--muted);font-style:italic}
+  .iv-highlights{background:var(--chip);border:1px solid var(--line);border-radius:8px;
+    padding:10px 12px;margin:8px 0 14px}
+  .iv-highlights h4{margin:0 0 6px;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--accent)}
+  .iv-highlights ul{margin:0;padding-left:18px;font-size:13.5px}
+  .iv-highlights ul li{margin:2px 0}
+  .iv-highlights .empty{color:var(--muted);font-style:italic;font-size:12.5px}
+
+  /* Kanban */
+  .kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+  .kcol{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .kcol h3{margin:0 0 10px;font-size:12.5px;display:flex;align-items:center;gap:6px;
+    padding-bottom:7px;border-bottom:1px solid var(--line-soft);letter-spacing:.2px}
+  .kcol h3 .cnt{margin-left:auto;background:var(--chip);border:1px solid var(--line);
+    border-radius:999px;padding:0 8px;font-size:11px;color:var(--muted);font-weight:700}
+  .kcard{background:var(--bg);border:1px solid var(--line-soft);border-radius:8px;
+    padding:8px 10px;font-size:13px;margin-bottom:8px}
+  .kcard:last-child{margin-bottom:0}
+  .kcard .kt{font-weight:600;line-height:1.35}
+  .kcard .km{color:var(--muted);font-size:11.5px;margin-top:3px}
+  .kcol.todo h3{color:var(--warn)}
+  .kcol.doing h3{color:var(--accent)}
+  .kcol.done h3{color:var(--accent2)}
+  .kcol.done .kcard{opacity:.82}
+  @media(max-width:640px){.kanban{grid-template-columns:1fr}}
 
   .note{color:var(--muted);font-size:12px;margin-top:30px;border-top:1px solid var(--line);padding-top:12px}
   .kbd{font-family:ui-monospace,Menlo,monospace;background:var(--chip);border:1px solid var(--line);
@@ -158,12 +185,13 @@
 </header>
 
 <nav class="toc no-print">
-  <a href="#org">Organigrama</a>
-  <a href="#descargas">Descargas · CVs</a>
-  <a href="#entrevistas">Entrevistas</a>
-  <a href="#equipo">Equipo</a>
-  <a href="#pool">Pool de reserva</a>
-  <a href="#agenda">Agenda</a>
+  <a href="#org">🗂️ Organigrama</a>
+  <a href="#pendientes">📌 Pendientes</a>
+  <a href="#descargas">📄 CVs</a>
+  <a href="#entrevistas">🎤 Entrevistas</a>
+  <a href="#equipo">👥 Equipo</a>
+  <a href="#pool">🎯 Pool</a>
+  <a href="#agenda">📅 Agenda</a>
 </nav>
 
 <div class="legend">
@@ -175,7 +203,7 @@
 
 <!-- ================= ORGANIGRAMA ================= -->
 <section id="org">
-<h2><span class="dot"></span>Organigrama</h2>
+<h2><span class="dot"></span>🗂️ Organigrama</h2>
 <div class="tree">
   <div class="node top"><div class="role">Cliente — Omán (árabes)</div><div class="who">vía HLC · Tonino (sponsor)</div></div>
   <div class="conn"></div>
@@ -189,7 +217,7 @@
     <div class="node"><div class="role">Metalurgia</div><div class="who">2 senior (1 externo <span class="warn">⚠</span>)</div></div>
     <div class="node"><div class="role">Proyectista / Diseño 3D</div><div class="who">Pablo · Navisworks · nube de puntos (drones)</div></div>
     <div class="node"><div class="role">Experto Reciclaje</div><div class="who">senior (planta / EE.UU.)</div></div>
-    <div class="node env"><div class="role">Asesor Medio Ambiente / HSEC — Omán</div><div class="who">Christi (Utah, EE.UU.) <span class="ok">✅</span></div></div>
+    <div class="node env"><div class="role">Asesor Medio Ambiente / HSEC — Omán</div><div class="who">Kent Christie (Utah, EE.UU.) <span class="ok">✅</span></div></div>
     <div class="node"><div class="role">Recurso clave ("Messi")</div><div class="who">Luis F. Hidalgo Cortés ("Lucho") <span class="ok">✅</span></div></div>
     <div class="node env"><div class="role">Calidad (QA)</div><div class="who">Paloma Tapia (junior, conoce a Tonino)</div></div>
   </div>
@@ -200,7 +228,7 @@
   <ul>
     <li><b>Calidad (QA):</b> Paloma Tapia — junior, trabaja con Tonino en HLC</li>
     <li><b>Legal / Compliance:</b> Belén (Pertel Legal) · <span class="warn">falta cobertura de ley omaní</span></li>
-    <li><b>Asesor de Medio Ambiente / HSEC — Omán:</b> Christi (Utah, EE.UU.) — ex-Equinox (Nicaragua), consultor internacional · alt. King Rosetti (Código Cianuro)</li>
+    <li><b>Asesor de Medio Ambiente / HSEC — Omán:</b> Kent Christie ("Christi", Utah, EE.UU.) — ex-Equinox (Nicaragua), consultor internacional · alt. King Rosetti (Código Cianuro)</li>
   </ul>
 </div>
 
@@ -210,22 +238,55 @@
 </div>
 </section>
 
+<!-- ================= PENDIENTES / KANBAN ================= -->
+<section id="pendientes">
+<h2><span class="dot"></span>📌 Pendientes — tablero</h2>
+<div class="sub">Seguimiento de lo que falta para la entrega a Tonino (lun 13-jul).</div>
+<div class="kanban">
+
+  <div class="kcol todo">
+    <h3>📋 Por hacer <span class="cnt">6</span></h3>
+    <div class="kcard"><div class="kt">📄 Recibir CVs pendientes</div><div class="km">Kent Christie · Lucho Hidalgo · Paloma · Ángelo</div></div>
+    <div class="kcard"><div class="kt">🔗 Cargar links de reunión</div><div class="km">de cada entrevista del finde</div></div>
+    <div class="kcard"><div class="kt">🎤 Entrevistas del domingo</div><div class="km">Paloma (QA) · Ángelo (mantención)</div></div>
+    <div class="kcard"><div class="kt">⚖️ Cobertura legal ley omaní</div><div class="km">Belén (Pertel Legal) — falta</div></div>
+    <div class="kcard"><div class="kt">♻️ Confirmar experto en reciclaje</div><div class="km">por confirmar tarifa</div></div>
+    <div class="kcard"><div class="kt">📦 Entrega organigrama + CVs a Tonino</div><div class="km">lun 13-jul</div></div>
+  </div>
+
+  <div class="kcol doing">
+    <h3>🔄 En curso <span class="cnt">2</span></h3>
+    <div class="kcard"><div class="kt">🎤 Entrevistas del sábado</div><div class="km">Kent Christie 15:00 · Juan Pablo 18:00 (Chile)</div></div>
+    <div class="kcard"><div class="kt">🧩 Cerrar organigrama definitivo</div><div class="km">revisión con Mauricio · Jorge · JC</div></div>
+  </div>
+
+  <div class="kcol done">
+    <h3>✅ Hecho <span class="cnt">4</span></h3>
+    <div class="kcard"><div class="kt">🗂️ Organigrama v2 publicado</div><div class="km">con descargas + entrevistas</div></div>
+    <div class="kcard"><div class="kt">📄 CV de Juan Pablo recibido</div><div class="km">guardado + link + highlights</div></div>
+    <div class="kcard"><div class="kt">📇 Contactos cargados</div><div class="km">Kent Christie · Juan Pablo · Ángelo</div></div>
+    <div class="kcard"><div class="kt">❓ Set de preguntas por candidato</div><div class="km">apertura → rol → pretensiones + WhatsApp</div></div>
+  </div>
+
+</div>
+</section>
+
 <!-- ================= DESCARGAS / CVs ================= -->
 <section id="descargas">
-<h2><span class="dot"></span>Descargas — CVs del equipo</h2>
+<h2><span class="dot"></span>📄 Descargas — CVs del equipo</h2>
 <div class="sub">Documentos confidenciales. A medida que llegan los CVs se cargan aquí con link directo de descarga.</div>
 <div class="dl-grid">
 
   <div class="dl-card">
-    <div class="name">Christi <span class="pill">✅</span></div>
+    <div class="name">Kent Christie ("Christi") <span class="pill">✅</span></div>
     <div class="r">Asesor Medio Ambiente / HSEC — Omán</div>
     <span class="dl-pending">CV pendiente de recibir</span>
   </div>
 
   <div class="dl-card">
     <div class="name">Juan Pablo Hidalgo Figueroa <span class="pill">✅</span></div>
-    <div class="r">Consultoría transversal — procesos + mantenimiento</div>
-    <span class="dl-pending">CV pendiente de recibir</span>
+    <div class="r">Diseñador Industrial / BIM Manager (piping)</div>
+    <a class="dl-link" href="og-87da9a22-files/cv-juan-pablo-hidalgo.pdf" target="_blank" rel="noopener">📄 Descargar CV (PDF)</a>
   </div>
 
   <div class="dl-card">
@@ -257,14 +318,17 @@
 
 <!-- ================= ENTREVISTAS ================= -->
 <section id="entrevistas">
-<h2><span class="dot"></span>Entrevistas — preguntas y respuestas</h2>
+<h2><span class="dot"></span>🎤 Entrevistas — preguntas y respuestas</h2>
 <div class="sub">Preguntas propuestas por candidato. El campo de respuesta se completa <b>en vivo durante la entrevista</b> (o hacé clic y escribí directo).</div>
 
 <!-- ===== Christi (HSEC) — Sáb 15:00 Chile ===== -->
 <details class="iv" open>
-  <summary>Christi — Asesor Medio Ambiente / HSEC — Omán <span class="iv-meta">Sáb 11-jul · 15:00 🇨🇱 / 12:00 🇨🇦 · con Jorge</span></summary>
+  <summary>Kent Christie ("Christi") — Asesor Medio Ambiente / HSEC — Omán <span class="iv-meta">Sáb 11-jul · 15:00 🇨🇱 / 12:00 🇨🇦 · con Jorge</span></summary>
   <div class="iv-body">
-    <div class="iv-fixed">Contexto: ex-Equinox (Nicaragua), consultor internacional. Alternativa: King Rosetti (Código Cianuro).</div>
+    <div class="iv-fixed">Contexto: ex-Equinox (Nicaragua), consultor internacional. Alternativa: King Rosetti (Código Cianuro).<br>
+      Contacto: <a href="mailto:kcintl@msn.com">kcintl@msn.com</a> · alt. <a href="mailto:kcintl1785@gmail.com">kcintl1785@gmail.com</a> · Tel/WhatsApp: +1 720-431-8093</div>
+    <div class="iv-link">🔗 <b>Reunión:</b> <span class="pending-link">link pendiente</span></div>
+    <div class="iv-highlights"><h4>Resumen del CV — highlights</h4><div class="empty">Se completa al recibir el CV / resume.</div></div>
 
     <div class="qgroup">Apertura — disponibilidad y compromiso</div>
     <div class="q"><div class="qt"><span class="num">1.</span>Disponibilidad: ¿desde cuándo puede incorporarse? ¿Hasta qué fecha tiene libre? ¿% de dedicación posible?</div><div class="a" contenteditable="true"></div></div>
@@ -274,7 +338,7 @@
     <div class="q"><div class="qt"><span class="num">3.</span>Experiencia en normativa ambiental de Omán / Golfo Pérsico (permisos, autoridad ambiental local).</div><div class="a" contenteditable="true"></div></div>
     <div class="q"><div class="qt"><span class="num">4.</span>Manejo de residuos peligrosos y de mantenimiento de astilleros (shipyard maintenance waste). ¿Proyectos comparables?</div><div class="a" contenteditable="true"></div></div>
     <div class="q"><div class="qt"><span class="num">5.</span>Experiencia con el Código Internacional de Manejo de Cianuro y recuperación de minerales.</div><div class="a" contenteditable="true"></div></div>
-    <div class="q"><div class="qt"><span class="num">6.</span>Nivel de inglés (cliente árabe / HLC internacional). ¿Cómoda redactando informes HSEC en inglés?</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">6.</span>Nivel de inglés (cliente árabe / HLC internacional). ¿Redacta informes HSEC en inglés con comodidad?</div><div class="a" contenteditable="true"></div></div>
     <div class="q"><div class="qt"><span class="num">7.</span>Modalidad: 100% remoto desde Utah, o disponibilidad para viajar a Omán si el proyecto lo pide.</div><div class="a" contenteditable="true"></div></div>
     <div class="q"><div class="qt"><span class="num">8.</span>Referencias / proyectos de HSEC internacionales que podamos validar.</div><div class="a" contenteditable="true"></div></div>
 
@@ -288,9 +352,23 @@
 
 <!-- ===== Juan Pablo Hidalgo (transversal) — Sáb 18:00 Chile ===== -->
 <details class="iv" open>
-  <summary>Juan Pablo Hidalgo Figueroa — Consultoría transversal (procesos + mantenimiento) <span class="iv-meta">Sáb 11-jul · 18:00 🇨🇱 / 15:00 🇨🇦</span></summary>
+  <summary>Juan Pablo Hidalgo Figueroa — Diseñador Industrial / BIM Manager (piping) <span class="iv-meta">Sáb 11-jul · 18:00 🇨🇱 / 15:00 🇨🇦</span></summary>
   <div class="iv-body">
-    <div class="iv-fixed">Contexto: trabaja transversal con procesos, mantenimiento y Jorge. Interesado ✅.</div>
+    <div class="iv-fixed">Base: Concepción, Chile · <a href="mailto:jh.figueroad@gmail.com">jh.figueroad@gmail.com</a> · +56 9 2388 5169<br>
+      <span class="warn">⚠ El CV es perfil Proyectista / BIM (piping), no "consultoría procesos + mantenimiento". Podría ser "Pablo" del organigrama — confirmar.</span></div>
+    <div class="iv-link">🔗 <b>Reunión:</b> <span class="pending-link">link pendiente</span></div>
+    <div class="iv-highlights"><h4>📄 Resumen del CV — highlights</h4>
+      <ul>
+        <li>🎓 Diseñador Industrial (DUOC UC Concepción, 2019) · 5 años de experiencia.</li>
+        <li>🏗️ Especialista en <b>piping industrial</b>: modelado 3D, planos de fabricación, isométricos y listados de materiales.</li>
+        <li>📐 <b>BIM Manager</b> bajo ISO 19650: gestión de CDE (Autodesk ACC), BEP/EIR — redujo un 15% los tiempos de intercambio de información.</li>
+        <li>💻 Software: Revit, AutoCAD Plant 3D, Advance Steel, Tekla Structures, Navisworks Manage.</li>
+        <li>🛰️ Reality capture: escáner láser <b>Leica RTC 360</b>, procesamiento en FARO SCENE, Leica Cyclone y ReCap Pro (nubes de puntos, As-Built).</li>
+        <li>✅ Clash detection: 100% de interferencias críticas resueltas antes de fabricación.</li>
+        <li>🏢 Trayectoria: Ingemecanic (BIM Manager, 2026), SCL Ingeniería, CAP Acero — Huachipato (2020–2023).</li>
+      </ul>
+      <div class="km" style="margin-top:6px">📎 <a href="og-87da9a22-files/cv-juan-pablo-hidalgo.pdf" target="_blank" rel="noopener">Descargar CV completo (PDF)</a></div>
+    </div>
 
     <div class="qgroup">Apertura — disponibilidad y compromiso</div>
     <div class="q"><div class="qt"><span class="num">1.</span>Disponibilidad: ¿desde cuándo puede incorporarse? ¿Hasta cuándo? ¿% de dedicación posible?</div><div class="a" contenteditable="true"></div></div>
@@ -316,6 +394,8 @@
   <summary>Paloma Tapia — Calidad (QA) <span class="iv-meta">Dom 12-jul · 15:00–16:00 🇨🇱 / 12:00 🇨🇦</span></summary>
   <div class="iv-body">
     <div class="iv-fixed">Contexto: junior, trabaja con Tonino en HLC.</div>
+    <div class="iv-link">🔗 <b>Reunión:</b> <span class="pending-link">link pendiente</span></div>
+    <div class="iv-highlights"><h4>Resumen del CV — highlights</h4><div class="empty">Se completa al recibir el CV / resume.</div></div>
 
     <div class="qgroup">Apertura — disponibilidad y compromiso</div>
     <div class="q"><div class="qt"><span class="num">1.</span>Disponibilidad: ¿desde cuándo puede incorporarse? ¿Hasta cuándo? ¿% de dedicación posible?</div><div class="a" contenteditable="true"></div></div>
@@ -340,7 +420,10 @@
 <details class="iv">
   <summary>Ángelo Rutia — Mantenimiento mecánico <span class="iv-meta">Dom 12-jul · 16:00–17:00 🇨🇱 / 13:00 🇨🇦 · con JC</span></summary>
   <div class="iv-body">
-    <div class="iv-fixed">Contexto: mantención mecánica entre plantas · ing. construcción/calidad · skills: machine learning, inglés, Excel avanzado · candidato rama JC.</div>
+    <div class="iv-fixed">Contexto: mantención mecánica entre plantas · ing. construcción/calidad · skills: machine learning, inglés, Excel avanzado · candidato rama JC.<br>
+      Contacto: <a href="mailto:aurrutiatapia@gmail.com">aurrutiatapia@gmail.com</a> · <span class="warn">⚠ el email sugiere "Ángelo Urrutia Tapia" (¿apellido Urrutia, no Rutia?) — confirmar.</span></div>
+    <div class="iv-link">🔗 <b>Reunión:</b> <span class="pending-link">link pendiente</span></div>
+    <div class="iv-highlights"><h4>Resumen del CV — highlights</h4><div class="empty">Se completa al recibir el CV / resume.</div></div>
 
     <div class="qgroup">Apertura — disponibilidad y compromiso</div>
     <div class="q"><div class="qt"><span class="num">1.</span>Disponibilidad: ¿desde cuándo puede incorporarse? ¿Hasta cuándo? ¿% de dedicación posible?</div><div class="a" contenteditable="true"></div></div>
@@ -366,7 +449,7 @@
 
 <!-- ================= EQUIPO ================= -->
 <section id="equipo">
-<h2><span class="dot"></span>Listado del equipo (candidatos)</h2>
+<h2><span class="dot"></span>👥 Listado del equipo (candidatos)</h2>
 <div class="table-scroll">
 <table>
   <thead><tr><th>Función</th><th>Persona</th><th>LinkedIn</th><th>Teléfono</th><th>Notas</th></tr></thead>
@@ -380,7 +463,7 @@
     <tr><td>Experto en reciclaje</td><td>por confirmar</td><td>—</td><td>—</td><td>Experiencia plantas / EE.UU. · bajó tarifa</td></tr>
     <tr><td>Calidad (QA)</td><td>Paloma Tapia</td><td>—</td><td>—</td><td>Junior, conoce a Tonino</td></tr>
     <tr><td>Legal / Compliance</td><td>Belén (Pertel Legal)</td><td>—</td><td>—</td><td>Falta ley omaní</td></tr>
-    <tr><td>Asesor de Medio Ambiente / HSEC — Omán</td><td>Christi (Utah, EE.UU.) <span class="ok">✅</span></td><td>—</td><td>—</td><td><b class="ok">Interesado</b> · Ex-Equinox (Nicaragua) · consultor internacional · alt. King Rosetti (Código Cianuro)</td></tr>
+    <tr><td>Asesor de Medio Ambiente / HSEC — Omán</td><td>Kent Christie ("Christi", Utah, EE.UU.) <span class="ok">✅</span></td><td>—</td><td>+1 720-431-8093</td><td><b class="ok">Interesado</b> · Ex-Equinox (Nicaragua) · consultor internacional · alt. King Rosetti (Código Cianuro) · <a href="mailto:kcintl@msn.com">kcintl@msn.com</a></td></tr>
   </tbody>
 </table>
 </div>
@@ -388,7 +471,7 @@
 
 <!-- ================= POOL ================= -->
 <section id="pool">
-<h2><span class="dot"></span>Pool de recursos clave (reserva)</h2>
+<h2><span class="dot"></span>🎯 Pool de recursos clave (reserva)</h2>
 <div class="table-scroll">
 <table>
   <thead><tr><th>Nombre</th><th>Perfil</th><th>LinkedIn</th><th>Teléfono</th><th>Notas</th></tr></thead>
@@ -398,8 +481,8 @@
     <tr><td>Luis Martínez ("Zorro")</td><td>Senior (Coquimbo/La Serena)</td><td>—</td><td>—</td><td>Bueno</td></tr>
     <tr><td>Experto Escondida</td><td>Operación de planta (arranque/parada)</td><td>—</td><td>—</td><td>Confianza · lo gestiona Mauricio</td></tr>
     <tr><td>Luis F. Hidalgo Cortés ("Lucho") <span class="ok">✅</span></td><td>Constructor de procesos ("Messi")</td><td>—</td><td>—</td><td><b class="ok">Interesado</b> · Santiago (Chile) · habla español · trabajaron juntos ~2021</td></tr>
-    <tr><td>Juan Pablo Hidalgo Figueroa <span class="ok">✅</span></td><td>Consultoría transversal (procesos + mantenimiento)</td><td>—</td><td>—</td><td><b class="ok">Interesado</b> · entrevista sáb 18:00 Chile</td></tr>
-    <tr><td>Ángel (Ángelo) Rutia</td><td>Mantenimiento mecánico</td><td>—</td><td>—</td><td>Mantención entre plantas · ing. construcción/calidad · skills: ML, inglés, Excel avanzado · candidato rama JC</td></tr>
+    <tr><td>Juan Pablo Hidalgo Figueroa <span class="ok">✅</span></td><td>Diseñador Industrial / BIM Manager (piping)</td><td>—</td><td>+56 9 2388 5169</td><td><b class="ok">Interesado</b> · entrevista sáb 18:00 Chile · <a href="mailto:jh.figueroad@gmail.com">jh.figueroad@gmail.com</a> · <a href="og-87da9a22-files/cv-juan-pablo-hidalgo.pdf" target="_blank" rel="noopener">CV 📄</a> · <span class="warn">¿= "Pablo"?</span></td></tr>
+    <tr><td>Ángelo Urrutia Tapia <span class="warn">(¿"Rutia"?)</span></td><td>Mantenimiento mecánico</td><td>—</td><td>—</td><td>Mantención entre plantas · ing. construcción/calidad · skills: ML, inglés, Excel avanzado · candidato rama JC · <a href="mailto:aurrutiatapia@gmail.com">aurrutiatapia@gmail.com</a></td></tr>
   </tbody>
 </table>
 </div>
@@ -407,7 +490,7 @@
 
 <!-- ================= AGENDA ================= -->
 <section id="agenda">
-<h2><span class="dot"></span>Agenda — 🇨🇦 Vancouver / 🇨🇱 Chile</h2>
+<h2><span class="dot"></span>📅 Agenda — 🇨🇦 Vancouver / 🇨🇱 Chile</h2>
 <div class="sub" style="margin-bottom:6px">En julio Chile va <b>+3 h</b> respecto a Vancouver (Vancouver PDT −07 · Chile CLT −04).</div>
 <div class="table-scroll">
 <table>
