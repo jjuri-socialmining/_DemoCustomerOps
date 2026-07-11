@@ -154,6 +154,15 @@
   .kcol.done .kcard{opacity:.82}
   @media(max-width:640px){.kanban{grid-template-columns:1fr}}
 
+  /* Copy-paste de mensajes */
+  .msgbox{position:relative}
+  .copy-btn{position:absolute;top:10px;right:10px;z-index:2;
+    background:var(--accent);color:#fff;border:none;border-radius:7px;
+    padding:6px 12px;font-size:12.5px;font-weight:700;cursor:pointer;
+    box-shadow:0 1px 4px rgba(0,0,0,.15)}
+  .copy-btn:hover{filter:brightness(1.08)}
+  .copy-btn.ok{background:var(--accent2)}
+
   .note{color:var(--muted);font-size:12px;margin-top:30px;border-top:1px solid var(--line);padding-top:12px}
   .kbd{font-family:ui-monospace,Menlo,monospace;background:var(--chip);border:1px solid var(--line);
     border-radius:5px;padding:1px 5px;font-size:12px}
@@ -365,32 +374,32 @@
     </div>
 
     <details style="margin:8px 0"><summary style="cursor:pointer;font-weight:700;color:var(--accent2);font-size:13px;padding:4px 0">✉️ Mensaje para enviarle por WhatsApp — tocar para ver/copiar</summary>
-    <div class="a" style="white-space:pre-wrap;margin-top:6px">Estimado Kent,
+    <div class="msgbox"><button class="copy-btn" onclick="copyMsg(this)">📋 Copiar</button><div class="a msgtext" style="white-space:pre-wrap;margin-top:6px">Estimado Kent,
 
-Un gusto haberte conocido hoy en esta *reunión de exploración* 🙌 y de verdad agradecido por tu disposición y tu tiempo. Nos quedó una muy buena impresión: tu perfil encaja bien con el frente de HSE / Medio Ambiente que estamos evaluando para este proyecto.
+Un gusto haberte conocido hoy en esta reunión de exploración 🙌 y de verdad agradecido por tu disposición y tu tiempo. Nos quedó una muy buena impresión: tu perfil encaja bien con el frente de HSE / Medio Ambiente que estamos evaluando para este proyecto.
 
-📇 *Mi contacto:*
+📇 Mi contacto:
 • Jorge Juri — PM / Sigma Digital Twins
 • 📧 jorgejuri@mgeomet.com.au
 • 📱 WhatsApp: +1 778 835 3720
 
-Como te comenté, acá van unos *tips para dejar tu CV a la medida del proyecto* (recuperación de minerales de residuos + planta de reciclaje, Omán):
+Como te comenté, acá van unos tips para dejar tu CV a la medida del proyecto (recuperación de minerales de residuos + planta de reciclaje, Omán):
 
-1) *Encabezado con el rol objetivo:* "HSE / Environmental &amp; Safety Advisor — Metal Recovery &amp; Hazardous Waste".
-2) *Arriba tu peso pesado:* Director de HSE en Barrick, Kinross, Capstone Copper y First Mode + Gerente HSE (cobre, Arizona). Con años por cargo y nombre de faena.
-3) *Lo que calza 1:1:* reciclaje/recuperación de metales (Cu en Capstone), residuos peligrosos + tratamiento de agua, revisión HSE en las 3 fases (diseño → construcción → puesta en marcha) y disposición final según normativa.
-4) *Metodologías:* PHA, FMEA, HAZOP, matrices de riesgo.
-5) *Certificaciones:* HAZWOPER ⭐, entrenador MSHA, ISO 45001 (y si tenés: Código del Cianuro/ICMI, NEBOSH, OSHA).
-6) *Diferenciador internacional:* Mauritania (minera estatal, ISO 45001) y tu conocimiento de la normativa de Arabia Saudita / Golfo.
-7) *Idiomas:* bilingüe español/inglés.
-8) *Sumá métricas* donde puedas.
+1) Encabezado con el rol objetivo: "HSE / Environmental &amp; Safety Advisor — Metal Recovery &amp; Hazardous Waste".
+2) Arriba tu peso pesado: Director de HSE en Barrick, Kinross, Capstone Copper y First Mode + Gerente HSE (cobre, Arizona). Con años por cargo y nombre de faena.
+3) Lo que calza 1:1: reciclaje/recuperación de metales (Cu en Capstone), residuos peligrosos + tratamiento de agua, revisión HSE en las 3 fases (diseño → construcción → puesta en marcha) y disposición final según normativa.
+4) Metodologías: PHA, FMEA, HAZOP, matrices de riesgo.
+5) Certificaciones: HAZWOPER ⭐, entrenador MSHA, ISO 45001 (y si tenés: Código del Cianuro/ICMI, NEBOSH, OSHA).
+6) Diferenciador internacional: Mauritania (minera estatal, ISO 45001) y tu conocimiento de la normativa de Arabia Saudita / Golfo.
+7) Idiomas: bilingüe español/inglés.
+8) Sumá métricas donde puedas.
 
-👉 El CV final conviene tenerlo en *inglés* (para el cliente).
+👉 El CV final conviene tenerlo en inglés (para el cliente).
 
-Cuando puedas, mandame tu *resume actualizado* así lo sumamos a la propuesta. Cualquier duda, me escribís por acá.
+Cuando puedas, mandame tu resume actualizado así lo sumamos a la propuesta. Cualquier duda, me escribís por acá.
 
 ¡Gracias de nuevo, Kent! 💪
-Jorge</div>
+Jorge</div></div>
     </details>
 
     <div class="qgroup">Opening — availability &amp; commitment</div>
@@ -559,7 +568,7 @@ Jorge</div>
 </div>
 
 <details style="margin:8px 0"><summary style="cursor:pointer;font-weight:700;color:var(--accent);font-size:13px;padding:6px 0">✉️ Respuesta para Juan Pablo — tocar para ver/copiar</summary>
-<div class="a" style="white-space:pre-wrap;margin-top:6px">Asunto: RE: CV Juan P. Hidalgo F.
+<div class="msgbox"><button class="copy-btn" onclick="copyMsg(this)">📋 Copiar</button><div class="a msgtext" style="white-space:pre-wrap;margin-top:6px">Asunto: RE: CV Juan P. Hidalgo F.
 
 Estimado Juan Pablo,
 
@@ -575,11 +584,11 @@ Quedo a tu disposición. ¡Gracias nuevamente y nos vemos en la reunión!
 Saludos cordiales,
 Jorge Juri
 PM / Sigma Digital Twins
-jorgejuri@mgeomet.com.au · +1 778 835 3720</div>
+jorgejuri@mgeomet.com.au · +1 778 835 3720</div></div>
 </details>
 
 <details style="margin:8px 0"><summary style="cursor:pointer;font-weight:700;color:var(--accent);font-size:13px;padding:6px 0">✉️ Respuesta para Paloma — tocar para ver/copiar</summary>
-<div class="a" style="white-space:pre-wrap;margin-top:6px">Asunto: RE: CV Paloma Tapia Guerrero
+<div class="msgbox"><button class="copy-btn" onclick="copyMsg(this)">📋 Copiar</button><div class="a msgtext" style="white-space:pre-wrap;margin-top:6px">Asunto: RE: CV Paloma Tapia Guerrero
 
 Estimada Paloma,
 
@@ -595,7 +604,7 @@ Quedo a tu disposición para cualquier información adicional. ¡Gracias nuevame
 Saludos cordiales,
 Jorge Juri
 PM / Sigma Digital Twins
-jorgejuri@mgeomet.com.au · +1 778 835 3720</div>
+jorgejuri@mgeomet.com.au · +1 778 835 3720</div></div>
 </details>
 </section>
 
@@ -665,5 +674,20 @@ jorgejuri@mgeomet.com.au · +1 778 835 3720</div>
 </div>
 
 </div>
+<script>
+function copyMsg(btn){
+  var text = btn.parentElement.querySelector('.msgtext').innerText;
+  navigator.clipboard.writeText(text).then(function(){
+    btn.textContent = '✅ Copiado'; btn.classList.add('ok');
+    setTimeout(function(){ btn.textContent = '📋 Copiar'; btn.classList.remove('ok'); }, 1800);
+  }).catch(function(){
+    // fallback: seleccionar el texto para copiar manual
+    var r = document.createRange(); r.selectNodeContents(btn.parentElement.querySelector('.msgtext'));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    btn.textContent = '⌘C para copiar';
+    setTimeout(function(){ btn.textContent = '📋 Copiar'; }, 2500);
+  });
+}
+</script>
 </body>
 </html>
