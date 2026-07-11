@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+
+<title>Organigrama — Proyecto Omán (Estudio Conceptual) · Sigma</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#1a2230; --muted:#5b6676;
+    --line:#c7d0dc; --accent:#1f6feb; --accent2:#0e7c5a; --warn:#b25b00;
+    --chip:#eef2f7;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0f141b; --card:#161d27; --ink:#e6ecf3; --muted:#9aa7b6;
+           --line:#2b3644; --accent:#4d9bff; --accent2:#37c99a; --warn:#e0932f; --chip:#1d2733; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding:32px 20px;}
+  .wrap{max-width:960px;margin:0 auto}
+  header{margin-bottom:22px}
+  h1{font-size:22px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:13px}
+  .badge{display:inline-block;background:var(--chip);border:1px solid var(--line);
+    border-radius:999px;padding:2px 10px;font-size:12px;color:var(--muted);margin-right:6px}
+  .tree{display:flex;flex-direction:column;align-items:center;gap:0;margin:18px 0 6px}
+  .node{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:10px 16px;text-align:center;min-width:200px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .node .role{font-weight:600}
+  .node .who{color:var(--muted);font-size:13px}
+  .node.top{border-color:var(--accent)}
+  .node.pm{border-color:var(--accent2)}
+  .conn{width:2px;height:18px;background:var(--line)}
+  .disc{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:6px}
+  .disc .node{min-width:150px;flex:1 1 150px;max-width:190px}
+  .band{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:8px;padding:12px 16px;margin:16px 0}
+  .band.qa{border-left-color:var(--accent2)}
+  .band.prod{border-left-color:var(--muted)}
+  .band h3{margin:0 0 8px;font-size:14px;letter-spacing:.3px;text-transform:uppercase;color:var(--muted)}
+  .band ul{margin:0;padding-left:18px}
+  .warn{color:var(--warn);font-weight:600}
+  table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.3px}
+  .note{color:var(--muted);font-size:12px;margin-top:24px;border-top:1px solid var(--line);padding-top:12px}
+  h2{font-size:16px;margin:26px 0 6px}
+  @media print{body{background:#fff;padding:0}.node,.band{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Organigrama — Proyecto Omán</h1>
+  <div class="sub">Estudio Conceptual + Básico · <span class="badge">Sigma = subcontrato de HLC</span><span class="badge">Alcance: NO construcción</span></div>
+</header>
+
+<div class="tree">
+  <div class="node top"><div class="role">Cliente — Omán (árabes)</div><div class="who">vía HLC · Tonino (sponsor)</div></div>
+  <div class="conn"></div>
+  <div class="node"><div class="role">Jefe de Proyecto</div><div class="who">Mauricio Contreras</div></div>
+  <div class="conn"></div>
+  <div class="node pm"><div class="role">Project Manager (+ AI)</div><div class="who">Jorge Juri · autopilot / gemelo digital</div></div>
+  <div class="conn"></div>
+  <div class="disc">
+    <div class="node"><div class="role">Procesos</div><div class="who">Program Manager</div></div>
+    <div class="node"><div class="role">Mant./Equipos/Eléctrica + Instrumentación</div><div class="who">Juan Carlos Ramírez (JC)</div></div>
+    <div class="node"><div class="role">Metalurgia</div><div class="who">2 senior (1 externo <span class="warn">⚠</span>)</div></div>
+    <div class="node"><div class="role">Proyectista / Diseño 3D</div><div class="who">Pablo · Navisworks · nube de puntos (drones)</div></div>
+    <div class="node"><div class="role">Experto Reciclaje</div><div class="who">senior (planta / EE.UU.)</div></div>
+    <div class="node" style="border-color:var(--accent2)"><div class="role">Asesor Medio Ambiente / HSEC — Omán</div><div class="who">Christi (Utah, EE.UU.) <span style="color:#0e7c5a;font-weight:700">✅ interesado</span></div></div>
+    <div class="node"><div class="role">Recurso clave ("Messi")</div><div class="who">Luis Fernando Hidalgo Cortés ("Lucho Hidalgo") <span style="color:#0e7c5a;font-weight:700">✅ interesado</span></div></div>
+    <div class="node" style="border-color:var(--accent2)"><div class="role">Calidad (QA)</div><div class="who">Paloma Tapia (junior, conoce a Tonino)</div></div>
+  </div>
+</div>
+
+<div class="band qa">
+  <h3>Transversal — Supervisión / QA (Sigma revisa antes de entregar al cliente)</h3>
+  <ul>
+    <li><b>Calidad (QA):</b> Paloma Tapia — junior, trabaja con Tonino en HLC</li>
+    <li><b>Legal / Compliance:</b> Belén (Pertel Legal) · <span class="warn">falta cobertura de ley omaní</span></li>
+    <li><b>Asesor de Medio Ambiente / HSEC (Salud, Seguridad, Medio Ambiente y Comunidad) — Omán:</b> Christi (Utah, EE.UU.) — ex-Equinox (Nicaragua), consultor internacional · alt. King Rosetti (Código Cianuro)</li>
+  </ul>
+</div>
+
+<div class="band prod">
+  <h3>Producción — "hormigas"</h3>
+  <ul><li>Dibujos · documentos · procesos · P&amp;IDs · cañería · 3D · paquete al cliente</li></ul>
+</div>
+
+<h2>Listado del equipo (candidatos)</h2>
+<table>
+  <thead><tr><th>Función</th><th>Persona</th><th>LinkedIn</th><th>Teléfono</th><th>Notas</th></tr></thead>
+  <tbody>
+    <tr><td>Jefe de Proyecto</td><td>Mauricio Contreras</td><td>—</td><td>—</td><td>Dirección</td></tr>
+    <tr><td>Project Manager + AI</td><td>Jorge Juri</td><td>—</td><td>—</td><td>Autopilot de PM · gemelo digital</td></tr>
+    <tr><td>Procesos</td><td>Program Manager</td><td>—</td><td>—</td><td>—</td></tr>
+    <tr><td>Mant./Equipos/Eléctrica/Instrum.</td><td>Juan Carlos Ramírez (JC)</td><td>—</td><td>—</td><td>Dos especialidades · "eminencia estrella"</td></tr>
+    <tr><td>Metalurgia senior</td><td>2 personas</td><td>—</td><td>—</td><td>Uno externo — <span class="warn">presión de costo</span></td></tr>
+    <tr><td>Proyectista — Diseño / 3D / dibujos</td><td>Pablo</td><td>—</td><td>—</td><td>Diseñador Industrial (U. Bío-Bío) · Dibujante Proyectista · BIM Manager · Navisworks · nube de puntos / drones · P&amp;IDs · lazos de control</td></tr>
+    <tr><td>Experto en reciclaje</td><td>por confirmar</td><td>—</td><td>—</td><td>Experiencia plantas / EE.UU. · bajó tarifa</td></tr>
+    <tr><td>Calidad (QA)</td><td>Paloma Tapia</td><td>—</td><td>—</td><td>Junior, conoce a Tonino</td></tr>
+    <tr><td>Legal / Compliance</td><td>Belén (Pertel Legal)</td><td>—</td><td>—</td><td>Falta ley omaní</td></tr>
+    <tr><td>Asesor de Medio Ambiente / HSEC — Omán</td><td>Christi (Utah, EE.UU.) <span style="color:#0e7c5a;font-weight:700">✅</span></td><td>—</td><td>—</td><td><b style="color:#0e7c5a">Interesado</b> · Ex-Equinox (Nicaragua) · consultor internacional · alt. King Rosetti (Código Cianuro)</td></tr>
+  </tbody>
+</table>
+
+<h2>Pool de recursos clave (reserva)</h2>
+<table>
+  <thead><tr><th>Nombre</th><th>Perfil</th><th>LinkedIn</th><th>Teléfono</th><th>Notas</th></tr></thead>
+  <tbody>
+    <tr style="opacity:.55;text-decoration:line-through"><td>Marcelo Rojas</td><td>Especialista top-tier</td><td>—</td><td>—</td><td><b style="color:#b00">❌ DESCARTADO</b> — cotizó ~18M CLP / 4 meses (muy alto), a Tonino no le gustó · fallback si otros no están; pedir tarifa/hora</td></tr>
+    <tr><td>Luis García Medina</td><td>Mexicano</td><td>—</td><td>—</td><td>Ya trabajando en el proyecto</td></tr>
+    <tr><td>Luis Martínez ("Zorro")</td><td>Senior (Coquimbo/La Serena)</td><td>—</td><td>—</td><td>Bueno</td></tr>
+    <tr><td>Experto Escondida</td><td>Operación de planta (arranque/parada)</td><td>—</td><td>—</td><td>Confianza · lo gestiona Mauricio</td></tr>
+    <tr><td>Luis Fernando Hidalgo Cortés ("Lucho Hidalgo") <span style="color:#0e7c5a;font-weight:700">✅</span></td><td>Constructor de procesos ("Messi")</td><td>—</td><td>—</td><td><b style="color:#0e7c5a">Interesado</b> · Santiago (Chile) · habla español · trabajaron juntos ~2021 · link en foto del chat</td></tr>
+    <tr><td>Juan Pablo Hidalgo Figueroa <span style="color:#0e7c5a;font-weight:700">✅</span></td><td>Consultoría — transversal (procesos + mantenimiento)</td><td>—</td><td>—</td><td><b style="color:#0e7c5a">Interesado</b> · trabaja transversal con procesos, mantenimiento y Jorge · podría reunirse mañana (sáb)</td></tr>
+    <tr><td>Ángel (Ángelo) Rutia</td><td>Mantenimiento mecánico</td><td>—</td><td>—</td><td>Mantención entre plantas · ing. construcción/calidad · skills: machine learning, inglés, Excel avanzado · candidato rama JC</td></tr>
+  </tbody>
+</table>
+
+<h2>Fotos / referencias</h2>
+<div class="gallery" style="display:flex;flex-wrap:wrap;gap:14px;margin-top:8px">
+  <!-- FOTOS: se agregan aquí a medida que llegan los screenshots -->
+  <div class="node" style="min-width:160px;color:var(--muted);text-align:center;padding:26px 14px">
+    (aún sin fotos — pega los recortes del chat y aparecen aquí)
+  </div>
+</div>
+
+<h2>Agenda — horarios 🇨🇦 Vancouver / 🇨🇱 Chile</h2>
+<div class="sub" style="margin-bottom:6px">En julio Chile va <b>+3 h</b> respecto a Vancouver (Vancouver PDT −07 · Chile CLT −04).</div>
+<table>
+  <thead><tr><th>Evento</th><th>Con quién</th><th>Día</th><th>🇨🇦 Vancouver</th><th>🇨🇱 Chile</th></tr></thead>
+  <tbody>
+    <tr><td>Entrevista — Christi (HSEC)</td><td>Christi + Jorge <span style="color:#0e7c5a;font-weight:700">✅</span></td><td>Sáb 11-jul</td><td>12:00</td><td><b>15:00</b></td></tr>
+    <tr><td>Entrevista — Juan Pablo Hidalgo</td><td>Juan Pablo Hidalgo Figueroa <span style="color:#0e7c5a;font-weight:700">✅</span></td><td>Sáb 11-jul</td><td>15:00</td><td><b>18:00</b></td></tr>
+    <tr><td>Revisión del organigrama</td><td>Equipo (Mauricio · Jorge · JC)</td><td>Sáb 11-jul</td><td>por confirmar</td><td>por confirmar</td></tr>
+    <tr><td>Entrevista — Paloma Tapia (QA)</td><td>Paloma Tapia + Jorge</td><td>Dom 12-jul</td><td>12:00</td><td><b>15:00–16:00 (3–4)</b></td></tr>
+    <tr><td>Entrevista — Ángelo Rutia (mantención)</td><td>Ángelo Rutia + JC</td><td>Dom 12-jul</td><td>13:00</td><td><b>16:00–17:00 (4–5)</b></td></tr>
+    <tr><td><b>Entrega organigrama + CVs a Tonino</b></td><td>Tonino (HLC)</td><td>Lun 13-jul</td><td>—</td><td>—</td></tr>
+  </tbody>
+</table>
+
+<div class="note">
+  Entregable comprometido: <b>organigrama + CVs</b> para <b>Tonino, lunes 13-jul-2026</b>. Mantener simple (no enviar lo que no piden).<br>
+  Confidencial — uso interno Sigma. Generado por el copiloto de reuniones (Sigma). Reunión 2026-07-10.
+</div>
+</div>
+</body>
+</html>
