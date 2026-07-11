@@ -5,59 +5,177 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
 
-<title>Organigrama — Proyecto Omán (Estudio Conceptual) · Sigma</title>
+<title>Organigrama + Entrevistas — Proyecto Omán · Sigma</title>
 <style>
   :root{
-    --bg:#f6f7f9; --card:#ffffff; --ink:#1a2230; --muted:#5b6676;
-    --line:#c7d0dc; --accent:#1f6feb; --accent2:#0e7c5a; --warn:#b25b00;
-    --chip:#eef2f7;
+    --bg:#f4f6f9; --card:#ffffff; --ink:#141b26; --muted:#5b6676;
+    --line:#d3dbe6; --line-soft:#e7ecf3;
+    --accent:#1f6feb; --accent2:#0e7c5a; --warn:#b25b00; --danger:#b00020;
+    --chip:#eef2f7; --sigma:#0b3d91;
+    --ok-bg:#e7f6ee; --ok-ink:#0e7c5a;
+    --field-bg:#fffdf3; --field-line:#e5cf7a;
   }
   @media (prefers-color-scheme: dark){
     :root{ --bg:#0f141b; --card:#161d27; --ink:#e6ecf3; --muted:#9aa7b6;
-           --line:#2b3644; --accent:#4d9bff; --accent2:#37c99a; --warn:#e0932f; --chip:#1d2733; }
+           --line:#2b3644; --line-soft:#232d3a;
+           --accent:#4d9bff; --accent2:#37c99a; --warn:#e0932f; --danger:#ff6b81;
+           --chip:#1d2733; --sigma:#4d9bff;
+           --ok-bg:#123024; --ok-ink:#37c99a;
+           --field-bg:#211d10; --field-line:#5a4d1f; }
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
-    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    padding:32px 20px;}
-  .wrap{max-width:960px;margin:0 auto}
-  header{margin-bottom:22px}
-  h1{font-size:22px;margin:0 0 4px}
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding:28px 18px 60px;}
+  .wrap{max-width:980px;margin:0 auto}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* Header */
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+    flex-wrap:wrap;margin-bottom:8px}
+  .brand{font-weight:800;letter-spacing:.5px;color:var(--sigma);font-size:13px;text-transform:uppercase;margin-bottom:6px}
+  h1{font-size:23px;margin:0 0 6px;line-height:1.2}
   .sub{color:var(--muted);font-size:13px}
   .badge{display:inline-block;background:var(--chip);border:1px solid var(--line);
-    border-radius:999px;padding:2px 10px;font-size:12px;color:var(--muted);margin-right:6px}
-  .tree{display:flex;flex-direction:column;align-items:center;gap:0;margin:18px 0 6px}
+    border-radius:999px;padding:2px 10px;font-size:12px;color:var(--muted);margin:2px 6px 2px 0}
+  .btn{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;
+    border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer}
+  .btn:hover{filter:brightness(1.06);text-decoration:none}
+
+  /* Nav / TOC */
+  nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 6px;padding:10px 12px;
+    background:var(--card);border:1px solid var(--line);border-radius:10px}
+  nav.toc a{font-size:13px;font-weight:600;color:var(--muted);padding:2px 8px;border-radius:6px}
+  nav.toc a:hover{background:var(--chip);color:var(--ink);text-decoration:none}
+
+  /* Legend */
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted);margin:12px 2px}
+  .legend b{color:var(--ink)}
+
+  h2{font-size:16px;margin:32px 0 8px;padding-top:6px;border-top:1px solid var(--line-soft);
+     display:flex;align-items:center;gap:8px}
+  h2 .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block}
+  section:first-of-type h2{border-top:none}
+
+  /* Tree */
+  .tree{display:flex;flex-direction:column;align-items:center;gap:0;margin:14px 0 6px}
   .node{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:10px 16px;text-align:center;min-width:200px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+    padding:10px 16px;text-align:center;min-width:210px;box-shadow:0 1px 3px rgba(20,27,38,.06)}
   .node .role{font-weight:600}
-  .node .who{color:var(--muted);font-size:13px}
-  .node.top{border-color:var(--accent)}
-  .node.pm{border-color:var(--accent2)}
+  .node .who{color:var(--muted);font-size:13px;margin-top:2px}
+  .node.top{border-color:var(--accent);border-width:1.5px}
+  .node.pm{border-color:var(--accent2);border-width:1.5px}
+  .node.env{border-color:var(--accent2)}
   .conn{width:2px;height:18px;background:var(--line)}
   .disc{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:6px}
-  .disc .node{min-width:150px;flex:1 1 150px;max-width:190px}
+  .disc .node{min-width:150px;flex:1 1 160px;max-width:210px}
+
+  /* Bands */
   .band{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
-    border-radius:8px;padding:12px 16px;margin:16px 0}
+    border-radius:8px;padding:12px 16px;margin:14px 0}
   .band.qa{border-left-color:var(--accent2)}
   .band.prod{border-left-color:var(--muted)}
-  .band h3{margin:0 0 8px;font-size:14px;letter-spacing:.3px;text-transform:uppercase;color:var(--muted)}
+  .band h3{margin:0 0 8px;font-size:13px;letter-spacing:.3px;text-transform:uppercase;color:var(--muted)}
   .band ul{margin:0;padding-left:18px}
+
   .warn{color:var(--warn);font-weight:600}
+  .ok{color:var(--ok-ink);font-weight:700}
+  .no{color:var(--danger);font-weight:700}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px;
+    background:var(--ok-bg);color:var(--ok-ink);margin-left:4px}
+
+  /* Tables */
   table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px}
-  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
   th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.3px}
-  .note{color:var(--muted);font-size:12px;margin-top:24px;border-top:1px solid var(--line);padding-top:12px}
-  h2{font-size:16px;margin:26px 0 6px}
-  @media print{body{background:#fff;padding:0}.node,.band{box-shadow:none}}
+  tr.out{opacity:.5;text-decoration:line-through}
+  .table-scroll{overflow-x:auto}
+
+  /* Downloads */
+  .dl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:10px}
+  .dl-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .dl-card .name{font-weight:700}
+  .dl-card .r{color:var(--muted);font-size:12.5px;margin:2px 0 8px}
+  .dl-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600}
+  .dl-pending{color:var(--muted);font-size:12.5px;font-style:italic}
+
+  /* Interview cards */
+  details.iv{background:var(--card);border:1px solid var(--line);border-radius:10px;margin:12px 0;
+    overflow:hidden}
+  details.iv[open]{box-shadow:0 2px 10px rgba(20,27,38,.07)}
+  details.iv > summary{list-style:none;cursor:pointer;padding:13px 16px;display:flex;
+    justify-content:space-between;align-items:center;gap:12px;font-weight:700}
+  details.iv > summary::-webkit-details-marker{display:none}
+  details.iv > summary::after{content:"▾";color:var(--muted);font-weight:400;transition:transform .15s}
+  details.iv[open] > summary::after{transform:rotate(180deg)}
+  .iv-meta{font-size:12px;color:var(--muted);font-weight:500}
+  .iv-body{padding:4px 16px 16px}
+  .qgroup{font-size:11.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+    color:var(--accent);margin:16px 0 2px;padding-bottom:3px;border-bottom:1px solid var(--line-soft)}
+  .qgroup.close{color:var(--accent2)}
+  .q{margin:14px 0}
+  .q .qt{font-weight:600;font-size:14px}
+  .q .qt .num{color:var(--accent);margin-right:6px}
+  .a{margin-top:6px;background:var(--field-bg);border:1px dashed var(--field-line);border-radius:8px;
+    padding:9px 12px;font-size:13.5px;min-height:38px;white-space:pre-wrap}
+  .a:empty::before{content:"— por completar en la entrevista —";color:var(--muted);font-style:italic}
+  .a[contenteditable]:focus{outline:2px solid var(--accent);background:var(--card)}
+  .iv-fixed{font-size:12.5px;color:var(--muted);margin-bottom:6px}
+
+  .note{color:var(--muted);font-size:12px;margin-top:30px;border-top:1px solid var(--line);padding-top:12px}
+  .kbd{font-family:ui-monospace,Menlo,monospace;background:var(--chip);border:1px solid var(--line);
+    border-radius:5px;padding:1px 5px;font-size:12px}
+
+  @media print{
+    body{background:#fff;padding:0;color:#000}
+    .no-print{display:none!important}
+    .node,.band,.dl-card,details.iv{box-shadow:none}
+    details.iv{border:1px solid #bbb}
+    details.iv:not([open]){display:block}
+    details.iv > summary::after{content:""}
+    .a{background:#fff;border-color:#bbb}
+    nav.toc{display:none}
+    a{color:#000;text-decoration:none}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
+
 <header>
-  <h1>Organigrama — Proyecto Omán</h1>
-  <div class="sub">Estudio Conceptual + Básico · <span class="badge">Sigma = subcontrato de HLC</span><span class="badge">Alcance: NO construcción</span></div>
+  <div>
+    <div class="brand">Sigma · Copiloto de Reuniones</div>
+    <h1>Organigrama &amp; Entrevistas — Proyecto Omán</h1>
+    <div class="sub">Estudio Conceptual + Básico · Sigma = subcontrato de HLC · Alcance: <b>NO construcción</b></div>
+    <div style="margin-top:8px">
+      <span class="badge">Confidencial — uso interno</span>
+      <span class="badge">Entrega a Tonino: lun 13-jul</span>
+      <span class="badge">Actualizado: 11-jul-2026</span>
+    </div>
+  </div>
+  <button class="btn no-print" onclick="window.print()">🖨️ Imprimir / PDF</button>
 </header>
 
+<nav class="toc no-print">
+  <a href="#org">Organigrama</a>
+  <a href="#descargas">Descargas · CVs</a>
+  <a href="#entrevistas">Entrevistas</a>
+  <a href="#equipo">Equipo</a>
+  <a href="#pool">Pool de reserva</a>
+  <a href="#agenda">Agenda</a>
+</nav>
+
+<div class="legend">
+  <span><b class="ok">✅</b> interesado / confirmado</span>
+  <span><b style="color:var(--muted)">⏳</b> por confirmar</span>
+  <span><b class="no">❌</b> descartado</span>
+  <span><b class="warn">⚠</b> riesgo / atención</span>
+</div>
+
+<!-- ================= ORGANIGRAMA ================= -->
+<section id="org">
+<h2><span class="dot"></span>Organigrama</h2>
 <div class="tree">
   <div class="node top"><div class="role">Cliente — Omán (árabes)</div><div class="who">vía HLC · Tonino (sponsor)</div></div>
   <div class="conn"></div>
@@ -67,13 +185,13 @@
   <div class="conn"></div>
   <div class="disc">
     <div class="node"><div class="role">Procesos</div><div class="who">Program Manager</div></div>
-    <div class="node"><div class="role">Mant./Equipos/Eléctrica + Instrumentación</div><div class="who">Juan Carlos Ramírez (JC)</div></div>
+    <div class="node"><div class="role">Mant./Equipos/Eléctrica + Instrum.</div><div class="who">Juan Carlos Ramírez (JC)</div></div>
     <div class="node"><div class="role">Metalurgia</div><div class="who">2 senior (1 externo <span class="warn">⚠</span>)</div></div>
     <div class="node"><div class="role">Proyectista / Diseño 3D</div><div class="who">Pablo · Navisworks · nube de puntos (drones)</div></div>
     <div class="node"><div class="role">Experto Reciclaje</div><div class="who">senior (planta / EE.UU.)</div></div>
-    <div class="node" style="border-color:var(--accent2)"><div class="role">Asesor Medio Ambiente / HSEC — Omán</div><div class="who">Christi (Utah, EE.UU.) <span style="color:#0e7c5a;font-weight:700">✅ interesado</span></div></div>
-    <div class="node"><div class="role">Recurso clave ("Messi")</div><div class="who">Luis Fernando Hidalgo Cortés ("Lucho Hidalgo") <span style="color:#0e7c5a;font-weight:700">✅ interesado</span></div></div>
-    <div class="node" style="border-color:var(--accent2)"><div class="role">Calidad (QA)</div><div class="who">Paloma Tapia (junior, conoce a Tonino)</div></div>
+    <div class="node env"><div class="role">Asesor Medio Ambiente / HSEC — Omán</div><div class="who">Christi (Utah, EE.UU.) <span class="ok">✅</span></div></div>
+    <div class="node"><div class="role">Recurso clave ("Messi")</div><div class="who">Luis F. Hidalgo Cortés ("Lucho") <span class="ok">✅</span></div></div>
+    <div class="node env"><div class="role">Calidad (QA)</div><div class="who">Paloma Tapia (junior, conoce a Tonino)</div></div>
   </div>
 </div>
 
@@ -82,7 +200,7 @@
   <ul>
     <li><b>Calidad (QA):</b> Paloma Tapia — junior, trabaja con Tonino en HLC</li>
     <li><b>Legal / Compliance:</b> Belén (Pertel Legal) · <span class="warn">falta cobertura de ley omaní</span></li>
-    <li><b>Asesor de Medio Ambiente / HSEC (Salud, Seguridad, Medio Ambiente y Comunidad) — Omán:</b> Christi (Utah, EE.UU.) — ex-Equinox (Nicaragua), consultor internacional · alt. King Rosetti (Código Cianuro)</li>
+    <li><b>Asesor de Medio Ambiente / HSEC — Omán:</b> Christi (Utah, EE.UU.) — ex-Equinox (Nicaragua), consultor internacional · alt. King Rosetti (Código Cianuro)</li>
   </ul>
 </div>
 
@@ -90,8 +208,166 @@
   <h3>Producción — "hormigas"</h3>
   <ul><li>Dibujos · documentos · procesos · P&amp;IDs · cañería · 3D · paquete al cliente</li></ul>
 </div>
+</section>
 
-<h2>Listado del equipo (candidatos)</h2>
+<!-- ================= DESCARGAS / CVs ================= -->
+<section id="descargas">
+<h2><span class="dot"></span>Descargas — CVs del equipo</h2>
+<div class="sub">Documentos confidenciales. A medida que llegan los CVs se cargan aquí con link directo de descarga.</div>
+<div class="dl-grid">
+
+  <div class="dl-card">
+    <div class="name">Christi <span class="pill">✅</span></div>
+    <div class="r">Asesor Medio Ambiente / HSEC — Omán</div>
+    <span class="dl-pending">CV pendiente de recibir</span>
+  </div>
+
+  <div class="dl-card">
+    <div class="name">Juan Pablo Hidalgo Figueroa <span class="pill">✅</span></div>
+    <div class="r">Consultoría transversal — procesos + mantenimiento</div>
+    <span class="dl-pending">CV pendiente de recibir</span>
+  </div>
+
+  <div class="dl-card">
+    <div class="name">Luis F. Hidalgo Cortés ("Lucho") <span class="pill">✅</span></div>
+    <div class="r">Constructor de procesos ("Messi")</div>
+    <span class="dl-pending">CV pendiente de recibir</span>
+  </div>
+
+  <div class="dl-card">
+    <div class="name">Paloma Tapia</div>
+    <div class="r">Calidad (QA)</div>
+    <span class="dl-pending">CV pendiente de recibir</span>
+  </div>
+
+  <div class="dl-card">
+    <div class="name">Ángelo Rutia</div>
+    <div class="r">Mantenimiento mecánico</div>
+    <span class="dl-pending">CV pendiente de recibir</span>
+  </div>
+
+  <div class="dl-card">
+    <div class="name">Pablo</div>
+    <div class="r">Proyectista / Diseño 3D · BIM</div>
+    <span class="dl-pending">CV pendiente de recibir</span>
+  </div>
+
+</div>
+</section>
+
+<!-- ================= ENTREVISTAS ================= -->
+<section id="entrevistas">
+<h2><span class="dot"></span>Entrevistas — preguntas y respuestas</h2>
+<div class="sub">Preguntas propuestas por candidato. El campo de respuesta se completa <b>en vivo durante la entrevista</b> (o hacé clic y escribí directo).</div>
+
+<!-- ===== Christi (HSEC) — Sáb 15:00 Chile ===== -->
+<details class="iv" open>
+  <summary>Christi — Asesor Medio Ambiente / HSEC — Omán <span class="iv-meta">Sáb 11-jul · 15:00 🇨🇱 / 12:00 🇨🇦 · con Jorge</span></summary>
+  <div class="iv-body">
+    <div class="iv-fixed">Contexto: ex-Equinox (Nicaragua), consultor internacional. Alternativa: King Rosetti (Código Cianuro).</div>
+
+    <div class="qgroup">Apertura — disponibilidad y compromiso</div>
+    <div class="q"><div class="qt"><span class="num">1.</span>Disponibilidad: ¿desde cuándo puede incorporarse? ¿Hasta qué fecha tiene libre? ¿% de dedicación posible?</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">2.</span>Compromiso: ¿qué nivel de dedicación puede garantizar al proyecto? ¿Otros compromisos que compitan por su tiempo?</div><div class="a" contenteditable="true"></div></div>
+
+    <div class="qgroup">Rol — HSEC / Medio Ambiente</div>
+    <div class="q"><div class="qt"><span class="num">3.</span>Experiencia en normativa ambiental de Omán / Golfo Pérsico (permisos, autoridad ambiental local).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">4.</span>Manejo de residuos peligrosos y de mantenimiento de astilleros (shipyard maintenance waste). ¿Proyectos comparables?</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">5.</span>Experiencia con el Código Internacional de Manejo de Cianuro y recuperación de minerales.</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">6.</span>Nivel de inglés (cliente árabe / HLC internacional). ¿Cómoda redactando informes HSEC en inglés?</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">7.</span>Modalidad: 100% remoto desde Utah, o disponibilidad para viajar a Omán si el proyecto lo pide.</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">8.</span>Referencias / proyectos de HSEC internacionales que podamos validar.</div><div class="a" contenteditable="true"></div></div>
+
+    <div class="qgroup close">Cierre — pretensiones y contacto</div>
+    <div class="q"><div class="qt"><span class="num">9.</span>Pretensión de sueldo <b>full-time</b> (mensual, moneda).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">10.</span>Tarifa <b>por hora de consultoría</b> (part-time / por horas).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">11.</span>Disponibilidad <b>de lunes a lunes</b> (¿puede trabajar los 7 días si el proyecto lo exige? ventanas horarias).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">12.</span>Disponibilidad por <b>WhatsApp</b> (¿es el mismo número de contacto? tiempo de respuesta esperado).</div><div class="a" contenteditable="true"></div></div>
+  </div>
+</details>
+
+<!-- ===== Juan Pablo Hidalgo (transversal) — Sáb 18:00 Chile ===== -->
+<details class="iv" open>
+  <summary>Juan Pablo Hidalgo Figueroa — Consultoría transversal (procesos + mantenimiento) <span class="iv-meta">Sáb 11-jul · 18:00 🇨🇱 / 15:00 🇨🇦</span></summary>
+  <div class="iv-body">
+    <div class="iv-fixed">Contexto: trabaja transversal con procesos, mantenimiento y Jorge. Interesado ✅.</div>
+
+    <div class="qgroup">Apertura — disponibilidad y compromiso</div>
+    <div class="q"><div class="qt"><span class="num">1.</span>Disponibilidad: ¿desde cuándo puede incorporarse? ¿Hasta cuándo? ¿% de dedicación posible?</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">2.</span>Compromiso: ¿qué nivel de dedicación puede garantizar? ¿Otros compromisos que compitan por su tiempo?</div><div class="a" contenteditable="true"></div></div>
+
+    <div class="qgroup">Rol — procesos + mantenimiento</div>
+    <div class="q"><div class="qt"><span class="num">3.</span>¿Cómo ve su rol integrando procesos y mantenimiento en este proyecto? ¿Qué frentes cubriría?</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">4.</span>Experiencia en plantas de recuperación / reciclaje de metales o similares.</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">5.</span>Herramientas y metodologías que domina (gestión de mantenimiento, procesos, software).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">6.</span>Nivel de inglés.</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">7.</span>Modalidad (remoto/híbrido) y disponibilidad de viaje a Omán si aplica.</div><div class="a" contenteditable="true"></div></div>
+
+    <div class="qgroup close">Cierre — pretensiones y contacto</div>
+    <div class="q"><div class="qt"><span class="num">8.</span>Pretensión de sueldo <b>full-time</b> (mensual, moneda).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">9.</span>Tarifa <b>por hora de consultoría</b> (part-time / por horas).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">10.</span>Disponibilidad <b>de lunes a lunes</b> (¿puede trabajar los 7 días si el proyecto lo exige? ventanas horarias).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">11.</span>Disponibilidad por <b>WhatsApp</b> (¿es el mismo número de contacto? tiempo de respuesta esperado).</div><div class="a" contenteditable="true"></div></div>
+  </div>
+</details>
+
+<!-- ===== Paloma Tapia (QA) — Dom 15:00-16:00 Chile ===== -->
+<details class="iv">
+  <summary>Paloma Tapia — Calidad (QA) <span class="iv-meta">Dom 12-jul · 15:00–16:00 🇨🇱 / 12:00 🇨🇦</span></summary>
+  <div class="iv-body">
+    <div class="iv-fixed">Contexto: junior, trabaja con Tonino en HLC.</div>
+
+    <div class="qgroup">Apertura — disponibilidad y compromiso</div>
+    <div class="q"><div class="qt"><span class="num">1.</span>Disponibilidad: ¿desde cuándo puede incorporarse? ¿Hasta cuándo? ¿% de dedicación posible?</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">2.</span>Compromiso: ¿qué nivel de dedicación puede garantizar? ¿Otros compromisos que compitan por su tiempo?</div><div class="a" contenteditable="true"></div></div>
+
+    <div class="qgroup">Rol — Calidad (QA)</div>
+    <div class="q"><div class="qt"><span class="num">3.</span>Experiencia en control de calidad documental / de ingeniería (dossiers, revisión de entregables).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">4.</span>Manejo de P&amp;IDs, planos y paquetes técnicos: ¿qué tan cómoda revisándolos?</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">5.</span>Relación de trabajo con Tonino / HLC: ¿en qué proyectos y qué rol?</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">6.</span>Herramientas de QA / gestión documental que usa.</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">7.</span>Nivel de inglés.</div><div class="a" contenteditable="true"></div></div>
+
+    <div class="qgroup close">Cierre — pretensiones y contacto</div>
+    <div class="q"><div class="qt"><span class="num">8.</span>Pretensión de sueldo <b>full-time</b> (mensual, moneda).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">9.</span>Tarifa <b>por hora de consultoría</b> (part-time / por horas).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">10.</span>Disponibilidad <b>de lunes a lunes</b> (¿puede trabajar los 7 días si el proyecto lo exige? ventanas horarias).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">11.</span>Disponibilidad por <b>WhatsApp</b> (¿es el mismo número de contacto? tiempo de respuesta esperado).</div><div class="a" contenteditable="true"></div></div>
+  </div>
+</details>
+
+<!-- ===== Ángelo Rutia (mantenimiento) — Dom 16:00-17:00 Chile ===== -->
+<details class="iv">
+  <summary>Ángelo Rutia — Mantenimiento mecánico <span class="iv-meta">Dom 12-jul · 16:00–17:00 🇨🇱 / 13:00 🇨🇦 · con JC</span></summary>
+  <div class="iv-body">
+    <div class="iv-fixed">Contexto: mantención mecánica entre plantas · ing. construcción/calidad · skills: machine learning, inglés, Excel avanzado · candidato rama JC.</div>
+
+    <div class="qgroup">Apertura — disponibilidad y compromiso</div>
+    <div class="q"><div class="qt"><span class="num">1.</span>Disponibilidad: ¿desde cuándo puede incorporarse? ¿Hasta cuándo? ¿% de dedicación posible?</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">2.</span>Compromiso: ¿qué nivel de dedicación puede garantizar? ¿Otros compromisos que compitan por su tiempo?</div><div class="a" contenteditable="true"></div></div>
+
+    <div class="qgroup">Rol — mantenimiento mecánico</div>
+    <div class="q"><div class="qt"><span class="num">3.</span>Experiencia en mantención mecánica entre plantas y arranque/parada de planta.</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">4.</span>Aplicación de machine learning / Excel avanzado al mantenimiento (predictivo, KPIs).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">5.</span>Experiencia en instrumentación/eléctrica que complemente la rama de JC.</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">6.</span>Nivel de inglés (confirmado en perfil).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">7.</span>Modalidad y disponibilidad de viaje a Omán si aplica.</div><div class="a" contenteditable="true"></div></div>
+
+    <div class="qgroup close">Cierre — pretensiones y contacto</div>
+    <div class="q"><div class="qt"><span class="num">8.</span>Pretensión de sueldo <b>full-time</b> (mensual, moneda).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">9.</span>Tarifa <b>por hora de consultoría</b> (part-time / por horas).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">10.</span>Disponibilidad <b>de lunes a lunes</b> (¿puede trabajar los 7 días si el proyecto lo exige? ventanas horarias).</div><div class="a" contenteditable="true"></div></div>
+    <div class="q"><div class="qt"><span class="num">11.</span>Disponibilidad por <b>WhatsApp</b> (¿es el mismo número de contacto? tiempo de respuesta esperado).</div><div class="a" contenteditable="true"></div></div>
+  </div>
+</details>
+
+<div class="sub no-print" style="margin-top:8px">💡 Las respuestas escritas aquí en el navegador <b>no se guardan</b> al recargar. Para que queden fijas en la página, el copiloto las carga en el archivo y republica.</div>
+</section>
+
+<!-- ================= EQUIPO ================= -->
+<section id="equipo">
+<h2><span class="dot"></span>Listado del equipo (candidatos)</h2>
+<div class="table-scroll">
 <table>
   <thead><tr><th>Función</th><th>Persona</th><th>LinkedIn</th><th>Teléfono</th><th>Notas</th></tr></thead>
   <tbody>
@@ -104,50 +380,55 @@
     <tr><td>Experto en reciclaje</td><td>por confirmar</td><td>—</td><td>—</td><td>Experiencia plantas / EE.UU. · bajó tarifa</td></tr>
     <tr><td>Calidad (QA)</td><td>Paloma Tapia</td><td>—</td><td>—</td><td>Junior, conoce a Tonino</td></tr>
     <tr><td>Legal / Compliance</td><td>Belén (Pertel Legal)</td><td>—</td><td>—</td><td>Falta ley omaní</td></tr>
-    <tr><td>Asesor de Medio Ambiente / HSEC — Omán</td><td>Christi (Utah, EE.UU.) <span style="color:#0e7c5a;font-weight:700">✅</span></td><td>—</td><td>—</td><td><b style="color:#0e7c5a">Interesado</b> · Ex-Equinox (Nicaragua) · consultor internacional · alt. King Rosetti (Código Cianuro)</td></tr>
+    <tr><td>Asesor de Medio Ambiente / HSEC — Omán</td><td>Christi (Utah, EE.UU.) <span class="ok">✅</span></td><td>—</td><td>—</td><td><b class="ok">Interesado</b> · Ex-Equinox (Nicaragua) · consultor internacional · alt. King Rosetti (Código Cianuro)</td></tr>
   </tbody>
 </table>
+</div>
+</section>
 
-<h2>Pool de recursos clave (reserva)</h2>
+<!-- ================= POOL ================= -->
+<section id="pool">
+<h2><span class="dot"></span>Pool de recursos clave (reserva)</h2>
+<div class="table-scroll">
 <table>
   <thead><tr><th>Nombre</th><th>Perfil</th><th>LinkedIn</th><th>Teléfono</th><th>Notas</th></tr></thead>
   <tbody>
-    <tr style="opacity:.55;text-decoration:line-through"><td>Marcelo Rojas</td><td>Especialista top-tier</td><td>—</td><td>—</td><td><b style="color:#b00">❌ DESCARTADO</b> — cotizó ~18M CLP / 4 meses (muy alto), a Tonino no le gustó · fallback si otros no están; pedir tarifa/hora</td></tr>
+    <tr class="out"><td>Marcelo Rojas</td><td>Especialista top-tier</td><td>—</td><td>—</td><td><b class="no">❌ DESCARTADO</b> — cotizó ~18M CLP / 4 meses (muy alto), a Tonino no le gustó · fallback si otros no están; pedir tarifa/hora</td></tr>
     <tr><td>Luis García Medina</td><td>Mexicano</td><td>—</td><td>—</td><td>Ya trabajando en el proyecto</td></tr>
     <tr><td>Luis Martínez ("Zorro")</td><td>Senior (Coquimbo/La Serena)</td><td>—</td><td>—</td><td>Bueno</td></tr>
     <tr><td>Experto Escondida</td><td>Operación de planta (arranque/parada)</td><td>—</td><td>—</td><td>Confianza · lo gestiona Mauricio</td></tr>
-    <tr><td>Luis Fernando Hidalgo Cortés ("Lucho Hidalgo") <span style="color:#0e7c5a;font-weight:700">✅</span></td><td>Constructor de procesos ("Messi")</td><td>—</td><td>—</td><td><b style="color:#0e7c5a">Interesado</b> · Santiago (Chile) · habla español · trabajaron juntos ~2021 · link en foto del chat</td></tr>
-    <tr><td>Juan Pablo Hidalgo Figueroa <span style="color:#0e7c5a;font-weight:700">✅</span></td><td>Consultoría — transversal (procesos + mantenimiento)</td><td>—</td><td>—</td><td><b style="color:#0e7c5a">Interesado</b> · trabaja transversal con procesos, mantenimiento y Jorge · podría reunirse mañana (sáb)</td></tr>
-    <tr><td>Ángel (Ángelo) Rutia</td><td>Mantenimiento mecánico</td><td>—</td><td>—</td><td>Mantención entre plantas · ing. construcción/calidad · skills: machine learning, inglés, Excel avanzado · candidato rama JC</td></tr>
+    <tr><td>Luis F. Hidalgo Cortés ("Lucho") <span class="ok">✅</span></td><td>Constructor de procesos ("Messi")</td><td>—</td><td>—</td><td><b class="ok">Interesado</b> · Santiago (Chile) · habla español · trabajaron juntos ~2021</td></tr>
+    <tr><td>Juan Pablo Hidalgo Figueroa <span class="ok">✅</span></td><td>Consultoría transversal (procesos + mantenimiento)</td><td>—</td><td>—</td><td><b class="ok">Interesado</b> · entrevista sáb 18:00 Chile</td></tr>
+    <tr><td>Ángel (Ángelo) Rutia</td><td>Mantenimiento mecánico</td><td>—</td><td>—</td><td>Mantención entre plantas · ing. construcción/calidad · skills: ML, inglés, Excel avanzado · candidato rama JC</td></tr>
   </tbody>
 </table>
-
-<h2>Fotos / referencias</h2>
-<div class="gallery" style="display:flex;flex-wrap:wrap;gap:14px;margin-top:8px">
-  <!-- FOTOS: se agregan aquí a medida que llegan los screenshots -->
-  <div class="node" style="min-width:160px;color:var(--muted);text-align:center;padding:26px 14px">
-    (aún sin fotos — pega los recortes del chat y aparecen aquí)
-  </div>
 </div>
+</section>
 
-<h2>Agenda — horarios 🇨🇦 Vancouver / 🇨🇱 Chile</h2>
+<!-- ================= AGENDA ================= -->
+<section id="agenda">
+<h2><span class="dot"></span>Agenda — 🇨🇦 Vancouver / 🇨🇱 Chile</h2>
 <div class="sub" style="margin-bottom:6px">En julio Chile va <b>+3 h</b> respecto a Vancouver (Vancouver PDT −07 · Chile CLT −04).</div>
+<div class="table-scroll">
 <table>
   <thead><tr><th>Evento</th><th>Con quién</th><th>Día</th><th>🇨🇦 Vancouver</th><th>🇨🇱 Chile</th></tr></thead>
   <tbody>
-    <tr><td>Entrevista — Christi (HSEC)</td><td>Christi + Jorge <span style="color:#0e7c5a;font-weight:700">✅</span></td><td>Sáb 11-jul</td><td>12:00</td><td><b>15:00</b></td></tr>
-    <tr><td>Entrevista — Juan Pablo Hidalgo</td><td>Juan Pablo Hidalgo Figueroa <span style="color:#0e7c5a;font-weight:700">✅</span></td><td>Sáb 11-jul</td><td>15:00</td><td><b>18:00</b></td></tr>
+    <tr><td>Entrevista — Christi (HSEC)</td><td>Christi + Jorge <span class="ok">✅</span></td><td>Sáb 11-jul</td><td>12:00</td><td><b>15:00</b></td></tr>
+    <tr><td>Entrevista — Juan Pablo Hidalgo</td><td>Juan Pablo Hidalgo Figueroa <span class="ok">✅</span></td><td>Sáb 11-jul</td><td>15:00</td><td><b>18:00</b></td></tr>
     <tr><td>Revisión del organigrama</td><td>Equipo (Mauricio · Jorge · JC)</td><td>Sáb 11-jul</td><td>por confirmar</td><td>por confirmar</td></tr>
-    <tr><td>Entrevista — Paloma Tapia (QA)</td><td>Paloma Tapia + Jorge</td><td>Dom 12-jul</td><td>12:00</td><td><b>15:00–16:00 (3–4)</b></td></tr>
-    <tr><td>Entrevista — Ángelo Rutia (mantención)</td><td>Ángelo Rutia + JC</td><td>Dom 12-jul</td><td>13:00</td><td><b>16:00–17:00 (4–5)</b></td></tr>
+    <tr><td>Entrevista — Paloma Tapia (QA)</td><td>Paloma Tapia + Jorge</td><td>Dom 12-jul</td><td>12:00</td><td><b>15:00–16:00</b></td></tr>
+    <tr><td>Entrevista — Ángelo Rutia (mantención)</td><td>Ángelo Rutia + JC</td><td>Dom 12-jul</td><td>13:00</td><td><b>16:00–17:00</b></td></tr>
     <tr><td><b>Entrega organigrama + CVs a Tonino</b></td><td>Tonino (HLC)</td><td>Lun 13-jul</td><td>—</td><td>—</td></tr>
   </tbody>
 </table>
+</div>
+</section>
 
 <div class="note">
   Entregable comprometido: <b>organigrama + CVs</b> para <b>Tonino, lunes 13-jul-2026</b>. Mantener simple (no enviar lo que no piden).<br>
-  Confidencial — uso interno Sigma. Generado por el copiloto de reuniones (Sigma). Reunión 2026-07-10.
+  Confidencial — uso interno Sigma. Generado por el copiloto de reuniones (Sigma). Base: reunión 2026-07-10.
 </div>
+
 </div>
 </body>
 </html>
