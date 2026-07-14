@@ -59,20 +59,41 @@
   section:first-of-type h2{border-top:none}
 
   /* Tree */
-  .tree{display:flex;flex-direction:column;align-items:center;gap:0;margin:14px 0 6px}
-  .node{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:10px 16px;text-align:center;min-width:210px;box-shadow:0 1px 3px rgba(20,27,38,.06)}
-  .node .role{font-weight:600}
-  .node .who{color:var(--muted);font-size:13px;margin-top:2px}
-  .node.top{border-color:var(--accent);border-width:1.5px}
-  .node.pm{border-color:var(--accent2);border-width:1.5px}
+  .tree{display:flex;flex-direction:column;align-items:center;gap:0;margin:18px 0 10px;
+    padding:22px 10px 26px;border-radius:16px;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(31,111,235,.06), transparent 60%),
+      linear-gradient(180deg, var(--card), var(--bg));
+    border:1px solid var(--line-soft)}
+  .node{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:12px 18px 11px;text-align:center;min-width:210px;position:relative;overflow:hidden;
+    box-shadow:0 2px 8px rgba(20,27,38,.07);transition:transform .15s ease, box-shadow .15s ease}
+  .node:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,27,38,.14)}
+  .node::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--line)}
+  .node .role{font-weight:700;font-size:13.5px;letter-spacing:.2px}
+  .node .who{color:var(--muted);font-size:12.5px;margin-top:3px;line-height:1.5}
+  .node.top{border-color:var(--accent)}
+  .node.top::before{background:var(--accent)}
+  .node.dir::before{background:var(--sigma)}
+  .node.dir .role{color:var(--sigma)}
+  .node.jefe{border-color:var(--warn)}
+  .node.jefe::before{background:var(--warn)}
+  .node.jefe .role{color:var(--warn)}
+  .node.pm{border-color:var(--accent2)}
+  .node.pm::before{background:var(--accent2)}
+  .node.pm .role{color:var(--accent2)}
   .node.env{border-color:var(--accent2)}
-  .conn{width:2px;height:18px;background:var(--line)}
+  .node.env::before{background:var(--accent2)}
+  .conn{width:2px;height:20px;background:linear-gradient(180deg,var(--line),var(--line-soft))}
   .disc{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:6px}
   .disc .node{min-width:150px;flex:1 1 160px;max-width:210px}
-  .branches{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start;justify-content:center;margin-top:0}
+  .branches{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start;justify-content:center;margin-top:0;
+    padding-top:16px;position:relative}
+  .branches::before{content:"";position:absolute;top:0;left:50%;width:2px;height:16px;
+    transform:translateX(-50%);background:var(--line)}
   .branch{display:flex;flex-direction:column;align-items:center}
   .branch>.node{max-width:260px}
+  .branch .branches{gap:16px}
 
   /* Bands */
   .band{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
@@ -244,9 +265,9 @@
 <div class="tree">
   <div class="node top"><div class="role">Cliente — Omán (árabes)</div><div class="who">vía HLC · Tonino (sponsor)</div></div>
   <div class="conn"></div>
-  <div class="node"><div class="role">Director</div><div class="who">Mauricio Contreras</div></div>
+  <div class="node dir"><div class="role">Director</div><div class="who">Mauricio Contreras</div></div>
   <div class="conn"></div>
-  <div class="node"><div class="role">Jefe de Proyecto — Metalurgia</div><div class="who">Luis García Medina <span class="ok">✅</span></div></div>
+  <div class="node jefe"><div class="role">Jefe de Proyecto — Metalurgia</div><div class="who">Luis García Medina <span class="ok">✅</span></div></div>
   <div class="branches">
     <div class="branch">
       <div class="conn"></div>
