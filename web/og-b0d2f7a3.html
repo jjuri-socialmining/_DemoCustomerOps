@@ -70,6 +70,9 @@
   .conn{width:2px;height:18px;background:var(--line)}
   .disc{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:6px}
   .disc .node{min-width:150px;flex:1 1 160px;max-width:210px}
+  .branches{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start;justify-content:center;margin-top:0}
+  .branch{display:flex;flex-direction:column;align-items:center}
+  .branch>.node{max-width:260px}
 
   /* Bands */
   .band{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
@@ -242,15 +245,21 @@
   <div class="node top"><div class="role">Cliente — Omán (árabes)</div><div class="who">vía HLC · Tonino (sponsor)</div></div>
   <div class="conn"></div>
   <div class="node"><div class="role">Jefe de Proyecto</div><div class="who">Mauricio Contreras</div></div>
-  <div class="conn"></div>
-  <div class="node pm"><div class="role">Project Manager (+ AI)</div><div class="who">Jorge Juri · autopilot / gemelo digital</div></div>
-  <div class="conn"></div>
-  <div class="disc">
-    <div class="node"><div class="role">Mant./Equipos/Eléctrica + Instrum.</div><div class="who">Juan Carlos Ramírez (JC)</div></div>
-    <div class="node"><div class="role">Metalurgia</div><div class="who">2 senior: Luis García Medina <span class="ok">✅</span> + Kent Christie <span class="ok">✅</span> · dependen de Mauricio Contreras</div></div>
-    <div class="node"><div class="role">Proyectista / BIM Manager — Piping &amp; Plant Design</div><div class="who">Juan Pablo Hidalgo <span class="ok">✅</span> · scan-to-BIM · ISO 19650<br><span class="warn">⚠ ¿absorbe el nodo "Pablo"? — confirmar con Mauricio</span></div></div>
-    <div class="node env"><div class="role">Experto Reciclaje + Asesor Medio Ambiente / HSEC — Omán</div><div class="who">Kent Christie (Utah, EE.UU.) <span class="ok">✅</span></div></div>
-    <div class="node env"><div class="role">Calidad (QA)</div><div class="who">Paloma Tapia <span class="ok">✅</span> · entrevistada 13-jul · disponibilidad inmediata full-time</div></div>
+  <div class="branches">
+    <div class="branch">
+      <div class="conn"></div>
+      <div class="node env"><div class="role">Metalurgia · Experto Reciclaje · Asesor Medio Ambiente / HSEC — Omán</div><div class="who">Luis García Medina <span class="ok">✅</span> + Kent Christie (Utah, EE.UU.) <span class="ok">✅</span></div></div>
+    </div>
+    <div class="branch">
+      <div class="conn"></div>
+      <div class="node pm"><div class="role">Project Manager (+ AI)</div><div class="who">Jorge Juri · autopilot / gemelo digital</div></div>
+      <div class="conn"></div>
+      <div class="disc">
+        <div class="node"><div class="role">Mant./Equipos/Eléctrica + Instrum.</div><div class="who">Juan Carlos Ramírez (JC)<br>Asistente: Ángelo Urrutia Tapia <span class="ok">✅</span></div></div>
+        <div class="node"><div class="role">Proyectista / BIM Manager — Piping &amp; Plant Design</div><div class="who">Juan Pablo Hidalgo <span class="ok">✅</span> · scan-to-BIM · ISO 19650<br><span class="warn">⚠ ¿absorbe el nodo "Pablo"? — confirmar con Mauricio</span></div></div>
+        <div class="node env"><div class="role">Calidad (QA)</div><div class="who">Paloma Tapia <span class="ok">✅</span> · entrevistada 13-jul · disponibilidad inmediata full-time</div></div>
+      </div>
+    </div>
   </div>
 </div>
 
