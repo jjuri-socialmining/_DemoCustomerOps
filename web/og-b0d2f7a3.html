@@ -204,16 +204,26 @@
     .a{background:#fff;border-color:#bbb}
     nav.toc{display:none}
     a{color:#000;text-decoration:none}
+    .confidential-watermark{display:block !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+  .confidential-watermark{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    pointer-events:none;
+    background-repeat:repeat;
+    background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='430'%20height='260'%3E%3Ctext%20x='30'%20y='150'%20font-family='Arial,Helvetica,sans-serif'%20font-size='23'%20font-weight='700'%20fill='%23e11d1d'%20fill-opacity='0.12'%20transform='rotate(-28%20215%20130)'%3EEste%20sitio%20web%20es%20confidencial%3C/text%3E%3C/svg%3E");
   }
 </style>
 </head>
 <body>
+<div class="confidential-watermark" aria-hidden="true"></div>
 <div class="wrap">
 
 <header>
   <div>
     <div class="brand">Sigma · Copiloto de Reuniones</div>
-    <h1>Organigrama &amp; Entrevistas — Proyecto Omán</h1>
+    <h1>Organigrama &amp; Entrevistas — Proyecto Omán <span style="color:#e11d1d;font-weight:800;font-size:.62em;letter-spacing:.5px;white-space:nowrap;vertical-align:middle">🔴 INFORMACIÓN CONFIDENCIAL — NO COMPARTIR</span></h1>
     <div class="sub">Estudio Conceptual + Básico · Sigma = subcontrato de HLC · Alcance: <b>NO construcción</b></div>
     <div style="margin-top:8px">
       <span class="badge">Confidencial — uso interno</span>
@@ -725,7 +735,7 @@ Jorge</div></div>
   <summary>Juan Pablo Hidalgo Figueroa — Diseñador Industrial / BIM Manager (piping) <span class="iv-meta">Sáb 11-jul · 18:00 🇨🇱 / 15:00 🇨🇦</span></summary>
   <div class="iv-body">
     <div class="iv-fixed">Base: Concepción, Chile · <a href="mailto:jh.figueroad@gmail.com">jh.figueroad@gmail.com</a> · <a href="https://wa.me/56923885169" target="_blank" rel="noopener">+56 9 2388 5169 💬</a><br>
-      <span class="warn">⚠ El CV es perfil Proyectista / BIM (piping), no "consultoría procesos + mantenimiento". Podría ser "Pablo" del organigrama — confirmar.</span><br>
+      <span class="ok">✅ Confirmado: es el Proyectista / Diseñador Industrial 3D del organigrama (el "Pablo" original). Su perfil real es Proyectista / BIM (piping).</span><br>
       <span style="color:var(--muted)">⭐ Reunión de <b>exploración</b> — realizada VIE 11-jul 18:00 🇨🇱 ✅ · no es oferta laboral; sujeto a que el proyecto se confirme.</span><br>
       <span class="ok">📲 Tips para el resume en INGLÉS enviados por WhatsApp (vie 11-jul, post-entrevista) — pedido: mandarlo el domingo temprano para el paquete del lunes.</span></div>
     <div class="iv-link">🔗 <b>Reunión:</b> <a href="https://meet.jit.si/SigmaDigitalTwins" target="_blank" rel="noopener">meet.jit.si/SigmaDigitalTwins</a> · <span style="color:var(--muted)">Jitsi — solo unirse</span></div>
@@ -747,7 +757,7 @@ Jorge</div></div>
     <div class="q"><div class="qt"><span class="num">2.</span>Compromiso: ¿qué nivel de dedicación puede garantizar? ¿Otros compromisos que compitan por su tiempo?</div><div class="a" contenteditable="true">🔶 Compromiso vigente: empleo en Ingemecanic (su único competidor de tiempo mencionado). Sigma planteó que el rol es <b>tiempo completo</b>; JP no lo rechazó pero pide evaluar lo económico antes de decidir. Muy interesado en la capa tecnológica/IA del proyecto (señal de compra genuina).</div></div>
 
     <div class="qgroup">Rol — procesos + mantenimiento</div>
-    <div class="q"><div class="qt"><span class="num">3.</span>¿Cómo ve su rol integrando procesos y mantenimiento en este proyecto? ¿Qué frentes cubriría?</div><div class="a" contenteditable="true">✅ Confirmado en entrevista: su perfil real es <b>Proyectista / diseño BIM (piping)</b>, no procesos+mantenimiento. Se le planteó: apoyo en diseño — revisión de programas de ingeniería y del diseño de la planta, croquis/diagramas con el área de procesos, en dupla con JC (mantenimiento/puesta en marcha). <span class="warn">🔴 Falta rotularlo formal en el organigrama (¿reemplaza al nodo "Pablo" proyectista?).</span></div></div>
+    <div class="q"><div class="qt"><span class="num">3.</span>¿Cómo ve su rol integrando procesos y mantenimiento en este proyecto? ¿Qué frentes cubriría?</div><div class="a" contenteditable="true">✅ Confirmado en entrevista: su perfil real es <b>Proyectista / diseño BIM (piping)</b>, no procesos+mantenimiento. Se le planteó: apoyo en diseño — revisión de programas de ingeniería y del diseño de la planta, croquis/diagramas con el área de procesos, en dupla con JC (mantenimiento/puesta en marcha). <span class="ok">✅ Rotulado en el organigrama como Diseñador Industrial 3D — reemplaza al nodo "Pablo" proyectista.</span></div></div>
     <div class="q"><div class="qt"><span class="num">4.</span>Experiencia en plantas de recuperación / reciclaje de metales o similares.</div><div class="a" contenteditable="true">✅ Respondió explícito (14:55): <b>plantas de reciclaje, NO</b>. Experiencia cercana: diseño de <b>líneas de relave espesado y agua recuperada</b> en minería (Plant 3D + BIM, coordinando estructural/civil/control), celulosa, y siderurgia (CAP Huachipato: líneas de gas y alimentación a equipos). Honesto — no infló la respuesta. Framing acordado para el cliente: <b>familias de equipos similares</b> (chancadores, reducción de tamaño, estructuras) comunes entre minería y reciclaje; el know-how de proceso lo aportan JC + metalurgista.</div></div>
     <div class="q"><div class="qt"><span class="num">5.</span>Herramientas y metodologías que domina (gestión de mantenimiento, procesos, software).</div><div class="a" contenteditable="true">✅ <b>BIM bajo ISO 19650 implementado DE CERO</b> en Ingemecanic: armó BEP y EIR él mismo, montó el CDE (base común de datos) y dio capacitaciones internas → BIM Manager real, no solo usuario. AutoCAD / Plant 3D en diseño de líneas · <b>laser scanning</b>: levantamiento y procesamiento de nubes de puntos (Mineral Sentinel, con Héctor) · planos spool para fabricación · coordinación multi-especialidad y con fabricante · paquetes de trabajo (PAC) en terreno. Del CV: Revit, Advance Steel, Tekla, Navisworks, Leica RTC 360 / FARO / ReCap. Gestión de mantenimiento: no es su frente (cubierto por JC/Ángelo).</div></div>
     <div class="q"><div class="qt"><span class="num">6.</span>Nivel de inglés.</div><div class="a" contenteditable="true">✅ (15:05) Lectura: básica/media («lecturas pequeñas»). <b>Hablado: NO se maneja</b> («al hablar, no»). Puede traducir su CV al inglés con ChatGPT — comprometido para el domingo. <span class="warn">⚠ Para reuniones con el cliente en inglés necesitará apoyo (traducción/acompañamiento) — igual que se planteó con otros roles.</span></div></div>
@@ -1103,7 +1113,7 @@ jorgejuri@mgeomet.com.au · +1 778 835 3720</div></div>
     <tr><td>Procesos</td><td>Program Manager</td><td>—</td><td>—</td><td>—</td></tr>
     <tr><td>Mant./Equipos/Eléctrica/Instrum.</td><td>Juan Carlos Ramírez (JC)</td><td>—</td><td>—</td><td>Dos especialidades · "eminencia estrella"</td></tr>
     <tr><td>Metalurgia senior</td><td>2 personas</td><td>—</td><td>—</td><td>Uno externo — <span class="warn">presión de costo</span></td></tr>
-    <tr><td>Proyectista — Diseño / 3D / dibujos</td><td>Pablo</td><td>—</td><td>—</td><td>Diseñador Industrial (U. Bío-Bío) · Dibujante Proyectista · BIM Manager · Navisworks · nube de puntos / drones · P&amp;IDs · lazos de control</td></tr>
+    <tr><td>Proyectista / Diseñador Industrial 3D</td><td>Juan Pablo Hidalgo Figueroa <span class="ok">✅</span></td><td>—</td><td>+56 9 2388 5169</td><td>Diseñador Industrial (DUOC UC Concepción) · Dibujante Proyectista · BIM Manager (piping) · scan-to-BIM · Navisworks · nube de puntos / drones · P&amp;IDs · ISO 19650 · <a href="og-b0d2f7a3-files/cv-juan-pablo-hidalgo.pdf" target="_blank" rel="noopener">CV 📄</a></td></tr>
     <tr><td>Experto en reciclaje</td><td>por confirmar</td><td>—</td><td>—</td><td>Experiencia plantas / EE.UU. · bajó tarifa</td></tr>
     <tr><td>Calidad (QA)</td><td>Paloma Tapia <span class="ok">✅</span></td><td>—</td><td>+56 9 9492 5416</td><td><b class="ok">Interesada</b> · entrevistada 13-jul · disponibilidad inmediata full-time · renta $1.1M CLP conversable · viaja · inglés B1 (CV) · <a href="mailto:palomadaniela105@gmail.com">palomadaniela105@gmail.com</a> · <a href="og-b0d2f7a3-files/cv-paloma-tapia-guerrero.pdf" target="_blank" rel="noopener">CV 📄</a></td></tr>
     <tr><td>Legal / Compliance</td><td>Belén (Pertel Legal)</td><td>—</td><td>—</td><td>Falta ley omaní</td></tr>
@@ -1125,7 +1135,7 @@ jorgejuri@mgeomet.com.au · +1 778 835 3720</div></div>
     <tr><td>Luis Martínez ("Zorro")</td><td>Senior (Coquimbo/La Serena)</td><td>—</td><td>—</td><td>Bueno</td></tr>
     <tr><td>Experto Escondida</td><td>Operación de planta (arranque/parada)</td><td>—</td><td>—</td><td>Confianza · lo gestiona Mauricio</td></tr>
     <tr><td>Luis F. Hidalgo Cortés ("Lucho") <span class="warn">⚠</span></td><td>Constructor de procesos ("Messi")</td><td><a href="https://www.linkedin.com/in/luis-fernando-hidalgo-cortez-93694766" target="_blank" rel="noopener">LinkedIn 🔗</a></td><td>—</td><td><b class="warn">No se pudo ubicar</b> — fuera del organigrama · Santiago (Chile) · trabajaron juntos ~2021</td></tr>
-    <tr><td>Juan Pablo Hidalgo Figueroa <span class="ok">✅</span></td><td>Diseñador Industrial / BIM Manager (piping)</td><td>—</td><td>+56 9 2388 5169</td><td><b class="ok">Interesado</b> · entrevista sáb 18:00 Chile · <a href="mailto:jh.figueroad@gmail.com">jh.figueroad@gmail.com</a> · <a href="og-b0d2f7a3-files/cv-juan-pablo-hidalgo.pdf" target="_blank" rel="noopener">CV 📄</a> · <span class="warn">¿= "Pablo"?</span></td></tr>
+    <tr><td>Juan Pablo Hidalgo Figueroa <span class="ok">✅</span></td><td>Diseñador Industrial / BIM Manager (piping)</td><td>—</td><td>+56 9 2388 5169</td><td><b class="ok">Interesado</b> · entrevista sáb 18:00 Chile · <a href="mailto:jh.figueroad@gmail.com">jh.figueroad@gmail.com</a> · <a href="og-b0d2f7a3-files/cv-juan-pablo-hidalgo.pdf" target="_blank" rel="noopener">CV 📄</a></td></tr>
     <tr><td>Ángelo Urrutia Tapia <span class="ok">✅ CV</span></td><td>Mantenimiento mecánico</td><td>—</td><td>+56 9 7757 6141</td><td><b>Ing. Civil Mecánico</b> (U. de La Serena, mejor egresado 2023) · Diplomado Gestión del Mantenimiento · planificador de mantención + QC en <b>Chuquicamata y Zaldívar</b> (chancadores, molinos, correas, hidrociclones) · SAP · disponibilidad inmediata (CV) · candidato rama JC · <a href="mailto:aurrutiatapia@gmail.com">aurrutiatapia@gmail.com</a> · <a href="og-b0d2f7a3-files/cv-angelo-urrutia-tapia.pdf" target="_blank" rel="noopener">CV 📄</a></td></tr>
   </tbody>
 </table>
