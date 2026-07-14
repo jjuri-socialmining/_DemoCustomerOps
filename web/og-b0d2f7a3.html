@@ -60,13 +60,13 @@
 
   /* Tree */
   .tree{display:flex;flex-direction:column;align-items:center;gap:0;margin:18px 0 10px;
-    padding:22px 10px 26px;border-radius:16px;
+    padding:22px 10px 26px;border-radius:16px;overflow-x:auto;
     background:
       radial-gradient(circle at 50% 0%, rgba(31,111,235,.06), transparent 60%),
       linear-gradient(180deg, var(--card), var(--bg));
     border:1px solid var(--line-soft)}
   .node{background:var(--card);border:1px solid var(--line);border-radius:12px;
-    padding:12px 18px 11px;text-align:center;min-width:210px;position:relative;overflow:hidden;
+    padding:12px 18px 11px;text-align:center;min-width:175px;position:relative;overflow:hidden;
     box-shadow:0 2px 8px rgba(20,27,38,.07);transition:transform .15s ease, box-shadow .15s ease}
   .node:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,27,38,.14)}
   .node::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--line)}
@@ -91,9 +91,12 @@
     padding-top:16px;position:relative}
   .branches::before{content:"";position:absolute;top:0;left:50%;width:2px;height:16px;
     transform:translateX(-50%);background:var(--line)}
+  /* nivel superior = espejo de la PPT: 3 ramas (Metalurgia / Mantenimiento / PMO) lado a lado, sin wrap */
+  .tree>.branches{flex-wrap:nowrap;gap:18px}
   .branch{display:flex;flex-direction:column;align-items:center}
-  .branch>.node{max-width:260px}
+  .branch>.node{max-width:220px}
   .branch .branches{gap:16px}
+  .branch .branches .branch>.node{max-width:210px}
 
   /* Bands */
   .band{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
@@ -244,7 +247,7 @@
 <!-- ================= ENTREGA DE PRODUCTO ================= -->
 <section id="entrega">
 <h2><span class="dot" style="background:var(--accent2)"></span>📦 Entrega de producto — Presentación del equipo (PPT)</h2>
-<div class="sub">Paquete para Tonino: <b>organigrama + CVs del equipo</b> en formato «Casos de Éxito» (Educación · Idiomas · Experiencia por Industria · Experiencia Profesional · Competencias · <b>Aporte al Proyecto</b> · Proyectos Clave). 11 slides: portada y cierre calcados del deck oficial Casos de Éxito · organigrama de 3 ramas (Metalurgia / Mantenimiento / PMO con IA) · 7 perfiles (Mauricio · Jorge · García Medina · Kent · Juan Pablo · Ángelo · Paloma) con caja verde «Aporte al proyecto — Duqm» construida desde las entrevistas · próximos pasos. <b>Esto es lo que se envía — la presentación no contiene links a esta página interna.</b></div>
+<div class="sub">Paquete para Tonino: <b>organigrama + CVs del equipo</b> en formato «Casos de Éxito» (Educación · Idiomas · Experiencia por Industria · Experiencia Profesional · Competencias · <b>Aporte al Proyecto</b> · Proyectos Clave). 11 slides: portada (con crédito <i>Preparado por Jorge Juri · Hefesto AI · Revisado por Mauricio Contreras</i>) y cierre práctico · organigrama de 3 ramas (Metalurgia / Mantenimiento / PMO con IA) · <b>8 perfiles</b> (Mauricio · Jorge · García Medina · Kent · <b>Juan Carlos</b> · Juan Pablo · Ángelo · Paloma) con caja verde «Aporte al proyecto — Duqm» construida desde las entrevistas · fuentes de CV a 12 / títulos a 18 · cierre con <b>equipo consolidado</b> (todos se conocen y han trabajado juntos por años) + <b>minutas de discusión por integrante a pedido</b> (preguntas y respuestas, niveles de conocimiento, aportes al proyecto). Disponible en <b>ES · EN · árabe (RTL)</b>. <b>Esto es lo que se envía — la presentación no contiene links a esta página interna.</b></div>
 <div class="dl-grid">
   <div class="dl-card">
     <div class="name">🇬🇧 Proposed Team — Duqm, Oman <span class="pill">EN</span></div>
@@ -256,8 +259,13 @@
     <div class="r">Versión en español (equipo interno / socios)</div>
     <a class="dl-link" href="og-b0d2f7a3-files/Sigma-Digital-Twins-Equipo-Duqm-ES.pptx" download>📦 Descargar PPT (ES)</a>
   </div>
+  <div class="dl-card">
+    <div class="name">🇴🇲 الفريق المقترح — Duqm, Omán <span class="pill">AR</span></div>
+    <div class="r">Versión en árabe (RTL) — para lectura del lado omaní</div>
+    <a class="dl-link" href="og-b0d2f7a3-files/Sigma-Digital-Twins-Team-Duqm-AR.pptx" download>📦 Descargar PPT (AR)</a>
+  </div>
 </div>
-<div class="sub" style="margin-top:8px">⚠ Revisar antes de enviar: fecha de arranque unificada (portada dice «Julio 2026», próximos pasos dice «agosto 2026») · Juan Carlos Ramírez (Jefe de Mantenimiento) figura en el organigrama sin perfil/CV en el deck · el organigrama ES dice «Luis García Medina (Messi)» — la versión EN (client-facing) va sin el apodo.</div>
+<div class="sub" style="margin-top:8px">⚠ Revisar antes de enviar: coherencia de fechas (portada «Julio 2026» = mes del estudio; cierre «agosto 2026» = arranque) · el organigrama ES dice «Luis García Medina (Messi)» — la versión EN (client-facing) va sin el apodo. <b>Resuelto:</b> Juan Carlos Ramírez ya tiene ficha completa (8 perfiles) · árabe agregado.</div>
 
 <details style="margin:10px 0"><summary style="cursor:pointer;font-weight:700;color:var(--accent2);font-size:13px;padding:6px 0">🧭 Nota interna — Estrategia de entrevistas: cómo se armó el equipo en tiempo récord (para consultas; NO va en el paquete a Tonino)</summary>
 <div class="iv-highlights" style="margin-top:6px">
@@ -352,26 +360,26 @@
 <div class="kanban">
 
   <div class="kcol todo">
-    <h3>📋 Por hacer <span class="cnt">7</span></h3>
-    <div class="kcard"><div class="kt">📦 Entrega organigrama + CVs a Tonino</div><div class="km">👤 Jorge/Sigma · ⏰ HOY lun 13-jul · ✔ enviado a Tonino</div></div>
+    <h3>📋 Por hacer <span class="cnt">3</span></h3>
     <div class="kcard"><div class="kt">📅 Unificar fecha de arranque (1-ago vs 8-ago)</div><div class="km">👤 Jorge·Mauricio·JC · ⏰ antes del paquete · ✔ una sola fecha</div></div>
     <div class="kcard"><div class="kt">💰 Capturar condiciones de JP</div><div class="km">sueldo · tarifa/hora · L-a-L · 👤 Jorge (WhatsApp) · ✔ resumen comercial sin rojos</div></div>
-    <div class="kcard"><div class="kt">📄 Recibir CVs pendientes</div><div class="km">JP (versión EN) · 👤 persiguen Jorge/Mauricio · ⏰ antes del paquete · ✔ CV en carpeta + página · <span class="warn">Lucho fuera — no se pudo ubicar</span></div></div>
     <div class="kcard"><div class="kt">⚖️ Cobertura legal ley omaní</div><div class="km">👤 Belén (Pertel Legal) · ⏰ — · ✔ cobertura confirmada</div></div>
-    <div class="kcard"><div class="kt">♻️ Experto en reciclaje: Kent Christie <span class="ok">✅</span></div><div class="km">asume el nodo junto con Asesor Medio Ambiente / HSEC · ✔ casilla asignada en organigrama</div></div>
-    <div class="kcard"><div class="kt">📬 Respuesta a JP con novedades</div><div class="km">👤 Jorge · ⏰ ≤ 2 semanas · ✔ mensaje enviado</div></div>
   </div>
 
   <div class="kcol doing">
     <h3>🔄 En curso <span class="cnt">2</span></h3>
-    <div class="kcard"><div class="kt">🎤 Entrevista Paloma (QA) realizada ✅ lun 13-jul</div><div class="km">Respuestas y resumen comercial en su bloque · pendiente WhatsApp: inglés · tarifa/hora · L-a-L · CV EN</div></div>
-    <div class="kcard"><div class="kt">🎤 Entrevista Ángelo — ✅ REALIZADA lun 13-jul (13:12–13:54)</div><div class="km">Guía completa + 8 extras respondidas en su bloque · sueldo CLP 1.5M+ · viaje SÍ · compromiso: novedades antes del VIE 17-jul · pendientes: tarifa hora, CV inglés, presentarle a JC</div></div>
-    <div class="kcard"><div class="kt">🎤 Entrevista Luis García Medina — ✅ REALIZADA lun 13-jul (18:00–18:51) · ES EL CANDIDATO</div><div class="km">Vino con el estudio leído y ruta propuesta · full-time SÍ · viaje SÍ · inglés muy básico (CV EN lo hacemos nosotros) · roadmap 4 etapas consensuado · pendientes: cifra pretensiones (media de mercado CL/MX) · modalidad legal México (abogado) · confirmar WhatsApp</div></div>
+    <div class="kcard"><div class="kt">📦 Entrega organigrama + CVs a Tonino</div><div class="km">👤 Jorge/Sigma · ⏰ HOY lun 13-jul · ✔ enviado a Tonino</div></div>
     <div class="kcard"><div class="kt">🧩 Cerrar organigrama definitivo</div><div class="km">👤 Mauricio·Jorge·JC · ⏰ HOY antes del paquete · ✔ organigrama aprobado</div></div>
   </div>
 
   <div class="kcol done">
-    <h3>✅ Hecho <span class="cnt">7</span></h3>
+    <h3>✅ Hecho <span class="cnt">17</span></h3>
+    <div class="kcard"><div class="kt">🎤 Entrevista Paloma (QA) realizada ✅ lun 13-jul</div><div class="km">Respuestas y resumen comercial en su bloque · pendiente WhatsApp: inglés · tarifa/hora · L-a-L · CV EN</div></div>
+    <div class="kcard"><div class="kt">🎤 Entrevista Ángelo — ✅ REALIZADA lun 13-jul (13:12–13:54)</div><div class="km">Guía completa + 8 extras respondidas en su bloque · sueldo CLP 1.5M+ · viaje SÍ · compromiso: novedades antes del VIE 17-jul · pendientes: tarifa hora, CV inglés, presentarle a JC</div></div>
+    <div class="kcard"><div class="kt">🎤 Entrevista Luis García Medina — ✅ REALIZADA lun 13-jul (18:00–18:51) · ES EL CANDIDATO</div><div class="km">Vino con el estudio leído y ruta propuesta · full-time SÍ · viaje SÍ · inglés muy básico (CV EN lo hacemos nosotros) · roadmap 4 etapas consensuado · pendientes: cifra pretensiones (media de mercado CL/MX) · modalidad legal México (abogado) · confirmar WhatsApp</div></div>
+    <div class="kcard"><div class="kt">📄 Recibir CVs pendientes <span class="ok">✅</span></div><div class="km">JP (versión EN) · 👤 persiguen Jorge/Mauricio · ✔ CV en carpeta + página · <span class="warn">Lucho fuera — no se pudo ubicar</span></div></div>
+    <div class="kcard"><div class="kt">♻️ Experto en reciclaje: Kent Christie <span class="ok">✅</span></div><div class="km">asume el nodo junto con Asesor Medio Ambiente / HSEC · ✔ casilla asignada en organigrama</div></div>
+    <div class="kcard"><div class="kt">📬 Respuesta a JP con novedades</div><div class="km">👤 Jorge · ⏰ ≤ 2 semanas · ✔ mensaje enviado</div></div>
     <div class="kcard"><div class="kt">🎤 Entrevistas del sábado realizadas</div><div class="km">Kent Christie ✅ · Juan Pablo ✅ — actas y resúmenes comerciales cargados</div></div>
     <div class="kcard"><div class="kt">🗂️ JP re-rotulado en el organigrama</div><div class="km">Proyectista / BIM Manager — Piping &amp; Plant Design (acta 11-jul)</div></div>
     <div class="kcard"><div class="kt">🔗 Links de reunión cargados</div><div class="km">Jitsi en cada entrevista</div></div>
@@ -431,11 +439,6 @@
     <a class="dl-link" href="og-b0d2f7a3-files/cv-luis-garcia-medina.pdf" target="_blank" rel="noopener">📄 Descargar CV (PDF)</a>
   </div>
 
-  <div class="dl-card">
-    <div class="name">Pablo</div>
-    <div class="r">Proyectista / Diseño 3D · BIM</div>
-    <span class="dl-pending">CV pendiente de recibir</span>
-  </div>
 
 </div>
 </section>
