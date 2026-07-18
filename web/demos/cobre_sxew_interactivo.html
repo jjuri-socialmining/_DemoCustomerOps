@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cobre SX/EW — Gemelo interactivo · Confiabilidad</title>
+<style>
+  :root{
+    color-scheme:dark;
+    --ground:#12100e; --panel:rgba(20,17,14,.88); --line:#3a3128;
+    --copper:#c8703c; --copper-hi:#e08a4e; --teal:#35c4b4; --amber:#e0a03a;
+    --ink:#ece6de; --muted:#9a8f82; --faint:#6b6357; --bad:#e05c4e;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;overflow:hidden;font-family:var(--sans);}
+  #app{position:fixed;inset:0;background:var(--ground);}
+  canvas{display:block;}
+  .panel{position:absolute;background:var(--panel);color:var(--ink);border:1px solid var(--line);
+    border-radius:12px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+
+  #hdr{top:14px;left:14px;padding:13px 16px;max-width:330px;}
+  #hdr .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--copper);display:flex;align-items:center;gap:8px;}
+  #hdr .eyebrow::before{content:"";width:20px;height:2px;background:var(--copper);}
+  #hdr h1{font-size:17px;font-weight:800;letter-spacing:-.01em;margin-top:7px;}
+  #hdr h1 .em{color:var(--copper-hi);}
+  #hdr .sub{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.4;}
+  #hdr .sub b{color:var(--ink);}
+
+  #kpis{top:14px;right:14px;padding:11px 14px;display:flex;gap:18px;font-family:var(--mono);}
+  .kpi{display:flex;flex-direction:column;gap:3px;min-width:74px;}
+  .kpi .l{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);}
+  .kpi .v{font-size:15px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .kpi .v .u{font-size:9.5px;color:var(--muted);font-weight:400;}
+  .kpi.t .v{color:var(--teal);}
+
+  #legend{bottom:14px;left:14px;padding:12px 14px;min-width:210px;}
+  #legend h2{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--faint);margin-bottom:8px;}
+  #legend .row{display:flex;align-items:center;gap:9px;margin:6px 0;cursor:pointer;opacity:.85;font-size:12.5px;}
+  #legend .row:hover{opacity:1;}
+  #legend .row.active{opacity:1;}
+  #legend .row.active .nm{color:var(--copper-hi);}
+  #legend .dot{width:10px;height:10px;border-radius:3px;flex:0 0 auto;box-shadow:0 0 0 2px rgba(255,255,255,.05);}
+
+  #views{bottom:14px;left:50%;transform:translateX(-50%);padding:7px;display:flex;gap:6px;}
+  #views button{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;
+    padding:8px 12px;cursor:pointer;transition:all .15s;}
+  #views button:hover{color:var(--ink);border-color:var(--copper);}
+  #views button.active{color:var(--copper-hi);border-color:var(--copper);background:rgba(200,112,60,.1);}
+  #views button:focus-visible{outline:2px solid var(--copper);outline-offset:2px;}
+
+  #hint{bottom:14px;right:14px;padding:8px 12px;font-size:10.5px;color:var(--muted);font-family:var(--mono);}
+  #hint b{color:var(--ink);font-weight:600;}
+
+  #info{top:84px;right:14px;width:308px;padding:16px 16px 14px;display:none;max-height:calc(100% - 190px);overflow-y:auto;}
+  #info.show{display:block;}
+  #info .close{position:absolute;top:10px;right:13px;cursor:pointer;color:var(--muted);font-size:15px;background:none;border:none;font-family:inherit;}
+  #info .close:hover{color:var(--ink);}
+  #info .kicker{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);}
+  #info h3{font-size:16px;margin:5px 0 7px;letter-spacing:-.01em;}
+  #info .desc{font-size:12px;color:var(--muted);line-height:1.5;}
+  #info .sec{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--faint);margin:13px 0 7px;display:flex;align-items:center;gap:8px;}
+  #info .sec::after{content:"";flex:1;height:1px;background:var(--line);}
+  #info .falla{display:flex;gap:9px;margin:7px 0;font-size:11.5px;line-height:1.45;}
+  #info .falla .sev{width:7px;height:7px;border-radius:50%;margin-top:4px;flex:0 0 auto;}
+  #info .falla .sev.a{background:var(--bad);box-shadow:0 0 6px rgba(224,92,78,.6);}
+  #info .falla .sev.b{background:var(--amber);}
+  #info .falla .sev.c{background:var(--teal);}
+  #info .falla b{color:var(--ink);font-weight:600;display:block;}
+  #info .falla span{color:var(--muted);}
+  #info .mb{margin-top:13px;padding:9px 11px;border:1px dashed rgba(200,112,60,.4);border-radius:8px;
+    font-size:10.5px;color:var(--muted);line-height:1.45;}
+  #info .mb b{color:var(--copper-hi);}
+
+  #loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:var(--muted);font-family:var(--mono);font-size:12px;letter-spacing:.1em;}
+  @media (max-width:720px){
+    #kpis{display:none;} #info{top:auto;bottom:74px;right:10px;left:10px;width:auto;max-height:44%;}
+    #legend{display:none;} #hint{display:none;} #hdr{max-width:250px;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="loading">CARGANDO PLANTA SX/EW…</div>
+
+  <div id="hdr" class="panel">
+    <div class="eyebrow">MineBot · Confiabilidad</div>
+    <h1>Cobre — <span class="em">SX/EW</span> interactivo</h1>
+    <div class="sub">Gemelo de la línea de extracción por solventes y electroobtención. Hacé <b>click en un equipo</b> para ver su proceso y sus modos de falla.</div>
+  </div>
+
+  <div id="kpis" class="panel">
+    <div class="kpi t"><span class="l">Flujo PLS</span><span class="v"><span id="k-pls">—</span><span class="u"> m³/h</span></span></div>
+    <div class="kpi"><span class="l">Dens. corriente</span><span class="v"><span id="k-dc">—</span><span class="u"> A/m²</span></span></div>
+    <div class="kpi"><span class="l">Efic. corriente</span><span class="v"><span id="k-ef">—</span><span class="u"> %</span></span></div>
+    <div class="kpi"><span class="l">Próx. cosecha</span><span class="v"><span id="k-cos">—</span><span class="u"> h</span></span></div>
+  </div>
+
+  <div id="legend" class="panel">
+    <h2>Equipos — click para inspeccionar</h2>
+    <div class="rows"></div>
+  </div>
+
+  <div id="views" class="panel">
+    <button data-v="linea" class="active">Línea</button>
+    <button data-v="sx">SX</button>
+    <button data-v="ew">Tankhouse</button>
+    <button data-v="catodos">Cátodos</button>
+  </div>
+
+  <div id="hint" class="panel"><b>Arrastrar</b> orbitar · <b>rueda</b> zoom · <b>click</b> equipo</div>
+
+  <div id="info" class="panel">
+    <button class="close" aria-label="Cerrar">✕</button>
+    <div class="kicker"></div><h3></h3><div class="desc"></div>
+    <div class="sec">Modos de falla típicos</div>
+    <div class="fallas"></div>
+    <div class="mb"><b>MineBot</b> responde estos modos de falla con criterio RCM / ISO 14224: causas, tareas preventivas y frecuencias.</div>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+/* ---------- stations: proceso + confiabilidad (el contenido MineBot) ---------- */
+const STATIONS = {
+  sx: {
+    color:0xe0a03a, kicker:'Etapa 01 · Extracción por solventes',
+    name:'Mixer-Settlers SX',
+    desc:'La fase orgánica (extractante, ámbar) captura selectivamente el Cu²⁺ de la solución PLS (azul-verde). Mezcla en el tambor, separación de fases por gravedad en el settler.',
+    fallas:[
+      {s:'a', m:'Crud interfacial', d:'Borra sólido-orgánico en la interfase: arrastre de orgánico y pérdida de eficiencia de separación.'},
+      {s:'a', m:'Falla de agitador', d:'Sello mecánico o rodamiento del mixer: detiene la transferencia de la etapa completa.'},
+      {s:'b', m:'Pérdida de orgánico', d:'Arrastre en acuoso por mala coalescencia; costo directo de reposición de extractante.'},
+      {s:'c', m:'Degradación del extractante', d:'Oxidación y nitración reducen la capacidad de carga con el tiempo.'}
+    ]
+  },
+  pipe: {
+    color:0x35c4b4, kicker:'Etapa 02 · Transferencia',
+    name:'Tubería y bombeo PLS',
+    desc:'El electrolito cargado avanza del circuito SX al tankhouse. El caudal y la limpieza de la línea definen la estabilidad de toda la planta.',
+    fallas:[
+      {s:'a', m:'Cavitación de bomba', d:'NPSH insuficiente o succión obstruida: daño acelerado de impulsor y sellos.'},
+      {s:'b', m:'Incrustación (scaling)', d:'Precipitación de yeso/sílice reduce el diámetro efectivo y el caudal.'},
+      {s:'b', m:'Corrosión-erosión', d:'Ácido + sólidos en suspensión atacan codos y reducciones.'},
+      {s:'c', m:'Fugas en bridas', d:'Juntas degradadas por ciclos térmicos; pérdida de solución y riesgo ambiental.'}
+    ]
+  },
+  ew: {
+    color:0x8b93a0, kicker:'Etapa 03 · Electroobtención',
+    name:'Celdas EW (tankhouse)',
+    desc:'Corriente continua entre ánodos de plomo y cátodos: el cobre se deposita sobre las placas. Cu²⁺ + 2e⁻ → Cu⁰. La distribución de corriente es el corazón de la calidad.',
+    fallas:[
+      {s:'a', m:'Cortocircuitos catódicos', d:'Dendritas o mala verticalidad tocan el ánodo: célula quemada y pérdida de eficiencia.'},
+      {s:'a', m:'Degradación de ánodos', d:'Ánodos Pb-Ca-Sn descascarados contaminan el cátodo con plomo.'},
+      {s:'b', m:'Neblina ácida', d:'Aerosol de H₂SO₄ sobre las celdas: corrosión de estructura y riesgo ocupacional.'},
+      {s:'c', m:'Desbalance de electrolito', d:'Temperatura o Cu²⁺ fuera de rango degradan el depósito.'}
+    ]
+  },
+  bus: {
+    color:0xc8703c, kicker:'Distribución eléctrica',
+    name:'Barras colectoras (busbars)',
+    desc:'Conducen miles de amperes a las celdas. Cada contacto cátodo-barra es un punto de resistencia que decide cuánta corriente realmente deposita cobre.',
+    fallas:[
+      {s:'a', m:'Puntos calientes', d:'Contactos sucios u oxidados: resistencia local, pérdida de energía y riesgo de incendio.'},
+      {s:'b', m:'Desgaste de asientos', d:'El apoyo repetido de cátodos deforma el contacto y desbalancea la corriente.'},
+      {s:'c', m:'Sulfatación superficial', d:'Película aislante por ambiente ácido; exige limpieza programada.'}
+    ]
+  },
+  cat: {
+    color:0xe08a4e, kicker:'Etapa 04 · Producto',
+    name:'Cátodos de cobre',
+    desc:'Planchas de Cu 99,99% cosechadas cada 6–7 días. La calidad superficial (sin nódulos ni contaminación) define el premio de venta.',
+    fallas:[
+      {s:'b', m:'Nodulación', d:'Depósito rugoso por exceso de densidad de corriente o electrolito sucio: rechazo de calidad.'},
+      {s:'b', m:'Falla de despegue (stripping)', d:'El cobre no separa limpio de la placa madre; daño de placa y retrabajo.'},
+      {s:'c', m:'Daño en manipulación', d:'Grúas y flejes marcan el cátodo; reclamos en despacho.'}
+    ]
+  }
+};
+
+/* ---------- three setup ---------- */
+const app = document.getElementById('app');
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x12100e, 45, 95);
+const camera = new THREE.PerspectiveCamera(46, innerWidth/innerHeight, .1, 200);
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.45;
+app.appendChild(renderer.domElement);
+document.getElementById('loading').remove();
+
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture;
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = .06;
+controls.maxPolarAngle = Math.PI/2 - .04;
+controls.minDistance = 4; controls.maxDistance = 55;
+
+/* lights */
+scene.add(new THREE.AmbientLight(0x4a453c, 2.2));
+scene.add(new THREE.HemisphereLight(0x8a94a8, 0x2a241d, 1.1));
+const key = new THREE.DirectionalLight(0xfff3e0, 3.4);
+key.position.set(12,16,10); key.castShadow = true;
+key.shadow.mapSize.set(2048,2048);
+key.shadow.camera.left=-22; key.shadow.camera.right=22;
+key.shadow.camera.top=22; key.shadow.camera.bottom=-22;
+scene.add(key);
+const fill = new THREE.DirectionalLight(0xbfd4ff, .7); fill.position.set(-14,8,-6); scene.add(fill);
+const rim  = new THREE.DirectionalLight(0xffcc99, .9); rim.position.set(0,10,-14); scene.add(rim);
+
+/* ground */
+const ground = new THREE.Mesh(
+  new THREE.CircleGeometry(48, 64),
+  new THREE.MeshStandardMaterial({color:0x2a2723, roughness:.95})
+);
+ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
+const grid = new THREE.GridHelper(90, 60, 0x2a2620, 0x221f1b);
+grid.position.y = .01; scene.add(grid);
+
+/* materials */
+const M = {
+  steel:   new THREE.MeshStandardMaterial({color:0x4d5158, metalness:.85, roughness:.38}),
+  steelD:  new THREE.MeshStandardMaterial({color:0x33363c, metalness:.7,  roughness:.5}),
+  organic: new THREE.MeshStandardMaterial({color:0xd98c1f, roughness:.15, transparent:true, opacity:.92, emissive:0x7a4a08, emissiveIntensity:.25}),
+  aqueous: new THREE.MeshStandardMaterial({color:0x1a8c8c, roughness:.1, transparent:true, opacity:.9, emissive:0x0d5c5c, emissiveIntensity:.3}),
+  electro: new THREE.MeshStandardMaterial({color:0x1a5c8c, roughness:.1, transparent:true, opacity:.85, emissive:0x0d3c5c, emissiveIntensity:.35}),
+  copper:  new THREE.MeshStandardMaterial({color:0xb35426, metalness:1, roughness:.3}),
+  cathode: new THREE.MeshStandardMaterial({color:0xcc5c24, metalness:1, roughness:.24, emissive:0x4a1f08, emissiveIntensity:.3}),
+  busbar:  new THREE.MeshStandardMaterial({color:0xc27a3a, metalness:1, roughness:.3}),
+  glass:   new THREE.MeshStandardMaterial({color:0x9fb4c0, roughness:.08, transparent:true, opacity:.2, depthWrite:false}),
+  drop:    new THREE.MeshStandardMaterial({color:0x26bfae, emissive:0x1fd4c0, emissiveIntensity:2.2, roughness:.2})
+};
+
+/* helper: box */
+function box(w,h,d,mat,x,y,z,group,station){
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat);
+  m.position.set(x,y,z); m.castShadow = true; m.receiveShadow = true;
+  if (station) m.userData.station = station;
+  group.add(m); return m;
+}
+
+const pickables = [];
+function reg(group, station){ group.traverse(o=>{ if(o.isMesh){ o.userData.station = station; pickables.push(o); } }); }
+
+/* ---------- SX: mixer-settlers ---------- */
+const sxGroup = new THREE.Group();
+const mixers = [];
+function mixerSettler(x,z){
+  const g = new THREE.Group();
+  const W=3.4, D=2.3, H=1.5, t=.12;
+  box(W,t,D,M.steelD,x,t/2,z,g);
+  box(t,H,D,M.steel,x-W/2+t/2,H/2,z,g);
+  box(t,H,D,M.steel,x+W/2-t/2,H/2,z,g);
+  box(W,H,t,M.steel,x,H/2,z-D/2+t/2,g);
+  box(W,H,t,M.steel,x,H/2,z+D/2-t/2,g);
+  const aq = box(W-2*t,.8,D-2*t,M.aqueous,x,t+.4,z,g);
+  const or_ = box(W-2*t,.3,D-2*t,M.organic,x,t+.8+.15,z,g);
+  const mixer = new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,1.4,24), M.steel);
+  mixer.position.set(x+1.35,1.45,z); mixer.castShadow = true;
+  const blades = new THREE.Mesh(new THREE.BoxGeometry(.7,.08,.12), M.steelD);
+  blades.position.y = .78; mixer.add(blades);
+  g.add(mixer); mixers.push(mixer);
+  return g;
+}
+sxGroup.add(mixerSettler(-9,-3));
+sxGroup.add(mixerSettler(-9,1));
+scene.add(sxGroup); reg(sxGroup,'sx');
+
+/* ---------- pipe + flow ---------- */
+const pipeGroup = new THREE.Group();
+const flowCurve = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(-7.2,1.0,-1), new THREE.Vector3(-7.0,2.4,-1),
+  new THREE.Vector3(-2.0,2.4,-1), new THREE.Vector3(3.0,2.4,-1),
+  new THREE.Vector3(3.6,1.3,-1)
+], false, 'catmullrom', .05);
+const pipeMesh = new THREE.Mesh(new THREE.TubeGeometry(flowCurve, 64, .16, 12, false), M.glass);
+pipeGroup.add(pipeMesh);
+/* pump at the SX end */
+const pump = new THREE.Mesh(new THREE.CylinderGeometry(.34,.34,.7,20), M.steelD);
+pump.rotation.z = Math.PI/2; pump.position.set(-7.2,.65,-1); pump.castShadow = true;
+pipeGroup.add(pump);
+scene.add(pipeGroup); reg(pipeGroup,'pipe');
+
+/* droplets */
+const drops = [];
+const dropGeo = new THREE.SphereGeometry(.12, 12, 10);
+for (let i=0;i<16;i++){
+  const d = new THREE.Mesh(dropGeo, M.drop);
+  d.userData.phase = i/16;
+  scene.add(d); drops.push(d);
+}
+
+/* ---------- EW tankhouse ---------- */
+const ewGroup = new THREE.Group();
+const busGroup = new THREE.Group();
+const cathodePlates = [];
+const CW=2.7, CD=1.05, CH=1.1;
+for (const cx of [4.5,7.6,10.7]){
+  for (let ci=0;ci<3;ci++){
+    const cz = -3.2 + ci*2.3;
+    box(CW,CH,CD,M.steelD,cx,CH/2,cz,ewGroup);
+    box(CW-.12,CH*.62,CD-.12,M.electro,cx,CH*.62,cz,ewGroup);
+    for (let p=0;p<6;p++){
+      const px = cx - CW/2 + .38 + p*(CW-.76)/5;
+      const plate = box(.05,1.1,CD-.24,M.cathode,px,CH+.5,cz,ewGroup);
+      cathodePlates.push(plate);
+    }
+    box(CW,.1,.1,M.busbar,cx,CH+1.05,cz-CD/2,busGroup);
+    box(CW,.1,.1,M.busbar,cx,CH+1.05,cz+CD/2,busGroup);
+  }
+}
+scene.add(ewGroup); reg(ewGroup,'ew');
+scene.add(busGroup); reg(busGroup,'bus');
+
+/* ---------- cathode stack (hero) ---------- */
+const catGroup = new THREE.Group();
+for (let k=0;k<8;k++){
+  const c = box(2.2,.14,1.5,M.copper,11.6,.12+k*.17,3.6,catGroup);
+  c.rotation.y = .14 + (k%2)*.05;
+}
+scene.add(catGroup); reg(catGroup,'cat');
+
+/* ---------- interaction ---------- */
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let hovered = null, selected = null;
+const info = document.getElementById('info');
+
+const VIEWS = {
+  linea:   {pos:[16.5,11,14.5], tgt:[1.5,1,0]},
+  sx:      {pos:[-4.5,6,7],     tgt:[-8.5,1,-1]},
+  ew:      {pos:[8,7.5,9.5],    tgt:[7.5,1,-1]},
+  catodos: {pos:[14.5,3.4,7.8], tgt:[11.6,.8,3.6]}
+};
+let camAnim = null;
+function flyTo(v){
+  camAnim = {
+    p0:camera.position.clone(), p1:new THREE.Vector3(...v.pos),
+    t0:controls.target.clone(), t1:new THREE.Vector3(...v.tgt),
+    k:0
+  };
+}
+camera.position.set(...VIEWS.linea.pos);
+controls.target.set(...VIEWS.linea.tgt);
+
+const viewsEl = document.getElementById('views');
+viewsEl.addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  viewsEl.querySelectorAll('button').forEach(x=>x.classList.toggle('active', x===b));
+  flyTo(VIEWS[b.dataset.v]);
+});
+
+/* legend */
+const legendRows = document.querySelector('#legend .rows');
+const STATION_VIEW = {sx:'sx', pipe:'linea', ew:'ew', bus:'ew', cat:'catodos'};
+for (const [id,st] of Object.entries(STATIONS)){
+  const r = document.createElement('div');
+  r.className = 'row'; r.dataset.st = id;
+  r.innerHTML = `<span class="dot" style="background:#${st.color.toString(16).padStart(6,'0')}"></span><span class="nm">${st.name}</span>`;
+  r.addEventListener('click', ()=>selectStation(id, true));
+  legendRows.appendChild(r);
+}
+
+function showInfo(id){
+  const st = STATIONS[id];
+  info.querySelector('.kicker').textContent = st.kicker;
+  info.querySelector('h3').textContent = st.name;
+  info.querySelector('.desc').textContent = st.desc;
+  info.querySelector('.fallas').innerHTML = st.fallas.map(f=>
+    `<div class="falla"><span class="sev ${f.s}"></span><div><b>${f.m}</b><span>${f.d}</span></div></div>`).join('');
+  info.classList.add('show');
+  document.querySelectorAll('#legend .row').forEach(r=>r.classList.toggle('active', r.dataset.st===id));
+}
+function selectStation(id, fly){
+  selected = id; showInfo(id);
+  if (fly) flyTo(VIEWS[STATION_VIEW[id]]);
+}
+info.querySelector('.close').addEventListener('click', ()=>{
+  info.classList.remove('show'); selected = null;
+  document.querySelectorAll('#legend .row').forEach(r=>r.classList.remove('active'));
+});
+
+renderer.domElement.addEventListener('pointermove', e=>{
+  mouse.x = (e.clientX/innerWidth)*2-1; mouse.y = -(e.clientY/innerHeight)*2+1;
+  raycaster.setFromCamera(mouse, camera);
+  const hit = raycaster.intersectObjects(pickables, false)[0];
+  const st = hit?.object.userData.station || null;
+  if (st !== hovered){ hovered = st; renderer.domElement.style.cursor = st ? 'pointer' : 'grab'; }
+});
+let downAt = null;
+renderer.domElement.addEventListener('pointerdown', e=>{ downAt = [e.clientX,e.clientY]; });
+renderer.domElement.addEventListener('pointerup', e=>{
+  if (!downAt) return;
+  const moved = Math.hypot(e.clientX-downAt[0], e.clientY-downAt[1]);
+  downAt = null;
+  if (moved > 6) return;             // it was a drag, not a click
+  if (hovered) selectStation(hovered, false);
+});
+
+/* ---------- KPIs ---------- */
+const k = {
+  pls: document.getElementById('k-pls'), dc: document.getElementById('k-dc'),
+  ef: document.getElementById('k-ef'),  cos: document.getElementById('k-cos')
+};
+let cosecha = 38.4;
+function jitter(base, amp, dec=0){ return (base + (Math.random()*2-1)*amp).toFixed(dec); }
+function tickKPIs(){
+  k.pls.textContent = jitter(842, 14);
+  k.dc.textContent  = jitter(318, 6);
+  k.ef.textContent  = jitter(91.2, .5, 1);
+  cosecha = Math.max(0, cosecha - .001);
+  k.cos.textContent = cosecha.toFixed(1);
+}
+tickKPIs(); setInterval(tickKPIs, 1400);
+
+/* ---------- loop ---------- */
+const clock = new THREE.Clock();
+function animate(){
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+
+  for (const d of drops){
+    const u = (t*.09 + d.userData.phase) % 1;
+    d.position.copy(flowCurve.getPointAt(u));
+  }
+  for (const m of mixers) m.rotation.y = t*2.2;
+  const glow = .3 + Math.sin(t*2.1)*.12;
+  M.cathode.emissiveIntensity = glow;
+  M.drop.emissiveIntensity = 1.9 + Math.sin(t*3.3)*.5;
+
+  if (camAnim){
+    camAnim.k = Math.min(1, camAnim.k + .022);
+    const e = 1 - Math.pow(1-camAnim.k, 3);
+    camera.position.lerpVectors(camAnim.p0, camAnim.p1, e);
+    controls.target.lerpVectors(camAnim.t0, camAnim.t1, e);
+    if (camAnim.k >= 1) camAnim = null;
+  }
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+
+addEventListener('resize', ()=>{
+  camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>
