@@ -269,7 +269,7 @@ app.appendChild(renderer.domElement);
 const controls = new Orbit(camera, renderer.domElement);
 
 /* ---- Lighting ---- */
-const hemi = new THREE.HemisphereLight(0x9fb4d4, 0x0a0e14, 0.55);
+const hemi = new THREE.HemisphereLight(0x9fb4d4, 0x7a828c, 0.65);
 scene.add(hemi);
 const key = new THREE.DirectionalLight(0xffffff, 2.1);
 key.position.set(28, 40, 20);
@@ -285,15 +285,15 @@ const fill = new THREE.DirectionalLight(0x3a5c8a, 0.5);
 fill.position.set(-14,20,28); scene.add(fill);
 
 /* ---- Ground slab ---- */
-const groundMat = new THREE.MeshStandardMaterial({color:0x11161f, roughness:0.95, metalness:0.0});
+const groundMat = new THREE.MeshStandardMaterial({color:0x848b94, roughness:0.95, metalness:0.0});
 const ground = new THREE.Mesh(new THREE.BoxGeometry(120, 1, 60), groundMat);
 ground.position.y=-0.5; ground.receiveShadow=true; scene.add(ground);
 // concrete pad
-const padMat = new THREE.MeshStandardMaterial({color:0x1a222e, roughness:0.9});
+const padMat = new THREE.MeshStandardMaterial({color:0xaab0b8, roughness:0.9});
 const pad = new THREE.Mesh(new THREE.BoxGeometry(96, 0.3, 44), padMat);
 pad.position.y=0.15; pad.receiveShadow=true; scene.add(pad);
 // grid lines on pad
-const grid = new THREE.GridHelper(96, 32, 0x243040, 0x1b232f);
+const grid = new THREE.GridHelper(96, 32, 0x6e757e, 0x8d939b);
 grid.position.y=0.32; grid.material.transparent=true; grid.material.opacity=0.5; scene.add(grid);
 
 /* ============================================================
