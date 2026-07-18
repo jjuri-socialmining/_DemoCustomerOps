@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelos 3D · Sigma Digital Twins</title>
+<style>
+  :root{
+    --bg:#0a0e14; --panel:#121821; --card:#141b25; --line:#1d2733;
+    --ink:#e8edf4; --muted:#7d8798; --steel:#8a94a6;
+    --accent:#ff5714; --ok:#35d07f; --amber:#ffb703;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:radial-gradient(1200px 700px at 70% -10%, #12202c 0%, var(--bg) 55%);
+    color:var(--ink); min-height:100vh;
+    font-family:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:44px 26px 80px;}
+  header .kick{font-size:11px;letter-spacing:5px;color:var(--accent);text-transform:uppercase;font-weight:700;}
+  header h1{font-size:26px;font-weight:600;margin-top:8px;letter-spacing:.3px;}
+  header .sub{color:var(--muted);font-size:13px;margin-top:8px;max-width:640px;line-height:1.5;}
+  .bar{display:flex;gap:18px;align-items:center;margin-top:18px;flex-wrap:wrap;}
+  .pill{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:1px;
+    background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:20px;padding:7px 14px;color:var(--muted);}
+  .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;margin-top:34px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    display:flex;flex-direction:column;transition:transform .18s,border-color .18s,box-shadow .18s;}
+  .card:hover{transform:translateY(-4px);border-color:var(--steel);box-shadow:0 16px 40px rgba(0,0,0,.4);}
+  .thumb{aspect-ratio:16/9;background:#0c1118 center/cover no-repeat;position:relative;border-bottom:1px solid var(--line);}
+  .thumb .badge{position:absolute;top:12px;left:12px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+    background:rgba(10,14,20,.82);border:1px solid var(--line);border-radius:6px;padding:5px 9px;color:var(--amber);font-weight:700;}
+  .thumb .live{position:absolute;top:12px;right:12px;font-size:9px;letter-spacing:1px;display:flex;align-items:center;gap:6px;
+    background:rgba(10,14,20,.82);border:1px solid var(--line);border-radius:20px;padding:5px 10px;color:var(--ok);}
+  .thumb .live .d{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .body{padding:16px 18px 18px;display:flex;flex-direction:column;flex:1;}
+  .body .kicker{font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;font-weight:700;}
+  .body h3{font-size:16px;margin:6px 0 8px;font-weight:600;}
+  .body p{font-size:12px;color:var(--muted);line-height:1.55;flex:1;}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 16px;}
+  .tag{font-size:9px;letter-spacing:.5px;color:var(--steel);background:rgba(255,255,255,.03);
+    border:1px solid var(--line);border-radius:5px;padding:4px 8px;}
+  .open{display:inline-flex;align-items:center;justify-content:space-between;text-decoration:none;
+    background:rgba(255,87,20,.08);border:1px solid rgba(255,87,20,.35);color:#ff8a5c;
+    font-family:inherit;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;
+    padding:11px 15px;border-radius:8px;transition:all .15s;}
+  .open:hover{background:rgba(255,87,20,.16);color:#ffb08c;}
+  footer{margin-top:48px;color:var(--muted);font-size:11px;letter-spacing:.5px;border-top:1px solid var(--line);padding-top:18px;}
+  footer b{color:var(--ink);}
+  .soon{opacity:.45;pointer-events:none;}
+  .soon .open{border-style:dashed;color:var(--muted);background:transparent;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kick">Sigma Digital Twins</div>
+    <h1>Modelos 3D · Gemelos Digitales</h1>
+    <div class="sub">Biblioteca de modelos 3D interactivos generados para los proyectos. Cada tarjeta abre el modelo en vivo — orbitá, hacé zoom y explorá el proceso.</div>
+    <div class="bar">
+      <span class="pill"><span class="dot"></span><span id="count">—</span> modelos activos</span>
+      <span class="pill">Actualizado 2026-07</span>
+      <span class="pill">Interactivo · WebGL</span>
+    </div>
+  </header>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    <b>Sigma Digital Twins Consulting</b> · biblioteca de modelos 3D · publicado vía GitHub Pages.
+    Insertá cualquier modelo como <b>3D nativo en PowerPoint</b> (Insertar → Modelos 3D, formato GLB) o embebelo por URL.
+  </footer>
+</div>
+
+<script>
+const MODELS = [
+  {
+    file:"planta_3d_interactiva_1.html",
+    thumb:"assets/thumbs/thumb-gemelo-nfu.jpg",
+    badge:"Negocio 05 · Reciclaje",
+    kicker:"Gemelo digital",
+    title:"Planta de Reciclaje y Valorización de NFU",
+    desc:"Gemelo digital operativo: línea completa de trituración → separación → granulación → silos, con KPIs en vivo (throughput, recuperación, uptime), flujo de material y sala SCADA.",
+    tags:["KPIs en vivo","Flujo material","SCADA","50–70k NFU/año"],
+    live:true
+  },
+  {
+    file:"planta_reciclaje_nfu.html",
+    thumb:"assets/thumbs/thumb-planta-nfu.jpg",
+    badge:"Negocio 05 · Reciclaje",
+    kicker:"Layout de planta",
+    title:"Planta Reciclaje NFU — Layout interactivo",
+    desc:"Vista de implantación del proceso con estaciones clickeables, cañerías color-codeadas, cintas animadas y figuras de escala. Exportable a GLB para PowerPoint 3D nativo.",
+    tags:["Estaciones","Cañerías","GLB-export","Escala humana"],
+    live:true
+  },
+];
+
+const grid = document.getElementById('grid');
+MODELS.forEach(m=>{
+  const a=document.createElement('div'); a.className='card'+(m.soon?' soon':'');
+  a.innerHTML=`
+    <div class="thumb" style="background-image:url('${m.thumb}')">
+      <span class="badge">${m.badge}</span>
+      ${m.live?'<span class="live"><span class="d"></span>LIVE</span>':''}
+    </div>
+    <div class="body">
+      <div class="kicker">${m.kicker}</div>
+      <h3>${m.title}</h3>
+      <p>${m.desc}</p>
+      <div class="tags">${m.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <a class="open" href="${m.file}" target="_blank" rel="noopener">Abrir modelo <span>→</span></a>
+    </div>`;
+  grid.appendChild(a);
+});
+document.getElementById('count').textContent = MODELS.filter(m=>!m.soon).length;
+</script>
+</body>
+</html>

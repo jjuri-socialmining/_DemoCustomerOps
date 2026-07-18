@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planta de Reciclaje de Neumáticos — Gemelo Digital 3D | Sigma</title>
+<style>
+  :root {
+    --bg: #0a0e14;
+    --panel: #121821;
+    --steel: #8a94a6;
+    --ink: #e8edf4;
+    --muted: #7d8798;
+    --amber: #ffb703;
+    --line: #1d2733;
+    --accent: #ff5714;
+    --ok: #35d07f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    -webkit-font-smoothing: antialiased;
+  }
+  #app { position: fixed; inset: 0; }
+  canvas { display: block; }
+
+  /* ---- HUD ---- */
+  .hud {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .topbar {
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 18px 22px;
+    background: linear-gradient(180deg, rgba(10,14,20,.9) 0%, rgba(10,14,20,0) 100%);
+  }
+  .brand { pointer-events: auto; }
+  .brand .kick {
+    font-size: 10px; letter-spacing: 4px; color: var(--accent);
+    text-transform: uppercase; font-weight: 700;
+  }
+  .brand h1 {
+    font-size: 17px; font-weight: 600; letter-spacing: .3px;
+    margin-top: 3px; color: var(--ink);
+  }
+  .brand .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .status {
+    text-align: right; pointer-events: auto;
+    font-size: 10px; letter-spacing: 1px;
+  }
+  .status .row { display: flex; align-items: center; gap: 7px; justify-content: flex-end; margin-bottom: 4px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+  .status .lbl { color: var(--muted); }
+  .status .val { color: var(--ink); font-weight: 600; }
+
+  /* ---- Legend / equipment list ---- */
+  .legend {
+    left: 22px; bottom: 22px;
+    background: rgba(18,24,33,.82);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px 16px;
+    pointer-events: auto;
+    backdrop-filter: blur(8px);
+    max-width: 260px;
+  }
+  .legend h2 {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px; font-weight: 600;
+  }
+  .leg-item {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 11px; padding: 3px 0; cursor: pointer;
+    color: var(--ink); opacity: .85; transition: opacity .15s;
+  }
+  .leg-item:hover { opacity: 1; }
+  .sw { width: 12px; height: 12px; border-radius: 3px; flex: none; border: 1px solid rgba(255,255,255,.15); }
+
+  /* ---- Info card on click ---- */
+  .info {
+    right: 22px; bottom: 22px;
+    width: 280px;
+    background: rgba(18,24,33,.9);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 16px 18px;
+    pointer-events: auto;
+    backdrop-filter: blur(8px);
+    transform: translateY(12px);
+    opacity: 0;
+    transition: opacity .25s, transform .25s;
+  }
+  .info.show { opacity: 1; transform: translateY(0); }
+  .info .tag {
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); font-weight: 700;
+  }
+  .info h3 { font-size: 15px; margin: 5px 0 4px; }
+  .info p { font-size: 11px; color: var(--muted); line-height: 1.55; }
+  .info .metrics { margin-top: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .info .metric { background: rgba(255,255,255,.03); border-radius: 5px; padding: 7px 9px; }
+  .info .metric .m-lbl { font-size: 8px; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; }
+  .info .metric .m-val { font-size: 13px; color: var(--ink); font-weight: 600; margin-top: 2px; }
+  .info .m-val small { font-size: 9px; color: var(--muted); }
+
+  /* ---- Controls hint ---- */
+  .hint {
+    left: 50%; bottom: 18px; transform: translateX(-50%);
+    font-size: 10px; color: var(--muted); letter-spacing: 1px;
+    background: rgba(18,24,33,.6); padding: 6px 14px; border-radius: 20px;
+    border: 1px solid var(--line);
+  }
+
+  /* ---- Toggle buttons ---- */
+  .toolbar {
+    right: 22px; top: 74px;
+    display: flex; flex-direction: column; gap: 6px;
+    pointer-events: auto;
+  }
+  .tbtn {
+    background: rgba(18,24,33,.82);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-family: inherit; font-size: 10px; letter-spacing: 1px;
+    padding: 8px 11px; border-radius: 6px; cursor: pointer;
+    text-transform: uppercase; transition: all .15s;
+    backdrop-filter: blur(8px); text-align: left;
+  }
+  .tbtn:hover { color: var(--ink); border-color: var(--steel); }
+  .tbtn.active { color: var(--accent); border-color: var(--accent); }
+
+  .loading {
+    position: fixed; inset: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg); flex-direction: column; gap: 14px;
+  }
+  .loading .bar { width: 180px; height: 2px; background: var(--line); overflow: hidden; border-radius: 2px; }
+  .loading .bar i { display: block; height: 100%; width: 40%; background: var(--accent);
+    animation: slide 1.1s infinite; }
+  @keyframes slide { 0%{transform:translateX(-100%)} 100%{transform:translateX(350%)} }
+  .loading span { font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+
+  @media (max-width: 640px) {
+    .legend { display: none; }
+    .info { width: calc(100% - 44px); }
+    .brand h1 { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<div class="loading" id="loading">
+  <span>Ensamblando gemelo digital</span>
+  <div class="bar"><i></i></div>
+</div>
+
+<div class="hud topbar">
+  <div class="brand">
+    <div class="kick">Sigma Digital Twins</div>
+    <h1>Planta de Reciclaje y Valorización de Neumáticos</h1>
+    <div class="sub">Gemelo digital · 50.000–70.000 NFU/año · flujo continuo</div>
+  </div>
+  <div class="status">
+    <div class="row"><span class="dot"></span><span class="val" id="st-state">EN OPERACIÓN</span></div>
+    <div class="row"><span class="lbl">Throughput</span><span class="val" id="st-tph">— t/h</span></div>
+    <div class="row"><span class="lbl">Recuperación</span><span class="val" id="st-rec">— %</span></div>
+    <div class="row"><span class="lbl">Uptime</span><span class="val">98.6 %</span></div>
+  </div>
+</div>
+
+<div class="hud toolbar">
+  <button class="tbtn active" id="tg-flow">● Flujo material</button>
+  <button class="tbtn active" id="tg-labels">● Etiquetas</button>
+  <button class="tbtn" id="tg-cut">Vista corte</button>
+  <button class="tbtn" id="tg-auto">Auto-órbita</button>
+</div>
+
+<div class="hud legend">
+  <h2>Línea de proceso</h2>
+  <div id="legend-list"></div>
+</div>
+
+<div class="hud info" id="info">
+  <div class="tag" id="i-tag">Equipo</div>
+  <h3 id="i-name">—</h3>
+  <p id="i-desc">—</p>
+  <div class="metrics" id="i-metrics"></div>
+</div>
+
+<div class="hud hint">Arrastrá para orbitar · rueda para zoom · clic en un equipo</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from "three";
+
+/* ============================================================
+   ORBIT CONTROLS (minimal, self-contained — no external dep)
+   ============================================================ */
+class Orbit {
+  constructor(cam, dom){
+    this.cam = cam; this.dom = dom;
+    this.target = new THREE.Vector3(0,2,0);
+    this.sph = new THREE.Spherical(46, Math.PI/3.1, Math.PI*0.22);
+    this.min = 14; this.max = 90;
+    this.autoRotate = false; this.autoSpeed = 0.12;
+    this._drag=false; this._px=0; this._py=0;
+    this.damp = 0.9;
+    this._vTheta=0; this._vPhi=0;
+    dom.addEventListener('pointerdown',e=>{this._drag=true;this._px=e.clientX;this._py=e.clientY;});
+    window.addEventListener('pointerup',()=>this._drag=false);
+    window.addEventListener('pointermove',e=>{
+      if(!this._drag)return;
+      const dx=(e.clientX-this._px)/dom.clientWidth;
+      const dy=(e.clientY-this._py)/dom.clientHeight;
+      this._vTheta = -dx*3.2; this._vPhi = -dy*3.2;
+      this._px=e.clientX; this._py=e.clientY;
+    });
+    dom.addEventListener('wheel',e=>{
+      e.preventDefault();
+      this.sph.radius = THREE.MathUtils.clamp(this.sph.radius*(1+Math.sign(e.deltaY)*0.08), this.min, this.max);
+    },{passive:false});
+    this.update();
+  }
+  update(){
+    if(this.autoRotate && !this._drag) this.sph.theta -= this.autoSpeed*0.016;
+    this.sph.theta += this._vTheta; this.sph.phi += this._vPhi;
+    this._vTheta*=this.damp; this._vPhi*=this.damp;
+    this.sph.phi = THREE.MathUtils.clamp(this.sph.phi, 0.25, Math.PI/2 - 0.05);
+    const p = new THREE.Vector3().setFromSpherical(this.sph).add(this.target);
+    this.cam.position.copy(p);
+    this.cam.lookAt(this.target);
+  }
+}
+
+/* ============================================================
+   SCENE
+   ============================================================ */
+const app = document.getElementById('app');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0e14);
+scene.fog = new THREE.Fog(0x0a0e14, 60, 130);
+
+const camera = new THREE.PerspectiveCamera(42, innerWidth/innerHeight, 0.1, 500);
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+app.appendChild(renderer.domElement);
+
+const controls = new Orbit(camera, renderer.domElement);
+
+/* ---- Lighting ---- */
+const hemi = new THREE.HemisphereLight(0x9fb4d4, 0x0a0e14, 0.55);
+scene.add(hemi);
+const key = new THREE.DirectionalLight(0xffffff, 2.1);
+key.position.set(28, 40, 20);
+key.castShadow = true;
+key.shadow.mapSize.set(2048,2048);
+key.shadow.camera.left=-55; key.shadow.camera.right=55;
+key.shadow.camera.top=55; key.shadow.camera.bottom=-55;
+key.shadow.camera.far=140; key.shadow.bias=-0.0004;
+scene.add(key);
+const rim = new THREE.DirectionalLight(0xff7a3c, 0.7);
+rim.position.set(-30,18,-24); scene.add(rim);
+const fill = new THREE.DirectionalLight(0x3a5c8a, 0.5);
+fill.position.set(-14,20,28); scene.add(fill);
+
+/* ---- Ground slab ---- */
+const groundMat = new THREE.MeshStandardMaterial({color:0x11161f, roughness:0.95, metalness:0.0});
+const ground = new THREE.Mesh(new THREE.BoxGeometry(120, 1, 60), groundMat);
+ground.position.y=-0.5; ground.receiveShadow=true; scene.add(ground);
+// concrete pad
+const padMat = new THREE.MeshStandardMaterial({color:0x1a222e, roughness:0.9});
+const pad = new THREE.Mesh(new THREE.BoxGeometry(96, 0.3, 44), padMat);
+pad.position.y=0.15; pad.receiveShadow=true; scene.add(pad);
+// grid lines on pad
+const grid = new THREE.GridHelper(96, 32, 0x243040, 0x1b232f);
+grid.position.y=0.32; grid.material.transparent=true; grid.material.opacity=0.5; scene.add(grid);
+
+/* ============================================================
+   MATERIAL LIBRARY
+   ============================================================ */
+const MAT = {
+  steelDark:  new THREE.MeshStandardMaterial({color:0x39424f, roughness:0.55, metalness:0.85}),
+  steelLight: new THREE.MeshStandardMaterial({color:0x8a94a6, roughness:0.4,  metalness:0.9}),
+  amber:      new THREE.MeshStandardMaterial({color:0xf6a723, roughness:0.5,  metalness:0.3}),
+  green:      new THREE.MeshStandardMaterial({color:0x2f9e57, roughness:0.5,  metalness:0.35}),
+  blue:       new THREE.MeshStandardMaterial({color:0x2f6fd0, roughness:0.45, metalness:0.4}),
+  copper:     new THREE.MeshStandardMaterial({color:0xc17a3f, roughness:0.45, metalness:0.6}),
+  rubber:     new THREE.MeshStandardMaterial({color:0x2a2620, roughness:0.95, metalness:0.05}),
+  brown:      new THREE.MeshStandardMaterial({color:0x6b4a2c, roughness:0.7,  metalness:0.2}),
+  silver:     new THREE.MeshStandardMaterial({color:0xb8c0cc, roughness:0.35, metalness:0.9}),
+  tan:        new THREE.MeshStandardMaterial({color:0xc9b18a, roughness:0.8,  metalness:0.1}),
+  ctrl:       new THREE.MeshStandardMaterial({color:0x1f3540, roughness:0.4,  metalness:0.5, emissive:0x0a1a20, emissiveIntensity:0.4}),
+  rail:       new THREE.MeshStandardMaterial({color:0xf6c723, roughness:0.5,  metalness:0.4}),
+};
+
+/* ---- Helpers ---- */
+const pickable = [];
+function box(w,h,d,mat){ const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat); m.castShadow=m.receiveShadow=true; return m; }
+function cyl(rt,rb,h,mat,seg=24){ const m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg),mat); m.castShadow=m.receiveShadow=true; return m; }
+function group(x,z){ const g=new THREE.Group(); g.position.set(x,0,z); scene.add(g); return g; }
+
+// simple steel support frame around a footprint
+function frame(g, w, d, h){
+  const postMat = MAT.steelDark;
+  const r=0.12;
+  const xs=[-w/2,w/2], zs=[-d/2,d/2];
+  xs.forEach(x=>zs.forEach(z=>{
+    const p=cyl(r,r,h,postMat,8); p.position.set(x,h/2,z); g.add(p);
+  }));
+  // top rails
+  [[0,h,-d/2,w,'x'],[0,h,d/2,w,'x'],[-w/2,h,0,d,'z'],[w/2,h,0,d,'z']].forEach(([x,y,z,len,axis])=>{
+    const bar=cyl(0.07,0.07,len,postMat,6);
+    bar.rotation.z = axis==='x'?Math.PI/2:0;
+    bar.rotation.x = axis==='z'?Math.PI/2:0;
+    bar.position.set(x,y,z); g.add(bar);
+  });
+}
+
+// yellow safety railing along top platform
+function railing(g, w, d, y){
+  const m=MAT.rail;
+  const post=(x,z)=>{const p=cyl(0.04,0.04,0.9,m,6);p.position.set(x,y+0.45,z);g.add(p);};
+  const n=Math.max(2,Math.round(w/1.2));
+  for(let i=0;i<=n;i++){post(-w/2+i*w/n,-d/2);post(-w/2+i*w/n,d/2);}
+  [[-d/2],[d/2]].forEach(([z])=>{
+    const rail=cyl(0.03,0.03,w,m,6); rail.rotation.z=Math.PI/2; rail.position.set(0,y+0.9,z); g.add(rail);
+  });
+}
+
+/* ============================================================
+   EQUIPMENT DEFINITIONS
+   Layout runs along X (−42 → +42). Storage row at +z.
+   ============================================================ */
+const EQUIP = [];
+function register(mesh, data){ mesh.userData=data; pickable.push(mesh); EQUIP.push({mesh,data}); }
+
+/* 1 — Recepción NFU (tire pile) */
+(()=>{
+  const g=group(-40,-8);
+  const base=box(9,2.4,7,MAT.rubber); base.position.y=1.2; g.add(base);
+  // stacked tires impression
+  for(let i=0;i<14;i++){
+    const t=new THREE.Mesh(new THREE.TorusGeometry(0.85,0.32,8,16),MAT.rubber);
+    t.castShadow=true;
+    t.position.set((Math.random()-0.5)*7,2.4+Math.random()*1.6,(Math.random()-0.5)*5);
+    t.rotation.set(Math.random()*3,Math.random()*3,Math.random()*3);
+    g.add(t);
+  }
+  base.position.copy(new THREE.Vector3(0,1.2,0));
+  register(base,{name:'Recepción NFU',tag:'Entrada',color:'#2a2620',
+    desc:'Zona de acopio de neumáticos fuera de uso. Alimentación por cargador frontal hacia la tolva primaria.',
+    metrics:[['Capacidad acopio','1.200 t'],['Alimentación','~10 t/h']]});
+})();
+
+/* 2 — Tolva de alimentación (hopper cone) */
+(()=>{
+  const g=group(-33,-8);
+  frame(g,4,4,4.2);
+  const hop=cyl(1.8,0.5,3.2,MAT.steelLight,20); hop.position.y=3.2; g.add(hop);
+  const mouth=cyl(1.9,1.9,0.5,MAT.amber,20); mouth.position.y=4.9; g.add(mouth);
+  register(hop,{name:'Tolva de alimentación',tag:'Dosificación',color:'#8a94a6',
+    desc:'Tolva de regulación con cinta dosificadora de velocidad variable que alimenta el triturador primario a caudal constante.',
+    metrics:[['Volumen','12 m³'],['Dosif.','0–12 t/h']]});
+})();
+
+/* 3 — Shredder Primary */
+(()=>{
+  const g=group(-24,-8);
+  frame(g,8,6,5.6);
+  const body=box(7,4.4,5,MAT.steelDark); body.position.y=2.6; g.add(body);
+  const cap=box(7.4,0.6,5.4,MAT.amber); cap.position.y=5; g.add(cap);
+  // drive motor
+  const mot=cyl(0.9,0.9,2.2,MAT.blue,16); mot.rotation.z=Math.PI/2; mot.position.set(4.4,2.4,0); g.add(mot);
+  register(body,{name:'Triturador primario',tag:'Trituración · L1',color:'#39424f',
+    desc:'Triturador de doble eje de baja velocidad y alto torque. Reduce el NFU entero a trozos de 50–100 mm (chips).',
+    metrics:[['Potencia','2×110 kW'],['Salida','50–100 mm'],['Throughput','8–10 t/h'],['Torque','alto']]});
+})();
+
+/* 4 — Criba vibratoria */
+(()=>{
+  const g=group(-15,-8);
+  frame(g,7,5,3.6);
+  const deck=box(6.2,0.7,4.4,MAT.amber); deck.position.y=3; deck.rotation.z=-0.08; g.add(deck);
+  const deck2=box(6.2,0.5,4.4,MAT.steelLight); deck2.position.y=2.2; deck2.rotation.z=-0.06; g.add(deck2);
+  register(deck,{name:'Criba vibratoria',tag:'Clasificación',color:'#f6a723',
+    desc:'Criba de dos pisos que clasifica los chips por granulometría y devuelve el sobretamaño al triturador secundario.',
+    metrics:[['Pisos','2'],['Corte','20 / 6 mm'],['Eficiencia','92 %']]});
+})();
+
+/* 5 — Separador magnético */
+(()=>{
+  const g=group(-6,-8);
+  frame(g,3.4,3.4,4.4);
+  const drum=cyl(1.5,1.5,3,MAT.green,24); drum.rotation.z=Math.PI/2; drum.position.y=3; g.add(drum);
+  const coil=cyl(1.62,1.62,0.4,MAT.steelDark,24); coil.rotation.z=Math.PI/2; coil.position.set(1.2,3,0); g.add(coil);
+  register(drum,{name:'Separador magnético',tag:'Recuperación acero',color:'#2f9e57',
+    desc:'Tambor magnético permanente que extrae el alambre de acero (talón y cinturón) de la corriente de caucho.',
+    metrics:[['Pureza Fe','95–98 %'],['Recuperación','~650 t/año'],['Campo','9.000 G']]});
+})();
+
+/* 6 — Separador óptico / densimétrico */
+(()=>{
+  const g=group(-6,-2);
+  frame(g,3,3,4);
+  const body=box(2.6,3.2,2.6,MAT.blue); body.position.y=2.6; g.add(body);
+  const eye=cyl(0.3,0.3,0.4,MAT.ctrl,12); eye.rotation.x=Math.PI/2; eye.position.set(0,3.2,1.4); g.add(eye);
+  register(body,{name:'Separador densimétrico',tag:'Separación',color:'#2f6fd0',
+    desc:'Mesa densimétrica + sensor óptico que separa caucho, textil residual y finos por densidad y color.',
+    metrics:[['Fracciones','3'],['Precisión','98 %'],['Aire','ciclónico']]});
+})();
+
+/* 7 — Ciclón neumático (textil) */
+(()=>{
+  const g=group(-6,4);
+  frame(g,2.6,2.6,5);
+  const top=cyl(1.3,1.3,2.2,MAT.brown,20); top.position.y=4; g.add(top);
+  const cone=cyl(1.3,0.2,2.2,MAT.brown,20); cone.position.y=1.9; g.add(cone);
+  register(top,{name:'Ciclón neumático',tag:'Extracción textil',color:'#6b4a2c',
+    desc:'Ciclón que separa la fibra textil ligera del caucho mediante flujo de aire. La fibra se ensila para valorización.',
+    metrics:[['Textil','~180 t/año'],['Caudal aire','12.000 m³/h']]});
+})();
+
+/* 8 — Shredder Secondary (granulador fino) */
+(()=>{
+  const g=group(3,-8);
+  frame(g,6,5,4.4);
+  const body=box(5,3.4,4,MAT.steelDark); body.position.y=2.2; g.add(body);
+  const cap=box(5.4,0.5,4.4,MAT.copper); cap.position.y=4.1; g.add(cap);
+  const mot=cyl(0.8,0.8,2,MAT.blue,16); mot.rotation.z=Math.PI/2; mot.position.set(3.2,2.1,0); g.add(mot);
+  register(body,{name:'Granulador secundario',tag:'Trituración · L2',color:'#39424f',
+    desc:'Granulador de alta velocidad que reduce el caucho limpio a crumb rubber (0,5–4 mm) para productos de valor.',
+    metrics:[['Salida','0,5–4 mm'],['Potencia','160 kW'],['Throughput','5–6 t/h']]});
+})();
+
+/* 9 — Ciclón fino #2 */
+(()=>{
+  const g=group(11,-8);
+  frame(g,2.4,2.4,4.6);
+  const top=cyl(1.1,1.1,2,MAT.amber,20); top.position.y=3.6; g.add(top);
+  const cone=cyl(1.1,0.18,2,MAT.amber,20); cone.position.y=1.7; g.add(cone);
+  register(top,{name:'Ciclón de finos',tag:'Despolvado',color:'#f6a723',
+    desc:'Separa el polvo de caucho fino del crumb y lo dirige al silo de polvo (paneles, baldosas, asfalto).',
+    metrics:[['Polvo','~90 t/año'],['Corte','<0,5 mm']]});
+})();
+
+/* ---- STORAGE SILOS ROW (+z) ---- */
+const SILOS = [
+  ['TDF',            -22, MAT.copper, '#c17a3f','Combustible derivado de neumático','2.500 t/año','PCI 28–32 MJ/kg'],
+  ['Ballistic Mulch',-15, MAT.steelLight,'#8a94a6','Mantillo balístico para stands de tiro','1.800 t/año','62 % margen'],
+  ['Crumb fino',      -8, MAT.rubber,'#2a2620','Caucho granulado fino 0,5–1 mm','1.200 t/año','88 % margen'],
+  ['Crumb grueso',    -1, MAT.brown, '#6b4a2c','Caucho granulado 1–4 mm','1.100 t/año','pisos, césped'],
+  ['Acero',            6, MAT.silver,'#b8c0cc','Alambre de acero recuperado','650 t/año','USD 150–250/t'],
+  ['Polvo',           13, MAT.steelDark,'#39424f','Polvo de caucho <0,5 mm','90 t/año','paneles/baldosas'],
+];
+SILOS.forEach(([name,x,mat,color,desc,prod,note])=>{
+  const g=group(x,10);
+  frame(g,2.8,2.8,1.6);
+  const body=cyl(1.35,1.35,5,mat,20); body.position.y=4; g.add(body);
+  const cone=cyl(1.35,0.35,1.6,mat,20); cone.position.y=1.6; g.add(cone);
+  const top=cyl(1.4,1.4,0.4,MAT.amber,20); top.position.y=6.6; g.add(top);
+  railing(g,2.8,2.8,6.8);
+  register(body,{name:'Silo · '+name,tag:'Almacenaje',color,
+    desc,metrics:[['Producción',prod],['Nota',note]]});
+});
+
+/* 10 — SCADA / Control room */
+(()=>{
+  const g=group(30,2);
+  const body=box(6,3.4,5,MAT.ctrl); body.position.y=1.9; g.add(body);
+  const roof=box(6.4,0.3,5.4,MAT.steelDark); roof.position.y=3.7; g.add(roof);
+  // glowing windows
+  const winMat=new THREE.MeshStandardMaterial({color:0x0e2530,emissive:0x1e6f88,emissiveIntensity:1.4});
+  for(let i=0;i<3;i++){const w=box(1.2,1.1,0.1,winMat);w.position.set(-1.8+i*1.8,2.1,2.55);g.add(w);}
+  const mast=cyl(0.06,0.06,4,MAT.steelLight,6); mast.position.set(2.6,5.7,-2); g.add(mast);
+  const beacon=new THREE.Mesh(new THREE.SphereGeometry(0.22,12,12),
+    new THREE.MeshStandardMaterial({color:0x35d07f,emissive:0x35d07f,emissiveIntensity:2}));
+  beacon.position.set(2.6,7.8,-2); g.add(beacon);
+  register(body,{name:'Sala SCADA / Control',tag:'Supervisión',color:'#1f3540',
+    desc:'Centro de control con HMI, PLCs y gemelo digital en vivo. Integra sensores IoT, KPIs y alarmas ANDON en tiempo real.',
+    metrics:[['Sensores','15+ puntos'],['Latencia','5 ms'],['ANDON','3 estados'],['Dashboard','Grafana']]});
+  window.__beacon=beacon;
+})();
+
+/* ============================================================
+   CONVEYORS + MATERIAL FLOW PARTICLES
+   ============================================================ */
+const flowGroup = new THREE.Group(); scene.add(flowGroup);
+const conveyors = [];
+function conveyor(from, to, color=0xff5714){
+  const a=new THREE.Vector3(...from), b=new THREE.Vector3(...to);
+  const len=a.distanceTo(b);
+  const beltMat=new THREE.MeshStandardMaterial({color:0x20262f,roughness:0.9});
+  const belt=new THREE.Mesh(new THREE.BoxGeometry(len,0.25,1),beltMat);
+  const mid=a.clone().add(b).multiplyScalar(0.5); belt.position.copy(mid);
+  belt.lookAt(b); belt.rotateY(Math.PI/2);
+  belt.castShadow=true; scene.add(belt);
+  // legs
+  [0.2,0.8].forEach(t=>{
+    const p=a.clone().lerp(b,t); const leg=cyl(0.06,0.06,p.y,MAT.steelDark,6);
+    leg.position.set(p.x,p.y/2,p.z); scene.add(leg);
+  });
+  conveyors.push({a,b,color});
+}
+// material path through the plant
+conveyor([-36,2.6,-8],[-33,3.4,-8]);
+conveyor([-33,3.4,-8],[-27.5,3.2,-8]);
+conveyor([-20,3.2,-8],[-18,3,-8]);
+conveyor([-11.5,2.8,-8],[-9,3,-8]);   // criba → mag
+conveyor([-6,3,-6],[-6,3,-4]);          // mag → densim
+conveyor([-6,3,0],[-6,3,2]);            // densim → ciclon
+conveyor([-3,3,-8],[0,2.2,-8]);         // → shredder2
+conveyor([6,2.2,-8],[9,3,-8]);          // shredder2 → ciclon fino
+// to storage silos
+[[-22],[-15],[-8],[-1],[6],[13]].forEach(([x])=>conveyor([x*0.5,3,-6],[x,3,8],0xff8c42));
+
+// flow particles
+const pGeo=new THREE.SphereGeometry(0.12,6,6);
+const pMat=new THREE.MeshStandardMaterial({color:0xff5714,emissive:0xff5714,emissiveIntensity:1.5});
+const particles=[];
+conveyors.forEach((c,ci)=>{
+  for(let i=0;i<4;i++){
+    const p=new THREE.Mesh(pGeo,pMat.clone());
+    p.userData={ci,t:Math.random()};
+    flowGroup.add(p); particles.push(p);
+  }
+});
+
+/* ============================================================
+   LABELS (sprites)
+   ============================================================ */
+const labelGroup=new THREE.Group(); scene.add(labelGroup);
+function makeLabel(text, pos){
+  const cvs=document.createElement('canvas'); const s=256; cvs.width=s*2; cvs.height=s/2;
+  const ctx=cvs.getContext('2d');
+  ctx.fillStyle='rgba(10,14,20,0.82)';
+  const w=cvs.width, h=cvs.height; const r=24;
+  ctx.beginPath();
+  ctx.moveTo(r,0);ctx.arcTo(w,0,w,h,r);ctx.arcTo(w,h,0,h,r);ctx.arcTo(0,h,0,0,r);ctx.arcTo(0,0,w,0,r);ctx.fill();
+  ctx.strokeStyle='rgba(255,87,20,0.6)'; ctx.lineWidth=3; ctx.stroke();
+  ctx.fillStyle='#e8edf4'; ctx.font='600 52px "IBM Plex Mono", monospace';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(text, w/2, h/2);
+  const tex=new THREE.CanvasTexture(cvs);
+  const spr=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));
+  spr.scale.set(6,1.5,1); spr.position.copy(pos);
+  labelGroup.add(spr); return spr;
+}
+EQUIP.forEach(({mesh,data})=>{
+  const wp=new THREE.Vector3(); mesh.getWorldPosition(wp);
+  makeLabel(data.name.replace('Silo · ',''), wp.clone().add(new THREE.Vector3(0,4.2,0)));
+});
+
+/* ============================================================
+   LEGEND UI
+   ============================================================ */
+const legendList=document.getElementById('legend-list');
+const legendItems=[
+  ['Recepción / tolva','#8a94a6'],
+  ['Trituración','#39424f'],
+  ['Clasificación','#f6a723'],
+  ['Sep. magnético (acero)','#2f9e57'],
+  ['Sep. densimétrico','#2f6fd0'],
+  ['Ciclones','#6b4a2c'],
+  ['Silos de producto','#c17a3f'],
+  ['SCADA / control','#1f3540'],
+];
+legendItems.forEach(([lbl,c])=>{
+  const d=document.createElement('div'); d.className='leg-item';
+  d.innerHTML=`<span class="sw" style="background:${c}"></span>${lbl}`;
+  legendList.appendChild(d);
+});
+
+/* ============================================================
+   PICKING
+   ============================================================ */
+const ray=new THREE.Raycaster(); const mouse=new THREE.Vector2();
+const info=document.getElementById('info');
+let selected=null, selectedEmissive=null;
+renderer.domElement.addEventListener('click',(e)=>{
+  mouse.x=(e.clientX/innerWidth)*2-1;
+  mouse.y=-(e.clientY/innerHeight)*2+1;
+  ray.setFromCamera(mouse,camera);
+  const hits=ray.intersectObjects(pickable,false);
+  if(hits.length){
+    const m=hits[0].object; showInfo(m.userData);
+    if(selected){ selected.material.emissive?.setHex(selectedEmissive??0x000000); }
+    selected=m; selectedEmissive=m.material.emissive?m.material.emissive.getHex():0x000000;
+    if(m.material.emissive) m.material.emissive.setHex(0xff5714);
+  }
+});
+function showInfo(d){
+  document.getElementById('i-tag').textContent=d.tag;
+  document.getElementById('i-name').textContent=d.name;
+  document.getElementById('i-desc').textContent=d.desc;
+  const mx=document.getElementById('i-metrics'); mx.innerHTML='';
+  (d.metrics||[]).forEach(([l,v])=>{
+    const el=document.createElement('div'); el.className='metric';
+    el.innerHTML=`<div class="m-lbl">${l}</div><div class="m-val">${v}</div>`;
+    mx.appendChild(el);
+  });
+  info.classList.add('show');
+}
+
+/* ============================================================
+   TOGGLES
+   ============================================================ */
+let showFlow=true, showLabels=true, autoRot=false, cutView=false;
+const tgFlow=document.getElementById('tg-flow');
+const tgLabels=document.getElementById('tg-labels');
+const tgAuto=document.getElementById('tg-auto');
+const tgCut=document.getElementById('tg-cut');
+tgFlow.onclick=()=>{showFlow=!showFlow;flowGroup.visible=showFlow;tgFlow.classList.toggle('active',showFlow);};
+tgLabels.onclick=()=>{showLabels=!showLabels;labelGroup.visible=showLabels;tgLabels.classList.toggle('active',showLabels);};
+tgAuto.onclick=()=>{autoRot=!autoRot;controls.autoRotate=autoRot;tgAuto.classList.toggle('active',autoRot);};
+tgCut.onclick=()=>{
+  cutView=!cutView; tgCut.classList.toggle('active',cutView);
+  controls.sph.phi = cutView ? 1.42 : Math.PI/3.1;
+  controls.sph.radius = cutView ? 34 : 46;
+};
+
+/* ============================================================
+   ANIMATED KPI READOUT
+   ============================================================ */
+const stTph=document.getElementById('st-tph');
+const stRec=document.getElementById('st-rec');
+let kpiTime=0;
+function updateKPI(dt){
+  kpiTime+=dt;
+  const tph=(8.4+Math.sin(kpiTime*0.5)*0.9+Math.random()*0.2).toFixed(1);
+  const rec=(94.2+Math.sin(kpiTime*0.3)*1.4).toFixed(1);
+  stTph.textContent=tph+' t/h';
+  stRec.textContent=rec+' %';
+}
+
+/* ============================================================
+   LOOP
+   ============================================================ */
+const clock=new THREE.Clock();
+function animate(){
+  requestAnimationFrame(animate);
+  const dt=clock.getDelta();
+  controls.update();
+  // flow particles
+  if(showFlow){
+    particles.forEach(p=>{
+      const c=conveyors[p.userData.ci];
+      p.userData.t+=dt*0.35;
+      if(p.userData.t>1)p.userData.t-=1;
+      p.position.lerpVectors(c.a,c.b,p.userData.t);
+      p.position.y+=0.25;
+      p.material.color.setHex(c.color);
+      p.material.emissive.setHex(c.color);
+    });
+  }
+  // beacon pulse
+  if(window.__beacon){
+    const b=window.__beacon; b.material.emissiveIntensity=1.4+Math.sin(kpiTime*4)*0.8;
+  }
+  updateKPI(dt);
+  renderer.render(scene,camera);
+}
+animate();
+
+// intro camera sweep
+let introT=0;
+const introStart=controls.sph.theta;
+(function intro(){
+  introT+=0.016;
+  if(introT<2.2){ controls.sph.theta=introStart - (1-introT/2.2)*1.2; requestAnimationFrame(intro); }
+})();
+
+window.addEventListener('resize',()=>{
+  camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+});
+
+// hide loader
+setTimeout(()=>{document.getElementById('loading').style.display='none';},600);
+</script>
+</body>
+</html>
