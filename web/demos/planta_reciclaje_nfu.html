@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planta de Reciclaje NFU — 3D interactivo</title>
+<style>
+  :root { color-scheme: dark; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { height:100%; overflow:hidden; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  #app { position:fixed; inset:0; background:linear-gradient(#aecbe6,#dfe9f2); }
+  canvas { display:block; }
+  .panel {
+    position:absolute; background:rgba(15,20,28,.82); color:#e9edf2;
+    border:1px solid rgba(255,255,255,.08); border-radius:12px;
+    backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  }
+  #title { top:16px; left:16px; padding:14px 18px; max-width:340px; }
+  #title h1 { font-size:16px; letter-spacing:.02em; }
+  #title .sub { font-size:12px; color:#9fb0c2; margin-top:4px; line-height:1.35; }
+  #title .accent { display:inline-block; width:34px; height:4px; background:#F2C94C; border-radius:2px; margin-bottom:8px; }
+  #legend { bottom:16px; left:16px; padding:12px 14px; font-size:12px; }
+  #legend h2 { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#9fb0c2; margin-bottom:8px; }
+  #legend .row { display:flex; align-items:center; gap:8px; margin:5px 0; cursor:pointer; opacity:.85; }
+  #legend .row:hover { opacity:1; }
+  #legend .dot { width:11px; height:11px; border-radius:50%; flex:0 0 auto; box-shadow:0 0 0 2px rgba(255,255,255,.06); }
+  #hint { bottom:16px; right:16px; padding:9px 13px; font-size:11px; color:#9fb0c2; }
+  #hint b { color:#e9edf2; font-weight:600; }
+  #info { top:16px; right:16px; padding:14px 16px; max-width:280px; display:none; }
+  #info h3 { font-size:14px; color:#F2C94C; margin-bottom:6px; }
+  #info p { font-size:12px; color:#c8d2dc; line-height:1.45; }
+  #info .close { position:absolute; top:8px; right:12px; cursor:pointer; color:#9fb0c2; font-size:16px; }
+  #loading { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#2a3a4a; font-size:14px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="loading">Cargando planta 3D…</div>
+  <div id="title" class="panel">
+    <span class="accent"></span>
+    <h1>Planta de Reciclaje de Neumáticos (NFU)</h1>
+    <div class="sub">Modelo 3D interactivo del proceso: recepción → trituración → separación → granulación → producto. Girá, acercá y hacé click en cada estación.</div>
+  </div>
+  <div id="legend" class="panel">
+    <h2>Estaciones del proceso</h2>
+    <div class="rows"></div>
+  </div>
+  <div id="hint" class="panel"><b>Arrastrar</b> girar · <b>rueda</b> zoom · <b>click der.</b> desplazar</div>
+  <div id="info" class="panel"><span class="close">✕</span><h3></h3><p></p></div>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+// ---------- paleta (tomada de las referencias industriales) ----------
+const COL = {
+  concrete:0xcccdc9, dirt:0xc9b487, roof:0xb8bec4, brick:0x8a5a44,
+  pipeOrange:0xe8622a, pipeBlue:0x2f86c1, pipeGreen:0x2f9e6a, rail:0xf2c94c,
+  tankBlue:0x2f86c1, silo:0xe8e2d0, cyclone:0xd9c48a, steel:0x9aa2ab,
+  crumb:0x141414, fence:0x2e7d4f, truck:0xf2c216, office:0xf3efe6, dark:0x2b3038,
+};
+const stationList = [
+  { key:'recepcion', name:'1 · Recepción NFU', color:COL.dark,
+    desc:'Ingreso y acopio de neumáticos fuera de uso desde recolección urbana, comunidades e industrias.' },
+  { key:'trituracion', name:'2 · Trituración', color:COL.pipeOrange,
+    desc:'Triturado primario y secundario del neumático en chips (TDS / TDF).' },
+  { key:'separacion', name:'3 · Separación', color:COL.steel,
+    desc:'Separación magnética del acero y extracción del textil. Salidas: acero y fibra.' },
+  { key:'granulacion', name:'4 · Granulación', color:COL.tankBlue,
+    desc:'Molienda del caucho en gránulo (crumb) y polvo, desde 6 mm hasta minus 400 micrones.' },
+  { key:'clasificacion', name:'5 · Clasificación / Silos', color:COL.cyclone,
+    desc:'Ciclones y silos clasifican por granulometría el caucho reciclado.' },
+  { key:'producto', name:'6 · Producto final', color:COL.crumb,
+    desc:'Crumb rubber, polvo de caucho, acero y textil listos como materia prima de valor agregado.' },
+];
+
+// ---------- escena ----------
+const app = document.getElementById('app');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xbcd2e8);
+scene.fog = new THREE.Fog(0xbcd2e8, 120, 320);
+
+const camera = new THREE.PerspectiveCamera(48, innerWidth/innerHeight, 0.5, 1000);
+camera.position.set(58, 42, 62);
+
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+app.appendChild(renderer.domElement);
+
+// reflejos PBR (environment) — salto de calidad en metales, tanques y cañerías
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.035).texture;
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.maxPolarAngle = Math.PI*0.49;
+controls.minDistance = 20;
+controls.maxDistance = 180;
+controls.target.set(0, 4, 0);
+
+// ---------- luces ----------
+const hemi = new THREE.HemisphereLight(0xdfeaf5, 0x9c8b6a, 0.9);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xfff4e0, 2.4);
+sun.position.set(60, 90, 40);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048,2048);
+const s=90; Object.assign(sun.shadow.camera,{left:-s,right:s,top:s,bottom:-s,near:1,far:300});
+sun.shadow.bias = -0.0004;
+sun.shadow.radius = 3;
+scene.add(sun);
+
+// ---------- helpers ----------
+const mat = (color,opt={}) => new THREE.MeshStandardMaterial({ color, roughness:opt.r??0.75, metalness:opt.m??0.0, ...opt });
+function box(w,h,d,color,opt={}){ const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(color,opt)); m.castShadow=m.receiveShadow=true; return m; }
+function cyl(rt,rb,h,color,seg=24,opt={}){ const m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg),mat(color,opt)); m.castShadow=m.receiveShadow=true; return m; }
+function station(key){ const g=new THREE.Group(); g.userData.station=stationList.find(s=>s.key===key); return g; }
+
+const world = new THREE.Group(); scene.add(world);
+
+// ---------- terreno + pad ----------
+const dirt = new THREE.Mesh(new THREE.PlaneGeometry(600,600), mat(COL.dirt,{r:1}));
+dirt.rotation.x=-Math.PI/2; dirt.position.y=-0.05; dirt.receiveShadow=true; world.add(dirt);
+const pad = new THREE.Mesh(new THREE.BoxGeometry(120,0.4,80), mat(COL.concrete,{r:0.9}));
+pad.position.y=0.0; pad.receiveShadow=true; world.add(pad);
+
+// cerco perimetral verde
+function fence(){
+  const g=new THREE.Group(); const hw=59, hd=39, ph=3.2;
+  const addSide=(x0,z0,x1,z1)=>{
+    const len=Math.hypot(x1-x0,z1-z0), pan=box(len,ph,0.25,COL.fence,{r:0.6});
+    pan.position.set((x0+x1)/2, ph/2, (z0+z1)/2);
+    pan.rotation.y=Math.atan2(z1-z0,x1-x0)*-1; g.add(pan);
+  };
+  addSide(-hw,-hd,hw,-hd); addSide(-hw,hd,hw,hd); addSide(-hw,-hd,-hw,hd); addSide(hw,-hd,hw,hd);
+  world.add(g);
+}
+fence();
+
+// pipe rack + tuberia color-codeada (CatmullRom -> TubeGeometry)
+function pipe(points, color, radius=0.35){
+  const curve=new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(...p)));
+  const geo=new THREE.TubeGeometry(curve, points.length*8, radius, 12, false);
+  const m=new THREE.Mesh(geo, mat(color,{r:0.4,m:0.3})); m.castShadow=true; world.add(m); return m;
+}
+function pipeRack(x0,x1,z,y=5){
+  const g=new THREE.Group();
+  for(let x=x0;x<=x1;x+=6){ const p=box(0.4,y,0.4,COL.steel,{m:0.6,r:0.5}); p.position.set(x,y/2,z); g.add(p); }
+  const beam=box(x1-x0,0.5,1.2,COL.steel,{m:0.6,r:0.5}); beam.position.set((x0+x1)/2,y,z); g.add(beam);
+  world.add(g); return g;
+}
+
+// ---------- 1 · RECEPCIÓN ----------
+{
+  const g=station('recepcion'); g.position.set(-46,0,-14);
+  // pila de neumaticos
+  const tireMat=mat(0x141414,{r:0.85});
+  const rows=[[0,0],[2.4,0],[1.2,2.1],[0.6,-2],[3,2],[1.8,-2]];
+  rows.forEach(([x,z],i)=>{ for(let k=0;k<3;k++){ const t=new THREE.Mesh(new THREE.TorusGeometry(1.0,0.42,10,20),tireMat);
+    t.rotation.x=Math.PI/2; t.position.set(x,0.45+k*0.9,z); t.castShadow=true; g.add(t);} });
+  // tolva de carga
+  const hop=cyl(2.2,0.9,2.4,COL.pipeOrange,16); hop.position.set(-4,1.4,-4); g.add(hop);
+  world.add(g);
+}
+
+// ---------- camión (amarillo, como referencia) ----------
+function truck(x,z,rot=0){
+  const g=new THREE.Group();
+  const chas=box(9,0.6,3,COL.dark); chas.position.y=1.2; g.add(chas);
+  const trailer=box(6,2.4,3,0xdedede,{r:0.5}); trailer.position.set(-1.3,2.7,0); g.add(trailer);
+  const cab=box(2.4,2.2,3,COL.truck,{r:0.5,m:0.2}); cab.position.set(3.4,2.6,0); g.add(cab);
+  const wm=mat(0x111,{r:0.9});
+  [[-3.5,1.7],[-1,1.7],[3,1.7]].forEach(([wx,wz])=>{ [1.4,-1.4].forEach(s=>{ const w=new THREE.Mesh(new THREE.CylinderGeometry(0.8,0.8,0.5,16),wm); w.rotation.x=Math.PI/2; w.position.set(wx,0.8,s*wz/1.4*1.4); g.add(w);});});
+  g.position.set(x,0,z); g.rotation.y=rot; g.scale.setScalar(0.9); world.add(g); return g;
+}
+truck(-40,6,Math.PI);
+
+// ---------- 2 · TRITURACIÓN ----------
+let shredRotor=null;
+{
+  const g=station('trituracion'); g.position.set(-28,0,-6);
+  const base=box(8,3,5,COL.pipeOrange,{r:0.5,m:0.2}); base.position.y=1.5; g.add(base);
+  const hopper=new THREE.Mesh(new THREE.CylinderGeometry(2.6,1.2,2.6,4),mat(COL.rail,{r:0.5})); hopper.position.set(0,4.4,0); hopper.rotation.y=Math.PI/4; hopper.castShadow=true; g.add(hopper);
+  // rotor visible (animado)
+  shredRotor=cyl(0.5,0.5,4.6,COL.steel,12,{m:0.7,r:0.4}); shredRotor.rotation.z=Math.PI/2; shredRotor.position.set(0,2.2,0); g.add(shredRotor);
+  const sec=box(5,2.6,4,COL.pipeOrange,{r:0.5,m:0.2}); sec.position.set(7,1.3,-3); g.add(sec);
+  world.add(g);
+}
+
+// ---------- cinta transportadora (animada) ----------
+const belts=[];
+function conveyor(x0,y0,z0,x1,y1,z1,w=1.6){
+  const g=new THREE.Group();
+  const dx=x1-x0,dy=y1-y0,dz=z1-z0, len=Math.hypot(dx,dy,dz);
+  const belt=box(len,0.4,w,COL.dark,{r:0.7});
+  const mid=[(x0+x1)/2,(y0+y1)/2,(z0+z1)/2];
+  belt.position.set(...mid);
+  const ang=Math.atan2(dy,Math.hypot(dx,dz));
+  const yaw=Math.atan2(dz,dx);
+  belt.rotation.order='YXZ'; belt.rotation.y=-yaw; belt.rotation.z=ang;
+  g.add(belt);
+  // barandas amarillas
+  [w/2,-w/2].forEach(s=>{ const r=box(len,0.5,0.12,COL.rail,{r:0.5}); r.position.set(mid[0],mid[1]+0.4,mid[2]+s); r.rotation.copy(belt.rotation); g.add(r);});
+  // soportes
+  const posts=Math.max(2,Math.round(len/4));
+  for(let i=0;i<=posts;i++){ const t=i/posts; const px=x0+dx*t,py=y0+dy*t,pz=z0+dz*t; const p=box(0.3,py,0.3,COL.steel,{m:0.6}); p.position.set(px,py/2,pz); g.add(p);}
+  // material que avanza (cajitas)
+  const nMat=Math.max(4,Math.round(len/1.5)); const cargo=[];
+  const cargoMat=mat(0x1c1c1c,{r:0.9});
+  for(let i=0;i<nMat;i++){ const c=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.35,0.7),cargoMat); c.castShadow=true; g.add(c); cargo.push(i/nMat); }
+  world.add(g);
+  belts.push({g,x0,y0,z0,dx,dy,dz,len,cargo,cargoObjs:g.children.slice(-nMat)});
+  return g;
+}
+conveyor(-24,3.2,-6, -14,5.2,-2);   // triturado -> separación
+conveyor(-8,4.6,-4,  0,4.6,2);      // separación -> granulación
+
+// ---------- 3 · SEPARACIÓN ----------
+{
+  const g=station('separacion'); g.position.set(-10,0,-6);
+  const drum=cyl(1.8,1.8,4,COL.steel,20,{m:0.7,r:0.35}); drum.rotation.z=Math.PI/2; drum.position.set(0,3,0); g.add(drum);
+  const frame=box(5,0.4,4.4,COL.rail,{r:0.5}); frame.position.set(0,1.4,0); g.add(frame);
+  [0,1,2,3].forEach(i=>{ const leg=box(0.3,2.8,0.3,COL.steel,{m:0.6}); leg.position.set((i<2?-2:2),1.4,(i%2?-1.8:1.8)); g.add(leg);});
+  // pila de acero separado
+  const steelMat=mat(COL.steel,{m:0.8,r:0.4});
+  for(let i=0;i<16;i++){ const s=new THREE.Mesh(new THREE.IcosahedronGeometry(0.35,0),steelMat); s.position.set(-4+Math.random()*2,0.35+Math.random()*0.5,3+Math.random()*1.5); s.castShadow=true; g.add(s);}
+  world.add(g);
+}
+
+// ---------- 4 · GRANULACIÓN (tanques azules, como referencia) ----------
+{
+  const g=station('granulacion'); g.position.set(4,0,-2);
+  for(let i=0;i<6;i++){ const t=cyl(1.4,1.4,5,COL.tankBlue,20,{r:0.35,m:0.15});
+    t.position.set((i%3)*3.4-3.4, 2.5, i<3?-2:2); g.add(t);
+    const cap=cyl(1.4,1.4,0.4,COL.tankBlue,20,{r:0.3}); cap.position.copy(t.position); cap.position.y=5; g.add(cap);}
+  // plataforma amarilla
+  const plat=box(11,0.3,7,COL.rail,{r:0.5}); plat.position.set(0,5.2,0); g.add(plat);
+  const railM=box(11,0.6,0.1,COL.rail); railM.position.set(0,5.7,-3.4); g.add(railM);
+  world.add(g);
+}
+
+// ---------- 5 · CLASIFICACIÓN: ciclones + silos ----------
+{
+  const g=station('clasificacion'); g.position.set(22,0,-8);
+  // ciclones (cono invertido sobre patas)
+  for(let i=0;i<3;i++){ const x=i*4;
+    const cone=new THREE.Mesh(new THREE.ConeGeometry(1.3,3,20),mat(COL.cyclone,{r:0.5})); cone.position.set(x,5,0); cone.rotation.x=Math.PI; g.add(cone);
+    const top=cyl(1.3,1.3,1.6,COL.cyclone,20,{r:0.5}); top.position.set(x,7.3,0); g.add(top);
+    [[-1,1],[1,1],[-1,-1],[1,-1]].forEach(([lx,lz])=>{ const leg=box(0.2,4,0.2,COL.steel,{m:0.6}); leg.position.set(x+lx,2,lz); g.add(leg);});
+  }
+  // silos altos
+  for(let i=0;i<2;i++){ const s=cyl(2,2,9,COL.silo,24,{r:0.45}); s.position.set(-6-i*5,4.5,3); g.add(s);
+    const roof=new THREE.Mesh(new THREE.ConeGeometry(2.1,1.6,24),mat(COL.silo,{r:0.4})); roof.position.set(-6-i*5,9.8,3); g.add(roof);}
+  world.add(g);
+}
+
+// ---------- 6 · PRODUCTO FINAL (pilas de crumb) ----------
+{
+  const g=station('producto'); g.position.set(40,0,6);
+  const crumbMat=mat(COL.crumb,{r:0.9});
+  const N=1400; const inst=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.16,0),crumbMat,N);
+  inst.castShadow=true; const d=new THREE.Object3D();
+  let i=0; const piles=[[0,0],[5,2],[-4,3]];
+  piles.forEach(([px,pz])=>{ const per=Math.floor(N/piles.length);
+    for(let k=0;k<per&&i<N;k++,i++){ const a=Math.random()*Math.PI*2, r=Math.random()*2.6, h=(2.6-r)*0.9*Math.random();
+      d.position.set(px+Math.cos(a)*r, h+0.16, pz+Math.sin(a)*r); d.rotation.set(Math.random()*3,Math.random()*3,0);
+      d.scale.setScalar(0.7+Math.random()*0.8); d.updateMatrix(); inst.setMatrixAt(i,d.matrix);} });
+  g.add(inst);
+  // fardos de textil (cajas beige)
+  for(let k=0;k<4;k++){ const b=box(1.6,1.2,1.2,0xbdb28e,{r:0.9}); b.position.set(-8,0.6+((k>1)?1.25:0),(k%2)*1.4-0.7-4); g.add(b);}
+  world.add(g);
+}
+
+// ---------- galpón de almacenamiento ----------
+function warehouse(x,z,w,d,h,rot=0){
+  const g=new THREE.Group();
+  const walls=box(w,h,d,COL.roof,{r:0.6}); walls.position.y=h/2; g.add(walls);
+  // techo a dos aguas
+  const roofGeo=new THREE.CylinderGeometry(d*0.62,d*0.62,w,3,1,false,0,Math.PI);
+  const roof=new THREE.Mesh(roofGeo,mat(0x9198a0,{r:0.5,m:0.2}));
+  roof.rotation.z=Math.PI/2; roof.rotation.y=Math.PI/2; roof.position.y=h; roof.scale.y=0.5; roof.castShadow=true; g.add(roof);
+  g.position.set(x,0,z); g.rotation.y=rot; world.add(g); return g;
+}
+warehouse(38,-6,18,14,7);
+// oficina modular blanca
+(function office(){ const g=new THREE.Group();
+  const b=box(10,4,7,COL.office,{r:0.7}); b.position.y=2; g.add(b);
+  for(let i=0;i<4;i++){ const win=box(0.1,1.4,1.2,0x33566e,{r:0.3,m:0.4}); win.position.set(5,2.4,-2.4+i*1.6); g.add(win);}
+  g.position.set(30,0,20); world.add(g);
+})();
+
+// ---------- figura humana (escala) ----------
+function person(x,z){
+  const g=new THREE.Group();
+  const skin=mat(0xe0b48c), pants=mat(0x27405e), vest=mat(0xf07a1f), hat=mat(0xffb020);
+  const legL=new THREE.Mesh(new THREE.CylinderGeometry(0.11,0.1,0.9),pants); legL.position.set(-0.12,0.45,0);
+  const legR=legL.clone(); legR.position.x=0.12; g.add(legL,legR);
+  const torso=new THREE.Mesh(new THREE.CylinderGeometry(0.24,0.2,0.8,10),vest); torso.position.y=1.28; g.add(torso);
+  const head=new THREE.Mesh(new THREE.SphereGeometry(0.16,12,12),skin); head.position.y=1.85; g.add(head);
+  const helmet=new THREE.Mesh(new THREE.SphereGeometry(0.18,12,12,0,Math.PI*2,0,Math.PI/2),hat); helmet.position.y=1.9; g.add(helmet);
+  g.traverse(o=>{o.castShadow=true;}); g.position.set(x,0,z); world.add(g); return g;
+}
+person(-6,4); person(14,6);
+
+// ---------- pipe racks + tuberías color-codeadas ----------
+pipeRack(-30,44,-16,5);
+pipe([[-28,5,-16],[-10,5,-16],[-10,5,-9],[4,5,-9],[4,5,-4]], COL.pipeOrange, 0.4);
+pipe([[-24,4.4,-16],[22,4.4,-16],[22,4.4,-10]], COL.pipeBlue, 0.32);
+pipe([[-10,3.6,-16],[40,3.6,-16],[40,3.6,4]], COL.pipeGreen, 0.3);
+pipe([[4,5.4,-2],[22,5.4,-2],[22,5.4,-8]], COL.pipeOrange, 0.3);
+
+// ---------- leyenda UI ----------
+const rows=document.querySelector('#legend .rows');
+stationList.forEach(s=>{ const r=document.createElement('div'); r.className='row';
+  r.innerHTML=`<span class="dot" style="background:#${s.color.toString(16).padStart(6,'0')}"></span>${s.name}`;
+  r.onclick=()=>showInfo(s); rows.appendChild(r); });
+
+// ---------- interacción: click en estaciones ----------
+const info=document.getElementById('info');
+const ray=new THREE.Raycaster(); const mouse=new THREE.Vector2();
+function showInfo(s){ info.querySelector('h3').textContent=s.name; info.querySelector('p').textContent=s.desc; info.style.display='block'; }
+info.querySelector('.close').onclick=()=>info.style.display='none';
+renderer.domElement.addEventListener('click',e=>{
+  mouse.x=(e.clientX/innerWidth)*2-1; mouse.y=-(e.clientY/innerHeight)*2+1;
+  ray.setFromCamera(mouse,camera);
+  const hit=ray.intersectObjects(world.children,true)[0];
+  if(!hit) return; let o=hit.object; while(o && !o.userData.station) o=o.parent;
+  if(o&&o.userData.station) showInfo(o.userData.station);
+});
+
+// ---------- export helpers (para el slide: PNG sin marca + GLB nativo PPT) ----------
+window.__renderStill = (w=2200,h=1375)=>{
+  const bg=scene.background, fg=scene.fog, sz=new THREE.Vector2(); renderer.getSize(sz);
+  const cp=camera.position.clone(), ct=controls.target.clone();
+  scene.background=new THREE.Color(0xeef3f7); scene.fog=null;
+  camera.position.set(66,50,72); controls.target.set(2,4,0); camera.lookAt(2,4,0);
+  camera.aspect=w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h,false);
+  renderer.render(scene,camera);
+  const url=renderer.domElement.toDataURL('image/png');
+  scene.background=bg; scene.fog=fg; camera.position.copy(cp); controls.target.copy(ct);
+  camera.aspect=sz.x/sz.y; camera.updateProjectionMatrix(); renderer.setSize(sz.x,sz.y,false);
+  return url;
+};
+window.__exportGLB = ()=> new Promise((res,rej)=>{
+  new GLTFExporter().parse(world, b=>res(b), e=>rej(e), {binary:true, onlyVisible:true});
+});
+
+// ---------- loop ----------
+document.getElementById('loading').style.display='none';
+let t=0;
+function animate(){
+  requestAnimationFrame(animate); t+=0.016;
+  if(shredRotor) shredRotor.rotation.x=t*6;
+  belts.forEach(b=>{ b.cargoObjs.forEach((c,i)=>{ let p=(b.cargo[i]+t*0.06)%1;
+    c.position.set(b.x0+b.dx*p, b.y0+b.dy*p+0.4, b.z0+b.dz*p); }); });
+  controls.update();
+  renderer.render(scene,camera);
+}
+animate();
+addEventListener('resize',()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); });
+</script>
+</body>
+</html>
