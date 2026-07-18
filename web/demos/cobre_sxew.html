@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cobre SX/EW — MineBot · Slide 1</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --ground:  #12100e;
+    --ground2: #17140f;
+    --panel:   #1c1915;
+    --line:    #322b22;
+    --copper:  #c8703c;
+    --copper-hi:#e08a4e;
+    --teal:    #35c4b4;
+    --amber:   #e0a03a;
+    --steel:   #8b93a0;
+    --ink:     #ece6de;
+    --muted:   #9a8f82;
+    --faint:   #6b6357;
+    --mono: ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans: system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { height:100%; }
+  body {
+    font-family:var(--sans); color:var(--ink);
+    background:
+      radial-gradient(120% 90% at 78% 8%, #241d15 0%, rgba(36,29,21,0) 55%),
+      radial-gradient(90% 80% at 12% 100%, #191510 0%, rgba(25,21,16,0) 60%),
+      var(--ground);
+    min-height:100%;
+    padding:clamp(18px,4vw,48px);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  .slide {
+    width:100%; max-width:1180px; margin-inline:auto;
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:clamp(14px,2.2vw,24px);
+  }
+
+  /* ---- header ---- */
+  .head { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; }
+  .eyebrow {
+    font-family:var(--mono); font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--copper); display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before { content:""; width:26px; height:2px; background:var(--copper); display:inline-block; }
+  h1 {
+    font-size:clamp(28px,4.4vw,46px); line-height:1.02; font-weight:800;
+    letter-spacing:-.02em; text-wrap:balance; margin-top:12px;
+  }
+  h1 .em { color:var(--copper-hi); }
+  .sub { color:var(--muted); font-size:clamp(14px,1.7vw,17px); margin-top:10px; max-width:46ch; line-height:1.4; }
+  .tag-plan {
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); border:1px solid var(--line); border-radius:999px;
+    padding:8px 14px; white-space:nowrap;
+  }
+  .tag-plan b { color:var(--ink); font-weight:600; }
+
+  /* ---- video frame (industrial monitor) ---- */
+  .stage { position:relative; border-radius:14px; overflow:hidden; background:#0c0b09;
+           border:1px solid var(--line); box-shadow:0 30px 80px -40px rgba(0,0,0,.9); }
+  .stage video { display:block; width:100%; height:auto; background:#0c0b09; }
+  .stage::after { /* inner copper hairline */
+    content:""; position:absolute; inset:0; border-radius:14px; pointer-events:none;
+    box-shadow:inset 0 0 0 1px rgba(200,112,60,.22);
+  }
+  .tick { position:absolute; width:16px; height:16px; border:2px solid var(--copper); pointer-events:none; opacity:.8; }
+  .tick.tl { top:12px; left:12px; border-right:0; border-bottom:0; }
+  .tick.tr { top:12px; right:12px; border-left:0; border-bottom:0; }
+  .tick.bl { bottom:12px; left:12px; border-right:0; border-top:0; }
+  .tick.br { bottom:12px; right:12px; border-left:0; border-top:0; }
+  .badge {
+    position:absolute; top:14px; right:14px; z-index:2;
+    font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+    background:rgba(12,11,9,.72); backdrop-filter:blur(6px);
+    color:var(--teal); border:1px solid rgba(53,196,180,.32); border-radius:999px; padding:6px 11px;
+    display:flex; align-items:center; gap:7px;
+  }
+  .badge .pulse { width:7px; height:7px; border-radius:50%; background:var(--teal);
+                  box-shadow:0 0 0 0 rgba(53,196,180,.6); animation:pulse 2.4s ease-out infinite; }
+  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(53,196,180,.5);} 70%{box-shadow:0 0 0 8px rgba(53,196,180,0);} 100%{box-shadow:0 0 0 0 rgba(53,196,180,0);} }
+
+  /* ---- process sequence ---- */
+  .flow { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line);
+          border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .step { background:var(--panel); padding:18px 18px 20px; display:flex; flex-direction:column; gap:9px; position:relative; }
+  .step .n { font-family:var(--mono); font-size:11px; letter-spacing:.1em; color:var(--faint); }
+  .step .name { display:flex; align-items:center; gap:9px; font-weight:700; font-size:15.5px; letter-spacing:-.01em; }
+  .step .dot { width:11px; height:11px; border-radius:3px; flex:0 0 auto; }
+  .step .d { color:var(--muted); font-size:12.5px; line-height:1.45; }
+  .step .chem { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; color:var(--faint); margin-top:auto; padding-top:6px; text-transform:uppercase; }
+  .step:not(:last-child)::after {
+    content:"→"; position:absolute; right:-11px; top:50%; transform:translateY(-50%);
+    z-index:3; color:var(--copper); font-size:14px; background:var(--ground);
+    width:22px; height:22px; display:grid; place-items:center; border-radius:50%;
+  }
+  .c-amber { background:var(--amber); } .c-teal { background:var(--teal); }
+  .c-copper{ background:var(--copper);} .c-steel{ background:var(--steel);}
+
+  /* ---- footer ---- */
+  .foot { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
+          font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:var(--faint); }
+  .foot .k { color:var(--muted); }
+
+  @media (max-width:760px) {
+    .flow { grid-template-columns:1fr 1fr; }
+    .step:nth-child(2)::after{ display:none; }
+  }
+  @media (max-width:440px) {
+    .flow { grid-template-columns:1fr; }
+    .step::after { display:none !important; }
+  }
+  @media (prefers-reduced-motion:reduce) { .badge .pulse { animation:none; } }
+</style>
+</head>
+<body>
+  <main class="slide">
+    <header class="head">
+      <div>
+        <div class="eyebrow">MineBot · Módulo Confiabilidad · Slide 01</div>
+        <h1>Cobre — <span class="em">SX / EW</span></h1>
+        <p class="sub">Extracción por solventes → electroobtención. La ruta hidrometalúrgica del cátodo de cobre, de la PLS al metal.</p>
+      </div>
+      <div class="tag-plan">Hidrometalurgia · <b>Cu 99,99%</b></div>
+    </header>
+
+    <section class="stage" aria-label="Animación 3D de la línea SX/EW de cobre">
+      <div class="badge"><span class="pulse"></span>Loop · 5 s</div>
+      <video src="assets/cobre_sxew_v1.mp4" poster="assets/cobre_sxew_v1_poster.jpg"
+             autoplay loop muted playsinline></video>
+      <span class="tick tl"></span><span class="tick tr"></span>
+      <span class="tick bl"></span><span class="tick br"></span>
+    </section>
+
+    <section class="flow" aria-label="Secuencia del proceso">
+      <div class="step">
+        <span class="n">01</span>
+        <span class="name"><span class="dot c-amber"></span>Extracción SX</span>
+        <span class="d">Mixer-settlers: la fase orgánica (ámbar) captura el cobre de la solución.</span>
+        <span class="chem">Orgánico + PLS</span>
+      </div>
+      <div class="step">
+        <span class="n">02</span>
+        <span class="name"><span class="dot c-teal"></span>Transferencia PLS</span>
+        <span class="d">La solución cargada fluye por tubería del circuito SX al tankhouse.</span>
+        <span class="chem">Flujo · pregnant leach</span>
+      </div>
+      <div class="step">
+        <span class="n">03</span>
+        <span class="name"><span class="dot c-steel"></span>Electroobtención EW</span>
+        <span class="d">Celdas con cátodos: la corriente deposita el cobre sobre las placas.</span>
+        <span class="chem">Cu²⁺ + 2e⁻ → Cu⁰</span>
+      </div>
+      <div class="step">
+        <span class="n">04</span>
+        <span class="name"><span class="dot c-copper"></span>Cátodo de cobre</span>
+        <span class="d">El producto final: planchas de cobre catódico listas para despacho.</span>
+        <span class="chem">99,99% Cu</span>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <span><span class="k">ESCENA</span> cobre_sxew_v1 · Blender · loop 120f @ 24fps</span>
+      <span><span class="k">SIGMA</span> Digital Twins · MiningOps</span>
+    </footer>
+  </main>
+</body>
+</html>
