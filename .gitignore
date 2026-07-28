@@ -41,7 +41,9 @@ staging/
 build_*.js
 package.json
 package-lock.json
-tools/
+tools/*
+!tools/*.py
+!tools/*.md
 
 # Organigrama Omán (deal Ghazal/Duqm) — PII de terceros (CVs, teléfonos, direcciones).
 # Bajado de Pages el 14-jul-2026. Copia local únicamente, NUNCA publicar.
