@@ -306,6 +306,90 @@
   }
   function esCampania(r){ return !!(utm(r,"utm_campaign")||utm(r,"utm_source")); }
 
+  /* Para comparar semanas se usa la fecha REAL de la visita, no el utm_term.
+     Si se usara la etiqueta, una campaña mal rotulada movería tráfico de semana
+     y la comparación mentiría. La etiqueta sirve para atribuir, no para medir. */
+  function semanaReal(r){
+    var d=r.ts_iso?new Date(r.ts_iso):null;
+    return (d&&!isNaN(d))?isoWeek(d):"(n/d)";
+  }
+  function semanaPrevia(w){
+    var m=String(w).match(/(\d{4})-w(\d{2})/); if(!m) return "";
+    // Retrocede 7 días desde el jueves de esa semana (el jueves siempre cae en su propia semana ISO).
+    var ene4=new Date(Date.UTC(+m[1],0,4));
+    var jue=new Date(ene4); jue.setUTCDate(ene4.getUTCDate()-((ene4.getUTCDay()||7)-4)+(+m[2]-1)*7);
+    jue.setUTCDate(jue.getUTCDate()-7);
+    return isoWeek(jue);
+  }
+
+  function cabeceraSemana(rows){
+    var vistas=rows.filter(function(r){return (r.event_type||"pageview")!=="click";});
+    var porSem={};
+    vistas.forEach(function(r){ var w=semanaReal(r); porSem[w]=(porSem[w]||0)+1; });
+
+    var wAct=isoWeek(new Date()), wAnt=semanaPrevia(wAct);
+    var act=porSem[wAct]||0, ant=porSem[wAnt]||0;
+    var nro=parseInt(wAct.split("-w")[1],10);
+
+    var veredicto, color;
+    if(!ant){
+      veredicto="Sin semana previa con datos para comparar."; color="#93a3b8";
+    } else {
+      var d=act-ant, pct=Math.round(d*100/ant);
+      if(d>0){ veredicto="▲ "+d+" visitas más que la semana "+parseInt(wAnt.split("-w")[1],10)+" (+"+pct+"%)"; color="#4ade80"; }
+      else if(d<0){ veredicto="▼ "+Math.abs(d)+" visitas menos que la semana "+parseInt(wAnt.split("-w")[1],10)+" ("+pct+"%)"; color="#f87171"; }
+      else { veredicto="= igual que la semana "+parseInt(wAnt.split("-w")[1],10); color="#fbbf24"; }
+    }
+
+    return '<div style="background:linear-gradient(90deg,#0b1220,#111827);border:1px solid #1f2937;'+
+      'border-radius:10px;padding:1rem 1.2rem;margin-bottom:1rem;display:flex;flex-wrap:wrap;'+
+      'align-items:baseline;gap:.5rem 1.2rem">'+
+      '<div style="font-size:1.5rem;font-weight:700;color:#e5e7eb">🗓 Semana '+nro+'</div>'+
+      '<div class="muted" style="font-size:.85rem">'+esc(wAct)+'</div>'+
+      '<div style="margin-left:auto;text-align:right">'+
+        '<div style="font-size:1.5rem;font-weight:700;color:#e5e7eb">'+act+' <span style="font-size:.8rem;font-weight:400;color:#93a3b8">visitas</span></div>'+
+        '<div style="font-size:.85rem;font-weight:600;color:'+color+'">'+esc(veredicto)+'</div>'+
+      '</div>'+
+    '</div>';
+  }
+
+  /* Cruce semana × post: la campaña se mide por semana Y por aviso. */
+  function tablaSemanaPost(camp){
+    if(!camp.length) return '';
+    var celdas={}, semanas={}, posts={};
+    camp.forEach(function(r){
+      if((r.event_type||"pageview")==="click") return;      // visitas, no clicks
+      // Semana por fecha REAL, igual que la cabecera: si se usara la etiqueta,
+      // los dos números no coincidirían y uno de los dos estaría mintiendo.
+      var w=semanaReal(r), p=utm(r,"utm_content")||"(sin aviso)";
+      semanas[w]=1; posts[p]=1;
+      celdas[w+"|"+p]=(celdas[w+"|"+p]||0)+1;
+    });
+    var ws=Object.keys(semanas).sort(), ps=Object.keys(posts).sort();
+    if(!ws.length) return '';
+    var th=ps.map(function(p){ return '<th>'+esc(p)+'</th>'; }).join("");
+    var totalPrev=null;
+    var body=ws.map(function(w){
+      var fila=0;
+      var tds=ps.map(function(p){ var n=celdas[w+"|"+p]||0; fila+=n;
+        return '<td style="text-align:center">'+(n||"·")+'</td>'; }).join("");
+      var delta="";
+      if(totalPrev!==null && totalPrev>0){
+        var d=fila-totalPrev, pct=Math.round(d*100/totalPrev);
+        delta=' <span style="color:'+(d>0?"#4ade80":d<0?"#f87171":"#fbbf24")+'">'+
+              (d>0?"▲ +":d<0?"▼ ":"= ")+(d===0?"":Math.abs(pct)+"%")+'</span>';
+      }
+      totalPrev=fila;
+      return '<tr><td><b>'+esc(w)+'</b></td>'+tds+'<td style="text-align:center"><b>'+fila+'</b>'+delta+'</td></tr>';
+    }).join("");
+    return '<div class="bd" style="margin-bottom:1rem"><h3>📅 Visitas por semana y por aviso</h3>'+
+      '<div style="overflow-x:auto"><table style="width:100%;font-size:.85rem">'+
+      '<thead><tr><th>Semana</th>'+th+'<th>Total</th></tr></thead><tbody>'+body+'</tbody></table></div>'+
+      '<div class="muted" style="font-size:.75rem;margin-top:.45rem">'+
+        'La semana es la de la <b>fecha real de la visita</b>, no la etiqueta de la campaña: '+
+        'un aviso mal rotulado no corre las visitas de semana. El % compara con la fila de arriba.</div></div>';
+  }
+
   function tally(rows,fn){
     var m={}; rows.forEach(function(r){ var k=fn(r)||"(n/d)"; m[k]=(m[k]||0)+1; });
     return Object.keys(m).map(function(k){return {k:k,n:m[k]};}).sort(function(a,b){return b.n-a.n;});
@@ -512,7 +596,8 @@
       'border-radius:8px;padding:.6rem .9rem;margin-bottom:1rem;font-size:.85rem">⚠ '+state._fails+
       ' registro(s) siguen sin leerse tras varios reintentos (límite de JSONBin). '+
       'Volvé a Actualizar en un rato: <b>no archives ni vacíes la colección hasta que esto llegue a cero</b>.</div>' : '';
-    app.innerHTML=head+'<main>'+warn+cards+campHTML+builderHTML()+bds+
+    app.innerHTML=head+'<main>'+warn+cabeceraSemana(rows)+cards+campHTML+
+      tablaSemanaPost(camp)+builderHTML()+bds+
       '<div class="toolbar">'+
         '<input id="f" type="text" placeholder="Filtrar (país, IP, ciudad, campaña…)" value="'+esc(state.filter)+'">'+
         '<span class="muted">'+view.length+' de '+total+'</span>'+
