@@ -121,18 +121,41 @@
   function headers(){ return {"X-Master-Key":localStorage.getItem(LS_KEY)||""}; }
   function sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
 
-  // fetch con reintentos + backoff (tolera el rate limit del plan gratis).
+  /* Freno compartido por TODOS los pedidos.
+     Antes cada request reintentaba por su cuenta: con 6 en paralelo contra el
+     mismo límite, los 6 se topaban, esperaban lo mismo y volvían juntos — un
+     rebaño chocando contra la misma puerta. Por eso quedaban registros sin leer.
+     Ahora un 429 frena a todos hasta la misma hora y baja la concurrencia. */
+  var gate429 = { until: 0, conc: 5 };
+
+  function waitGate(){
+    var d = gate429.until - Date.now();
+    return d > 0 ? sleep(d) : Promise.resolve();
+  }
+
+  // fetch con reintentos, backoff exponencial con jitter y respeto de Retry-After.
   function fetchJSON(url, tries){
-    tries = tries==null ? 4 : tries;
+    tries = tries==null ? 6 : tries;
     function attempt(n){
-      return fetch(url,{headers:headers()}).then(function(r){
+      return waitGate().then(function(){
+        return fetch(url,{headers:headers()});
+      }).then(function(r){
         if(r.status===401||r.status===403){ var ae=new Error("auth"); ae.fatal=true; throw ae; }
+        if(r.status===429){
+          // El servidor dice cuánto esperar; si no lo dice, backoff con jitter.
+          var ra = parseFloat(r.headers.get("Retry-After"));
+          var wait = (ra>0 ? ra*1000 : 700*Math.pow(2,n)) + Math.random()*400;
+          gate429.until = Math.max(gate429.until, Date.now()+wait);
+          gate429.conc  = Math.max(1, gate429.conc-1);     // achicar el caudal
+          throw new Error("429");
+        }
         if(!r.ok) throw new Error("http "+r.status);
         return r.json();
       }).catch(function(e){
         if(e.fatal) throw e;
         if(n>=tries) throw e;
-        return sleep(350*Math.pow(2,n)).then(function(){ return attempt(n+1); });
+        var back = String(e.message)==="429" ? 0 : 350*Math.pow(2,n)+Math.random()*250;
+        return sleep(back).then(function(){ return attempt(n+1); });
       });
     }
     return attempt(0);
@@ -152,24 +175,43 @@
     return page(null);
   }
 
-  // Lee solo los ids indicados, con concurrencia baja + reintentos. Devuelve {records,fails}.
+  /* Lee los ids indicados. Devuelve {records, missing} — los que quedaron sin
+     leer vuelven como lista, no como un número: así se puede reintentar solo
+     esos en vez de barrer la colección entera de nuevo. */
   function fetchRecords(ids, onProgress){
-    var out={}, i=0, CONC=6, fails=0, done=0, total=ids.length;
+    var out={}, i=0, failed=[], done=0, total=ids.length;
     function one(){
       if(i>=ids.length) return Promise.resolve();
       var id=ids[i++];
       return fetchJSON(BIN+id+"/latest").then(function(j){
-        if(j&&j.record) out[id]=j.record;
+        if(j&&j.record) out[id]=j.record; else failed.push(id);
       }).catch(function(e){
         if(e.fatal) throw e;
-        fails++;
+        failed.push(id);
       }).then(function(){
         done++; if(onProgress) onProgress(done,total);
         return one();
       });
     }
-    var ws=[]; for(var w=0;w<CONC;w++) ws.push(one());
-    return Promise.all(ws).then(function(){ return {records:out, fails:fails}; });
+    var ws=[]; for(var w=0;w<gate429.conc;w++) ws.push(one());
+    return Promise.all(ws).then(function(){ return {records:out, missing:failed}; });
+  }
+
+  /* Reintenta en tandas lo que no entró, con el caudal ya reducido por el 429.
+     Antes esto se lo pedíamos al usuario ("Pulsa ↻ Actualizar"): trabajo del
+     panel, no suyo. Para cuando una pasada no rescata nada nuevo. */
+  function fetchWithRetries(ids, onProgress){
+    var acc={}, ronda=0;
+    function pass(pend){
+      return fetchRecords(pend, onProgress).then(function(res){
+        var got=Object.keys(res.records).length;
+        Object.keys(res.records).forEach(function(k){ acc[k]=res.records[k]; });
+        ronda++;
+        if(!res.missing.length || got===0 || ronda>=4) return {records:acc, missing:res.missing};
+        return sleep(1200+ronda*800).then(function(){ return pass(res.missing); });
+      });
+    }
+    return pass(ids);
   }
 
   function load(){
@@ -196,12 +238,12 @@
           app.innerHTML='<div class="center">Leyendo '+missing.length+' registro(s)…'+
             '<br><span id="prog" class="muted"></span></div>';
         }
-        return fetchRecords(missing,function(d,t){ var p=document.getElementById("prog"); if(p) p.textContent=d+" / "+t; })
+        return fetchWithRetries(missing,function(d,t){ var p=document.getElementById("prog"); if(p) p.textContent=d+" / "+t; })
           .then(function(res){
             Object.keys(res.records).forEach(function(id){ cache[id]=res.records[id]; });
             try{ localStorage.setItem(cacheKey, JSON.stringify(cache)); }catch(e){}
             state.rows=ids.map(function(id){ return cache[id]; }).filter(Boolean);
-            state._fails=res.fails||0; state._loading=0;
+            state._fails=(res.missing||[]).length; state._loading=0;
             render();
           });
       })
@@ -215,6 +257,32 @@
   /* ───────────── Helpers de render ───────────── */
   function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){
     return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  /* ───────────── Campañas (UTM) ─────────────
+     Convención para las campañas semanales de LinkedIn:
+       utm_source=linkedin  utm_medium=social
+       utm_campaign=<nombre de la campaña>   ej. digital_twin_launch
+       utm_content=post_<n>                  ej. post_1  (cada aviso)
+       utm_term=<semana ISO>                 ej. 2026-w32 (para cortar por semana)
+     El tracker ya guarda los cinco en r.params (web/assets/track.js). */
+  var UTM_KEYS=["utm_source","utm_medium","utm_campaign","utm_content","utm_term"];
+
+  function utm(r,k){ return (r.params&&r.params[k])||""; }
+
+  // Semana ISO: la campaña es semanal, así que es el corte natural.
+  function isoWeek(d){
+    var t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+    var dn=t.getUTCDay()||7; t.setUTCDate(t.getUTCDate()+4-dn);
+    var y0=new Date(Date.UTC(t.getUTCFullYear(),0,1));
+    var w=Math.ceil(((t-y0)/86400000+1)/7);
+    return t.getUTCFullYear()+"-w"+(w<10?"0"+w:w);
+  }
+  function semanaDe(r){
+    if(utm(r,"utm_term")) return utm(r,"utm_term");      // la que declaró la campaña
+    var d=r.ts_iso?new Date(r.ts_iso):null;              // si no, la real de la visita
+    return (d&&!isNaN(d))?isoWeek(d):"(n/d)";
+  }
+  function esCampania(r){ return !!(utm(r,"utm_campaign")||utm(r,"utm_source")); }
 
   function tally(rows,fn){
     var m={}; rows.forEach(function(r){ var k=fn(r)||"(n/d)"; m[k]=(m[k]||0)+1; });
@@ -239,6 +307,65 @@
     return '<span class="pill pc">👁 página</span>';
   }
 
+  /* ───────────── Generador de links de campaña ─────────────
+     Los UTM hay que escribirlos igual siempre: "Post_1" y "post_1" son dos
+     campañas distintas para cualquier analítica. Por eso se generan acá y no
+     se tipean a mano en cada aviso. */
+  var DESTINOS=[
+    ["https://jjuri-socialmining.github.io/_DemoCustomerOps/Dashboard_GemeloDigital_SIGMA.html","Dashboard Gemelo Digital"],
+    ["https://jjuri-socialmining.github.io/_DemoCustomerOps/Dashboard_GemeloDigital_ADR_SIGMA.html","Dashboard Planta ADR"],
+    ["https://jjuri-socialmining.github.io/_DemoCustomerOps/","Home del workspace"],
+    ["https://jjuri-socialmining.github.io/_DemoCustomerOps/bienvenida.html","Landing de bienvenida"],
+    ["https://sigmaops.ai/demo","sigmaops.ai/demo (cuando el dominio esté)"]
+  ];
+
+  function slug(s){
+    return String(s||"").toLowerCase().trim()
+      .normalize("NFD").replace(/[̀-ͯ]/g,"")   // sin tildes
+      .replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
+  }
+
+  /* La semana lleva su propio normalizador: slug() convertiría "2026-W32" en
+     "2026_w32", y la semana que el panel deduce de la fecha es "2026-w32". Con
+     dos formas, la misma semana caía en dos grupos del desglose. */
+  function normWeek(s){
+    var m=String(s||"").match(/(\d{4})\D*w?\D*(\d{1,2})/i);
+    if(!m) return slug(s);
+    return m[1]+"-w"+(m[2].length<2?"0"+m[2]:m[2]);
+  }
+
+  function armarLink(){
+    var g=function(id){ var e=document.getElementById(id); return e?e.value:""; };
+    var base=g("u_base"), camp=slug(g("u_camp")), cont=slug(g("u_cont")), wk=normWeek(g("u_week"));
+    if(!base) return "";
+    var p=[["utm_source","linkedin"],["utm_medium","social"]];
+    if(camp) p.push(["utm_campaign",camp]);
+    if(cont) p.push(["utm_content",cont]);
+    if(wk)   p.push(["utm_term",wk]);
+    var qs=p.map(function(kv){ return kv[0]+"="+encodeURIComponent(kv[1]); }).join("&");
+    return base+(base.indexOf("?")>=0?"&":"?")+qs;
+  }
+
+  function builderHTML(){
+    var wk=isoWeek(new Date());
+    var opts=DESTINOS.map(function(d){ return '<option value="'+esc(d[0])+'">'+esc(d[1])+'</option>'; }).join("");
+    var inp='background:#111827;border:1px solid #374151;border-radius:6px;color:#e5e7eb;padding:.45rem .6rem;font-size:.85rem';
+    return '<div class="bd" style="margin-bottom:1rem">'+
+      '<h3>🔗 Link de campaña para el aviso de LinkedIn</h3>'+
+      '<div style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.6rem 0">'+
+        '<select id="u_base" style="'+inp+';min-width:230px">'+opts+'</select>'+
+        '<input id="u_camp" style="'+inp+'" placeholder="campaña" value="digital_twin_launch">'+
+        '<input id="u_cont" style="'+inp+';width:110px" placeholder="aviso" value="post_1">'+
+        '<input id="u_week" style="'+inp+';width:110px" placeholder="semana" value="'+esc(wk)+'">'+
+        '<button id="u_copy">⧉ Copiar</button>'+
+      '</div>'+
+      '<div id="u_out" style="word-break:break-all;font-size:.8rem;color:#93c5fd;'+
+        'background:#0b1220;border:1px solid #1f2937;border-radius:6px;padding:.55rem .7rem"></div>'+
+      '<div class="muted" style="font-size:.75rem;margin-top:.45rem">'+
+        'Se normaliza a minúsculas y guiones bajos: «Post 1» y «post_1» tienen que ser la misma campaña, no dos.</div>'+
+    '</div>';
+  }
+
   function render(){
     var rows=state.rows;
     var total=rows.length;
@@ -260,6 +387,7 @@
         '<span class="sp"></span>'+
         '<button id="b_refresh">↻ Actualizar</button>'+
         '<button id="b_csv">⤓ CSV</button>'+
+        '<button id="b_archivo" title="Respaldo íntegro en JSON, para archivar antes de vaciar">⤓ Archivo JSON</button>'+
         '<button id="b_logout">Salir</button>'+
       '</header>';
 
@@ -277,6 +405,31 @@
         '<div class="card"><div class="n">'+ret+'</div><div class="l">Retornos</div></div>'+
         '<div class="card"><div class="n">'+countries.length+'</div><div class="l">Países</div></div>'+
       '</div>';
+
+    /* ---- bloque de campañas: solo el tráfico que viene etiquetado ---- */
+    var camp=rows.filter(esCampania);
+    var campHTML='';
+    if(camp.length){
+      var campUniq=Object.keys(camp.reduce(function(a,r){a[r.visitor_id||r.ip||Math.random()]=1;return a;},{})).length;
+      var campClicks=camp.filter(function(r){return r.event_type==="click";}).length;
+      campHTML=
+        '<div class="cards" style="margin-top:0">'+
+          '<div class="card"><div class="n">'+camp.length+'</div><div class="l">Registros de campaña</div></div>'+
+          '<div class="card"><div class="n">'+campUniq+'</div><div class="l">Únicos de campaña</div></div>'+
+          '<div class="card"><div class="n">'+campClicks+'</div><div class="l">Clicks de campaña</div></div>'+
+          '<div class="card"><div class="n">'+Math.round(camp.length*100/total)+'%</div><div class="l">Del tráfico total</div></div>'+
+        '</div>'+
+        '<div class="breakdowns">'+
+          breakdown("📣 Campaña (utm_campaign)",tally(camp,function(r){return utm(r,"utm_campaign");}),camp.length)+
+          breakdown("📝 Aviso (utm_content)",tally(camp,function(r){return utm(r,"utm_content");}),camp.length)+
+          breakdown("🗓 Semana",tally(camp,semanaDe),camp.length)+
+          breakdown("📡 Fuente (utm_source)",tally(camp,function(r){return utm(r,"utm_source");}),camp.length)+
+        '</div>';
+    } else {
+      campHTML='<div class="bd" style="margin-bottom:1rem"><h3>📣 Campañas</h3>'+
+        '<div class="row"><span>Todavía no llegó ninguna visita etiquetada con UTM. '+
+        'Generá el link acá abajo y usalo en el aviso de LinkedIn.</span></div></div>';
+    }
 
     var bds='<div class="breakdowns">'+
       breakdown("📄 Páginas más visitadas",pages,pageviews.length)+
@@ -332,8 +485,9 @@
 
     var warn = state._fails ? '<div style="background:#3a1d1d;border:1px solid #f87171;color:#fca5a5;'+
       'border-radius:8px;padding:.6rem .9rem;margin-bottom:1rem;font-size:.85rem">⚠ '+state._fails+
-      ' registro(s) no se pudieron leer (rate limit). Pulsa ↻ Actualizar para completarlos.</div>' : '';
-    app.innerHTML=head+'<main>'+warn+cards+bds+
+      ' registro(s) siguen sin leerse tras varios reintentos (límite de JSONBin). '+
+      'Volvé a Actualizar en un rato: <b>no archives ni vacíes la colección hasta que esto llegue a cero</b>.</div>' : '';
+    app.innerHTML=head+'<main>'+warn+cards+campHTML+builderHTML()+bds+
       '<div class="toolbar">'+
         '<input id="f" type="text" placeholder="Filtrar (país, IP, ciudad, campaña…)" value="'+esc(state.filter)+'">'+
         '<span class="muted">'+view.length+' de '+total+'</span>'+
@@ -373,6 +527,41 @@
       a.download="visitas_"+new Date().toISOString().slice(0,10)+".csv";
       a.click();
     };
+    /* Respaldo íntegro: los registros crudos, sin recortar a las columnas del
+       CSV. Es lo que hay que guardar ANTES de vaciar la colección — el CSV
+       pierde cualquier campo que el tracker sume después. */
+    var ar=document.getElementById("b_archivo"); if(ar) ar.onclick=function(){
+      var hoy=new Date().toISOString();
+      var dump={
+        exportado_en: hoy,
+        coleccion: localStorage.getItem(LS_COL)||"",
+        total_registros: state.rows.length,
+        sin_leer: state._fails||0,
+        nota: state._fails ? "OJO: "+state._fails+" registro(s) no se pudieron leer. No vacíes la colección con este archivo incompleto." : "Lectura completa.",
+        registros: state.rows
+      };
+      var blob=new Blob([JSON.stringify(dump,null,2)],{type:"application/json;charset=utf-8"});
+      var a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);
+      a.download="archivo_visitas_"+hoy.slice(0,10)+".json";
+      a.click();
+    };
+
+    /* Generador de links de campaña */
+    var refrescarLink=function(){
+      var o=document.getElementById("u_out"); if(o) o.textContent=armarLink();
+    };
+    ["u_base","u_camp","u_cont","u_week"].forEach(function(id){
+      var e=document.getElementById(id); if(e){ e.oninput=refrescarLink; e.onchange=refrescarLink; }
+    });
+    refrescarLink();
+    var cp=document.getElementById("u_copy"); if(cp) cp.onclick=function(){
+      var url=armarLink(); if(!url) return;
+      navigator.clipboard.writeText(url).then(function(){
+        cp.textContent="✓ Copiado"; setTimeout(function(){ cp.textContent="⧉ Copiar"; },1500);
+      }).catch(function(){ cp.textContent="⚠ Copiá a mano"; });
+    };
+
     var f=document.getElementById("f"); if(f) f.oninput=function(){ state.filter=f.value; render();
       var nf=document.getElementById("f"); if(nf){ nf.focus(); nf.setSelectionRange(nf.value.length,nf.value.length);} };
     document.querySelectorAll("th[data-k]").forEach(function(th){
