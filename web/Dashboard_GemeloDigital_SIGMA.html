@@ -325,7 +325,10 @@
   @media(max-width:680px){ .maturity .mnote{display:none} .maturity{font-size:10px} }
   /* chat con Hefesto */
   .aichat{margin-top:11px; border-top:1px solid var(--edge2); padding-top:10px}
-  .aichat-log{max-height:150px; overflow:auto; display:flex; flex-direction:column; gap:6px; margin-bottom:8px}
+  .aichat-head{display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); margin-bottom:7px}
+  .aichat-head b{color:var(--text); font-weight:700}
+  .aichat-head .chip{margin-left:auto; font-size:10px; padding:2px 7px; border-radius:999px; border:1px solid var(--edge2); white-space:nowrap}
+  .aichat-log{height:330px; overflow:auto; display:flex; flex-direction:column; gap:6px; margin-bottom:8px}
   .aichat-log:empty{display:none}
   .cmsg{font-size:12px; line-height:1.45; padding:7px 10px; border-radius:9px; max-width:92%}
   .cmsg.you{align-self:flex-end; background:rgba(47,230,208,.12); color:var(--text)}
@@ -528,6 +531,7 @@
           <div class="aivalrow"><button class="aibtn" id="aiValidate" type="button">✓ Validar (Ing. de procesos)</button><span id="aiValBadge" class="pill ok" style="display:none">Validado · 99%</span></div>
           <div class="aivalrow"><a class="wabtn" id="waGroup" href="#" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0 0 20.465 3.488"/></svg>Grupo de WhatsApp del dashboard</a></div>
           <div class="aichat">
+            <div class="aichat-head">Grupo <b>Escondida · ADR</b><span class="chip" id="grpChip">grupo…</span></div>
             <div class="aichat-log" id="aiChatLog"></div>
             <div class="aichat-row">
               <input id="aiChatInput" type="text" placeholder="Preguntale a Hefesto…" autocomplete="off">
@@ -845,6 +849,7 @@
 
 <!-- Sincronización en tiempo real entre dispositivos (MQTT sobre WebSocket) -->
 <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<script src="assets/chat-grupo.js?v=3"></script>
 <!-- ====== Simulación de planta en tiempo real (datos representativos, animados) ====== -->
 <script>
 (function(){
@@ -1307,17 +1312,20 @@
       log.scrollTop=log.scrollHeight; });
   })();
 
-  /* ---- chat con Hefesto (placeholder) ---- */
+  /* ---- chat del grupo de WhatsApp, dentro de la página — ver web/assets/chat-grupo.js ---- */
   (function(){
-    var inp=document.getElementById('aiChatInput'), btn=document.getElementById('aiChatSend'), log=document.getElementById('aiChatLog');
-    if(!inp||!btn||!log)return;
-    function esc(s){ return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
-    function send(){ var q=(inp.value||'').trim(); if(!q)return; inp.value='';
-      log.innerHTML+='<div class="cmsg you">'+esc(q)+'</div>'+
-        '<div class="cmsg bot">🚧 <b>En construcción.</b> Pronto vas a tener el poder de las mejores IA del mercado en un solo chat — preguntale a Hefesto lo que quieras sobre la planta.</div>';
-      log.scrollTop=log.scrollHeight; }
-    btn.addEventListener('click',send);
-    inp.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); send(); } });
+    if(!window.ChatGrupo)return;
+    var chip=document.getElementById('grpChip');
+    window.ChatGrupo.mount({
+      log:      document.getElementById('aiChatLog'),
+      input:    document.getElementById('aiChatInput'),
+      sendBtn:  document.getElementById('aiChatSend'),
+      broker:   'wss://broker.emqx.io:8084/mqtt',
+      topicIn:  'sigma/democustomerops/chat/escondida-adr/v1',
+      topicOut: 'sigma/democustomerops/chat/escondida-adr/out/v1',
+      group:    '120363427356778149@g.us',
+      setChip:  function(txt,col){ if(chip){ chip.textContent=txt; chip.style.color=col||''; chip.style.borderColor=col||''; } }
+    });
   })();
 
   setupHealth();
