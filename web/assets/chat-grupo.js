@@ -16,6 +16,10 @@
    CONTRATO SALIENTE — TOPIC_OUT, mismo formato, role:"user"
    Se escribe desde acá y el relay decide si lo mete en el grupo.
 
+   La página está suscrita a LOS DOS topics: así los dashboards abiertos se ven
+   entre sí sin depender del relay. Mientras el relay no exista, esto es un chat
+   entre paneles y nada llega a WhatsApp.
+
    ⚠️ EL RELAY ES LA FRONTERA DE SEGURIDAD, NO ESTA PÁGINA.
    Esta página es pública: cualquiera puede abrir la consola y publicar en
    TOPIC_OUT con el nombre que quiera. El `from` que viaja acá es una etiqueta
@@ -165,7 +169,15 @@
         clientId: 'sigmachat_' + Math.random().toString(36).slice(2, 10),
         reconnectPeriod: 4000, connectTimeout: 8000, clean: true
       });
-      client.on('connect', function () { client.subscribe(opts.topicIn); connected = true; setChip('💬 grupo ON', '#37D27D'); render(); });
+      /* Escucha los DOS topics. El de entrada trae lo que el relay saca del
+         grupo; el de salida trae lo que escriben los otros dashboards abiertos.
+         Sin esto la página publicaría al vacío hasta que exista el relay, y dos
+         dashboards no se verían entre sí. El dedupe por id absorbe el eco
+         propio y el que devuelva el relay. */
+      client.on('connect', function () {
+        client.subscribe([opts.topicIn, opts.topicOut]);
+        connected = true; setChip('💬 grupo ON', '#37D27D'); render();
+      });
       client.on('reconnect', function () { setChip('grupo…', '#FFB02E'); });
       client.on('offline', function () { connected = false; setChip('grupo OFF', '#FF5A6A'); render(); });
       client.on('error', function () { connected = false; setChip('grupo OFF', '#FF5A6A'); render(); });
