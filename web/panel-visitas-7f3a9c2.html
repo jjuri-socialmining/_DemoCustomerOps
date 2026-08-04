@@ -273,10 +273,11 @@
         if(l) l.textContent=n+" encontrados"+(cacheados?" · "+cacheados+" ya en caché":"");
       })
       .then(function(ids){
-        if(ids.length===0){ state.rows=[]; state._fails=0; state._loading=0; return render(); }
+        if(ids.length===0){ state.ids=[]; state.rows=[]; state._fails=0; state._loading=0; return render(); }
         // Solo leemos los registros que no estén ya en caché (carga incremental).
         var missing=ids.filter(function(id){ return !cache[id]; });
         // 1) Mostrar al INSTANTE lo ya cacheado (cargas siguientes = inmediatas)
+        state.ids=ids;
         state.rows=ids.map(function(id){ return cache[id]; }).filter(Boolean);
         state._fails=0; state._loading=missing.length;
         if(state.rows.length) render();
@@ -294,6 +295,7 @@
             Object.keys(res.records).forEach(function(id){ cache[id]=res.records[id]; });
             podar(cache, ids);
             try{ localStorage.setItem(cacheKey, JSON.stringify(cache)); }catch(e){}
+            state.ids=ids;
             state.rows=ids.map(function(id){ return cache[id]; }).filter(Boolean);
             state._fails=(res.missing||[]).length; state._loading=0;
             render();
@@ -304,6 +306,86 @@
         app.innerHTML='<div class="center">Error al cargar: '+esc(e.message)+
           ' &nbsp; <button onclick="location.reload()">Reintentar</button></div>';
       });
+  }
+
+  /* ── Respaldar y vaciar ──────────────────────────────────────────
+     Corre acá, en el navegador de Jorge, con SU Master Key: la clave nunca sale
+     de este equipo ni la ve nadie más. El orden importa y no es negociable:
+     primero baja el respaldo, después verifica que esté completo, y sólo
+     entonces borra. Borrar es irreversible: JSONBin no tiene papelera. */
+  function bajarArchivo(){
+    var hoy=new Date().toISOString();
+    var dump={
+      exportado_en: hoy,
+      coleccion: localStorage.getItem(LS_COL)||"",
+      total_registros: state.rows.length,
+      sin_leer: state._fails||0,
+      nota: state._fails ? "INCOMPLETO: "+state._fails+" registro(s) no se pudieron leer."
+                         : "Lectura completa.",
+      registros: state.rows
+    };
+    var blob=new Blob([JSON.stringify(dump,null,2)],{type:"application/json;charset=utf-8"});
+    var a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="archivo_visitas_"+hoy.slice(0,10)+".json";
+    a.click();
+    return dump.total_registros;
+  }
+
+  function borrarBin(id){
+    return waitGate().then(function(){
+      return fetch(BIN+id, {method:"DELETE", headers:headers()});
+    }).then(function(r){
+      if(r.status===429){
+        gate429.until=Date.now()+1500+Math.random()*500;
+        gate429.conc=Math.max(1,gate429.conc-1);
+        return sleep(600).then(function(){ return borrarBin(id); });   // reintenta
+      }
+      return r.ok || r.status===404;    // 404 = ya no estaba, cuenta como borrado
+    }).catch(function(){ return false; });
+  }
+
+  function respaldarYVaciar(){
+    var ids=(state.ids||[]).slice();
+    if(!ids.length){ alert("No hay registros para vaciar."); return; }
+    if(state._loading){ alert("Esperá a que termine de cargar."); return; }
+    if(state._fails){
+      alert("No se puede vaciar: quedan "+state._fails+" registro(s) sin leer.\n\n"+
+            "El respaldo saldría incompleto y esos datos no vuelven. "+
+            "Actualizá hasta que el aviso rojo desaparezca.");
+      return;
+    }
+
+    var n=bajarArchivo();   // el respaldo SIEMPRE primero
+    var ok=prompt(
+      "Se descargó el respaldo con "+n+" registro(s).\n\n"+
+      "Guardalo en ~/PKM/MarketingOps/data/visitas/ ANTES de seguir.\n\n"+
+      "Esto va a BORRAR "+ids.length+" registro(s) de JSONBin. Es irreversible.\n\n"+
+      "Escribí VACIAR para confirmar:");
+    if(String(ok||"").trim().toUpperCase()!=="VACIAR"){ return; }
+
+    var hechos=0, fallos=0, i=0;
+    app.innerHTML='<div class="center">Vaciando…<br><span id="dprog" class="muted">0 / '+ids.length+'</span></div>';
+    function paso(){
+      if(i>=ids.length) return Promise.resolve();
+      var id=ids[i++];
+      return borrarBin(id).then(function(bien){
+        bien?hechos++:fallos++;
+        var d=document.getElementById("dprog");
+        if(d) d.textContent=(hechos+fallos)+" / "+ids.length+(fallos?" · "+fallos+" con error":"");
+        return paso();
+      });
+    }
+    var ws=[]; for(var w=0;w<3;w++) ws.push(paso());
+    Promise.all(ws).then(function(){
+      try{
+        localStorage.removeItem("__sigma_cache_"+localStorage.getItem(LS_COL));
+        localStorage.removeItem(LS_CUT);        // ya no hace falta ocultar nada
+      }catch(e){}
+      state.rows=[]; state.ids=[];
+      alert("Listo: "+hechos+" borrado(s)"+(fallos?", "+fallos+" con error (volvé a intentar)":"")+".\n\nEl panel arranca de cero.");
+      load();
+    });
   }
 
   /* ───────────── Helpers de render ───────────── */
@@ -535,6 +617,9 @@
         '<button id="b_refresh">↻ Actualizar</button>'+
         '<button id="b_csv">⤓ CSV</button>'+
         '<button id="b_archivo" title="Respaldo íntegro en JSON, para archivar antes de vaciar">⤓ Archivo JSON</button>'+
+        '<button id="b_vaciar" style="border-color:#f87171;color:#fca5a5" '+
+          'title="Baja el respaldo y después borra todos los registros de JSONBin. Irreversible.">'+
+          '🗑 Respaldar y vaciar</button>'+
         '<button id="b_logout">Salir</button>'+
       '</header>';
 
@@ -691,6 +776,8 @@
 
     var v=document.getElementById("b_vivo"); if(v) v.onchange=function(){ vivoOn(v.checked); tictac(); };
     tictac();
+
+    var bv=document.getElementById("b_vaciar"); if(bv) bv.onclick=respaldarYVaciar;
 
     var bc=document.getElementById("b_corte"); if(bc) bc.onclick=function(){
       if(corte()){ try{ localStorage.removeItem(LS_CUT); }catch(e){} render(); return; }
