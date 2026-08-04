@@ -126,7 +126,16 @@
      mismo límite, los 6 se topaban, esperaban lo mismo y volvían juntos — un
      rebaño chocando contra la misma puerta. Por eso quedaban registros sin leer.
      Ahora un 429 frena a todos hasta la misma hora y baja la concurrencia. */
-  var gate429 = { until: 0, conc: 5 };
+  var CONC_MAX = 5;
+  var gate429 = { until: 0, conc: CONC_MAX, ok: 0 };
+
+  // El caudal tiene que poder VOLVER a subir. Sin esto, un 429 temprano dejaba
+  // la concurrencia clavada en 1 para el resto de la sesión y el panel se
+  // arrastraba en cada carga posterior.
+  function exito(){
+    if(gate429.conc >= CONC_MAX) return;
+    if(++gate429.ok >= 12){ gate429.ok = 0; gate429.conc++; }
+  }
 
   function waitGate(){
     var d = gate429.until - Date.now();
@@ -147,9 +156,11 @@
           var wait = (ra>0 ? ra*1000 : 700*Math.pow(2,n)) + Math.random()*400;
           gate429.until = Math.max(gate429.until, Date.now()+wait);
           gate429.conc  = Math.max(1, gate429.conc-1);     // achicar el caudal
+          gate429.ok    = 0;
           throw new Error("429");
         }
         if(!r.ok) throw new Error("http "+r.status);
+        exito();
         return r.json();
       }).catch(function(e){
         if(e.fatal) throw e;
@@ -161,13 +172,18 @@
     return attempt(0);
   }
 
-  function listAllBinIds(col){
+  /* El listado es paginado de a 10 y encadenado (cada página necesita el id de
+     la anterior), así que no se puede paralelizar: 365 registros = 37 vueltas.
+     Por eso avisa por dónde va — antes se quedaba mudo en "Cargando visitas…"
+     y parecía colgado. */
+  function listAllBinIds(col, onPage){
     var ids=[];
     function page(after){
       var url=LIST+encodeURIComponent(col)+"/bins"+(after?("/"+after):"");
       return fetchJSON(url).then(function(arr){
         if(!Array.isArray(arr)||arr.length===0) return ids;
         arr.forEach(function(b){ ids.push(b.record); });
+        if(onPage) onPage(ids.length);
         if(arr.length<10) return ids;            // última página
         return page(arr[arr.length-1].record);   // siguiente página
       });
@@ -219,8 +235,14 @@
     if(!col||!key){ return gate(); }
     var cacheKey="__sigma_cache_"+col, cache={};
     try{ cache=JSON.parse(localStorage.getItem(cacheKey)||"{}"); }catch(e){ cache={}; }
-    app.innerHTML='<div class="center">Cargando visitas…</div>';
-    listAllBinIds(col)
+    gate429.conc=CONC_MAX; gate429.ok=0; gate429.until=0;   // cada carga arranca a caudal pleno
+    var cacheados=Object.keys(cache).length;
+    app.innerHTML='<div class="center">Listando registros…<br><span id="lprog" class="muted">'+
+      (cacheados?cacheados+' ya en caché':'')+'</span></div>';
+    listAllBinIds(col,function(n){
+        var l=document.getElementById("lprog");
+        if(l) l.textContent=n+" encontrados"+(cacheados?" · "+cacheados+" ya en caché":"");
+      })
       .then(function(ids){
         if(ids.length===0){ state.rows=[]; state._fails=0; state._loading=0; return render(); }
         // Solo leemos los registros que no estén ya en caché (carga incremental).
@@ -348,6 +370,9 @@
 
   function builderHTML(){
     var wk=isoWeek(new Date());
+    // La numeración del aviso sigue a la semana ISO: campaña 32 = semana 32.
+    // Se autocompleta para no tener que acordarse cada lunes.
+    var nro=parseInt(wk.split("-w")[1],10);
     var opts=DESTINOS.map(function(d){ return '<option value="'+esc(d[0])+'">'+esc(d[1])+'</option>'; }).join("");
     var inp='background:#111827;border:1px solid #374151;border-radius:6px;color:#e5e7eb;padding:.45rem .6rem;font-size:.85rem';
     return '<div class="bd" style="margin-bottom:1rem">'+
@@ -355,7 +380,7 @@
       '<div style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.6rem 0">'+
         '<select id="u_base" style="'+inp+';min-width:230px">'+opts+'</select>'+
         '<input id="u_camp" style="'+inp+'" placeholder="campaña" value="digital_twin_launch">'+
-        '<input id="u_cont" style="'+inp+';width:110px" placeholder="aviso" value="post_1">'+
+        '<input id="u_cont" style="'+inp+';width:110px" placeholder="aviso" value="post_'+nro+'">'+
         '<input id="u_week" style="'+inp+';width:110px" placeholder="semana" value="'+esc(wk)+'">'+
         '<button id="u_copy">⧉ Copiar</button>'+
       '</div>'+
