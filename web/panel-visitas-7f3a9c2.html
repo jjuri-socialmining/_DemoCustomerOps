@@ -93,7 +93,9 @@
   var LIST = "https://api.jsonbin.io/v3/c/", BIN = "https://api.jsonbin.io/v3/b/";
   var LS_KEY="__sigma_report_key", LS_COL="__sigma_report_col";
   var app = document.getElementById("app");
-  var state = { rows:[], sortKey:"ts_iso", sortDir:-1, filter:"" };
+  var state = { rows:[], sortKey:"ts_iso", sortDir:-1, filter:"",
+                vivo:(function(){ try{ return localStorage.getItem("__sigma_report_vivo")==="1"; }catch(e){ return false; } })(),
+                ultima:0 };
 
   /* ───────────── GATE: pide Collection ID + Master Key ───────────── */
   function gate(msg){
@@ -119,6 +121,28 @@
 
   /* ───────────── Carga de datos desde JSONBin ───────────── */
   function headers(){ return {"X-Master-Key":localStorage.getItem(LS_KEY)||""}; }
+
+  /* El caché guardaba para siempre registros que ya no existen en la colección:
+     crecía sin techo hasta reventar la cuota de localStorage, y ahí el setItem
+     fallaba en silencio (está dentro de un try vacío) y el caché dejaba de
+     servir sin avisar. Se poda contra la lista viva en cada carga. */
+  function podar(cache, idsVivos){
+    var vivos={}; idsVivos.forEach(function(id){ vivos[id]=1; });
+    Object.keys(cache).forEach(function(id){ if(!vivos[id]) delete cache[id]; });
+    return cache;
+  }
+
+  /* ── "Empezar de 0" ──────────────────────────────────────────────
+     Corte por fecha: el panel ignora todo lo anterior. Sirve para arrancar a
+     medir las campañas desde cero SIN borrar nada — los registros viejos
+     siguen en JSONBin para el respaldo y el análisis. Vaciar la colección de
+     verdad necesita la Master Key y se hace desde JSONBin. */
+  var LS_CUT="__sigma_report_corte";
+  function corte(){ return localStorage.getItem(LS_CUT)||""; }
+  function trasElCorte(r){
+    var c=corte(); if(!c) return true;
+    return !!(r.ts_iso && r.ts_iso >= c);      // ISO 8601 ordena bien como texto
+  }
   function sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
 
   /* Freno compartido por TODOS los pedidos.
@@ -230,16 +254,21 @@
     return pass(ids);
   }
 
-  function load(){
+  function load(silencioso){
     var col=localStorage.getItem(LS_COL), key=localStorage.getItem(LS_KEY);
     if(!col||!key){ return gate(); }
+    state.ultima=Date.now();
     var cacheKey="__sigma_cache_"+col, cache={};
     try{ cache=JSON.parse(localStorage.getItem(cacheKey)||"{}"); }catch(e){ cache={}; }
     gate429.conc=CONC_MAX; gate429.ok=0; gate429.until=0;   // cada carga arranca a caudal pleno
     var cacheados=Object.keys(cache).length;
-    app.innerHTML='<div class="center">Listando registros…<br><span id="lprog" class="muted">'+
-      (cacheados?cacheados+' ya en caché':'')+'</span></div>';
+    // En vivo no se pisa la pantalla: la vuelta es silenciosa y sólo refresca al final.
+    if(!silencioso){
+      app.innerHTML='<div class="center">Listando registros…<br><span id="lprog" class="muted">'+
+        (cacheados?cacheados+' ya en caché':'')+'</span></div>';
+    }
     listAllBinIds(col,function(n){
+        if(silencioso) return;
         var l=document.getElementById("lprog");
         if(l) l.textContent=n+" encontrados"+(cacheados?" · "+cacheados+" ya en caché":"");
       })
@@ -263,6 +292,7 @@
         return fetchWithRetries(missing,function(d,t){ var p=document.getElementById("prog"); if(p) p.textContent=d+" / "+t; })
           .then(function(res){
             Object.keys(res.records).forEach(function(id){ cache[id]=res.records[id]; });
+            podar(cache, ids);
             try{ localStorage.setItem(cacheKey, JSON.stringify(cache)); }catch(e){}
             state.rows=ids.map(function(id){ return cache[id]; }).filter(Boolean);
             state._fails=(res.missing||[]).length; state._loading=0;
@@ -476,7 +506,9 @@
   }
 
   function render(){
-    var rows=state.rows;
+    var todas=state.rows;                       // todo lo que hay en la colección
+    var rows=todas.filter(trasElCorte);         // lo que se muestra, tras el corte
+    var ocultas=todas.length-rows.length;
     var total=rows.length;
     var pageviews=rows.filter(function(r){return (r.event_type||"pageview")!=="click";});
     var clicks=rows.filter(function(r){return r.event_type==="click";});
@@ -492,8 +524,14 @@
     var head=
       '<header>'+
         '<h1>📊 Panel de Visitas</h1>'+
-        '<span class="muted">'+total+' registros'+(state._loading?' · actualizando '+state._loading+'…':'')+'</span>'+
+        '<span class="muted">'+total+' registros'+(state._loading?' · actualizando '+state._loading+'…':'')+
+          (ocultas?' <span style="color:#fbbf24">· '+ocultas+' antes del corte, ocultos</span>':'')+
+          '<span id="vivochip" style="margin-left:.6rem"></span></span>'+
         '<span class="sp"></span>'+
+        '<label style="font-size:.8rem;color:#93a3b8;display:inline-flex;align-items:center;gap:.35rem;margin-right:.4rem">'+
+          '<input type="checkbox" id="b_vivo"'+(state.vivo?' checked':'')+'> En vivo</label>'+
+        '<button id="b_corte" title="El panel ignora todo lo anterior a este momento. No borra nada.">'+
+          (corte()?'↺ Quitar corte':'⌫ Empezar de 0')+'</button>'+
         '<button id="b_refresh">↻ Actualizar</button>'+
         '<button id="b_csv">⤓ CSV</button>'+
         '<button id="b_archivo" title="Respaldo íntegro en JSON, para archivar antes de vaciar">⤓ Archivo JSON</button>'+
@@ -627,8 +665,38 @@
     function q(v){ if(v==null)return ""; v=String(v).replace(/"/g,'""'); return /[",\n]/.test(v)?'"'+v+'"':v; }
   }
 
+  /* ── Modo en vivo ────────────────────────────────────────────────
+     Relee la colección cada POLL_MS. Lo caro es listar (paginado de a 10 y
+     encadenado); las lecturas de registro ya vistos salen del caché, así que
+     una vuelta en vivo sólo paga los registros nuevos. Por eso el intervalo no
+     baja de 30 s: el límite de JSONBin es el techo real, no la voluntad. */
+  var POLL_MS=30000, pollTimer=null;
+
+  function tictac(){
+    var c=document.getElementById("vivochip"); if(!c) return;
+    if(!state.vivo){ c.textContent=""; return; }
+    var s=Math.round((Date.now()-(state.ultima||Date.now()))/1000);
+    c.innerHTML='<span style="color:#4ade80">● en vivo</span> <span class="muted">· hace '+s+' s</span>';
+  }
+
+  function vivoOn(on){
+    state.vivo=on;
+    try{ localStorage.setItem("__sigma_report_vivo", on?"1":"0"); }catch(e){}
+    if(pollTimer){ clearInterval(pollTimer); pollTimer=null; }
+    if(on){ pollTimer=setInterval(function(){ if(!state._loading) load(true); }, POLL_MS); }
+  }
+
   function wire(){
-    var r=document.getElementById("b_refresh"); if(r) r.onclick=load;
+    var r=document.getElementById("b_refresh"); if(r) r.onclick=function(){ load(); };
+
+    var v=document.getElementById("b_vivo"); if(v) v.onchange=function(){ vivoOn(v.checked); tictac(); };
+    tictac();
+
+    var bc=document.getElementById("b_corte"); if(bc) bc.onclick=function(){
+      if(corte()){ try{ localStorage.removeItem(LS_CUT); }catch(e){} render(); return; }
+      try{ localStorage.setItem(LS_CUT, new Date().toISOString()); }catch(e){}
+      render();
+    };
     var lo=document.getElementById("b_logout"); if(lo) lo.onclick=clearKey;
     var cs=document.getElementById("b_csv"); if(cs) cs.onclick=function(){
       var blob=new Blob([toCSV()],{type:"text/csv;charset=utf-8"});
@@ -684,7 +752,11 @@
   }
 
   /* ───────────── arranque ───────────── */
-  if(localStorage.getItem(LS_KEY)&&localStorage.getItem(LS_COL)) load(); else gate();
+  setInterval(tictac,1000);                       // el "hace N s" corre solo
+  if(localStorage.getItem(LS_KEY)&&localStorage.getItem(LS_COL)){
+    load();
+    if(state.vivo) vivoOn(true);                  // el modo en vivo sobrevive a la recarga
+  } else gate();
 })();
 </script>
 </body>
