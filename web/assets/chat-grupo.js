@@ -33,7 +33,13 @@
   var MAX_TEXT   = 600;   // recorte defensivo: un mensaje enorme no rompe el panel
   var RETAIN     = 80;    // mensajes en pantalla
   var THROTTLE   = 800;   // ms mínimos entre envíos (página pública, freno al spam)
-  var NAME_KEY   = 'sigma_chat_nombre';
+
+  /* Quien escribe desde el dashboard es la sala de control: se firma así, sin
+     preguntar nada. No es una identidad verificable — ver la advertencia de
+     arriba — es la etiqueta con la que el grupo ve entrar al panel.
+     Va la sigla, con el rol completo en el tooltip para quien no la conozca. */
+  var FROM      = 'OSC';
+  var FROM_LONG = 'Operador de sala de control';
 
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
@@ -72,9 +78,7 @@
 
     var msgs = [], seen = Object.create(null);
     var connected = false, client = null, lastSent = 0;
-
-    var myName = '';
-    try { myName = global.localStorage.getItem(NAME_KEY) || ''; } catch (e) { myName = ''; }
+    var myName = opts.from || FROM;
 
     /* Aviso del propio panel, no del grupo. Entra al mismo array que los
        mensajes: si se hiciera appendChild, el próximo render() lo borraría
@@ -99,8 +103,9 @@
         var who = m.role === 'bot' ? 'Hefesto' : (m.from || 'Alguien');
         var t   = hhmm(m.ts);
         var mine = m.role !== 'bot' && myName && m.from === myName;
+        var tip  = (m.from === FROM) ? ' title="' + esc(FROM_LONG) + '"' : '';
         return '<div class="cmsg ' + (mine ? 'you' : 'bot') + '">'
-             + '<b>' + esc(who) + '</b>' + (t ? ' <span style="opacity:.6;font-size:10px">' + esc(t) + '</span>' : '')
+             + '<b' + tip + '>' + esc(who) + '</b>' + (t ? ' <span style="opacity:.6;font-size:10px">' + esc(t) + '</span>' : '')
              + '<br>' + esc(txt) + '</div>';
       }).join('');
       log.scrollTop = log.scrollHeight;
@@ -116,24 +121,11 @@
       render();
     }
 
-    function setPlaceholder() {
-      input.placeholder = myName ? 'Escribí en el grupo…' : '¿Con qué nombre querés aparecer?';
-    }
-
     /* ---- envío: se habla acá, no se salta a WhatsApp ---- */
     function send() {
       var q = (input.value || '').trim();
       if (!q) return;
       input.value = '';
-
-      // Primer uso: el texto que escriba es su nombre. Queda en este navegador.
-      if (!myName) {
-        myName = q.slice(0, 40);
-        try { global.localStorage.setItem(NAME_KEY, myName); } catch (e) {}
-        setPlaceholder();
-        note('👋 Listo, <b>' + esc(myName) + '</b>. Ya podés escribir en el grupo.');
-        return;
-      }
 
       var now = Date.now();
       if (now - lastSent < THROTTLE) { return; }
@@ -156,7 +148,8 @@
       }
     }
 
-    setPlaceholder();
+    input.placeholder = 'Escribí como ' + myName + '…';
+    if (myName === FROM) input.title = FROM_LONG;   // el rótulo largo no entra en el input
     render();
     sendBtn.addEventListener('click', send);
     input.addEventListener('keydown', function (e) {
