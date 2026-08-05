@@ -9,13 +9,13 @@
   ─────────────────────────────────────────────────────────────────────────────
   PÁGINA DE CAPTURA (link público para compartir)
   Registra cada visita (IP, ubicación, dispositivo, navegador, referido, UTM…)
-  en una colección de JSONBin y luego redirige al Dashboard real.
+  como una fila de una planilla de Google, y luego redirige al Dashboard real.
 
-  CONFIGURACIÓN  →  edita el bloque CONFIG de abajo con tus datos de JSONBin.
+  CONFIGURACIÓN  →  bloque CONFIG de web/assets/track.js (ENDPOINT + WRITE_TOKEN).
   Guía paso a paso: tools/visit-tracker/SETUP.md
 
-  Seguridad: la CREATE_KEY es una Access Key con permiso SOLO de "Bin Create".
-  Aunque alguien vea este código, no puede leer ni borrar las visitas guardadas.
+  Seguridad: el WRITE_TOKEN sólo habilita AGREGAR filas. Aunque alguien vea este
+  código, no puede leer ni borrar las visitas guardadas.
   ─────────────────────────────────────────────────────────────────────────────
 -->
 <style>
@@ -94,7 +94,7 @@
   <p>Preparando tu acceso a la demostración interactiva…</p>
   <p class="skip"><a id="manual" href="Dashboard_GemeloDigital_SIGMA.html">Continuar ahora →</a></p>
 
-<script src="assets/track.js?v=6"></script>
+<script src="assets/track.js?v=7"></script>
 <script>
   /* Splash: espera a que el tracker registre el pageview y luego redirige */
   (function(){

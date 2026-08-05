@@ -7,23 +7,29 @@
      • "pageview" → cada vez que alguien ENTRA a una página (qué link usan).
      • "click"    → cada click en un <a> o [data-track] (qué les llama la atención).
 
-   Guarda cada evento en una colección de JSONBin. Una sola configuración aquí.
-   Seguridad: CREATE_KEY es una Access Key con permiso SOLO "Bin Create".
-   Guía: tools/visit-tracker/SETUP.md
+   Cada evento es UNA FILA de una planilla de Google, vía un Apps Script Web App.
+
+   Antes esto guardaba un bin por visita en JSONBin, y ahí estaba el problema:
+   la colección se lista paginada de a 10 y encadenada, así que abrir el panel
+   con 385 visitas costaba ~424 requests, y crecía con cada visita para siempre.
+   Una fila por visita hace que leer todo cueste UN request, siempre.
+
+   Seguridad: WRITE_TOKEN viaja en esta página pública y por lo tanto es público
+   de hecho. No importa: el backend sólo lo acepta para AGREGAR filas. No lee,
+   no lista y no borra — eso exige el READ_TOKEN, que nunca sale del panel.
+   Guía: tools/visit-tracker/SETUP.md · despliegue: apps-script/DEPLOY.md
    ───────────────────────────────────────────────────────────────────────────── */
 (function () {
   "use strict";
 
   /* ════════════════════ CONFIG — EDITA ESTO (una sola vez) ═══════════════════ */
   var CONFIG = {
-    COLLECTION_ID: "6a32d727da38895dfed1c6c9",
-    CREATE_KEY:    "$2a$10$GZXDddQfBmo1UmmKj/Tmwe.agDHu7gfjGGbSIbTJg4iAceXFiXxYm",
+    ENDPOINT:    "https://script.google.com/macros/s/AKfycbyrYFvzQavV_gVMlhS7AUvCX7xZ7U3X77FI1SU-Cy9VB-kfirJJBBzwwfknp88STdUX/exec",   // https://script.google.com/macros/s/.../exec
+    WRITE_TOKEN: "6cf22ecb82b54008a309406df475cb7a",
     GEO_TIMEOUT_MS: 4000,
     TRACK_CLICKS: true            // false = solo cuenta visitas, no clicks
   };
   /* ═══════════════════════════════════════════════════════════════════════════ */
-
-  var API = "https://api.jsonbin.io/v3/b";
 
   /* ---------- visitor id persistente (detecta retornos) ---------- */
   function getVisitor() {
@@ -147,19 +153,28 @@
     return { page: location.pathname, page_title: document.title || "(sin título)", page_url: location.href };
   }
 
-  /* ---------- POST a JSONBin (un evento = un bin) ---------- */
-  function postBin(payload) {
-    if (!CONFIG.COLLECTION_ID || /PEGA_AQUI/.test(CONFIG.COLLECTION_ID) ||
-        !CONFIG.CREATE_KEY || /PEGA_AQUI/.test(CONFIG.CREATE_KEY)) {
-      console.warn("[track] Sin configurar — evento no enviado:", payload.event_type, payload.page);
+  /* ---------- POST al Apps Script (un lote = un request) ----------
+     Content-Type text/plain a propósito: con application/json el navegador
+     dispara un preflight OPTIONS, y Apps Script no responde OPTIONS — la
+     request moriría como "error de CORS" sin haber llegado nunca. Con text/plain
+     es una "simple request" y sale derecho. El backend igual parsea JSON. */
+  function enviarLote(payloads) {
+    if (!payloads.length) return Promise.resolve(true);
+    if (!CONFIG.ENDPOINT || /PEGA_AQUI/.test(CONFIG.ENDPOINT) ||
+        !CONFIG.WRITE_TOKEN || /PEGA_AQUI/.test(CONFIG.WRITE_TOKEN)) {
+      console.warn("[track] Sin configurar — " + payloads.length + " evento(s) no enviados");
       return Promise.resolve(false);
     }
-    return fetch(API, {
+    return fetch(CONFIG.ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "X-Access-Key": CONFIG.CREATE_KEY,
-                 "X-Collection-Id": CONFIG.COLLECTION_ID, "X-Bin-Private": "true" },
-      body: JSON.stringify(payload), keepalive: true
-    }).then(function (r) { return r.ok; }).catch(function () { return false; });
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ token: CONFIG.WRITE_TOKEN, registros: payloads }),
+      keepalive: true,
+      redirect: "follow"          // /exec redirige a googleusercontent.com
+    })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { return !!(j && j.ok); })
+      .catch(function () { return false; });
   }
 
   /* ---------- bandeja de salida (outbox) en localStorage ----------
@@ -174,11 +189,33 @@
     var a = obRead(); a.push({ eid: eid, payload: payload }); obWrite(a);
     return eid;
   }
-  function dequeue(eid) { obWrite(obRead().filter(function (it) { return it.eid !== eid; })); }
-  function trySend(item) {
-    return postBin(item.payload).then(function (ok) { if (ok) dequeue(item.eid); return ok; });
+  function dequeue(eids) {
+    var fuera = {}; eids.forEach(function (e) { fuera[e] = 1; });
+    obWrite(obRead().filter(function (it) { return !fuera[it.eid]; }));
   }
-  function flushOutbox() { return Promise.all(obRead().map(trySend)); }
+  /* Un evento ya encolado, enviado solo. Se desencola sólo si el backend confirma. */
+  function trySend(item) {
+    return enviarLote([Object.assign({ eid: item.eid }, item.payload)])
+      .then(function (ok) { if (ok) dequeue([item.eid]); return ok; });
+  }
+
+  /* Todo lo pendiente en UN request. Antes era uno por evento: con el outbox
+     lleno tras varios clicks, eso eran N requests al cargar la página.
+     El eid viaja adentro del registro para que el backend pueda descartar
+     duplicados: si la respuesta se pierde en el camino pero la fila se escribió,
+     el reintento no la duplica. */
+  function flushOutbox() {
+    var pend = obRead();
+    if (!pend.length) return Promise.resolve(true);
+    var lote = pend.slice(0, 100);
+    var payloads = lote.map(function (it) {
+      return Object.assign({ eid: it.eid }, it.payload);
+    });
+    return enviarLote(payloads).then(function (ok) {
+      if (ok) dequeue(lote.map(function (it) { return it.eid; }));
+      return ok;
+    });
+  }
 
   /* ---------- estado compartido por página ---------- */
   var visitor = getVisitor(), dev = parseUA(), brw = browserData();

@@ -8,13 +8,13 @@
 <!--
   ─────────────────────────────────────────────────────────────────────────────
   PÁGINA DE REPORTE (URL secreta — solo para ti)
-  Lee la colección de JSONBin y muestra el reporte acumulado de visitas.
+  Lee la planilla de visitas (vía Apps Script) y muestra el reporte acumulado.
 
-  SEGURIDAD: este archivo NO contiene la Master Key. Te la pide al abrir y la
-  guarda solo en tu navegador (localStorage). Por eso publicarlo es seguro:
-  quien no tenga la llave no ve ningún dato.
-
-  Para verlo: abre esta URL e ingresa tu Collection ID + Master Key (X-Master-Key).
+  SEGURIDAD: este archivo NO contiene ninguna credencial. Te pide la URL de la
+  app web y el token de LECTURA al abrir, y los guarda solo en tu navegador
+  (localStorage). Por eso publicarlo es seguro: quien no tenga el token no ve
+  ningún dato. El token que sí viaja en la página pública de captura es otro, y
+  sólo sirve para agregar filas.
   Guía: tools/visit-tracker/SETUP.md
   ─────────────────────────────────────────────────────────────────────────────
 -->
@@ -90,53 +90,65 @@
 <script>
 (function(){
   "use strict";
-  var LIST = "https://api.jsonbin.io/v3/c/", BIN = "https://api.jsonbin.io/v3/b/";
-  var LS_KEY="__sigma_report_key", LS_COL="__sigma_report_col";
+  /* ═══════════ Origen de datos: Apps Script + Google Sheets ═══════════
+
+     ANTES (JSONBin): un bin por visita. Listar la colección venía paginado de a
+     10 y ENCADENADO —cada página necesitaba el id de la última de la anterior,
+     o sea estrictamente secuencial— y recién después había que leer un bin por
+     visita. Con 385 visitas eso daba ~424 requests para dibujar una tabla, y
+     crecía con cada visita, para siempre. De ahí salieron el caché, la poda, el
+     backoff, el freno compartido de 429 y la compactación semanal: unas 350
+     líneas sosteniendo una herramienta mal elegida.
+
+     AHORA: una fila por visita en una planilla, y leerlas todas es UN request.
+     Nada de eso hace falta, así que nada de eso quedó. Esto es todo el acceso a
+     datos del panel.
+
+     Las credenciales siguen sin tocar el sitio: la URL y el token de lectura se
+     escriben una vez y viven en el localStorage de este navegador. El token de
+     lectura es distinto del que lleva la página pública — ese sólo agrega filas. */
+
+  var LS_URL="__sigma_report_url", LS_TOK="__sigma_report_tok";
   var app = document.getElementById("app");
   var state = { rows:[], sortKey:"ts_iso", sortDir:-1, filter:"",
                 vivo:(function(){ try{ return localStorage.getItem("__sigma_report_vivo")==="1"; }catch(e){ return false; } })(),
-                ultima:0 };
+                ultima:0, _fails:0, _loading:0 };
 
-  /* ───────────── GATE: pide Collection ID + Master Key ───────────── */
+  function endpoint(){ return localStorage.getItem(LS_URL)||""; }
+  function token(){ return localStorage.getItem(LS_TOK)||""; }
+
+  /* ───────────── GATE: pide URL de la app web + token de lectura ───────────── */
   function gate(msg){
     app.innerHTML =
       '<div class="gate">'+
         '<h2>🔒 Panel de Visitas</h2>'+
-        '<p>Ingresa tus credenciales de JSONBin. Se guardan solo en este navegador, nunca en el sitio.</p>'+
-        '<label>Collection ID</label><input id="g_col" type="text" placeholder="65f...">'+
-        '<label>Master Key (X-Master-Key)</label><input id="g_key" type="text" placeholder="$2a$10$...">'+
+        '<p>Pegá la URL de tu aplicación web y el token de lectura. '+
+          'Se guardan solo en este navegador, nunca en el sitio.</p>'+
+        '<label>URL de la aplicación web (termina en /exec)</label>'+
+          '<input id="g_url" type="text" placeholder="https://script.google.com/macros/s/.../exec">'+
+        '<label>Token de lectura (READ_TOKEN)</label><input id="g_tok" type="text" placeholder="a1b2c3…">'+
         '<button class="primary" id="g_go">Entrar</button>'+
         '<div class="err">'+(msg||"")+'</div>'+
       '</div>';
     document.getElementById("g_go").onclick=function(){
-      var col=document.getElementById("g_col").value.trim();
-      var key=document.getElementById("g_key").value.trim();
-      if(!col||!key){ gate("Completa ambos campos."); return; }
-      try{ localStorage.setItem(LS_COL,col); localStorage.setItem(LS_KEY,key); }catch(e){}
+      var u=document.getElementById("g_url").value.trim();
+      var t=document.getElementById("g_tok").value.trim();
+      if(!u||!t){ gate("Completá ambos campos."); return; }
+      if(!/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(u)){
+        gate("Esa URL no parece la de la app web. Tiene que empezar con "+
+             "https://script.google.com/macros/s/ y terminar en /exec."); return;
+      }
+      try{ localStorage.setItem(LS_URL,u); localStorage.setItem(LS_TOK,t); }catch(e){}
       load();
     };
-    var pc=localStorage.getItem(LS_COL); if(pc) document.getElementById("g_col").value=pc;
+    var pu=localStorage.getItem(LS_URL); if(pu) document.getElementById("g_url").value=pu;
   }
-  function clearKey(){ try{localStorage.removeItem(LS_KEY);localStorage.removeItem(LS_COL);}catch(e){} gate("Credenciales borradas."); }
-
-  /* ───────────── Carga de datos desde JSONBin ───────────── */
-  function headers(){ return {"X-Master-Key":localStorage.getItem(LS_KEY)||""}; }
-
-  /* El caché guardaba para siempre registros que ya no existen en la colección:
-     crecía sin techo hasta reventar la cuota de localStorage, y ahí el setItem
-     fallaba en silencio (está dentro de un try vacío) y el caché dejaba de
-     servir sin avisar. Se poda contra la lista viva en cada carga. */
-  function podar(cache, idsVivos){
-    var vivos={}; idsVivos.forEach(function(id){ vivos[id]=1; });
-    Object.keys(cache).forEach(function(id){ if(!vivos[id]) delete cache[id]; });
-    return cache;
-  }
+  function clearKey(){ try{localStorage.removeItem(LS_TOK);localStorage.removeItem(LS_URL);}catch(e){} gate("Credenciales borradas."); }
 
   /* ── "Empezar de 0" ──────────────────────────────────────────────
      Corte por fecha: el panel ignora todo lo anterior. Sirve para arrancar a
-     medir las campañas desde cero SIN borrar nada — los registros viejos
-     siguen en JSONBin para el respaldo y el análisis. Vaciar la colección de
-     verdad necesita la Master Key y se hace desde JSONBin. */
+     medir una campaña desde cero SIN borrar nada — las visitas viejas siguen en
+     la planilla para el análisis y la comparación semana contra semana. */
   var LS_CUT="__sigma_report_corte";
   function corte(){ return localStorage.getItem(LS_CUT)||""; }
   function trasElCorte(r){
@@ -145,183 +157,77 @@
   }
   function sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
 
-  /* Freno compartido por TODOS los pedidos.
-     Antes cada request reintentaba por su cuenta: con 6 en paralelo contra el
-     mismo límite, los 6 se topaban, esperaban lo mismo y volvían juntos — un
-     rebaño chocando contra la misma puerta. Por eso quedaban registros sin leer.
-     Ahora un 429 frena a todos hasta la misma hora y baja la concurrencia. */
-  var CONC_MAX = 5;
-  var gate429 = { until: 0, conc: CONC_MAX, ok: 0 };
-
-  // El caudal tiene que poder VOLVER a subir. Sin esto, un 429 temprano dejaba
-  // la concurrencia clavada en 1 para el resto de la sesión y el panel se
-  // arrastraba en cada carga posterior.
-  function exito(){
-    if(gate429.conc >= CONC_MAX) return;
-    if(++gate429.ok >= 12){ gate429.ok = 0; gate429.conc++; }
+  /* ───────────── Acceso a la planilla ─────────────
+     GET sin cabeceras propias a propósito: así es una "simple request" y no
+     dispara el preflight OPTIONS, que Apps Script no contesta. /exec redirige a
+     googleusercontent.com, y ese sí manda los CORS que dejan leer la respuesta. */
+  function pedir(params){
+    var u=endpoint(); if(!u) return Promise.reject(new Error("sin configurar"));
+    var q="?token="+encodeURIComponent(token());
+    Object.keys(params||{}).forEach(function(k){ q+="&"+k+"="+encodeURIComponent(params[k]); });
+    return fetch(u+q,{redirect:"follow"}).then(function(r){
+      if(!r.ok) throw new Error("http "+r.status);
+      return r.json();
+    }).then(function(j){
+      if(!j||!j.ok){
+        var e=new Error((j&&j.error)||"respuesta inesperada");
+        if(/token/i.test(e.message)) e.fatal=true;      // credencial mala, no red
+        throw e;
+      }
+      return j;
+    });
   }
 
-  function waitGate(){
-    var d = gate429.until - Date.now();
-    return d > 0 ? sleep(d) : Promise.resolve();
-  }
-
-  // fetch con reintentos, backoff exponencial con jitter y respeto de Retry-After.
-  function fetchJSON(url, tries){
-    tries = tries==null ? 6 : tries;
-    function attempt(n){
-      return waitGate().then(function(){
-        return fetch(url,{headers:headers()});
-      }).then(function(r){
-        if(r.status===401||r.status===403){ var ae=new Error("auth"); ae.fatal=true; throw ae; }
-        if(r.status===429){
-          // El servidor dice cuánto esperar; si no lo dice, backoff con jitter.
-          var ra = parseFloat(r.headers.get("Retry-After"));
-          var wait = (ra>0 ? ra*1000 : 700*Math.pow(2,n)) + Math.random()*400;
-          gate429.until = Math.max(gate429.until, Date.now()+wait);
-          gate429.conc  = Math.max(1, gate429.conc-1);     // achicar el caudal
-          gate429.ok    = 0;
-          throw new Error("429");
-        }
-        if(!r.ok) throw new Error("http "+r.status);
-        exito();
-        return r.json();
-      }).catch(function(e){
-        if(e.fatal) throw e;
-        if(n>=tries) throw e;
-        var back = String(e.message)==="429" ? 0 : 350*Math.pow(2,n)+Math.random()*250;
-        return sleep(back).then(function(){ return attempt(n+1); });
-      });
-    }
-    return attempt(0);
-  }
-
-  /* El listado es paginado de a 10 y encadenado (cada página necesita el id de
-     la anterior), así que no se puede paralelizar: 365 registros = 37 vueltas.
-     Por eso avisa por dónde va — antes se quedaba mudo en "Cargando visitas…"
-     y parecía colgado. */
-  function listAllBinIds(col, onPage){
-    var ids=[];
-    function page(after){
-      var url=LIST+encodeURIComponent(col)+"/bins"+(after?("/"+after):"");
-      return fetchJSON(url).then(function(arr){
-        if(!Array.isArray(arr)||arr.length===0) return ids;
-        arr.forEach(function(b){ ids.push(b.record); });
-        if(onPage) onPage(ids.length);
-        if(arr.length<10) return ids;            // última página
-        return page(arr[arr.length-1].record);   // siguiente página
-      });
-    }
-    return page(null);
-  }
-
-  /* Lee los ids indicados. Devuelve {records, missing} — los que quedaron sin
-     leer vuelven como lista, no como un número: así se puede reintentar solo
-     esos en vez de barrer la colección entera de nuevo. */
-  function fetchRecords(ids, onProgress){
-    var out={}, i=0, failed=[], done=0, total=ids.length;
-    function one(){
-      if(i>=ids.length) return Promise.resolve();
-      var id=ids[i++];
-      return fetchJSON(BIN+id+"/latest").then(function(j){
-        if(j&&j.record) out[id]=j.record; else failed.push(id);
-      }).catch(function(e){
-        if(e.fatal) throw e;
-        failed.push(id);
-      }).then(function(){
-        done++; if(onProgress) onProgress(done,total);
-        return one();
-      });
-    }
-    var ws=[]; for(var w=0;w<gate429.conc;w++) ws.push(one());
-    return Promise.all(ws).then(function(){ return {records:out, missing:failed}; });
-  }
-
-  /* Reintenta en tandas lo que no entró, con el caudal ya reducido por el 429.
-     Antes esto se lo pedíamos al usuario ("Pulsa ↻ Actualizar"): trabajo del
-     panel, no suyo. Para cuando una pasada no rescata nada nuevo. */
-  function fetchWithRetries(ids, onProgress){
-    var acc={}, ronda=0;
-    function pass(pend){
-      return fetchRecords(pend, onProgress).then(function(res){
-        var got=Object.keys(res.records).length;
-        Object.keys(res.records).forEach(function(k){ acc[k]=res.records[k]; });
-        ronda++;
-        if(!res.missing.length || got===0 || ronda>=4) return {records:acc, missing:res.missing};
-        return sleep(1200+ronda*800).then(function(){ return pass(res.missing); });
-      });
-    }
-    return pass(ids);
+  function enviar(cuerpo){
+    var u=endpoint(); if(!u) return Promise.reject(new Error("sin configurar"));
+    return fetch(u,{
+      method:"POST",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},   // evita el preflight
+      body:JSON.stringify(Object.assign({token:token()},cuerpo)),
+      redirect:"follow"
+    }).then(function(r){
+      if(!r.ok) throw new Error("http "+r.status);
+      return r.json();
+    }).then(function(j){
+      if(!j||!j.ok) throw new Error((j&&j.error)||"respuesta inesperada");
+      return j;
+    });
   }
 
   function load(silencioso){
-    var col=localStorage.getItem(LS_COL), key=localStorage.getItem(LS_KEY);
-    if(!col||!key){ return gate(); }
+    if(!endpoint()||!token()){ return gate(); }
     state.ultima=Date.now();
-    var cacheKey="__sigma_cache_"+col, cache={};
-    try{ cache=JSON.parse(localStorage.getItem(cacheKey)||"{}"); }catch(e){ cache={}; }
-    gate429.conc=CONC_MAX; gate429.ok=0; gate429.until=0;   // cada carga arranca a caudal pleno
-    var cacheados=Object.keys(cache).length;
-    // En vivo no se pisa la pantalla: la vuelta es silenciosa y sólo refresca al final.
-    if(!silencioso){
-      app.innerHTML='<div class="center">Cargando…<br><span id="lprog" class="muted"></span></div>';
+    if(!silencioso && !state.rows.length){
+      app.innerHTML='<div class="center">Cargando…</div>';
     }
-    // Sin mencionar el caché: leerlo como "hay 396 guardados" confundía. Lo que
-    // importa es cuánto falta, y eso sólo se sabe cuando termina de listar.
-    listAllBinIds(col,function(n){
-        if(silencioso) return;
-        var l=document.getElementById("lprog");
-        if(l) l.textContent=n+" registros";
-      })
-      .then(function(ids){
-        if(ids.length===0){ state.ids=[]; state.rows=[]; state._fails=0; state._loading=0; return render(); }
-        // Solo leemos los registros que no estén ya en caché (carga incremental).
-        var missing=ids.filter(function(id){ return !cache[id]; });
-        // 1) Mostrar al INSTANTE lo ya cacheado (cargas siguientes = inmediatas)
-        state.ids=ids;
-        state.rows=ids.map(function(id){ return cache[id]; }).filter(Boolean);
-        state._fails=0; state._loading=missing.length;
-        if(state.rows.length) render();
-        if(missing.length===0){
-          try{ localStorage.setItem(cacheKey, JSON.stringify(cache)); }catch(e){}
-          state._loading=0; return render();
-        }
-        // 2) Traer en segundo plano solo lo que falta
-        if(!state.rows.length){
-          app.innerHTML='<div class="center">Leyendo '+missing.length+' registro(s)…'+
-            '<br><span id="prog" class="muted"></span></div>';
-        }
-        return fetchWithRetries(missing,function(d,t){ var p=document.getElementById("prog"); if(p) p.textContent=d+" / "+t; })
-          .then(function(res){
-            Object.keys(res.records).forEach(function(id){ cache[id]=res.records[id]; });
-            podar(cache, ids);
-            try{ localStorage.setItem(cacheKey, JSON.stringify(cache)); }catch(e){}
-            state.ids=ids;
-            state.rows=ids.map(function(id){ return cache[id]; }).filter(Boolean);
-            state._fails=(res.missing||[]).length; state._loading=0;
-            render();
-          });
-      })
-      .catch(function(e){
-        if(e.fatal||String(e.message)==="auth"){ return gate("Credenciales inválidas. Revisa Collection ID y Master Key."); }
-        app.innerHTML='<div class="center">Error al cargar: '+esc(e.message)+
-          ' &nbsp; <button onclick="location.reload()">Reintentar</button></div>';
-      });
+    state._loading=1;
+    if(state.rows.length) render();      // el chip "actualizando" sin pisar la tabla
+
+    return pedir({}).then(function(j){
+      state.rows=j.registros||[];
+      state._fails=j.ilegibles||0;       // filas cuyo JSON quedó corrupto
+      state._loading=0;
+      render();
+    }).catch(function(e){
+      state._loading=0;
+      if(e.fatal){ return gate("Token de lectura rechazado. Revisá la URL y el token."); }
+      if(silencioso) return;             // en vivo: se reintenta en la próxima vuelta
+      app.innerHTML='<div class="center">Error al cargar: '+esc(e.message)+
+        ' &nbsp; <button onclick="location.reload()">Reintentar</button></div>';
+    });
   }
 
-  /* ── Respaldar y vaciar ──────────────────────────────────────────
-     Corre acá, en el navegador de Jorge, con SU Master Key: la clave nunca sale
-     de este equipo ni la ve nadie más. El orden importa y no es negociable:
-     primero baja el respaldo, después verifica que esté completo, y sólo
-     entonces borra. Borrar es irreversible: JSONBin no tiene papelera. */
+  /* ── Respaldo local ──────────────────────────────────────────────
+     Los registros crudos, sin recortar a las columnas del CSV: el CSV pierde
+     cualquier campo que el tracker sume después. */
   function bajarArchivo(){
     var hoy=new Date().toISOString();
     var dump={
       exportado_en: hoy,
-      coleccion: localStorage.getItem(LS_COL)||"",
+      origen: endpoint(),
       total_registros: state.rows.length,
-      sin_leer: state._fails||0,
-      nota: state._fails ? "INCOMPLETO: "+state._fails+" registro(s) no se pudieron leer."
+      ilegibles: state._fails||0,
+      nota: state._fails ? "OJO: "+state._fails+" fila(s) con JSON ilegible, no incluidas."
                          : "Lectura completa.",
       registros: state.rows
     };
@@ -333,58 +239,34 @@
     return dump.total_registros;
   }
 
-  function borrarBin(id){
-    return waitGate().then(function(){
-      return fetch(BIN+id, {method:"DELETE", headers:headers()});
-    }).then(function(r){
-      if(r.status===429){
-        gate429.until=Date.now()+1500+Math.random()*500;
-        gate429.conc=Math.max(1,gate429.conc-1);
-        return sleep(600).then(function(){ return borrarBin(id); });   // reintenta
-      }
-      return r.ok || r.status===404;    // 404 = ya no estaba, cuenta como borrado
-    }).catch(function(){ return false; });
-  }
-
+  /* ── Respaldar y vaciar ──────────────────────────────────────────
+     Ahora el vaciado es una sola llamada, y el backend copia la hoja a
+     "respaldo-<fecha>" dentro de la misma planilla ANTES de borrar, y verifica
+     que la copia cuadre. Igual bajamos el JSON local primero: dos respaldos en
+     dos lugares distintos cuestan un click y evitan una tarde muy mala. */
   function respaldarYVaciar(){
-    var ids=(state.ids||[]).slice();
-    if(!ids.length){ alert("No hay registros para vaciar."); return; }
     if(state._loading){ alert("Esperá a que termine de cargar."); return; }
-    if(state._fails){
-      alert("No se puede vaciar: quedan "+state._fails+" registro(s) sin leer.\n\n"+
-            "El respaldo saldría incompleto y esos datos no vuelven. "+
-            "Actualizá hasta que el aviso rojo desaparezca.");
-      return;
-    }
+    if(!state.rows.length){ alert("No hay registros para vaciar."); return; }
 
-    var n=bajarArchivo();   // el respaldo SIEMPRE primero
+    var n=bajarArchivo();
     var ok=prompt(
       "Se descargó el respaldo con "+n+" registro(s).\n\n"+
       "Guardalo en ~/PKM/MarketingOps/data/visitas/ ANTES de seguir.\n\n"+
-      "Esto va a BORRAR "+ids.length+" registro(s) de JSONBin. Es irreversible.\n\n"+
+      "Esto vacía la hoja «visitas». El backend deja una copia como "+
+      "«respaldo-<fecha>» en la misma planilla y la verifica antes de borrar.\n\n"+
       "Escribí VACIAR para confirmar:");
     if(String(ok||"").trim().toUpperCase()!=="VACIAR"){ return; }
 
-    var hechos=0, fallos=0, i=0;
-    app.innerHTML='<div class="center">Vaciando…<br><span id="dprog" class="muted">0 / '+ids.length+'</span></div>';
-    function paso(){
-      if(i>=ids.length) return Promise.resolve();
-      var id=ids[i++];
-      return borrarBin(id).then(function(bien){
-        bien?hechos++:fallos++;
-        var d=document.getElementById("dprog");
-        if(d) d.textContent=(hechos+fallos)+" / "+ids.length+(fallos?" · "+fallos+" con error":"");
-        return paso();
-      });
-    }
-    var ws=[]; for(var w=0;w<3;w++) ws.push(paso());
-    Promise.all(ws).then(function(){
-      try{
-        localStorage.removeItem("__sigma_cache_"+localStorage.getItem(LS_COL));
-        localStorage.removeItem(LS_CUT);        // ya no hace falta ocultar nada
-      }catch(e){}
-      state.rows=[]; state.ids=[];
-      alert("Listo: "+hechos+" borrado(s)"+(fallos?", "+fallos+" con error (volvé a intentar)":"")+".\n\nEl panel arranca de cero.");
+    app.innerHTML='<div class="center">Vaciando…</div>';
+    enviar({fn:"vaciar"}).then(function(j){
+      try{ localStorage.removeItem(LS_CUT); }catch(e){}   // ya no hace falta ocultar nada
+      state.rows=[];
+      alert("Listo: "+j.borrados+" registro(s) borrados.\n"+
+            (j.respaldo?"Copia en la hoja «"+j.respaldo+"».\n":"")+
+            "\nEl panel arranca de cero.");
+      load();
+    }).catch(function(e){
+      alert("No se vació: "+e.message+"\n\nNo se borró nada.");
       load();
     });
   }
@@ -607,7 +489,7 @@
     var head=
       '<header>'+
         '<h1>📊 Panel de Visitas</h1>'+
-        '<span class="muted">'+total+' registros'+(state._loading?' · actualizando '+state._loading+'…':'')+
+        '<span class="muted">'+total+' registros'+(state._loading?' · actualizando…':'')+
           (ocultas?' <span style="color:#fbbf24">· '+ocultas+' antes del corte, ocultos</span>':'')+
           '<span id="vivochip" style="margin-left:.6rem"></span></span>'+
         '<span class="sp"></span>'+
@@ -619,7 +501,7 @@
         '<button id="b_csv">⤓ CSV</button>'+
         '<button id="b_archivo" title="Respaldo íntegro en JSON, para archivar antes de vaciar">⤓ Archivo JSON</button>'+
         '<button id="b_vaciar" style="border-color:#f87171;color:#fca5a5" '+
-          'title="Baja el respaldo y después borra todos los registros de JSONBin. Irreversible.">'+
+          'title="Baja el respaldo y después vacía la hoja de visitas. El backend deja una copia y la verifica antes de borrar.">'+
           '🗑 Respaldar y vaciar</button>'+
         '<button id="b_logout">Salir</button>'+
       '</header>';
@@ -716,10 +598,12 @@
       '</tr>';
     }).join("");
 
+    /* Ya no existen las lecturas a medias: una carga trae todo o falla entera.
+       Lo único que puede quedar afuera es una fila cuyo _json se haya corrompido. */
     var warn = state._fails ? '<div style="background:#3a1d1d;border:1px solid #f87171;color:#fca5a5;'+
       'border-radius:8px;padding:.6rem .9rem;margin-bottom:1rem;font-size:.85rem">⚠ '+state._fails+
-      ' registro(s) siguen sin leerse tras varios reintentos (límite de JSONBin). '+
-      'Volvé a Actualizar en un rato: <b>no archives ni vacíes la colección hasta que esto llegue a cero</b>.</div>' : '';
+      ' fila(s) de la planilla tienen el JSON ilegible y quedaron fuera del reporte. '+
+      'Revisá la columna <b>_json</b> en la hoja «visitas».</div>' : '';
     app.innerHTML=head+'<main>'+warn+cabeceraSemana(rows)+cards+campHTML+
       tablaSemanaPost(camp)+builderHTML()+bds+
       '<div class="toolbar">'+
@@ -752,10 +636,9 @@
   }
 
   /* ── Modo en vivo ────────────────────────────────────────────────
-     Relee la colección cada POLL_MS. Lo caro es listar (paginado de a 10 y
-     encadenado); las lecturas de registro ya vistos salen del caché, así que
-     una vuelta en vivo sólo paga los registros nuevos. Por eso el intervalo no
-     baja de 30 s: el límite de JSONBin es el techo real, no la voluntad. */
+     Relee la planilla cada POLL_MS. Ahora una vuelta en vivo es UN request que
+     trae todo, así que el intervalo lo fija el sentido común y no un rate limit:
+     30 s alcanza de sobra para mirar entrar una campaña. */
   var POLL_MS=30000, pollTimer=null;
 
   function tictac(){
@@ -793,24 +676,9 @@
       a.download="visitas_"+new Date().toISOString().slice(0,10)+".csv";
       a.click();
     };
-    /* Respaldo íntegro: los registros crudos, sin recortar a las columnas del
-       CSV. Es lo que hay que guardar ANTES de vaciar la colección — el CSV
-       pierde cualquier campo que el tracker sume después. */
-    var ar=document.getElementById("b_archivo"); if(ar) ar.onclick=function(){
-      var hoy=new Date().toISOString();
-      var dump={
-        exportado_en: hoy,
-        coleccion: localStorage.getItem(LS_COL)||"",
-        total_registros: state.rows.length,
-        sin_leer: state._fails||0,
-        nota: state._fails ? "OJO: "+state._fails+" registro(s) no se pudieron leer. No vacíes la colección con este archivo incompleto." : "Lectura completa.",
-        registros: state.rows
-      };
-      var blob=new Blob([JSON.stringify(dump,null,2)],{type:"application/json;charset=utf-8"});
-      var a=document.createElement("a");
-      a.href=URL.createObjectURL(blob);
-      a.download="archivo_visitas_"+hoy.slice(0,10)+".json";
-      a.click();
+    /* Una sola implementación del respaldo: antes esto repetía bajarArchivo()
+       con su propia copia de la lógica, y las dos ya se habían desincronizado. */
+    var ar=document.getElementById("b_archivo"); if(ar) ar.onclick=function(){ bajarArchivo();
     };
 
     /* Generador de links de campaña */
@@ -841,7 +709,7 @@
 
   /* ───────────── arranque ───────────── */
   setInterval(tictac,1000);                       // el "hace N s" corre solo
-  if(localStorage.getItem(LS_KEY)&&localStorage.getItem(LS_COL)){
+  if(localStorage.getItem(LS_TOK)&&localStorage.getItem(LS_URL)){
     load();
     if(state.vivo) vivoOn(true);                  // el modo en vivo sobrevive a la recarga
   } else gate();
