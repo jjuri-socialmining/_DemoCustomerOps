@@ -175,14 +175,29 @@
          dashboards no se verían entre sí. El dedupe por id absorbe el eco
          propio y el que devuelva el relay. */
       client.on('connect', function () {
-        client.subscribe([opts.topicIn, opts.topicOut]);
+        /* topicHist trae el backlog del grupo en UN mensaje retenido: el broker se
+           lo entrega a cada panel apenas se suscribe. Sin esto el chat arranca en
+           blanco aunque el grupo tenga conversación, porque qos 0 no guarda nada. */
+        var subs = [opts.topicIn, opts.topicOut];
+        if (opts.topicHist) subs.push(opts.topicHist);
+        client.subscribe(subs);
         connected = true; setChip('💬 grupo ON', '#37D27D'); render();
       });
       client.on('reconnect', function () { setChip('grupo…', '#FFB02E'); });
       client.on('offline', function () { connected = false; setChip('grupo OFF', '#FF5A6A'); render(); });
       client.on('error', function () { connected = false; setChip('grupo OFF', '#FF5A6A'); render(); });
       client.on('message', function (t, p) {
-        try { push(JSON.parse(p.toString())); } catch (e) { /* payload roto: se ignora */ }
+        try {
+          var d = JSON.parse(p.toString());
+          /* El backlog viene como {messages:[…]}, no como un mensaje suelto. Cada
+             uno pasa por el mismo push() — valida igual y el dedupe por id evita
+             que se repita lo que ya estaba en pantalla. */
+          if (opts.topicHist && t === opts.topicHist && d && d.messages) {
+            for (var i = 0; i < d.messages.length; i++) push(d.messages[i]);
+            return;
+          }
+          push(d);
+        } catch (e) { /* payload roto: se ignora */ }
       });
     } catch (e) {
       connected = false; setChip('grupo OFF', '#FF5A6A'); render();

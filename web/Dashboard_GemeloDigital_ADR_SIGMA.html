@@ -715,7 +715,7 @@
 
 
 <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-<script src="assets/chat-grupo.js?v=7"></script>
+<script src="assets/chat-grupo.js?v=8"></script>
 <script>
 (function(){
   "use strict";
@@ -882,6 +882,7 @@
       broker:   'wss://broker.emqx.io:8084/mqtt',
       topicIn:  'sigma/democustomerops/chat/escondida-adr/v1',
       topicOut: 'sigma/democustomerops/chat/escondida-adr/out/v1',
+      topicHist:'sigma/democustomerops/chat/escondida-adr/hist/v1',
       group:    '120363427356778149@g.us',
       setChip:  function(txt,col){ if(chip){ chip.textContent=txt; chip.style.color=col||''; chip.style.borderColor=col||''; } }
     });
