@@ -272,6 +272,15 @@
   }
 
   /* ───────────── Helpers de render ───────────── */
+
+  /* Una VISITA es un pageview y nada más. Antes esto era «todo lo que no sea
+     click», y alcanzaba mientras existieran sólo dos tipos de evento. Con las
+     señales del chat (chat_foco, chat_tipeo, chat_envio, chat_abandono) esa
+     definición pasaba a contar cada señal como una visita más e inflaba el
+     número principal del panel sin que se notara. */
+  function esVista(r){ var t=r.event_type||"pageview"; return t==="pageview"; }
+  function esChat(r){ return String(r.event_type||"").indexOf("chat_")===0; }
+
   function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){
     return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
 
@@ -318,7 +327,7 @@
   }
 
   function cabeceraSemana(rows){
-    var vistas=rows.filter(function(r){return (r.event_type||"pageview")!=="click";});
+    var vistas=rows.filter(esVista);
     var porSem={};
     vistas.forEach(function(r){ var w=semanaReal(r); porSem[w]=(porSem[w]||0)+1; });
 
@@ -348,12 +357,114 @@
     '</div>';
   }
 
+  /* ───────────── Chat: quién pinchó y no habló ─────────────
+     El embudo del chat tiene tres escalones y el interesante es el del medio:
+       abrió (chat_foco) → escribió (chat_tipeo) → habló (chat_envio)
+     Quien llegó al segundo y no al tercero mostró intención y se arrepintió.
+     Ese es el lead caliente, y hasta ahora era invisible: el panel sólo veía a
+     los que hablaban, que son justamente los que no hace falta detectar.
+
+     Se agrupa por visitor_id (el id persistente que el tracker guarda en el
+     localStorage del visitante), no por IP: la IP cambia de red en red y junta
+     a gente distinta detrás del mismo NAT corporativo. */
+  function embudoChat(rows){
+    var porVisitante={};
+    rows.filter(esChat).forEach(function(r){
+      var v=r.visitor_id||"(sin id)";
+      var e=porVisitante[v]||(porVisitante[v]={
+        visitor_id:v, foco:0, tipeo:0, envio:0, abandono:0,
+        borrador:0, ultima:"", pais:"", ciudad:"", campania:"", pagina:""
+      });
+      var t=r.event_type;
+      if(t==="chat_foco") e.foco++;
+      else if(t==="chat_tipeo") e.tipeo++;
+      else if(t==="chat_envio") e.envio++;
+      else if(t==="chat_abandono"){ e.abandono++; e.borrador=Math.max(e.borrador, r.chat_borrador_chars||0); }
+      if((r.ts_iso||"")>e.ultima){
+        e.ultima=r.ts_iso||"";
+        e.pais=r.country||e.pais; e.ciudad=r.city||e.ciudad;
+        e.pagina=r.page_title||r.page||e.pagina;
+      }
+      // La campaña la trae el pageview, no la señal de chat; se completa después.
+      if(utm(r,"utm_content")) e.campania=utm(r,"utm_content");
+    });
+
+    // Atribución: pegarle a cada visitante la campaña con la que entró.
+    var campPorVisitante={};
+    rows.filter(esVista).forEach(function(r){
+      var c=utm(r,"utm_content")||utm(r,"utm_campaign")||utm(r,"utm_source");
+      if(c && r.visitor_id) campPorVisitante[r.visitor_id]=c;
+    });
+    Object.keys(porVisitante).forEach(function(v){
+      if(!porVisitante[v].campania && campPorVisitante[v]) porVisitante[v].campania=campPorVisitante[v];
+    });
+
+    var todos=Object.keys(porVisitante).map(function(v){ return porVisitante[v]; });
+    return {
+      // Escribió y no mandó: el más caliente de los tres.
+      arrepentidos: todos.filter(function(e){ return e.tipeo && !e.envio; })
+                         .sort(function(a,b){ return (b.ultima>a.ultima)?1:-1; }),
+      // Abrió el campo y ni escribió.
+      curiosos:     todos.filter(function(e){ return e.foco && !e.tipeo && !e.envio; })
+                         .sort(function(a,b){ return (b.ultima>a.ultima)?1:-1; }),
+      hablaron:     todos.filter(function(e){ return e.envio; })
+    };
+  }
+
+  function tablaChat(rows){
+    var f=embudoChat(rows);
+    var abrieron=f.arrepentidos.length+f.curiosos.length+f.hablaron.length;
+    if(!abrieron) return "";
+
+    function fila(e, calor){
+      var cuando=e.ultima?e.ultima.slice(0,16).replace("T"," "):"—";
+      var lugar=[e.ciudad,e.pais].filter(Boolean).join(", ")||"—";
+      return '<tr>'+
+        '<td>'+calor+'</td>'+
+        '<td><code style="font-size:.78rem">'+esc(e.visitor_id)+'</code></td>'+
+        '<td>'+esc(e.campania||"(sin campaña)")+'</td>'+
+        '<td>'+esc(lugar)+'</td>'+
+        '<td>'+esc(cuando)+'</td>'+
+        '<td>'+(e.borrador?e.borrador+' car.':'—')+'</td>'+
+      '</tr>';
+    }
+
+    var filas=f.arrepentidos.map(function(e){ return fila(e,'🔥 escribió y no mandó'); })
+      .concat(f.curiosos.map(function(e){ return fila(e,'👀 sólo abrió'); })).join("");
+
+    var silenciosos=f.arrepentidos.length+f.curiosos.length;
+    var tasa=abrieron?Math.round(f.hablaron.length*100/abrieron):0;
+
+    return '<div class="bd" style="margin-bottom:1.5rem">'+
+      '<h3>💬 Chat — quién pinchó y no habló</h3>'+
+      '<div class="cards" style="margin-bottom:1rem">'+
+        '<div class="card"><div class="n" style="color:#f87171">'+f.arrepentidos.length+'</div>'+
+          '<div class="l">Escribieron y no mandaron</div></div>'+
+        '<div class="card"><div class="n" style="color:#fbbf24">'+f.curiosos.length+'</div>'+
+          '<div class="l">Abrieron y ni escribieron</div></div>'+
+        '<div class="card"><div class="n" style="color:#4ade80">'+f.hablaron.length+'</div>'+
+          '<div class="l">Hablaron</div></div>'+
+        '<div class="card"><div class="n">'+tasa+'%</div>'+
+          '<div class="l">Convierten a mensaje</div></div>'+
+      '</div>'+
+      (silenciosos
+        ? '<div class="tablewrap" style="max-height:32vh"><table><thead><tr>'+
+            '<th>Señal</th><th>Visitante</th><th>Campaña</th><th>Dónde</th>'+
+            '<th>Cuándo</th><th>Borrador</th></tr></thead>'+
+          '<tbody>'+filas+'</tbody></table></div>'+
+          '<div class="muted" style="font-size:.78rem;margin-top:.6rem">'+
+            'Del borrador se guarda sólo el largo, nunca el texto. '+
+            'El visitante es un id anónimo del navegador; cruzalo con la campaña para saber a quién escribirle.</div>'
+        : '<div class="row"><span>Todos los que abrieron el chat terminaron hablando.</span></div>')+
+    '</div>';
+  }
+
   /* Cruce semana × post: la campaña se mide por semana Y por aviso. */
   function tablaSemanaPost(camp){
     if(!camp.length) return '';
     var celdas={}, semanas={}, posts={};
     camp.forEach(function(r){
-      if((r.event_type||"pageview")==="click") return;      // visitas, no clicks
+      if(!esVista(r)) return;                               // visitas, no clicks ni señales de chat
       // Semana por fecha REAL, igual que la cabecera: si se usara la etiqueta,
       // los dos números no coincidirían y uno de los dos estaría mintiendo.
       var w=semanaReal(r), p=utm(r,"utm_content")||"(sin aviso)";
@@ -475,7 +586,7 @@
     var rows=todas.filter(trasElCorte);         // lo que se muestra, tras el corte
     var ocultas=todas.length-rows.length;
     var total=rows.length;
-    var pageviews=rows.filter(function(r){return (r.event_type||"pageview")!=="click";});
+    var pageviews=rows.filter(esVista);
     var clicks=rows.filter(function(r){return r.event_type==="click";});
     var uniq=Object.keys(rows.reduce(function(a,r){a[r.visitor_id||r.ip||Math.random()]=1;return a;},{})).length;
     var ret=rows.filter(function(r){return r.returning;}).length;
@@ -605,7 +716,7 @@
       ' fila(s) de la planilla tienen el JSON ilegible y quedaron fuera del reporte. '+
       'Revisá la columna <b>_json</b> en la hoja «visitas».</div>' : '';
     app.innerHTML=head+'<main>'+warn+cabeceraSemana(rows)+cards+campHTML+
-      tablaSemanaPost(camp)+builderHTML()+bds+
+      tablaSemanaPost(camp)+tablaChat(rows)+builderHTML()+bds+
       '<div class="toolbar">'+
         '<input id="f" type="text" placeholder="Filtrar (país, IP, ciudad, campaña…)" value="'+esc(state.filter)+'">'+
         '<span class="muted">'+view.length+' de '+total+'</span>'+

@@ -147,6 +147,8 @@
       try {
         client.publish(opts.topicOut, JSON.stringify(m));
         push(m);                                 // eco local inmediato; el relay puede devolverlo con el mismo id
+        hablo = true;                            // deja de contar como "pinchó y no habló"
+        señal('chat_envio', { chat_chars: q.length });
       } catch (e) {
         note('⚠️ <b>No se pudo enviar.</b> El mensaje no salió del navegador.');
       }
@@ -158,6 +160,54 @@
     sendBtn.addEventListener('click', send);
     input.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') { e.preventDefault(); send(); }
+    });
+
+    /* ── Señales de interés en el chat ───────────────────────────────────
+       El que abre el chat y se arrepiente es la señal comercial más valiosa de
+       todo el panel: mostró intención y no la completó. Sin esto sólo veíamos a
+       los que hablaron — justamente los que no hace falta detectar, porque ya
+       están hablando.
+
+       Cada señal es una fila más en la planilla; se cruzan después por
+       visitor_id, que el tracker ya pone en cada evento:
+         chat_foco     → hizo click en el campo
+         chat_tipeo    → llegó a escribir algo
+         chat_envio    → habló
+         chat_abandono → escribió y se fue sin mandar
+
+       Del borrador abandonado viaja SÓLO EL LARGO, nunca el texto. Guardar lo
+       que alguien escribió y decidió no decir es otra cosa, y no es esta.
+
+       Cada señal sale una sola vez por carga de página: si no, un visitante que
+       hace foco cinco veces parecería cinco interesados. */
+    function señal(tipo, extra) {
+      var T = global.SigmaTrack;
+      if (!T || typeof T.log !== 'function') return;   // chat sin tracker: no pasa nada
+      var base = { chat_group: group, chat_from: myName };
+      if (extra) Object.keys(extra).forEach(function (k) { base[k] = extra[k]; });
+      try { T.log(tipo, base); } catch (e) {}
+    }
+
+    var vioFoco = false, tipeo = false, hablo = false;
+
+    input.addEventListener('focus', function () {
+      if (vioFoco) return;
+      vioFoco = true;
+      señal('chat_foco');
+    });
+
+    input.addEventListener('input', function () {
+      if (tipeo || !(input.value || '').trim()) return;
+      tipeo = true;
+      señal('chat_tipeo');
+    });
+
+    /* pagehide y no beforeunload: en Safari/iOS beforeunload no dispara y se
+       perdía justo el caso móvil. El envío del tracker usa keepalive, así que
+       la señal sale aunque la pestaña se esté cerrando. */
+    global.addEventListener('pagehide', function () {
+      if (hablo || !tipeo) return;
+      señal('chat_abandono', { chat_borrador_chars: (input.value || '').trim().length });
     });
 
     /* ---- transporte ---- */
