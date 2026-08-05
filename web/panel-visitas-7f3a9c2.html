@@ -264,13 +264,14 @@
     var cacheados=Object.keys(cache).length;
     // En vivo no se pisa la pantalla: la vuelta es silenciosa y sólo refresca al final.
     if(!silencioso){
-      app.innerHTML='<div class="center">Listando registros…<br><span id="lprog" class="muted">'+
-        (cacheados?cacheados+' ya en caché':'')+'</span></div>';
+      app.innerHTML='<div class="center">Cargando…<br><span id="lprog" class="muted"></span></div>';
     }
+    // Sin mencionar el caché: leerlo como "hay 396 guardados" confundía. Lo que
+    // importa es cuánto falta, y eso sólo se sabe cuando termina de listar.
     listAllBinIds(col,function(n){
         if(silencioso) return;
         var l=document.getElementById("lprog");
-        if(l) l.textContent=n+" encontrados"+(cacheados?" · "+cacheados+" ya en caché":"");
+        if(l) l.textContent=n+" registros";
       })
       .then(function(ids){
         if(ids.length===0){ state.ids=[]; state.rows=[]; state._fails=0; state._loading=0; return render(); }
