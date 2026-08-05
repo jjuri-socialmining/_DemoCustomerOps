@@ -31,6 +31,26 @@
   };
   /* ═══════════════════════════════════════════════════════════════════════════ */
 
+  /* ---------- adentro de un iframe no se mide ----------
+     El Dashboard se embebe A SÍ MISMO para la vista móvil
+     (Dashboard_GemeloDigital_SIGMA.html?embed=mobile), así que este archivo
+     corría DOS VECES por visita: una en la página y otra en el iframe. Como es
+     el mismo origen, comparten localStorage — hasta el contador de visitas
+     subía de a dos, y las dos filas quedaban idénticas (misma página, ~80 ms de
+     diferencia), imposibles de distinguir de dos visitas reales.
+
+     Resultado: cada visita valía dos y TODA la medición de campaña estaba
+     inflada al doble. Mide el marco; el iframe no reporta nada.
+
+     Se deja el objeto público como no-op para que quien lo llame desde adentro
+     del iframe (el chat, por ejemplo) no se rompa ni tenga que preguntar. */
+  if (window.top !== window.self) {
+    var noop = function () { return Promise.resolve(false); };
+    window.SigmaTrack = { ready: Promise.resolve(false), log: noop, flush: noop,
+                          config: CONFIG, embebido: true };
+    return;
+  }
+
   /* ---------- visitor id persistente (detecta retornos) ---------- */
   function getVisitor() {
     var k = "__sigma_vid";
