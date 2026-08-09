@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Mapa de incendios — corredor Hope–Manning, agosto 2026</title>
+  <!-- Leaflet servido desde nuestro propio server, NO desde unpkg. Dos motivos:
+       1) el integrity de unpkg venia corrupto (42 chars en vez de 44) y el navegador
+          bloqueaba la hoja: sin ella las teselas quedan position:static y el mapa se
+          desparrama — que es exactamente el bug que se veia;
+       2) esto se usa en ruta con señal mala: una dependencia menos que resolver. -->
+  <link rel="stylesheet" href="leaflet/leaflet.css" />
+  <style>
+    :root{--bg:#0b1016;--panel:#111923;--panel2:#172231;--ink:#eef5ff;--muted:#9fb0c4;--line:#26364a;--accent:#ffb020;--danger:#ff4d4d;--ok:#30d158;--blue:#5ac8fa;--violet:#bf5af2;--radius:18px}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}html,body{height:100%}.app{display:grid;grid-template-rows:auto 1fr;height:100vh;height:100dvh;overflow:hidden}.top{padding:14px 14px 10px;background:linear-gradient(180deg,#121b27,#0b1016);border-bottom:1px solid var(--line)}.title{display:flex;align-items:center;gap:10px;margin:0 0 8px;font-size:20px;line-height:1.15}.subtitle{margin:0;color:var(--muted);font-size:13px}.statusbar{display:flex;gap:8px;overflow:auto;padding-top:10px}.pill{white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:7px 10px;background:var(--panel);font-size:12px}.pill.danger{border-color:#6b2424;color:#ffd1d1}.pill.ok{border-color:#235b34;color:#cdfbd7}.main{display:grid;grid-template-columns:minmax(0,1fr) 380px;min-height:0;min-width:0;overflow:hidden}.mapwrap{position:relative;min-width:0;min-height:0;height:100%}#map{height:100%;width:100%;background:#111}.panel{background:var(--panel);border-left:1px solid var(--line);overflow:auto;min-width:0;padding:12px}.card{background:var(--panel2);border:1px solid var(--line);border-radius:var(--radius);padding:13px;margin-bottom:12px}.card h2{font-size:16px;margin:0 0 10px}.card h3{font-size:14px;margin:14px 0 8px;color:#d8e9ff}.small{font-size:12px;color:var(--muted);line-height:1.35}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.btn{border:1px solid var(--line);background:#0d1420;color:var(--ink);border-radius:12px;padding:10px;font-size:13px;text-align:left;cursor:pointer}.btn.active{border-color:var(--accent);box-shadow:0 0 0 1px #ffb02055 inset}.checklist{display:grid;gap:7px}.item{display:flex;gap:8px;align-items:flex-start;padding:8px;border:1px solid #26364a;border-radius:12px;background:#0d1420}.item input{margin-top:2px;transform:scale(1.15)}.item label{font-size:14px;line-height:1.25}.risk{display:grid;gap:8px}.riskrow{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:start;padding:9px;border:1px solid var(--line);border-radius:13px;background:#0d1420}.emoji{font-size:22px;text-align:center}.legend{position:absolute;z-index:500;left:10px;bottom:10px;background:#0b1016e8;border:1px solid var(--line);border-radius:14px;padding:10px;font-size:12px;line-height:1.55}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}.red{background:var(--danger)}.orange{background:var(--accent)}.purple{background:var(--violet)}.evacorden{background:#ff2d55}.blue{background:var(--blue)}.green{background:var(--ok)}.controls{position:absolute;z-index:501;right:10px;top:10px;display:flex;flex-direction:column;gap:8px}.controlbtn{border:1px solid var(--line);background:#0b1016e8;color:var(--ink);border-radius:12px;padding:9px 10px;font-weight:700}.leaflet-popup-content{font-size:13px}.warn{color:#ffd1d1}.oktext{color:#cdfbd7}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.routebox{display:grid;gap:8px}.step{padding:9px;border-left:4px solid var(--accent);background:#0d1420;border-radius:10px}.tabs{display:flex;gap:6px;margin-bottom:10px;position:sticky;top:0;background:var(--panel);padding:0 0 8px;z-index:4}.tab{flex:1;text-align:center;border:1px solid var(--line);border-radius:12px;padding:9px 6px;background:#0d1420;color:var(--muted);font-size:12px}.tab.active{color:#fff;border-color:var(--accent)}.hidden{display:none}.source{word-break:break-word;color:#9fd4ff}@media (max-width: 860px){.main{grid-template-columns:minmax(0,1fr);grid-template-rows:52dvh minmax(0,1fr)}.panel{border-left:0;border-top:1px solid var(--line)}.title{font-size:18px}.top{padding-top:max(12px,env(safe-area-inset-top))}.grid{grid-template-columns:1fr}.legend{font-size:11px;max-width:260px}.panel{max-height:none}}
+  </style>
+  <!-- ── Ficha de camping ───────────────────────────────────────────────────
+       Diseño calcado del visor del SEIA: bandera de estado + color de veredicto
+       arriba, y debajo cajas con borde del mismo color, cada una con su rótulo.
+       El color lo inyecta cada ficha por variable (--fc), así el borde, el
+       rótulo y el botón quedan siempre en el color del veredicto sin duplicar
+       reglas. Verde = tomalo, ámbar = sirve con reparos, rojo = no.        -->
+  <style>
+    .leaflet-popup.ficha .leaflet-popup-content-wrapper{background:#0d1622f5;border:1px solid var(--fc);border-radius:12px;box-shadow:0 12px 38px #000b;padding:0;overflow:hidden}
+    .leaflet-popup.ficha .leaflet-popup-content{margin:0;width:296px!important;font-size:12.5px;color:var(--ink);line-height:1.45;overscroll-behavior:contain}
+    .leaflet-popup.ficha .leaflet-popup-content::-webkit-scrollbar{width:7px}
+    .leaflet-popup.ficha .leaflet-popup-content::-webkit-scrollbar-thumb{background:#ffffff33;border-radius:9px}
+    .leaflet-popup.ficha .leaflet-popup-tip{background:#0d1622f5;border:1px solid var(--fc)}
+    .leaflet-popup.ficha a.leaflet-popup-close-button{color:var(--fc);font-size:19px;width:26px;height:26px;padding:5px 0 0}
+    .fh{display:flex;align-items:center;gap:8px;padding:11px 32px 10px 12px;font-weight:800;font-size:13.5px;color:var(--fc);background:linear-gradient(180deg,#ffffff10,transparent);border-bottom:1px solid var(--fc)}
+    .fh .fh-ico{font-size:16px;line-height:1}
+    .fb{padding:11px 12px 12px;display:grid;gap:9px}
+    .fsec{border:1px solid var(--fc);border-radius:9px;background:#ffffff08;padding:9px 10px}
+    .ftit{display:block;color:var(--fc);font-weight:800;font-size:10.5px;letter-spacing:.7px;text-transform:uppercase;margin-bottom:6px}
+    .fk{color:var(--fc);font-weight:700}
+    .fnom{font-size:14px;font-weight:700;margin-bottom:2px}
+    .fli{display:grid;grid-template-columns:14px 1fr;gap:6px;margin:4px 0;align-items:start}
+    .fpro{color:#5be07f;font-weight:800}
+    .fcon{color:#ff7b7b;font-weight:800}
+    .fbtn{display:block;text-align:center;background:var(--fc);color:#08111c;font-weight:800;border-radius:999px;padding:9px 10px;text-decoration:none;font-size:12.5px}
+    .ffoot{font-size:10.5px;color:var(--muted);line-height:1.4}
+    .fviva{font-size:11.5px;padding:7px 9px;border-radius:8px;background:#ff2d5522;border:1px solid #ff2d5566;color:#ffd9d9}
+    .fviva.ok{background:#30d15818;border-color:#30d15855;color:#cdfbd7}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <h1 class="title">🏕️ Corredor Hope → Manning: camping FCFS 10–16 ago</h1>
+    <p class="subtitle">Mapa operativo familiar: incendios, cortes de la Hwy 3, y ficha de pros y contras de cada camping del parque. Tocá cada 🏕️.</p>
+    <div class="statusbar" id="statusbar">
+      <span class="pill">🏠 Salida: New Westminster</span>
+      <span class="pill">🎯 Destino: E.C. Manning Park (Hwy 3)</span>
+      <span class="pill danger">🚫 Prohibición de fogatas desde 16-jul (Coastal Fire Centre)</span>
+      <span class="pill danger">⚠️ Parque parcialmente cerrado por incendio</span>
+      <span class="pill">🔥 BC Wildfire + 🚧 DriveBC: en vivo</span>
+      <span class="pill">📶 Sin señal en gran parte de la Hwy 3</span>
+    </div>
+  </header>
+  <main class="main">
+    <section class="mapwrap">
+      <div id="map"></div>
+      <div class="controls">
+        <button class="controlbtn" onclick="refreshAll()">↻ Actualizar</button>
+        <button class="controlbtn" onclick="map.fitBounds([ORIGEN,MANNING],{padding:[40,40]})">🛣️ Ver ruta completa</button>
+        <button class="controlbtn" onclick="map.setView(MANNING,11)">🏕️ Campings del parque</button>
+      </div>
+      <div class="legend">
+        <div><span class="dot red"></span>Incendio activo / no controlado</div>
+        <div><span class="dot orange"></span>Perímetro / restricción / prohibición</div>
+        <div><span class="dot evacorden"></span><b>ORDEN</b> de evacuación — salí ya</div>
+        <div><span class="dot purple"></span>ALERTA de evacuación — preparate</div>
+        <div><span class="dot evacorden" style="opacity:.65"></span>Estado no reconocido — tratar como ORDEN</div>
+        <div><span class="dot blue"></span>DriveBC corte/incidente</div>
+        <div><span class="dot green"></span>Parada segura / agua / bencina / compra</div>
+        <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--line)">
+          <div><b style="color:var(--ink)">🏕️ Campings — ficha con pros y contras</b></div>
+          <div><span class="dot green"></span>Sirve: tomalo si hay lugar</div>
+          <div><span class="dot orange"></span>Sirve con reparos: leé los contras</div>
+          <div><span class="dot red"></span>No lo usaría en estas condiciones</div>
+        </div>
+        <div style="margin-top:8px;padding-top:7px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;line-height:1.45">
+          <div><b style="color:var(--ink)">Fuente de los datos</b></div>
+          <div>🔥 Incendios, perímetros, evacuaciones y restricciones:<br>
+            <a class="source" href="https://wildfiresituation.nrs.gov.bc.ca/map" target="_blank" rel="noopener">BC Wildfire Service</a>
+            <span class="mono">(wfnews-prd · ArcGIS FeatureServer)</span></div>
+          <div style="margin-top:3px">🚧 Cortes de ruta:
+            <a class="source" href="https://www.drivebc.ca" target="_blank" rel="noopener">DriveBC</a> <span class="mono">(/api/events)</span></div>
+          <div style="margin-top:3px">🗺️ Mapa base: OpenStreetMap</div>
+          <div style="margin-top:6px">Descargado: <span id="legendUpdated" class="mono">pendiente</span></div>
+          <div style="margin-top:6px;color:#ffd1d1">Si una autoridad, RCMP o DriveBC dice otra cosa, esa instrucción manda sobre este mapa.<br>
+            Verificá antes de salir: <a class="source" href="https://emergency.rdos.bc.ca" target="_blank" rel="noopener">emergency.rdos.bc.ca</a> ·
+            <a class="source" href="https://www.emergencyinfobc.gov.bc.ca" target="_blank" rel="noopener">EmergencyInfoBC</a></div>
+        </div>
+      </div>
+    </section>
+    <aside class="panel">
+      <div class="tabs">
+        <button class="tab active" data-tab="plan" onclick="showTab('plan')">Plan</button>
+        <button class="tab" data-tab="lista" onclick="showTab('lista')">Lista</button>
+        <button class="tab" data-tab="dany" onclick="showTab('dany')">Offline</button>
+        <button class="tab" data-tab="apis" onclick="showTab('apis')">APIs</button>
+      </div>
+
+      <section id="tab-plan">
+        <div class="card">
+          <h2>🚦 Regla de decisión</h2>
+          <div class="risk">
+            <div class="riskrow"><div class="emoji">🟢</div><div><b>Seguimos</b><br><span class="small">Ruta abierta, visibilidad buena, sin evacuación cercana, combustible sobre 1/2.</span></div></div>
+            <div class="riskrow"><div class="emoji">🟡</div><div><b>Esperamos</b><br><span class="small">Corte temporal, humo moderado o autoridad indica espera. Parar en pueblo con servicios.</span></div></div>
+            <div class="riskrow"><div class="emoji">🔴</div><div><b>No pasamos</b><br><span class="small">Evacuación, fuego cerca, humo severo, corte indefinido, carretera secundaria no confirmada.</span></div></div>
+            <div class="riskrow"><div class="emoji">🏨</div><div><b>Alojamos temprano</b><br><span class="small">Si se hace tarde, niños cansados, humo, corte sin ETA o riesgo de quedar sin combustible.</span></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>🛣️ Ruta y desvíos</h2>
+          <div class="routebox">
+            <div class="step"><b>Ruta principal · ~220 km · ~2 h 45 sin cortes</b><br><span class="small">New Westminster → Hwy 1 este hasta <b>Hope</b> → <b>Hwy 3 Crowsnest</b> (Hope–Princeton) → E.C. Manning Park. Los cuatro campings drive-in están sobre la Hwy 3, entre el km 45 y el km 70 después de Hope.</span></div>
+            <div class="step" style="border-left-color:#ff2d55"><b>El problema de fondo: una sola ruta</b><br><span class="small">A Manning se entra y se sale por la Hwy 3, nada más. Si se corta al oeste quedan encerrados hacia Princeton; si se corta al este, hacia Hope. Con seis incendios fuera de control alrededor del parque, esa es la decisión que hay que pensar antes de salir, no en el camino.</span></div>
+            <div class="step" style="border-left-color:#ff2d55"><b>Cerrado / restringido al 8-ago</b><br><span class="small"><b>Hwy 1</b> por el Fraser Canyon (Yale → 28 km al sur de Jackass Mountain) <b>cerrada</b> por incendio: eso saca la salida norte. En la Hwy 3 hay seis avisos de <b>visibilidad reducida por humo</b> y obra mayor en el puente Cedar Creek (km 42 Hope–Manning, un carril a 30 km/h).</span></div>
+            <div class="step" style="border-left-color:#ffb020"><b>Dentro del parque hay cierres</b><br><span class="small">BC Parks tiene el parque en <b>cierre parcial</b>: incendio cerca de <b>Allison Pass</b> (cierra Memaloose y Poland Lake) y el incendio Hozameen Ridge (cierra Skyline 2 y Mowich). Los campings drive-in siguen abiertos. Sumallo Grove cerrado por inundación; Silvertip cerrado por obras.</span></div>
+            <div class="step" style="border-left-color:#ff2d55"><b>Sin fogatas — desde el 16 de julio</b><br><span class="small">Prohibición de fogatas en todo el Coastal Fire Centre, que incluye E.C. Manning Park. Seis noches sin fuego: hay que llevar cocina a gas. Las estufas a gas siguen permitidas, la fogata no.</span></div>
+            <div class="step" style="border-left-color:#5ac8fa"><b>Antes de salir</b><br><span class="small">Refrescá el mapa y confirmá en <a class="source" href="https://www.drivebc.ca" target="_blank" rel="noopener">DriveBC</a> y <a class="source" href="https://www.emergencyinfobc.gov.bc.ca" target="_blank" rel="noopener">EmergencyInfoBC</a>. Esto cambia por hora.</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>🏕️ Los campings del parque</h2>
+          <p class="small">Cada uno abre su ficha con pros y contras, los sitios FCFS reales según BC Parks, y los incendios activos que el mapa encuentra a menos de 25 km en este momento.</p>
+          <div class="grid" id="campBtns"></div>
+          <p class="small" style="margin-top:10px;padding-top:9px;border-top:1px solid var(--line)">
+            <b style="color:var(--ink)">Total FCFS en todo el parque: 43 sitios</b> — Hampton 20, Coldspring 13, Mule Deer 10.
+            Lightning Lake y Skyview no tienen ninguno. Esa es toda la lotería disponible el lunes a la mañana.
+          </p>
+        </div>
+        <div class="card">
+          <h2>⛽ Paradas de la ruta</h2>
+          <p class="small">🔵 origen · 🟢 parada con servicios · 🟠 mirar las capas en vivo antes de comprometerse. Tocá cada una para ver la nota del tramo.</p>
+          <div class="grid">
+            <button class="btn" onclick="focusPoi('origen')">🏠 Salida — New Westminster</button>
+            <button class="btn" onclick="focusPoi('hope')">⛽ Hope — última parada barata</button>
+            <button class="btn" onclick="focusPoi('sunshine')">⛽ Sunshine Valley</button>
+            <button class="btn" onclick="focusPoi('resort')">🏨 Manning Park Resort</button>
+            <button class="btn" onclick="focusPoi('allison')">⚠️ Allison Pass — incendio</button>
+            <button class="btn" onclick="focusPoi('princeton')">🔄 Princeton — salida este</button>
+          </div>
+        </div>
+        <div class="card">
+          <h2>🛒 Qué comprar en 7‑Eleven / parada rápida</h2>
+          <div class="checklist" id="buyQuick"></div>
+        </div>
+      </section>
+
+      <section id="tab-lista" class="hidden">
+        <div class="card">
+          <h2>✅ Lista camping consolidada</h2>
+          <p class="small">Los checks quedan guardados en este teléfono.</p>
+          <div id="campingList"></div>
+        </div>
+      </section>
+
+      <section id="tab-dany" class="hidden">
+        <div class="card">
+          <h2>📱 Cómo bajar el mapa offline</h2>
+          <ol class="small">
+            <li>Abrir Google Maps.</li>
+            <li>Tocar foto/inicial arriba a la derecha.</li>
+            <li>Entrar a “Mapas sin conexión”.</li>
+            <li>Tocar “Selecciona tu propio mapa”.</li>
+            <li>Seleccionar un área grande: New Westminster, toda la Hwy 1 hasta Hope, y toda la Hwy 3 desde Hope hasta <b>Princeton</b> pasando por Manning Park.</li>
+            <li>Descargar con WiFi.</li>
+            <li>Probar: poner modo avión, abrir Google Maps, buscar destino y verificar que aparece la ruta.</li>
+          </ol>
+          <p class="warn"><b>Importante:</b> el área tiene que llegar hasta Princeton, no terminar en Manning. Si la Hwy 3 se corta hacia el oeste, la única salida es hacia el este y ahí el mapa tiene que seguir funcionando. Dentro del parque prácticamente no hay señal celular.</p>
+        </div>
+        <div class="card">
+          <h2>🔋 Teléfono operativo</h2>
+          <div class="checklist" id="phoneList"></div>
+        </div>
+      </section>
+
+      <section id="tab-apis" class="hidden">
+        <div class="card">
+          <h2>🔌 Fuentes en vivo descubiertas</h2>
+          <p class="small">Última actualización local: <span id="updated">pendiente</span></p>
+          <div id="apiStatus" class="small"></div>
+        </div>
+        <div class="card">
+          <h2>⚠️ Limitaciones</h2>
+          <p class="small">Los datos oficiales pueden demorarse. Si una autoridad local, RCMP, DriveBC o BC Wildfire indica evacuación/corte, esa instrucción prevalece sobre el mapa.</p>
+        </div>
+      </section>
+    </aside>
+  </main>
+</div>
+<script src="leaflet/leaflet.js"></script>
+<script>
+const MANNING=[49.114511,-120.856552]; // centroide de E.C. Manning Park segun la API de BC Parks
+const ORIGEN=[49.2057,-122.9110];   // centro de New Westminster (punto generico, no una direccion)
+const SOURCES={
+  activeFires:'https://wfnews-prd.bcwildfireservices.com/services6/ubm4tcTYICKBpist/ArcGIS/rest/services/BCWS_ActiveFires_PublicView/FeatureServer/0/query?where=FIRE_STATUS%20%3C%3E%20%27Out%27&outFields=*&returnGeometry=true&outSR=4326&f=geojson&resultRecordCount=2000',
+  perimeters:'https://wfnews-prd.bcwildfireservices.com/services6/ubm4tcTYICKBpist/arcgis/rest/services/BCWS_FirePerimeters_PublicView/FeatureServer/0/query?where=FIRE_STATUS%20%3C%3E%20%27Out%27&outFields=*&returnGeometry=true&outSR=4326&f=geojson&resultRecordCount=2000',
+  evac:'https://wfnews-prd.bcwildfireservices.com/services6/ubm4tcTYICKBpist/ArcGIS/rest/services/Evacuation_Orders_and_Alerts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson&resultRecordCount=2000',
+  restrictions:'https://wfnews-prd.bcwildfireservices.com/services6/ubm4tcTYICKBpist/ArcGIS/rest/services/British_Columbia_Area_Restrictions_-_View/FeatureServer/13/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson&resultRecordCount=1000',
+  // DriveBC responde 200 pero SIN Access-Control-Allow-Origin: pedirlo directo desde el
+  // navegador da "Failed to fetch" y la capa de cortes de ruta NUNCA se dibuja — que es
+  // justo la que importa manejando. Va por el proxy de nuestro nginx (mismo origen).
+  // Ruta relativa a propósito: la página no tiene que saber en qué host la sirven.
+  drivebc:'api/drivebc'
+};
+const map=L.map('map',{zoomControl:false}).setView([49.20,-121.85],8);  // encuadre que cubre New Westminster y todo el corredor de la Hwy 3
+L.control.zoom({position:'bottomright'}).addTo(map);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(map);
+const layers={fires:L.layerGroup().addTo(map),perimeters:L.layerGroup().addTo(map),evac:L.layerGroup().addTo(map),restrictions:L.layerGroup().addTo(map),drivebc:L.layerGroup().addTo(map),poi:L.layerGroup().addTo(map),camps:L.layerGroup().addTo(map)};
+/* Coordenadas geocodificadas con Nominatim/OSM el 2026-08-08, no estimadas a ojo.
+   'ojo' = punto que hay que mirar en las capas en vivo antes de comprometerse,
+   no una parada segura. Allison Pass es 'ojo' porque es donde BC Parks ubica el
+   incendio que motiva el cierre parcial del parque, y esta sobre la Hwy 3.    */
+const poi={
+ origen:    {name:'New Westminster — punto de partida',lat:49.2057,lon:-122.9110,emoji:'🏠',tipo:'origen',
+             nota:'Punto de partida. Salir con estanque lleno: desde Hope hacia el este los servicios se espacian mucho.'},
+ hope:      {name:'Hope — última parada barata antes de la Hwy 3',lat:49.37998,lon:-121.44159,emoji:'⛽',tipo:'parada',
+             nota:'~150 km del origen. Bencina, baño, comida, supermercado. Acá se decide: seguir por la Hwy 3 al parque, o abortar y volver. Es la última decisión con señal buena.'},
+ sunshine:  {name:'Sunshine Valley — servicios sobre la Hwy 3',lat:49.27400,lon:-121.23501,emoji:'⛽',tipo:'parada',
+             nota:'~25 km al este de Hope sobre la Hwy 3. Último punto con servicios antes del tramo largo al parque.'},
+ resort:    {name:'Manning Park Resort — servicios dentro del parque',lat:49.08042,lon:-120.91708,emoji:'🏨',tipo:'parada',
+             nota:'Lodge, tienda, sani-station y cargadores EV (J-1772, 6,24 kW). Es el punto del parque con más chance de señal y de información al día del operador. Si Hampton está lleno, acá se pregunta.'},
+ allison:   {name:'Allison Pass — incendio activo',lat:49.11617,lon:-120.86749,emoji:'⚠️',tipo:'ojo',
+             nota:'BC Parks tiene el parque en cierre parcial por un incendio ardiendo cerca de este paso: cerró Memaloose Trail, Poland Lake Trail y el camping de backcountry de Poland Lake. El paso está sobre la Hwy 3, entre los campings y la salida este.'},
+ princeton: {name:'Princeton — salida este de la Hwy 3',lat:49.46046,lon:-120.50797,emoji:'🔄',tipo:'ojo',
+             nota:'Si la Hwy 3 se corta hacia el oeste, esta es la única salida. ~65 km al este del parque. Servicios completos. Con la Hwy 1 del Fraser Canyon cerrada, conviene saber que existe antes de necesitarla.'}
+};
+const POI_COLOR={origen:'#5ac8fa',destino:'#30d158',parada:'#30d158',ojo:'#ffb020'};
+for(const [id,p] of Object.entries(poi)){
+  L.circleMarker([p.lat,p.lon],{radius:8,color:POI_COLOR[p.tipo]||'#30d158',fillColor:POI_COLOR[p.tipo]||'#30d158',fillOpacity:.9,weight:2})
+   .addTo(layers.poi)
+   .bindPopup(`<b>${p.emoji} ${p.name}</b><div style="margin-top:6px;font-size:12.5px;line-height:1.4">${p.nota}</div>
+     <div style="margin-top:6px;font-size:11px;color:#9fb0c4">Nota escrita el 2026-08-08. El estado del fuego y los cortes salen de las capas en vivo, no de este texto.</div>`);
+}
+function focusPoi(id){const p=poi[id]; if(p) map.setView([p.lat,p.lon],11)}
+
+/* ── Campings ──────────────────────────────────────────────────────────────
+   Los conteos de sitios NO son de memoria ni del chat: salen de la API de
+   BC Parks (park-operation-sub-areas, consultada el 2026-08-08). Importa
+   porque el numero que circulaba de Coldspring era 33 FCFS de 66 y el real
+   es 13 de 66: el "plan B" era menos de la mitad de lo que parecia.
+   Duchas: park-facilities dice textualmente que hay en Lightning Lake,
+   Lone Duck I y II, Skyview y Hampton. Coldspring y Mule Deer no tienen.
+   Coordenadas geocodificadas con Nominatim/OSM el 2026-08-08.
+   El veredicto es un juicio, no un dato: 'ok' verde, 'reparos' ambar,
+   'no' rojo. Los pros y contras de abajo son lo que sostiene ese juicio. */
+const VERD={
+  ok:      {color:'#30d158',ico:'🟩',txt:'SIRVE'},
+  reparos: {color:'#ffb020',ico:'🟨',txt:'SIRVE CON REPAROS'},
+  no:      {color:'#ff453a',ico:'🟥',txt:'NO LO USARÍA ASÍ'}
+};
+const camps={
+ hampton:{
+  nom:'Hampton Campground', lat:49.07081, lon:-120.71968, veredicto:'reparos',
+  titulo:'PRIMERA OPCIÓN FCFS',
+  datos:[['Sitios',       '100 (80 reservables · <b>20 FCFS</b>)'],
+         ['Servicios',    'Duchas · baños con descarga · agua potable'],
+         ['Para chicos',  'Playground + bike park propio del camping'],
+         ['Desde casa',   '~220 km · ~2 h 45 sin cortes'],
+         ['Fogatas',      '<span style="color:#ff7b7b">Prohibidas desde el 16-jul</span>']],
+  pros:['Es el único FCFS del parque con duchas calientes y baños con descarga.',
+        '20 sitios FCFS: la mayor bolsa del parque, y la única con servicios completos.',
+        'Bike park y playground adentro — el mejor de los cuatro para los chicos.',
+        'Agua potable de red, no bomba manual.'],
+  contras:['20 sitios sobre 100 es 1 de cada 5: llegás sin garantía después de 2 h 45 de manejo.',
+           'Seis incendios fuera de control a menos de 30 km, el más cercano ~14 km.',
+           'Sin fogata las 6 noches. Hay que llevar cocina a gas sí o sí.',
+           'Prácticamente sin señal celular: una evacuación te llega tarde o no te llega.',
+           'Una sola vía de entrada y salida, la Hwy 3.'],
+  url:'https://bcparks.ca/ec-manning-park/', btn:'Abrir ficha BC Parks'},
+ coldspring:{
+  nom:'Coldspring Campground', lat:49.07094, lon:-120.80356, veredicto:'no',
+  titulo:'PLAN B — MÁS DÉBIL DE LO QUE PARECE',
+  datos:[['Sitios',      '66 (53 reservables · <b>13 FCFS</b>)'],
+         ['Servicios',   'Pit toilets · agua de bomba manual · <b>sin duchas</b>'],
+         ['Para chicos', 'Sin playground'],
+         ['Corrección',  '<span style="color:#ff7b7b">Circulaba como “33 de 66 FCFS”. BC Parks dice 13.</span>'],
+         ['Fogatas',     '<span style="color:#ff7b7b">Prohibidas desde el 16-jul</span>']],
+  pros:['Está dentro del mismo parque: si Hampton falla, no hay que volverse a casa.',
+        'Más tranquilo y arbolado que Hampton.'],
+  contras:['Solo 13 sitios FCFS, no 33. Como red de contención es delgada.',
+           'Sin duchas ni baños con descarga — 6 noches con pit toilet y bomba manual.',
+           'Es el más cercano al incendio Daynar Creek: ~10 km.',
+           'Sin playground: con chicos, seis noches se hacen largas.'],
+  url:'https://bcparks.ca/ec-manning-park/', btn:'Abrir ficha BC Parks'},
+ muledeer:{
+  nom:'Mule Deer Campground', lat:49.08981, lon:-120.68208, veredicto:'reparos',
+  titulo:'TERCERA CHANCE FCFS — LA QUE NADIE MENCIONÓ',
+  datos:[['Sitios',      '49 (39 reservables · <b>10 FCFS</b>)'],
+         ['Servicios',   'Pit toilets · agua · <b>sin duchas</b>'],
+         ['Para chicos', 'Playground'],
+         ['Ubicación',   'El más al este de los cuatro, junto al río Similkameen'],
+         ['Fogatas',     '<span style="color:#ff7b7b">Prohibidas desde el 16-jul</span>']],
+  pros:['10 sitios FCFS más que no estaban en el plan original: suma chances el lunes.',
+        'Tiene playground, a diferencia de Coldspring.',
+        'Junto al río, y el más cerca de la salida este hacia Princeton.'],
+  contras:['Sin duchas. Si el requisito es ducha, este no califica.',
+           'Solo 10 sitios FCFS: es un complemento, no un plan.',
+           'Sin fogata, igual que todo el parque.'],
+  url:'https://bcparks.ca/ec-manning-park/', btn:'Abrir ficha BC Parks'},
+ lightning:{
+  nom:'Lightning Lake Campground', lat:49.06097, lon:-120.84137, veredicto:'ok',
+  titulo:'EL MEJOR — PERO SOLO CON RESERVA',
+  datos:[['Sitios',      '143 (92 + 51) · <b>0 FCFS</b>'],
+         ['Servicios',   'Duchas · baños con descarga · agua potable'],
+         ['Para chicos', 'Playground + lago con playa (Spruce Bay) + botes de remo'],
+         ['Reserva',     'Obligatoria en temporada — camping.bcparks.ca'],
+         ['Fogatas',     '<span style="color:#ff7b7b">Prohibidas desde el 16-jul</span>']],
+  pros:['Es el mejor camping del parque para una familia: lago, playa, botes, playground.',
+        'Duchas y baños con descarga.',
+        '143 sitios = muchas más chances de que aparezca una cancelación para el 10–16.',
+        'Sin fogata, el lago compensa bastante más que un sitio en el bosque.'],
+  contras:['<b>Cero sitios FCFS.</b> Presentarse sin reserva acá no sirve de nada.',
+           'Es el más cercano al incendio Daynar Creek de los cuatro: ~9 km.',
+           'Si no hay cancelación, no hay plan.'],
+  url:'https://camping.bcparks.ca', btn:'Buscar cancelaciones'},
+ skyview:{
+  nom:'Skyview RV Campground', lat:49.08042, lon:-120.91708, veredicto:'reparos',
+  titulo:'LA PUERTA DE ATRÁS — OTRO SISTEMA DE RESERVA',
+  datos:[['Sitios',     '92 · <b>0 FCFS</b>'],
+         ['Servicios',  'Duchas · electricidad 15/30/50 A · agua y desagüe'],
+         ['Reserva',    'NO por BC Parks — va por Manning Park Resort'],
+         ['Por qué mirarlo','Sistema separado: puede tener lugar cuando BC Parks no'],
+         ['Fogatas',    '<span style="color:#ff7b7b">Prohibidas desde el 16-jul</span>']],
+  pros:['Se reserva por el sistema del Resort, no por BC Parks: es una bolsa de disponibilidad distinta que casi nadie mira.',
+        'Duchas y electricidad — con enchufe, seis noches con chicos cambian bastante.',
+        'Pegado al lodge: tienda, comida y la mejor señal del parque.'],
+  contras:['Está pensado para RV; para carpa es menos lindo y más expuesto.',
+           'Cero FCFS: o hay reserva, o no hay.',
+           'Se paga aparte y suele ser más caro que BC Parks.'],
+  url:'https://online.rezexpert.com/book?business_code=400340', btn:'Reservar en el Resort'}
+};
+
+/* Distancia en km sobre la esfera. Alcanza de sobra a esta escala. */
+function km(aLat,aLon,bLat,bLon){
+  const la=aLat*Math.PI/180, lb=bLat*Math.PI/180;
+  const c=Math.sin(la)*Math.sin(lb)+Math.cos(la)*Math.cos(lb)*Math.cos((aLon-bLon)*Math.PI/180);
+  return 6371*Math.acos(Math.min(1,Math.max(-1,c)));
+}
+/* Los incendios activos que llegaron en la ultima carga. La ficha los consulta
+   cada vez que se abre, asi el bloque de riesgo nunca queda pegado a un texto
+   escrito a mano: si la API cambia, la ficha cambia sola.                   */
+let FUEGOS=[];
+function fuegosCerca(lat,lon,radio){
+  const cerca=FUEGOS.map(f=>({...f,d:km(lat,lon,f.lat,f.lon)})).filter(f=>f.d<=radio).sort((a,b)=>a.d-b.d);
+  return {n:cerca.length, ooc:cerca.filter(f=>f.ooc).length, mas:cerca[0]||null};
+}
+function bloqueFuego(c){
+  if(!FUEGOS.length) return `<div class="fviva">Capa de incendios sin cargar todavía. Tocá ↻ Actualizar antes de fiarte de esta ficha.</div>`;
+  const r=fuegosCerca(c.lat,c.lon,25);
+  if(!r.n) return `<div class="fviva ok">Sin incendios activos a menos de 25 km en este momento.</div>`;
+  const m=r.mas;
+  return `<div class="fviva"><b>${r.n} incendio${r.n>1?'s':''} activo${r.n>1?'s':''} a &lt;25 km</b>${r.ooc?` · ${r.ooc} fuera de control`:''}<br>
+    Más cercano: <b>${m.nombre}</b> a <b>${m.d.toFixed(1)} km</b>${m.ha?` · ${Math.round(m.ha).toLocaleString('es-CL')} ha`:''} · ${m.estado||'estado desconocido'}</div>`;
+}
+function ficha(id){
+  const c=camps[id], v=VERD[c.veredicto];
+  const datos=c.datos.map(([k,val])=>`<div><span class="fk">${k}</span> ${val}</div>`).join('');
+  const pros=c.pros.map(t=>`<div class="fli"><span class="fpro">✓</span><span>${t}</span></div>`).join('');
+  const cons=c.contras.map(t=>`<div class="fli"><span class="fcon">✗</span><span>${t}</span></div>`).join('');
+  return `<div style="--fc:${v.color}">
+    <div class="fh"><span class="fh-ico">${v.ico}</span><span>${v.txt}</span></div>
+    <div class="fb">
+      <div class="fsec"><span class="ftit">Camping</span>
+        <div class="fnom">${c.nom}</div>
+        <div style="font-size:11.5px;color:${v.color};font-weight:700">${c.titulo}</div>
+      </div>
+      <div class="fsec"><span class="ftit">Datos</span>${datos}</div>
+      <div class="fsec"><span class="ftit">A favor</span>${pros}</div>
+      <div class="fsec"><span class="ftit">En contra</span>${cons}</div>
+      <div class="fsec"><span class="ftit">Incendios ahora — capa en vivo</span>${bloqueFuego(c)}</div>
+      <a class="fbtn" href="${c.url}" target="_blank" rel="noopener">▶ ${c.btn}</a>
+      <div class="ffoot">Sitios y servicios: API de BC Parks, consultada el 8-ago-2026. Pros y contras: criterio, no dato oficial. La distancia a los incendios se recalcula con cada ↻ Actualizar.</div>
+    </div></div>`;
+}
+for(const [id,c] of Object.entries(camps)){
+  const col=VERD[c.veredicto].color;
+  L.marker([c.lat,c.lon],{icon:L.divIcon({className:'',iconSize:[30,30],iconAnchor:[15,15],
+    html:`<div style="width:30px;height:30px;border-radius:50%;background:#0d1622ee;border:2.5px solid ${col};display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 3px 10px #0008">🏕️</div>`})})
+   .addTo(layers.camps)
+   /* maxHeight: la ficha completa mide mas que la pantalla de un telefono.
+      Sin esto Leaflet la deja crecer y el boton del final queda inalcanzable. */
+   .bindPopup(()=>ficha(id),{className:'ficha',maxWidth:320,minWidth:296,maxHeight:400,autoPanPadding:[16,16]});
+}
+function focusCamp(id){const c=camps[id]; if(!c) return; map.setView([c.lat,c.lon],13);
+  layers.camps.eachLayer(l=>{const ll=l.getLatLng(); if(Math.abs(ll.lat-c.lat)<1e-6&&Math.abs(ll.lng-c.lon)<1e-6) l.openPopup()});}
+document.getElementById('campBtns').innerHTML=Object.entries(camps)
+  .map(([id,c])=>`<button class="btn" onclick="focusCamp('${id}')">${VERD[c.veredicto].ico} ${c.nom.replace(' Campground','')}</button>`).join('');
+function colorForFire(status){return status==='Out of Control'||status==='OUT_CNTRL'?'#ff4d4d':status==='Being Held'?'#ffb020':'#ff7a45'}
+function popupProps(title,props,keys){return `<b>${title}</b><br>`+keys.map(k=>props[k]?`<b>${k}:</b> ${props[k]}<br>`:'').join('')}
+
+/* ── Evacuaciones ──────────────────────────────────────────────────────────
+   Una ORDEN y una ALERTA venian del mismo color lila y con un popup que
+   mostraba nombres de campo en ingles. Son cosas distintas y la diferencia
+   importa: Orden = salir ya, zona cerrada. Alerta = preparate para salir.
+   Ahora la Orden va en rojo y solida, la Alerta en lila y punteada.        */
+/* El clasificador ahora falla hacia el lado peligroso, no hacia el tranquilo.
+   Antes era indexOf('order')===0 con un else que pintaba lila: cualquier
+   valor no reconocido — campo renombrado, null, "Evacuation Order" con
+   prefijo — caia en ALERTA. Ese error es asimetrico. Mostrar una alerta
+   como orden hace que la familia salga antes de tiempo; mostrar una orden
+   como alerta la deja adentro de una zona cerrada leyendo "todavia se
+   puede estar". Por eso lo desconocido va a rojo y avisa que no se pudo
+   leer el estado. Valores reales verificados contra la API el 2026-08-08:
+   solo "Order" (42) y "Alert" (52) en 94 zonas de toda BC.               */
+function estadoEvac(p){
+  const v=String((p&&p.ORDER_ALERT_STATUS)||'').toLowerCase().trim();
+  if(!v) return 'desconocido';
+  if(v.includes('rescind')||v.includes('cancel')) return 'levantada';
+  if(v.includes('order')) return 'orden';
+  if(v.includes('alert')) return 'alerta';
+  return 'desconocido';
+}
+function esOrden(p){return estadoEvac(p)==='orden'}
+function estiloEvac(f){
+  switch(estadoEvac(f.properties)){
+    case 'orden':     return {color:'#ff2d55',weight:3,fillColor:'#ff2d55',fillOpacity:.30};
+    case 'alerta':    return {color:'#bf5af2',weight:2,fillColor:'#bf5af2',fillOpacity:.12,dashArray:'6 4'};
+    case 'levantada': return {color:'#30d158',weight:1,fillColor:'#30d158',fillOpacity:.05,dashArray:'2 6'};
+    default:          return {color:'#ff2d55',weight:3,fillColor:'#ff2d55',fillOpacity:.30,dashArray:'1 4'};
+  }
+}
+function fechaCorta(ms){
+  if(!ms) return 'sin fecha';
+  try{return new Date(ms).toLocaleString('es-CL',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+  catch(e){return 'sin fecha'}
+}
+/* Cuanto hace que la autoridad toco esta zona. Un boletin de hace 12 h en
+   un incendio que corre no significa "sin novedad", significa "no sabes".  */
+function antiguedad(ms){
+  if(!ms) return {txt:'sin fecha', viejo:true};
+  const h=(Date.now()-ms)/36e5;
+  if(h<0) return {txt:'fecha futura', viejo:true};
+  if(h<1) return {txt:'hace '+Math.round(h*60)+' min', viejo:false};
+  if(h<48) return {txt:'hace '+Math.round(h)+' h', viejo:h>=6};
+  return {txt:'hace '+Math.round(h/24)+' dias', viejo:true};
+}
+const EVAC_UI={
+  orden:     {color:'#ff2d55',titulo:'🔴 ORDEN DE EVACUACIÓN', texto:'Salí ya. La zona está cerrada, no se entra.'},
+  alerta:    {color:'#bf5af2',titulo:'🟣 ALERTA DE EVACUACIÓN',texto:'Preparate para salir con poco aviso. Todavía se puede estar.'},
+  levantada: {color:'#30d158',titulo:'🟢 EVACUACIÓN LEVANTADA', texto:'La autoridad la rescindió. Confirmá en la fuente antes de entrar.'},
+  desconocido:{color:'#ff2d55',titulo:'⚠️ ESTADO NO RECONOCIDO',texto:'No se pudo leer si es orden o alerta. Tratala como ORDEN y verificá en EmergencyInfoBC antes de acercarte.'}
+};
+function popupEvac(p){
+  const est=estadoEvac(p), ui=EVAC_UI[est];
+  const casas=p.MULTI_SOURCED_HOMES, gente=p.MULTI_SOURCED_POPULATION;
+  const afecta=(casas||gente)?`<b>Afecta:</b> ${casas||0} casas · ${gente||0} personas<br>`:'';
+  const edad=antiguedad(p.DATE_MODIFIED);
+  return `<div style="min-width:230px;line-height:1.45">
+    <div style="font-size:15px;font-weight:800;color:${ui.color}">${ui.titulo}</div>
+    <div style="margin:5px 0 9px;padding:6px 8px;border-radius:8px;background:${ui.color}22;font-size:12.5px">
+      ${ui.texto}</div>
+    <b>Zona:</b> ${p.ORDER_ALERT_NAME||'—'}<br>
+    <b>Incendio:</b> ${p.EVENT_NAME||'—'}<br>
+    <b>Emite:</b> ${p.ISSUING_AGENCY||'—'}<br>
+    ${afecta}<b>Actualizado:</b> ${fechaCorta(p.DATE_MODIFIED)}
+    <span style="color:${edad.viejo?'#ffd1d1':'#9fb0c4'}">(${edad.txt}${edad.viejo?' — puede estar desactualizado':''})</span>
+    ${est==='desconocido'?`<div style="margin-top:7px;font-size:11.5px;color:#ffd1d1">valor crudo del campo: <span style="font-family:ui-monospace,monospace">${String(p.ORDER_ALERT_STATUS??'(ausente)')}</span></div>`:''}
+  </div>`;
+}
+async function addGeoJson(name,url,layer,styleFn,pointFn,popupFn){layer.clearLayers(); const r=await fetch(url); if(!r.ok) throw new Error(r.status+' '+r.statusText); const data=await r.json(); L.geoJSON(data,{style:styleFn,pointToLayer:pointFn,onEachFeature:(f,l)=>{const p=f.properties||{}; if(popupFn){l.bindPopup(popupFn(p)); return} const title=p.INCIDENT_NAME||p.FIRE_NUMBER||p.EVENT_NAME||p.ORDER_ALERT_NAME||p.NAME||name; l.bindPopup(popupProps(title,p,['FIRE_STATUS','CURRENT_SIZE','GEOGRAPHIC_DESCRIPTION','FIRE_NUMBER','FIRE_URL','ORDER_ALERT_STATUS','ISSUING_AGENCY','EVENT_TYPE','BULLETIN_URL']))}}).addTo(layer); return data.features?.length||0}
+/* Los incendios se cargan aparte del resto de las capas por una razon: ademas
+   de dibujarlos, hay que quedarse con sus coordenadas para que las fichas de
+   camping puedan calcular "cuantos hay a menos de 25 km de aca". Si FUEGOS
+   queda vacio, la ficha lo dice en vez de mostrar un cero tranquilizador. */
+async function addFires(){
+  layers.fires.clearLayers();
+  const r=await fetch(SOURCES.activeFires); if(!r.ok) throw new Error(r.status+' '+r.statusText);
+  const data=await r.json(); const pts=[];
+  L.geoJSON(data,{
+    pointToLayer:(f,latlng)=>L.circleMarker(latlng,{radius:7,color:colorForFire(f.properties?.FIRE_STATUS),fillColor:colorForFire(f.properties?.FIRE_STATUS),fillOpacity:.9,weight:2}),
+    style:{color:'#ff4d4d',weight:2,fillOpacity:.25},
+    onEachFeature:(f,l)=>{
+      const p=f.properties||{};
+      l.bindPopup(popupProps(p.INCIDENT_NAME||p.FIRE_NUMBER||'Incendio',p,['FIRE_STATUS','CURRENT_SIZE','GEOGRAPHIC_DESCRIPTION','FIRE_NUMBER','FIRE_URL']));
+      const g=f.geometry;
+      if(g&&g.type==='Point'){
+        pts.push({lat:g.coordinates[1],lon:g.coordinates[0],
+                  nombre:p.INCIDENT_NAME||p.FIRE_NUMBER||'sin nombre',
+                  estado:p.FIRE_STATUS, ha:Number(p.CURRENT_SIZE)||0,
+                  ooc:p.FIRE_STATUS==='Out of Control'||p.FIRE_STATUS==='OUT_CNTRL'});
+      }
+    }}).addTo(layers.fires);
+  FUEGOS=pts;
+  return data.features?.length||0;
+}
+/* DriveBC no devuelve solo puntos: un corte de ruta suele venir como LineString (el
+   tramo afectado). Con una LineString, `const [lon,lat]=coordinates` recibe ARRAYS en
+   vez de números y Leaflet tira "Cannot read properties of null (reading 'lat')",
+   matando la capa ENTERA por un solo registro. Como la capa de cortes es la que más
+   importa manejando, acá cada evento va en su propio try: uno malo se saltea y el
+   resto se dibuja. */
+function puntoDriveBC(loc){
+  if(!loc||!loc.coordinates) return null;
+  const c=loc.coordinates;
+  if(typeof c[0]==='number') return [c[1],c[0]];              // Point: [lon,lat] → [lat,lon]
+  const planos=[];                                            // LineString / MultiLineString
+  (function baja(a){ if(!Array.isArray(a)) return;
+    if(typeof a[0]==='number'){ planos.push(a); return }
+    a.forEach(baja) })(c);
+  if(!planos.length) return null;
+  const m=planos[Math.floor(planos.length/2)];                // punto medio del tramo
+  return [m[1],m[0]];
+}
+async function addDriveBC(){
+  layers.drivebc.clearLayers();
+  const r=await fetch(SOURCES.drivebc);
+  if(!r.ok) throw new Error(r.status+' '+r.statusText);
+  const data=await r.json();
+  let count=0, saltados=0;
+  for(const e of data){
+    try{
+      const pt=puntoDriveBC(e.location);
+      if(!pt) { saltados++; continue }
+      const [lat,lon]=pt;
+      if(!isFinite(lat)||!isFinite(lon)) { saltados++; continue }
+      if(lat<48||lat>56||lon>-113||lon<-126) continue;
+      const sev=e.severity||'';
+      const closed=e.closed?'CERRADO':'Activo';
+      const marker=L.circleMarker([lat,lon],{radius:e.closed?8:6,color:'#5ac8fa',fillColor:e.closed?'#ff4d4d':'#5ac8fa',fillOpacity:.85,weight:2});
+      marker.bindPopup(`<b>🚧 DriveBC ${closed}</b><br>${e.description||e.optimized_description||''}<br><b>Severidad:</b> ${sev}<br><b>Ruta:</b> ${e.route_at||e.route_display||''}`);
+      marker.addTo(layers.drivebc); count++;
+    }catch(err){ saltados++; }
+  }
+  if(saltados) console.warn('DriveBC: '+saltados+' evento(s) sin geometría usable');
+  return count;
+}
+async function refreshAll(){const status=[]; document.getElementById('updated').textContent='actualizando…';
+ const jobs=[
+  ['Incendios activos',addFires],
+  ['Perímetros',()=>addGeoJson('Perímetro',SOURCES.perimeters,layers.perimeters,{color:'#ffb020',weight:2,fillOpacity:.16})],
+  ['Evacuaciones',()=>addGeoJson('Evacuación',SOURCES.evac,layers.evac,estiloEvac,null,popupEvac)],
+  ['Restricciones',()=>addGeoJson('Restricción',SOURCES.restrictions,layers.restrictions,{color:'#ffb020',weight:1,fillOpacity:.08})],
+  ['DriveBC',addDriveBC]
+ ];
+ for(const [label,fn] of jobs){try{const n=await fn();status.push(`<div class="oktext">✓ ${label}: ${n} elementos</div>`)}catch(e){status.push(`<div class="warn">✕ ${label}: ${e.message}</div>`)}}
+ document.getElementById('apiStatus').innerHTML=status.join('');
+ const sello=new Date().toLocaleString('es-CL',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+ document.getElementById('updated').textContent=sello;
+ const lu=document.getElementById('legendUpdated'); if(lu) lu.textContent=sello;
+}
+const camping={
+ 'Dormir / abrigo':['Carpa','Colchones','Ropa de cama','Mantitas varias','Chaquetas','Pijama grueso'],
+ 'Ropa / baño':['Toallas','Traje de baño','Bloqueador','Gorros','Chalas de agua'],
+ 'Aseo personal':['Cepillos de dientes','Pasta de dientes','Desodorante','Shampoo','Bálsamo','Jabón'],
+ 'Comida / cocina':['Platos','Vasos','Tazas','Tenedor, cuchillo, cuchara','Café','Botellas de agua','Servilletas','Toalla nova'],
+ 'Equipamiento':['Sillas','Cooler','Alfombra negra con blanco','Lámpara de camping','Carro','Tarp'],
+ 'Sin fogata — obligatorio':['Cocina a gas (la fogata está prohibida)','Cartuchos de gas de repuesto','Encendedor para la cocina','Linternas y pilas: no hay fuego que alumbre','Capa de abrigo extra para la noche'],
+ 'Humo':['Mascarillas N95 para cada uno','Colirio / lágrimas artificiales','Inhaladores si alguien los usa'],
+ 'Limpieza':['Bolsas de basura']
+};
+const quickBuy=['Agua extra / botellas grandes','Hielo para cooler','Snacks salados','Fruta fácil: plátanos/manzanas','Sándwiches o wraps','Leche / café listo','Electrolitos o Gatorade','Toallas húmedas','Papel higiénico / servilletas','Bolsas de basura','Cartucho de gas de repuesto (no hay fogata permitida)','Power bank si falta','Mascarillas N95 por humo'];
+const phone=['Google Maps offline descargado','Prueba en modo avión realizada','Teléfono cargado 100%','Power bank cargado','Cable de auto disponible','Ubicación/GPS activado','Dirección destino guardada','Contactos familiares guardados'];
+function mkChecks(target,groups,prefix){const el=document.getElementById(target); let html=''; if(Array.isArray(groups)){html='<div class="checklist">'+groups.map((x,i)=>check(prefix+i,x)).join('')+'</div>'}else{for(const [g,items] of Object.entries(groups)){html+=`<h3>${g}</h3><div class="checklist">`+items.map((x,i)=>check(prefix+g+i,x)).join('')+'</div>'}} el.innerHTML=html; el.querySelectorAll('input').forEach(inp=>{inp.checked=localStorage.getItem(inp.id)==='1'; inp.addEventListener('change',()=>localStorage.setItem(inp.id,inp.checked?'1':'0'))})}
+function check(id,label){return `<div class="item"><input type="checkbox" id="${id.replace(/\W/g,'_')}"><label for="${id.replace(/\W/g,'_')}">${label}</label></div>`}
+function showTab(name){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name)); ['plan','lista','dany','apis'].forEach(n=>document.getElementById('tab-'+n).classList.toggle('hidden',n!==name))}
+mkChecks('campingList',camping,'camp-'); mkChecks('buyQuick',quickBuy,'buy-'); mkChecks('phoneList',phone,'phone-'); refreshAll();
+
+/* Leaflet mide el contenedor al construirse. Si en ese momento todavia no tiene su
+   tamano final (fuentes, panel lateral, barra del navegador en el celular), las
+   teselas quedan corridas y el mapa aparece descuadrado. invalidateSize() lo obliga
+   a volver a medir. Hay que llamarlo despues del load y en cada cambio de tamano. */
+function ajustarMapa(){try{if(typeof map!=='undefined'&&map.invalidateSize)map.invalidateSize()}catch(e){}}
+ajustarMapa();
+window.addEventListener('load',()=>{ajustarMapa();setTimeout(ajustarMapa,200);setTimeout(ajustarMapa,600)});
+window.addEventListener('resize',ajustarMapa);
+window.addEventListener('orientationchange',()=>setTimeout(ajustarMapa,300));
+if(window.ResizeObserver){new ResizeObserver(ajustarMapa).observe(document.querySelector('.mapwrap'))}
+</script>
+</body>
+</html>
