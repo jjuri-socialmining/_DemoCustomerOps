@@ -91,6 +91,14 @@
   footer{margin-top:46px; padding-top:20px; border-top:1px solid var(--rule);
     font-size:13px; color:var(--ink-faint); line-height:1.55}
   code{font-family:var(--mono); font-size:.9em}
+
+  ol.indic{list-style:none;margin:0 0 12px;padding:0}
+  ol.indic li{display:flex;gap:12px;align-items:baseline;padding:7px 2px;
+    border-bottom:1px solid var(--rule);font-size:14.5px}
+  ol.indic li:last-child{border-bottom:none}
+  ol.indic .km{font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums;
+    color:var(--ink-faint);min-width:56px;text-align:right;flex:0 0 auto}
+  ol.indic .via{flex:1}
 </style>
 </head>
 <body>
@@ -343,6 +351,52 @@
   figuran en OpenStreetMap y conviene confirmarlos. Estar a 3 km del pueblo es la ventaja
   real de este camping: no hace falta cargar el auto para toda la estadía.</div>
 
+  <h2>Cómo llegar</h2>
+  <p id="resumenRuta" class="cap">calculando…</p>
+  <p>La ruta está dibujada en verde sobre el mapa de arriba. Se calculó una vez y quedó
+  guardada en el archivo, así que <strong>se dibuja aunque no haya señal</strong>.</p>
+  <details>
+    <summary style="cursor:pointer;font-weight:600;margin-bottom:10px">Ver las indicaciones giro a giro</summary>
+    <ol class="indic" id="indicaciones"><li>cargando…</li></ol>
+  </details>
+  <div class="cap">Calculado con OSRM sobre OpenStreetMap. El tiempo es <strong>sin
+  tráfico</strong> — OSRM no lo modela, así que en hora pico hay que contar más.</div>
+
+  <h2>Señal en la ruta</h2>
+  <p>La Sea to Sky tiene un tramo largo sin antenas cerca. Estas distancias salen de las
+  <strong>188 antenas de telefonía que OpenStreetMap tiene mapeadas</strong> en el corredor,
+  y están dibujadas en el mapa de arriba en violeta.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Punto</th><th class="n">Antena más cerca</th><th>Lectura</th></tr></thead>
+      <tbody>
+        <tr><td>Horseshoe Bay</td><td class="n">0,4 km</td><td>Sin problema</td></tr>
+        <tr><td><strong>Lions Bay</strong></td><td class="n"><strong>9,2 km</strong></td><td><strong>⚠ El hueco más grande</strong></td></tr>
+        <tr><td><strong>Porteau Cove</strong></td><td class="n"><strong>5,4 km</strong></td><td><strong>⚠ Zona floja</strong></td></tr>
+        <tr><td>Britannia Beach</td><td class="n">3,0 km</td><td>Aceptable</td></tr>
+        <tr class="pick"><td><strong>Stawamus Chief</strong></td><td class="n"><strong>3,3 km</strong></td><td>Debería haber señal en el camping</td></tr>
+        <tr><td>Squamish pueblo</td><td class="n">1,7 km</td><td>Buena</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cap">OpenStreetMap (ODbL). <strong>Una antena cerca no garantiza señal</strong>:
+  mandan la banda, la potencia y sobre todo el relieve. Lo que el dato sí dice es dónde no
+  hay ninguna. Para contrastar con mediciones de usuarios:
+  <a href="https://www.nperf.com/en/map/CA/-/5651.Rogers-Wireless/signal?ll=49.60&amp;lg=-123.20&amp;zoom=11" target="_blank" rel="noopener">nPerf Rogers</a> ·
+  <a href="https://www.nperf.com/en/map/CA/-/5564.Bell-Mobility/signal?ll=49.60&amp;lg=-123.20&amp;zoom=11" target="_blank" rel="noopener">Bell</a> ·
+  <a href="https://www.nperf.com/en/map/CA/-/331.Telus-Mobility/signal?ll=49.60&amp;lg=-123.20&amp;zoom=11" target="_blank" rel="noopener">Telus</a> ·
+  <a href="https://www.cellmapper.net/map?MCC=302&amp;MNC=720&amp;latitude=49.65&amp;longitude=-123.18&amp;zoom=11" target="_blank" rel="noopener">CellMapper</a>.</div>
+
+  <div class="box warn">
+    <span class="lbl">Mapas offline — hacerlo con WiFi antes de salir</span>
+    <p>Descargar un área que cubra <strong>desde Vancouver, la Hwy 1 hasta Horseshoe Bay y
+    toda la Hwy 99 hasta Squamish, siguiendo hasta Whistler</strong>. Que llegue hasta
+    Whistler y no termine en Squamish: la Hwy 99 es vía única, y si se corta hacia el sur
+    la única salida es hacia el norte.</p>
+    <p>Después <strong>probarlo en modo avión</strong>. Sin esa prueba no se sabe si quedó
+    bien descargado.</p>
+  </div>
+
   <h2>Checklist de equipaje</h2>
   <p>Agrupado por el motivo de cada cosa, no por tipo de objeto. Los <strong>◆</strong> son
   los que no tienen reemplazo cerca. Lo tildado se guarda en este dispositivo.</p>
@@ -488,6 +542,32 @@
      .bindPopup('<b>'+p[0]+'</b><br>'+p[4]).addTo(map);
   });
   map.fitBounds(L.latLngBounds(P.map(function(p){return [p[2],p[3]];})).pad(0.14));
+
+  var capaRuta=L.layerGroup().addTo(map);
+  fetch('../../data/ruta-squamish.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(function(j){
+    if(!j||!j.rutas||!j.rutas.length) return;
+    var r=j.rutas[0];
+    L.polyline(r.geom,{color:'#12312c',weight:7,opacity:.5}).addTo(capaRuta);
+    L.polyline(r.geom,{color:'#0B6E5F',weight:3.5,opacity:.95}).addTo(capaRuta)
+     .bindPopup('<b>🚗 '+j.origen+' → '+j.destino+'</b><br>'+r.km+' km · '+r.min+' min sin tráfico');
+    var el=document.getElementById('resumenRuta');
+    if(el) el.innerHTML='<strong>'+j.origen+' → Stawamus Chief: '+r.km+' km · '+r.min+' min</strong> sin tráfico';
+    var ind=document.getElementById('indicaciones');
+    if(ind&&r.pasos) ind.innerHTML=r.pasos.map(function(s){
+      var g={'turn':'↱','end of road':'⤷','merge':'⤳','on ramp':'⤴','off ramp':'⤵','fork':'⑂',
+             'continue':'↑','roundabout':'↻','depart':'●','arrive':'⚑'}[s.t]||'→';
+      return '<li><span class="km">'+s.m.toFixed(1)+' km</span><span class="via">'+g+' '+(s.v||'seguir')+'</span></li>';
+    }).join('');
+  }).catch(function(){});
+  fetch('../../data/antenas.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(function(j){
+    if(!j) return;
+    (j.antenas||[]).forEach(function(a){
+      L.circleMarker([a.lat,a.lon],{radius:3.5,color:'#fff',weight:1,fillColor:'#8A5AC8',fillOpacity:.85})
+       .bindPopup('<b>📡 Antena de telefonía</b><br>'+(a.operador||'operador sin registrar')+
+                  '<br><span style="color:#666;font-size:11px">OpenStreetMap · que haya antena no garantiza señal</span>')
+       .addTo(map);
+    });
+  }).catch(function(){});
 })();
 </script>
 </body>

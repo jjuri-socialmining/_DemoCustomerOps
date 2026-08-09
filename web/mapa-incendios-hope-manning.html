@@ -81,6 +81,7 @@
         <button class="controlbtn" onclick="map.fitBounds([ORIGEN,MANNING],{padding:[40,40]})">🛣️ Ver ruta completa</button>
         <button class="controlbtn" onclick="map.setView(MANNING,11)">🏕️ Campings del parque</button>
         <button class="controlbtn" id="btnCams" onclick="toggleCams()">📷 Cámaras de ruta</button>
+        <button class="controlbtn" id="btnAntenas" onclick="toggleAntenas()">📡 Antenas / señal</button>
       </div>
       <div class="legend" id="legend"><button class="legend-toggle" id="legendToggle" type="button" aria-expanded="false" aria-controls="legendBody"><span class="chev">▸</span><span>Referencias del mapa</span><span class="hint">tocá para ver</span></button><div class="legend-body" id="legendBody">
         <div><span class="dot red"></span>Incendio activo / no controlado</div>
@@ -91,6 +92,7 @@
         <div><span class="dot blue"></span>DriveBC corte/incidente</div>
         <div><span class="dot green"></span>Parada segura / agua / bencina / compra</div>
         <div><span class="dot" style="background:#7ee0ff"></span>Cámara de DriveBC — tocá para ver la ruta</div>
+        <div><span class="dot" style="background:#c9a0ff"></span>Antena de telefonía (OpenStreetMap)</div>
         <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--line)">
           <div><b style="color:var(--ink)">🏕️ Campings — ficha con pros y contras</b></div>
           <div><span class="dot green"></span>Sirve: tomalo si hay lugar</div>
@@ -116,7 +118,6 @@
       <div class="tabs">
         <button class="tab active" data-tab="plan" onclick="showTab('plan')">Plan</button>
         <button class="tab" data-tab="lista" onclick="showTab('lista')">Lista</button>
-        <button class="tab" data-tab="dany" onclick="showTab('dany')">Offline</button>
         <button class="tab" data-tab="apis" onclick="showTab('apis')">APIs</button>
       </div>
 
@@ -176,26 +177,6 @@
         </div>
       </section>
 
-      <section id="tab-dany" class="hidden">
-        <div class="card">
-          <h2>📱 Cómo bajar el mapa offline</h2>
-          <ol class="small">
-            <li>Abrir Google Maps.</li>
-            <li>Tocar foto/inicial arriba a la derecha.</li>
-            <li>Entrar a “Mapas sin conexión”.</li>
-            <li>Tocar “Selecciona tu propio mapa”.</li>
-            <li>Seleccionar un área grande: New Westminster, toda la Hwy 1 hasta Hope, y toda la Hwy 3 desde Hope hasta <b>Princeton</b> pasando por Manning Park.</li>
-            <li>Descargar con WiFi.</li>
-            <li>Probar: poner modo avión, abrir Google Maps, buscar destino y verificar que aparece la ruta.</li>
-          </ol>
-          <p class="warn"><b>Importante:</b> el área tiene que llegar hasta Princeton, no terminar en Manning. Si la Hwy 3 se corta hacia el oeste, la única salida es hacia el este y ahí el mapa tiene que seguir funcionando. Dentro del parque prácticamente no hay señal celular.</p>
-        </div>
-        <div class="card">
-          <h2>🔋 Teléfono operativo</h2>
-          <div class="checklist" id="phoneList"></div>
-        </div>
-      </section>
-
       <section id="tab-apis" class="hidden">
         <div class="card">
           <h2>🔌 Fuentes en vivo descubiertas</h2>
@@ -229,12 +210,15 @@ const SOURCES={
   // manejando— nunca se dibujaba. Instantánea estática como respaldo, generada
   // por bin/snapshot-drivebc.py y servida desde el mismo origen.
   drivebcRespaldo:'data/drivebc-eventos.json',
-  camaras:'data/drivebc-camaras.json'
+  camaras:'data/drivebc-camaras.json',
+  // OpenStreetMap (ODbL) es lo único de cobertura que se puede DIBUJAR:
+  // nPerf y los operadores son dato propietario, sólo enlazables.
+  antenas:'data/antenas.json'
 };
 const map=L.map('map',{zoomControl:false}).setView([49.20,-121.85],8);  // encuadre que cubre New Westminster y todo el corredor de la Hwy 3
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(map);
-const layers={fires:L.layerGroup().addTo(map),perimeters:L.layerGroup().addTo(map),evac:L.layerGroup().addTo(map),restrictions:L.layerGroup().addTo(map),drivebc:L.layerGroup().addTo(map),poi:L.layerGroup().addTo(map),camps:L.layerGroup().addTo(map),cams:L.layerGroup()};
+const layers={fires:L.layerGroup().addTo(map),perimeters:L.layerGroup().addTo(map),evac:L.layerGroup().addTo(map),restrictions:L.layerGroup().addTo(map),drivebc:L.layerGroup().addTo(map),poi:L.layerGroup().addTo(map),camps:L.layerGroup().addTo(map),cams:L.layerGroup(),antenas:L.layerGroup()};
 /* Coordenadas geocodificadas con Nominatim/OSM el 2026-08-08, no estimadas a ojo.
    'ojo' = punto que hay que mirar en las capas en vivo antes de comprometerse,
    no una parada segura. Allison Pass es 'ojo' porque es donde BC Parks ubica el
@@ -554,6 +538,26 @@ function fichaCam(c){
     Captura del ${(c.actualizada||'').slice(0,16).replace('T',' ')||'—'}</div>
   </div>`;
 }
+async function addAntenas(){
+  layers.antenas.clearLayers();
+  const r=await fetch(SOURCES.antenas,{cache:'no-store'});
+  if(!r.ok) throw new Error(r.status+' '+r.statusText);
+  const j=await r.json(); let n=0;
+  for(const a of (j.antenas||[])){
+    L.circleMarker([a.lat,a.lon],{radius:4,color:'#0b1016',weight:1,fillColor:'#c9a0ff',fillOpacity:.9})
+     .bindPopup(`<b>📡 Antena de telefonía</b><br>${a.operador||a.nombre||'operador sin registrar en OSM'}`+
+       `<br><span class="mono" style="color:var(--muted)">${a.tipo||''} · a ${a.dist_ruta} km de la ruta</span>`+
+       `<br><span style="color:var(--muted);font-size:11px">Que haya antena no garantiza señal: manda el relieve. Fuente: OpenStreetMap</span>`)
+     .addTo(layers.antenas);
+    n++;
+  }
+  return n;
+}
+function toggleAntenas(){
+  const on=map.hasLayer(layers.antenas);
+  if(on) map.removeLayer(layers.antenas); else layers.antenas.addTo(map);
+  const b=document.getElementById('btnAntenas'); if(b) b.classList.toggle('active',!on);
+}
 async function addWebcams(){
   layers.cams.clearLayers();
   const r=await fetch(SOURCES.camaras,{cache:'no-store'});
@@ -604,7 +608,8 @@ async function refreshAll(){const status=[]; document.getElementById('updated').
   ['Evacuaciones',()=>addGeoJson('Evacuación',SOURCES.evac,layers.evac,estiloEvac,null,popupEvac)],
   ['Restricciones',()=>addGeoJson('Restricción',SOURCES.restrictions,layers.restrictions,{color:'#ffb020',weight:1,fillOpacity:.08})],
   ['DriveBC cortes',addDriveBC],
-  ['Cámaras de ruta',addWebcams]
+  ['Cámaras de ruta',addWebcams],
+  ['Antenas (OpenStreetMap)',addAntenas]
  ];
  for(const [label,fn] of jobs){try{const n=await fn();status.push(`<div class="oktext">✓ ${label}: ${n} elementos</div>`)}catch(e){status.push(`<div class="warn">✕ ${label}: ${e.message}</div>`)}}
  document.getElementById('apiStatus').innerHTML=status.join('');
@@ -624,10 +629,11 @@ const camping={
 };
 const quickBuy=['Agua extra / botellas grandes','Hielo para cooler','Snacks salados','Fruta fácil: plátanos/manzanas','Sándwiches o wraps','Leche / café listo','Electrolitos o Gatorade','Toallas húmedas','Papel higiénico / servilletas','Bolsas de basura','Cartucho de gas de repuesto (no hay fogata permitida)','Power bank si falta','Mascarillas N95 por humo'];
 const phone=['Este mapa abierto y cargado ANTES de salir (guarda las capas en el teléfono)','Mapa offline de respaldo descargado (Google Maps u OsmAnd)','Prueba en modo avión realizada','Teléfono cargado 100%','Power bank cargado','Cable de auto disponible','Ubicación/GPS activado','Dirección destino guardada','Contactos familiares guardados'];
+function mkChecksSiExiste(t,g,p){ if(document.getElementById(t)) mkChecks(t,g,p) }
 function mkChecks(target,groups,prefix){const el=document.getElementById(target); let html=''; if(Array.isArray(groups)){html='<div class="checklist">'+groups.map((x,i)=>check(prefix+i,x)).join('')+'</div>'}else{for(const [g,items] of Object.entries(groups)){html+=`<h3>${g}</h3><div class="checklist">`+items.map((x,i)=>check(prefix+g+i,x)).join('')+'</div>'}} el.innerHTML=html; el.querySelectorAll('input').forEach(inp=>{inp.checked=localStorage.getItem(inp.id)==='1'; inp.addEventListener('change',()=>localStorage.setItem(inp.id,inp.checked?'1':'0'))})}
 function check(id,label){return `<div class="item"><input type="checkbox" id="${id.replace(/\W/g,'_')}"><label for="${id.replace(/\W/g,'_')}">${label}</label></div>`}
-function showTab(name){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name)); ['plan','lista','dany','apis'].forEach(n=>document.getElementById('tab-'+n).classList.toggle('hidden',n!==name))}
-mkChecks('campingList',camping,'camp-'); mkChecks('buyQuick',quickBuy,'buy-'); mkChecks('phoneList',phone,'phone-'); refreshAll();
+function showTab(name){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name)); ['plan','lista','apis'].forEach(n=>document.getElementById('tab-'+n).classList.toggle('hidden',n!==name))}
+mkChecks('campingList',camping,'camp-'); mkChecks('buyQuick',quickBuy,'buy-'); mkChecksSiExiste('phoneList',phone,'phone-'); refreshAll();
 
 /* Leaflet mide el contenedor al construirse. Si en ese momento todavia no tiene su
    tamano final (fuentes, panel lateral, barra del navegador en el celular), las
