@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shuswap Lake — qué esperar esta semana</title>
+<meta name="description" content="Condiciones en Shuswap Lake Provincial Park para la semana del 9 al 16 de agosto de 2026: humo, evacuaciones cercanas, prohibicion de fogatas y que revisar cada dia.">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Shuswap Lake — qué esperar esta semana">
+<meta property="og:description" content="Humo, evacuaciones cercanas y prohibicion de fogatas. Consultado el 8 de agosto de 2026.">
+<meta property="og:type" content="article">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏕️</text></svg>">
+</head>
+<body>
+<style>
+  :root{
+    --paper:#F4F6F5; --card:#FFFFFF; --ink:#14181B; --ink-soft:#4B565B;
+    --ink-faint:#78868C; --rule:#DCE2E1; --rule-strong:#C3CCCA;
+    --accent:#0B6E5F; --accent-soft:#E3F0ED;
+    --good:#2C7A5B; --good-bg:#E6F1EB;
+    --warn:#8A6410; --warn-bg:#F6EEDC;
+    --bad:#A93B1B;  --bad-bg:#F7E7E1;
+    --crit:#7E1D12; --crit-bg:#F3DEDA;
+    --shadow:0 1px 2px rgba(20,24,27,.05), 0 8px 24px rgba(20,24,27,.05);
+    --serif:ui-serif,Georgia,"Iowan Old Style","Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#111517; --card:#181D20; --ink:#E9EFEE; --ink-soft:#A7B4B7;
+      --ink-faint:#7C8A8E; --rule:#283033; --rule-strong:#384346;
+      --accent:#4FBFA8; --accent-soft:#16302C;
+      --good:#5FBF92; --good-bg:#152B22;
+      --warn:#D5A64A; --warn-bg:#2C2515;
+      --bad:#E58060;  --bad-bg:#331C15;
+      --crit:#F09080; --crit-bg:#3A1A14;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#111517; --card:#181D20; --ink:#E9EFEE; --ink-soft:#A7B4B7;
+    --ink-faint:#7C8A8E; --rule:#283033; --rule-strong:#384346;
+    --accent:#4FBFA8; --accent-soft:#16302C;
+    --good:#5FBF92; --good-bg:#152B22;
+    --warn:#D5A64A; --warn-bg:#2C2515;
+    --bad:#E58060;  --bad-bg:#331C15;
+    --crit:#F09080; --crit-bg:#3A1A14;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--sans); font-size:16.5px; line-height:1.6; -webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px; margin:0 auto; padding:0 22px 80px}
+
+  header.top{padding:48px 0 26px; border-bottom:2px solid var(--ink)}
+  .eyebrow{font-family:var(--mono); font-size:11.5px; letter-spacing:.13em;
+    text-transform:uppercase; color:var(--ink-faint); margin:0 0 15px}
+  h1{font-family:var(--serif); font-weight:600; font-size:clamp(29px,5.2vw,43px);
+    line-height:1.12; letter-spacing:-.02em; margin:0 0 13px; text-wrap:balance}
+  .standfirst{font-size:17.5px; color:var(--ink-soft); margin:0; max-width:58ch; text-wrap:pretty}
+  .stamp{margin-top:20px; font-family:var(--mono); font-size:11.5px; color:var(--ink-faint)}
+
+  section{padding:40px 0; border-bottom:1px solid var(--rule)}
+  section:last-of-type{border-bottom:0}
+  h2{font-family:var(--serif); font-weight:600; font-size:clamp(21px,3.3vw,28px);
+    line-height:1.2; letter-spacing:-.015em; margin:0 0 6px; text-wrap:balance}
+  .sec-note{color:var(--ink-faint); font-size:14px; margin:0 0 22px}
+  p{margin:0 0 15px; max-width:66ch; text-wrap:pretty}
+  p:last-child{margin-bottom:0}
+  strong{font-weight:650}
+  a{color:var(--accent); text-underline-offset:2px}
+
+  .verdict{background:var(--card); border:1px solid var(--rule-strong);
+    border-left:5px solid var(--accent); border-radius:3px; padding:24px 26px;
+    box-shadow:var(--shadow)}
+  .verdict .big{font-family:var(--serif); font-size:clamp(19px,2.7vw,23px);
+    line-height:1.32; margin:0 0 13px; letter-spacing:-.01em}
+  .verdict p{font-size:15.5px; color:var(--ink-soft)}
+
+  .split{display:grid; gap:14px; margin-top:6px}
+  @media(min-width:660px){.split{grid-template-columns:1fr 1fr}}
+  .panel{border:1px solid var(--rule-strong); border-radius:3px; padding:19px 21px; background:var(--card)}
+  .panel.ok{border-left:4px solid var(--good)}
+  .panel.no{border-left:4px solid var(--bad)}
+  .panel h3{font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    margin:0 0 12px; font-weight:600}
+  .panel.ok h3{color:var(--good)}
+  .panel.no h3{color:var(--bad)}
+  .panel ul{margin:0; padding-left:18px; font-size:15px; color:var(--ink-soft); line-height:1.5}
+  .panel li{margin-bottom:8px}
+  .panel li:last-child{margin-bottom:0}
+  .panel li b{color:var(--ink)}
+
+  .tbl-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch}
+  table{border-collapse:collapse; width:100%; font-size:14.5px; min-width:400px}
+  th{text-align:left; font-weight:600; font-size:12px; letter-spacing:.05em;
+    text-transform:uppercase; color:var(--ink-faint);
+    border-bottom:1.5px solid var(--rule-strong); padding:0 12px 8px 0; vertical-align:bottom}
+  td{border-bottom:1px solid var(--rule); padding:11px 12px 11px 0; vertical-align:top}
+  tr:last-child td{border-bottom:0}
+  td.num,th.num{text-align:right; font-family:var(--mono);
+    font-variant-numeric:tabular-nums; padding-right:0}
+  .row-bad td{background:var(--bad-bg)}
+
+  .pill{display:inline-block; font-family:var(--mono); font-size:11px; font-weight:600;
+    letter-spacing:.05em; text-transform:uppercase; padding:3px 8px; border-radius:2px; white-space:nowrap}
+  .p-good{background:var(--good-bg); color:var(--good)}
+  .p-warn{background:var(--warn-bg); color:var(--warn)}
+  .p-crit{background:var(--crit-bg); color:var(--crit)}
+
+  .callout{border:1px solid var(--rule-strong); border-left:4px solid var(--bad);
+    background:var(--card); border-radius:3px; padding:17px 20px; margin:22px 0 0}
+  .callout.calm{border-left-color:var(--accent)}
+  .callout p{font-size:15px; margin-bottom:10px}
+  .callout p:last-child{margin-bottom:0}
+  .callout .hd{font-family:var(--mono); font-size:11px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--ink-faint); margin:0 0 9px; font-weight:600}
+
+  .check{display:flex; flex-direction:column; gap:10px; margin-top:8px}
+  .ci{display:flex; gap:14px; align-items:flex-start; background:var(--card);
+    border:1px solid var(--rule-strong); border-radius:3px; padding:15px 17px;
+    text-decoration:none; color:inherit; transition:border-color .12s ease}
+  .ci:hover{border-color:var(--accent)}
+  .ci .n{display:block; font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+    padding-top:3px; min-width:18px}
+  .ci .b{display:block; flex:1; min-width:0}
+  .ci .t{display:block; font-weight:650; font-size:15.5px; margin-bottom:4px; color:var(--accent)}
+  .ci .d{display:block; font-size:14px; color:var(--ink-soft); line-height:1.45}
+
+  ul.plain{margin:0 0 15px; padding-left:19px; max-width:66ch}
+  ul.plain li{margin-bottom:7px}
+  footer{padding:36px 0 0; border-top:2px solid var(--ink); margin-top:40px}
+  footer p{font-size:13.5px; color:var(--ink-faint)}
+  :where(a,button):focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">Shuswap Lake Provincial Park · semana del 9 al 16 de agosto</p>
+  <h1>Tu reserva está bien. El tema es el humo.</h1>
+  <p class="standfirst">
+    Revisé las condiciones del parque contra BC Wildfire, BC Parks y los datos de calidad
+    del aire. Esto es lo que conviene saber antes de salir.
+  </p>
+  <p class="stamp">Consultado el sábado 8 de agosto de 2026, 18:00 PDT</p>
+</header>
+
+<section>
+  <div class="verdict">
+    <p class="big">No hay ningún incendio a menos de 50 km del parque y el parque está
+      abierto. Lo que sí hay es humo denso y seis zonas de evacuación entre 43 y 58 km.</p>
+    <p>Ninguna de esas zonas toca el parque — son todas del incendio Bradley Creek, del
+      lado del lago Okanagan. Pero explican por qué el aire está como está, y son lo que
+      hay que mirar cada mañana.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Lo bueno y lo malo, separado</h2>
+  <p class="sec-note">Para que no se mezcle una cosa con la otra</p>
+
+  <div class="split">
+    <div class="panel ok">
+      <h3>✓ A favor</h3>
+      <ul>
+        <li><b>Cero incendios a menos de 50 km.</b> El más cercano está a 56,6 km (150 ha).</li>
+        <li><b>El parque está abierto</b>, sin cierre por incendio.</li>
+        <li>Ninguna zona de evacuación toca el parque.</li>
+        <li>Es de los pocos lugares de BC con <b>varias noches seguidas disponibles</b> esta semana.</li>
+      </ul>
+    </div>
+    <div class="panel no">
+      <h3>✗ En contra</h3>
+      <ul>
+        <li><b>Aire malo:</b> índice 182 el sábado, promedio 71,8 proyectado para el lunes.</li>
+        <li><b>Seis zonas de evacuación a menos de 60 km</b> — tres son órdenes.</li>
+        <li><b>Fogatas prohibidas</b> desde el 10 de julio.</li>
+        <li>Provincia en <b>estado de emergencia</b>: pueden restringir la circulación.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>El humo</h2>
+  <p class="sec-note">PM2.5, en µg/m³ — es el dato que más va a afectar la estadía</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <tr><th>Cuándo</th><th class="num">Promedio</th><th class="num">Pico</th><th>Lectura</th></tr>
+      <tr class="row-bad"><td><strong>Sábado 8</strong> (ahora)</td><td class="num">83,2</td><td class="num">145,8</td><td><span class="pill p-crit">índice 182</span></td></tr>
+      <tr class="row-bad"><td>Domingo 9</td><td class="num">87,0</td><td class="num">104,3</td><td><span class="pill p-crit">muy malo</span></td></tr>
+      <tr><td>Lunes 10</td><td class="num">71,8</td><td class="num">90,3</td><td><span class="pill p-crit">muy malo</span></td></tr>
+    </table>
+  </div>
+
+  <p style="margin-top:16px">Escala: menos de 12 es bueno · 12–25 moderado · 25–50 malo ·
+    <strong>50–100 muy malo</strong> · más de 100 peligroso.</p>
+
+  <div class="callout">
+    <p class="hd">Qué significa en carpa</p>
+    <p>Arriba de 50 se recomienda que los grupos sensibles —chicos, gente con asma,
+      adultos mayores— se queden adentro. <strong>En carpa no hay adentro.</strong></p>
+    <p>Si van igual, lo que más ayuda: <strong>mascarillas N95</strong> para cada uno (las
+      quirúrgicas no filtran PM2.5), pasar las horas de pico dentro del auto con las
+      ventanas cerradas y la recirculación puesta, y llevar colirio o lágrimas
+      artificiales. Si alguien usa inhalador, que lo tenga a mano y no en el fondo del bolso.</p>
+  </div>
+
+  <p style="margin-top:18px">Un detalle honesto sobre el dato: viene de un modelo
+    meteorológico, no de un sensor en el suelo. Sirve para el orden de magnitud, no para el
+    número exacto del día. Vale la pena mirar el índice oficial antes de salir.</p>
+</section>
+
+<section>
+  <h2>Las evacuaciones cercanas</h2>
+  <p class="sec-note">Todas del incendio Bradley Creek · ninguna toca el parque</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <tr><th>Zona</th><th class="num">Distancia</th><th>Estado</th></tr>
+      <tr><td>Spallumcheen</td><td class="num">43 km</td><td><span class="pill p-warn">alerta</span></td></tr>
+      <tr><td>Sweetsbridge / Cedar Hill y Glenemma</td><td class="num">44 km</td><td><span class="pill p-warn">alerta</span></td></tr>
+      <tr><td>Splatsin Kukpi7 y Tkwamipla</td><td class="num">44 km</td><td><span class="pill p-warn">alerta</span></td></tr>
+      <tr class="row-bad"><td>Okanagan Indian Band IR 1</td><td class="num">47 km</td><td><span class="pill p-crit">orden</span></td></tr>
+      <tr class="row-bad"><td>Oeste de OKIB (zona 6 Mile Creek Rd)</td><td class="num">53 km</td><td><span class="pill p-crit">orden</span></td></tr>
+      <tr class="row-bad"><td>Spallumcheen</td><td class="num">58 km</td><td><span class="pill p-crit">orden</span></td></tr>
+    </table>
+  </div>
+
+  <p style="margin-top:18px"><strong>Orden</strong> significa salir ya, zona cerrada.
+    <strong>Alerta</strong> significa estar listo para salir con poco aviso. El incendio
+    Bradley Creek cruzó la <strong>Hwy 97</strong> en el extremo norte del lago Okanagan.</p>
+
+  <div class="callout calm">
+    <p class="hd">Lo práctico</p>
+    <p>Antes de armar la carpa, tener decidido <strong>por dónde se sale</strong> si hay
+      que salir de apuro, y que todos en el grupo lo sepan. No es alarmismo: es la
+      conversación que después no se puede tener con calma.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Fogatas: prohibidas</h2>
+  <p class="sec-note">Kamloops Fire Centre, desde el 10 de julio · sin rescindir</p>
+
+  <ul class="plain">
+    <li>🚫 <strong>Fogata y firepit de leña</strong> —incluido el portátil— <strong>prohibidos</strong>. Cuentan como fuego abierto.</li>
+    <li>✅ <strong>Firepit a gas o propano</strong> permitido, si es <strong>CSA o ULC certificado</strong> y la llama no pasa los <strong>15 cm</strong>.</li>
+    <li>✅ <strong>Cocinas a gas</strong> y briquetas, bajo la misma regla.</li>
+  </ul>
+
+  <p><strong>Hay que llevar cocina a gas sí o sí</strong> y planificar la comida sin fuego
+    desde el principio, no como plan B.</p>
+
+  <div class="callout">
+    <p class="hd">Ojo con esto</p>
+    <p>Con el estado de emergencia declarado el sábado 8, <strong>hasta los aparatos
+      portátiles a gas se pueden prohibir</strong> de un día para el otro.
+      <a href="https://www2.gov.bc.ca/gov/content/safety/wildfire-status/prevention/fire-bans-and-restrictions" target="_blank" rel="noopener">Verificar el mismo día de salir</a>.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Dos cosas del parque</h2>
+
+  <p><strong>Sendero Albas Falls cerrado al este de Celista Creek</strong>, del 15 de julio
+    al 22 de agosto, por reemplazo del puente bajo. Si estaba en los planes, no se puede
+    hacer completo.</p>
+
+  <p><strong>Cuidado con el sendero de Celesta Creek en el camping ALBAS:</strong> BC Parks
+    tiene un aviso permanente por tramos empinados con caídas al vacío. Hubo heridos graves
+    y muertes por las cascadas, los cambios de nivel del agua, la corriente y el agua fría.
+    Chicos siempre acompañados y perros con correa.</p>
+</section>
+
+<section>
+  <h2>Para mirar cada mañana</h2>
+  <p class="sec-note">En este orden. Toma dos minutos.</p>
+
+  <div class="check">
+    <a class="ci" href="https://www.emergencyinfobc.gov.bc.ca" target="_blank" rel="noopener">
+      <span class="n">01</span>
+      <span class="b">
+        <span class="t">EmergencyInfoBC</span>
+        <span class="d">Evacuaciones y restricciones de circulación. Con el estado de
+          emergencia activo, esto manda sobre todo lo demás.</span>
+      </span>
+    </a>
+    <a class="ci" href="https://wildfiresituation.nrs.gov.bc.ca/map" target="_blank" rel="noopener">
+      <span class="n">02</span>
+      <span class="b">
+        <span class="t">Mapa oficial de incendios</span>
+        <span class="d">Ver si algo se movió hacia el parque. Hoy lo más cerca está a 56 km.</span>
+      </span>
+    </a>
+    <a class="ci" href="https://www.drivebc.ca" target="_blank" rel="noopener">
+      <span class="n">03</span>
+      <span class="b">
+        <span class="t">DriveBC</span>
+        <span class="d">Cortes de ruta. Mirar la de vuelta, no sólo la de ida — la Hwy 97
+          ya fue cruzada por el fuego una vez.</span>
+      </span>
+    </a>
+    <a class="ci" href="https://www2.gov.bc.ca/gov/content/safety/wildfire-status/prevention/fire-bans-and-restrictions" target="_blank" rel="noopener">
+      <span class="n">04</span>
+      <span class="b">
+        <span class="t">Prohibiciones de fuego</span>
+        <span class="d">Por si cambian las reglas de los aparatos portátiles.</span>
+      </span>
+    </a>
+  </div>
+
+  <div class="callout calm">
+    <p class="hd">Y antes de salir de casa</p>
+    <p>Descargar los <strong>mapas offline</strong> cubriendo el parque y toda la ruta de
+      vuelta, no sólo el destino. En esa zona hay tramos largos sin señal, y un mapa que
+      termina en el camping no sirve para salir.</p>
+  </div>
+</section>
+
+<footer>
+  <p><strong>De dónde salen los datos</strong> — Incendios, evacuaciones y prohibiciones:
+    BC Wildfire Service. Avisos del parque y estado de las fogatas: API de BC Parks.
+    Cortes de ruta: DriveBC. Calidad del aire: modelo CAMS vía Open-Meteo. Todo consultado
+    el 8 de agosto de 2026 entre las 17:00 y las 19:00.</p>
+  <p>Esto es una foto de un momento, no un estado permanente — y el aire viene de un
+    modelo, no de un sensor. <strong>Si una autoridad, BC Parks, DriveBC o EmergencyInfoBC
+    dicen otra cosa, esa instrucción manda sobre esta página.</strong></p>
+</footer>
+
+</div>
+
+</body>
+</html>
