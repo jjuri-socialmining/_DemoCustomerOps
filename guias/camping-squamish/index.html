@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Acampar en Squamish sin reserva — guía práctica</title>
+<meta name="description" content="Guía de campings sin reserva en Squamish, BC: Stawamus Chief, Alice Lake y Porteau Cove. Tarifas, servicios, avisos de osos, prohibición de fogatas, precios de atracciones y dónde comprar.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏔️</text></svg>">
+<link rel="stylesheet" href="leaflet/leaflet.css">
+<style>
+  :root{
+    --paper:#F4F6F5; --card:#FFFFFF; --ink:#14181B; --ink-soft:#4B565B;
+    --ink-faint:#78868C; --rule:#DCE2E1; --rule-strong:#C3CCCA;
+    --accent:#0B6E5F;
+    --crit:#7E1D12; --crit-bg:#F3DEDA;
+    --warn:#7A5205; --warn-bg:#F7EBD3;
+    --ok:#1F5F35; --ok-bg:#E2EFE6;
+    --serif:ui-serif,Georgia,"Iowan Old Style","Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --paper:#111517; --card:#181D20; --ink:#E9EFEE; --ink-soft:#A7B4B7;
+    --ink-faint:#7C8A8E; --rule:#283033; --rule-strong:#384346;
+    --accent:#4FBFA8; --crit:#F09080; --crit-bg:#3A1A14;
+    --warn:#E3B457; --warn-bg:#332612; --ok:#78C48D; --ok-bg:#162E1D;}}
+  :root[data-theme="dark"]{
+    --paper:#111517; --card:#181D20; --ink:#E9EFEE; --ink-soft:#A7B4B7;
+    --ink-faint:#7C8A8E; --rule:#283033; --rule-strong:#384346;
+    --accent:#4FBFA8; --crit:#F09080; --crit-bg:#3A1A14;
+    --warn:#E3B457; --warn-bg:#332612; --ok:#78C48D; --ok-bg:#162E1D;}
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans);
+    font-size:16.5px; line-height:1.62; -webkit-font-smoothing:antialiased}
+  .wrap{max-width:780px; margin:0 auto; padding:40px 22px 80px}
+  .eyebrow{font-family:var(--mono); font-size:11.5px; letter-spacing:.13em;
+    text-transform:uppercase; color:var(--ink-faint); margin:0 0 12px}
+  h1{font-family:var(--serif); font-weight:600; font-size:clamp(28px,6.5vw,40px);
+    line-height:1.1; letter-spacing:-.02em; margin:0 0 12px; text-wrap:balance}
+  .sub{font-size:17px; color:var(--ink-soft); margin:0 0 6px}
+  h2{font-family:var(--serif); font-weight:600; font-size:23px; letter-spacing:-.015em;
+    margin:44px 0 14px; padding-bottom:8px; border-bottom:1px solid var(--rule-strong)}
+  h3{font-size:12px; font-weight:700; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--ink-faint); margin:26px 0 10px}
+  p{margin:0 0 14px}
+  a{color:var(--accent)}
+
+  .box{background:var(--card); border:1px solid var(--rule-strong); border-radius:5px;
+    padding:16px 18px; margin-bottom:14px}
+  .box.crit{border-left:3px solid var(--crit); background:var(--crit-bg)}
+  .box.warn{border-left:3px solid var(--warn); background:var(--warn-bg)}
+  .box.ok{border-left:3px solid var(--ok); background:var(--ok-bg)}
+  .box p:last-child{margin-bottom:0}
+  .lbl{font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; display:block; margin-bottom:7px}
+  .box.crit .lbl{color:var(--crit)} .box.warn .lbl{color:var(--warn)} .box.ok .lbl{color:var(--ok)}
+
+  .scroll{overflow-x:auto; margin-bottom:8px}
+  table{width:100%; border-collapse:collapse; font-size:14.5px}
+  th,td{text-align:left; padding:8px 10px; border-bottom:1px solid var(--rule); vertical-align:top}
+  thead th{font-family:var(--mono); font-size:10.5px; text-transform:uppercase;
+    letter-spacing:.08em; color:var(--ink-faint); white-space:nowrap}
+  td.n,th.n{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+  tr.tot td{font-weight:700; border-top:2px solid var(--rule-strong)}
+  tr.pick td{background:var(--ok-bg)}
+  .cap{font-size:13px; color:var(--ink-faint); line-height:1.5; margin-bottom:18px}
+
+  ul.plain{padding-left:20px; margin:0 0 14px}
+  ul.plain li{margin-bottom:7px}
+  .qa{border-left:3px solid var(--rule-strong); padding-left:16px; margin-bottom:16px}
+  .qa .q{font-family:var(--serif); font-size:19px; font-weight:600; margin-bottom:4px}
+  .qa .a{font-size:15px; color:var(--ink-soft)}
+
+  #map{height:320px; border-radius:5px; border:1px solid var(--rule-strong);
+    background:var(--card); margin-bottom:8px}
+  .leaflet-popup-content{font-size:13px; line-height:1.45; margin:9px 11px}
+
+  .grupo{margin-bottom:20px}
+  .grupo > h3{margin:0 0 3px}
+  .grupo > .por{font-size:13px; color:var(--ink-faint); margin:0 0 8px; line-height:1.45}
+  .grupo ul{list-style:none; margin:0; padding:0}
+  .grupo li{border-bottom:1px solid var(--rule)}
+  .grupo li:last-child{border-bottom:none}
+  .grupo label{display:grid; grid-template-columns:22px 1fr; gap:9px; align-items:start;
+    padding:8px 2px; cursor:pointer; font-size:15px; line-height:1.45}
+  .grupo input{width:18px; height:18px; margin:2px 0 0; accent-color:var(--ok); cursor:pointer}
+  .grupo label .n{display:block; font-size:12.5px; color:var(--ink-faint); line-height:1.4}
+  .grupo li.hot label .t::before{content:"◆ "; color:var(--crit); font-size:12px}
+  .grupo input:checked ~ .txt .t{text-decoration:line-through; color:var(--ink-faint)}
+
+  footer{margin-top:46px; padding-top:20px; border-top:1px solid var(--rule);
+    font-size:13px; color:var(--ink-faint); line-height:1.55}
+  code{font-family:var(--mono); font-size:.9em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Guía práctica · Sea to Sky, British Columbia</p>
+  <h1>Acampar en Squamish sin reserva</h1>
+  <p class="sub">En agosto los campings reservables de BC se agotan tres meses antes. Esta
+  guía es sobre lo que queda: los sitios que se toman <strong>por orden de llegada</strong>
+  en el corredor Sea to Sky, qué tienen y qué les falta.</p>
+
+  <div class="box ok">
+    <span class="lbl">✓ Lo esencial en una línea</span>
+    <p><strong>Stawamus Chief tiene 109 sitios y los 109 son sin reserva.</strong> No acepta
+    reservas: se llega y se toma lugar. Es, con diferencia, la mayor bolsa de sitios por
+    orden de llegada de toda la región — a 2 km del centro de Squamish.</p>
+  </div>
+
+  <h2>Los tres campings de la zona</h2>
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Camping</th><th class="n">Por noche</th><th class="n">Sin reserva</th><th>Qué tiene</th></tr>
+      </thead>
+      <tbody>
+        <tr class="pick">
+          <td><strong>Stawamus Chief</strong></td>
+          <td class="n"><strong>$10 por persona</strong></td>
+          <td class="n"><strong>109 de 109</strong></td>
+          <td>52 con auto + 57 walk-in. Lockers de comida, canillas de agua fría, tarimas de
+          grava con borde de madera. Menores de 6 no pagan.
+          <strong>Sin duchas y sin electricidad.</strong></td>
+        </tr>
+        <tr>
+          <td>Alice Lake</td>
+          <td class="n">$51</td>
+          <td class="n">12 de 107</td>
+          <td>95 sitios con auto, <strong>con duchas</strong>, lago para nadar y playas de
+          arena. 54 sitios con electricidad.</td>
+        </tr>
+        <tr>
+          <td>Porteau Cove</td>
+          <td class="n">—</td>
+          <td class="n">0 de 60</td>
+          <td><strong>Aviso vigente: agua no potable por presencia de plomo.</strong>
+          Ruido de tren y de obra.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cap">Conteos de sitios y tarifas: API y web de BC Parks. Stawamus Chief cobra
+  por persona; los otros, por sitio.</div>
+
+  <h2>Electricidad o llegar sin reserva: hay que elegir</h2>
+  <p>Es la disyuntiva que define acampar acá en temporada alta. Todos los sitios con enchufe
+  del corredor son reservables, y en agosto están tomados desde mayo.</p>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Camping</th><th class="n">Sitios</th><th class="n">Con luz</th><th class="n">Sin reserva</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Stawamus Chief</strong></td><td class="n">52</td><td class="n">0</td><td class="n">52</td></tr>
+        <tr><td>Alice Lake — loop eléctrico</td><td class="n">54</td><td class="n">54</td><td class="n">0</td></tr>
+        <tr><td>Alice Lake — loop común</td><td class="n">41</td><td class="n">0</td><td class="n">0</td></tr>
+        <tr><td>Porteau Cove</td><td class="n">44</td><td class="n">44</td><td class="n">0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box warn">
+    <span class="lbl">Cómo se acampa sin enchufe</span>
+    <ul class="plain">
+      <li><strong>El auto es la única fuente de carga.</strong> Cargador de 12 V, y cargar
+      mientras se maneja a los paseos, no con el motor parado.</li>
+      <li><strong>Batería externa grande</strong>, cargada de antemano.</li>
+      <li><strong>Farol y linternas a pilas.</strong> Sin fogata —está prohibida— y sin luz,
+      la noche es oscura de verdad.</li>
+      <li>La hielera reemplaza a la heladera. Se repone hielo en Squamish, a 5 minutos.</li>
+      <li>Descargar mapas y entretenimiento antes de llegar.</li>
+    </ul>
+  </div>
+
+  <h2>Dónde queda todo</h2>
+  <div id="map"></div>
+  <div class="cap">Ubicaciones de OpenStreetMap. El camping está al sur del pueblo, sobre la
+  Highway 99; los comercios y servicios quedan al norte, entre 2 y 7 km.</div>
+
+  <h2>Osos — no es opcional</h2>
+  <div class="box crit">
+    <span class="lbl">⚠ Avisos vigentes de BC Parks</span>
+    <p>Stawamus Chief: <strong>«Bear regularly visiting the campground»</strong>.
+    Alice Lake: <strong>«Bear sighting in day-use area and campground»</strong>, más un
+    aviso específico de asegurar comida y basura. Por eso el camping provee
+    <strong>lockers de comida</strong>, y usarlos deja de ser una recomendación.</p>
+    <ul class="plain">
+      <li><strong>Todo lo que huela, al locker.</strong> Comida, basura, hielera, platos
+      sucios, pasta de dientes, protector solar, ropa con olor a comida.</li>
+      <li><strong>Nada de comida en la carpa. Nunca.</strong></li>
+      <li>Cocinar y comer <strong>lejos de donde se duerme</strong>.</li>
+      <li><strong>Si aparece uno:</strong> no correr. Hablarle fuerte y firme, agrandarse,
+      levantar a los chicos, y retroceder de frente y despacio dejándole salida.</li>
+      <li>Con oso negro, si ataca, <strong>se pelea</strong>. Hacerse el muerto es sólo para
+      el grizzly, que en esta zona no hay.</li>
+      <li>Reportar avistamientos al <strong>1-877-952-7277</strong> (Conservation Officer
+      Service).</li>
+    </ul>
+    <p>Alice Lake suma aviso de <strong>robos</strong>: no dejar cosas de valor a la vista
+    en el auto.</p>
+  </div>
+
+  <h2>Fogatas: prohibidas</h2>
+  <p>Rige la prohibición del <strong>Coastal Fire Centre desde el 16 de julio</strong> en
+  todos los parques de la zona. <strong>El firepit portátil de leña también cuenta como
+  fuego abierto y está prohibido.</strong> Sí se permiten cocinas y equipos a
+  <strong>gas o propano certificados</strong>. En condiciones extremas llegan a prohibirse
+  incluso ésos.</p>
+  <p>Consecuencia práctica: <strong>hay que llevar cocina a gas sí o sí</strong>, y planificar
+  la comida sin fuego como plan A, no como reemplazo.</p>
+
+  <h2>Aire e incendios</h2>
+  <p>Squamish proyecta entre <strong>13,6 y 15,9 µg/m³</strong> de PM2.5 — banda moderada.
+  De referencia: menos de 12 es bueno, 12 a 25 moderado, 25 a 50 malo, más de 50 muy malo.
+  <strong>En carpa no existe el «quedarse adentro»</strong>, así que conviene mirar el
+  pronóstico de PM2.5 antes de salir y no sólo el del tiempo.</p>
+  <p>Al momento de armar esta guía había <strong>cero incendios activos a menos de 60 km</strong>,
+  de 895 que ardían en la provincia.</p>
+
+  <h2>Qué hay para hacer</h2>
+
+  <div class="qa">
+    <div class="q">Stawamus Chief — el monolito</div>
+    <div class="a">Una de las paredes de granito más grandes del mundo, y el sendero arranca
+    en el camping. La subida a la primera cima lleva 1½ a 2 horas, con cadenas y escaleras.
+    Exige calzado cerrado y no es para chicos muy chicos. <strong>Gratis.</strong></div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Shannon Falls</div>
+    <div class="a">335 metros, la tercera catarata más alta de BC, a cinco minutos caminando
+    desde el estacionamiento. Apta para todas las edades. <strong>Gratis.</strong></div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Estuario de Squamish</div>
+    <div class="a">Boardwalk llano entre marismas, con muchos pájaros.
+    <strong>Gratis y apto para cochecito.</strong></div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Sea to Sky Gondola</div>
+    <div class="a">Góndola, puente colgante y senderos fáciles arriba. Abre de junio al 13 de
+    septiembre, todos los días de 9:00 a 20:00, última bajada 21:00.</div>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Entrada</th><th class="n">Boletería</th><th class="n">Online</th></tr></thead>
+      <tbody>
+        <tr><td>Adulto 19–64</td><td class="n">81,95</td><td class="n">73,95</td></tr>
+        <tr><td>Senior 65+</td><td class="n">76,95</td><td class="n">68,95</td></tr>
+        <tr><td>Joven 13–18</td><td class="n">51,95</td><td class="n">43,95</td></tr>
+        <tr><td>Chico 6–12</td><td class="n">37,95</td><td class="n">29,95</td></tr>
+        <tr><td><strong>Menores de 6</strong></td><td class="n"><strong>gratis</strong></td><td class="n"><strong>gratis</strong></td></tr>
+        <tr class="pick"><td><strong>Family (2 adultos + 2 chicos)</strong></td><td class="n">191,95</td><td class="n"><strong>165,95</strong></td></tr>
+        <tr><td>Sólo bajada</td><td class="n">25,00</td><td class="n">19,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cap">Comprar online ahorra $8 por entrada. La tarifa Family conviene incluso
+  con un solo chico.</div>
+
+  <div class="qa">
+    <div class="q">Britannia Mine Museum</div>
+    <div class="a">A 20 minutos al sur, en Britannia Beach. La entrada incluye el tren
+    subterráneo dentro de la mina, el show BOOM! y lavado de oro.</div>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Entrada</th><th class="n">Precio</th></tr></thead>
+      <tbody>
+        <tr><td>Adulto 18+</td><td class="n">42,95</td></tr>
+        <tr><td>Senior 65+ y estudiantes</td><td class="n">36,95</td></tr>
+        <tr><td>Joven 13–17</td><td class="n">32,95</td></tr>
+        <tr><td>Chico 5–12</td><td class="n">24,95</td></tr>
+        <tr><td><strong>4 años o menos</strong></td><td class="n"><strong>gratis</strong></td></tr>
+        <tr><td>Tarifa familiar diaria</td><td class="n">152,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cap"><strong>Early Riser:</strong> en julio y agosto, reservando online el turno
+  de las <strong>9:00</strong> hay <strong>20% de descuento</strong>. No se combina con la
+  tarifa familiar.</div>
+
+  <div class="qa">
+    <div class="q">Railway Museum of BC</div>
+    <div class="a">En Squamish. La entrada incluye viajes ilimitados en el vagón diésel BC-21,
+    en el Mini-Rail y en las zorras de mantenimiento. Roundhouse con locomotoras a vapor,
+    herrería en vivo e imprenta antigua. Recomiendan 4 a 5 horas; con 2 o 3 se ve todo una
+    vez. Estacionamiento gratis.</div>
+  </div>
+
+  <div class="box crit">
+    <span class="lbl">⚠ Abre pocos días</span>
+    <p>El museo abre <strong>sólo los sábados, los domingos de fin de semana largo, y los
+    viernes de junio, julio y agosto</strong>. De lunes a jueves está cerrado. Conviene
+    confirmar al 604-898-9336 antes de ir.</p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Entrada</th><th class="n">Gate</th><th class="n">Pase de temporada</th></tr></thead>
+      <tbody>
+        <tr><td>Adulto 19–59</td><td class="n">35,00</td><td class="n">70,00</td></tr>
+        <tr><td>Senior 60+</td><td class="n">30,00</td><td class="n">60,00</td></tr>
+        <tr><td>Estudiante 12–19</td><td class="n">27,00</td><td class="n">40,00</td></tr>
+        <tr><td>Chico 5–11</td><td class="n">20,00</td><td class="n">40,00</td></tr>
+        <tr><td><strong>Menores de 5</strong></td><td class="n"><strong>gratis</strong></td><td class="n"><strong>gratis</strong></td></tr>
+        <tr><td>Familia (misma dirección)</td><td class="n">100,00</td><td class="n">200,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cap">Los seniors pagan mitad de precio los viernes.</div>
+
+  <h2>Duchas, compras y servicios</h2>
+  <p>Stawamus Chief no tiene duchas. La salida es el <strong>Brennan Park Recreation
+  Centre</strong>, con pileta y duchas: <strong>entrada familiar $13,65</strong>; sueltos,
+  adulto $6,30, joven $4,73, chico $3,68. Hay tarjetas de 10 y 20 visitas válidas dos años.
+  Confirmar horarios al 604-898-3604. La otra opción, gratis, es bañarse en Alice Lake.</p>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Servicio</th><th>Dónde</th><th class="n">km*</th><th>Horario</th></tr></thead>
+      <tbody>
+        <tr><td>Supermercado</td><td>Stong's Market — 38078 Cleveland Ave</td><td class="n">2,5</td><td>07:00–19:00 todos los días</td></tr>
+        <tr><td>Supermercado</td><td>Nesters Market — 1200 Hunter Place</td><td class="n">2,9</td><td>07:00–21:00 todos los días</td></tr>
+        <tr><td>Supermercado</td><td>Save-On-Foods</td><td class="n">2,9</td><td>Lu–Vi 09:00–21:00 · Sá 09:00–18:00</td></tr>
+        <tr><td>Supermercado</td><td>Your Independent Grocer</td><td class="n">7,1</td><td>08:00–22:00 todos los días</td></tr>
+        <tr><td>Compra grande</td><td>Walmart — 39210 Discovery Way</td><td class="n">4,9</td><td>—</td></tr>
+        <tr><td>Equipo de camping</td><td>Canadian Tire</td><td class="n">6,7</td><td>—</td></tr>
+        <tr><td>Hielo y básicos</td><td>Valleycliffe General Store — 1909 Maple Dr</td><td class="n">3,1</td><td>09:00–21:00</td></tr>
+        <tr><td>Combustible</td><td>Shell — 1580 Sea to Sky Hwy</td><td class="n">2,6</td><td>—</td></tr>
+        <tr><td>Combustible</td><td>Co-op — 38183 Cleveland Ave</td><td class="n">2,7</td><td>—</td></tr>
+        <tr><td>Farmacia</td><td>Squamish Pharmacy — 37989 Cleveland Ave</td><td class="n">2,3</td><td>—</td></tr>
+        <tr><td>Farmacia</td><td>Shoppers Drug Mart — 1339 Pemberton Ave</td><td class="n">2,7</td><td>—</td></tr>
+        <tr><td><strong>Hospital</strong></td><td><strong>Squamish General — 38140 Behrner Dr</strong></td><td class="n">2,5</td><td>—</td></tr>
+        <tr><td>Duchas y pileta</td><td>Brennan Park — 1009 Centennial Way</td><td class="n">5,4</td><td>604-898-3604</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cap">* Distancia en línea recta desde Stawamus Chief. Los horarios que faltan no
+  figuran en OpenStreetMap y conviene confirmarlos. Estar a 3 km del pueblo es la ventaja
+  real de este camping: no hace falta cargar el auto para toda la estadía.</div>
+
+  <h2>Checklist de equipaje</h2>
+  <p>Agrupado por el motivo de cada cosa, no por tipo de objeto. Los <strong>◆</strong> son
+  los que no tienen reemplazo cerca. Lo tildado se guarda en este dispositivo.</p>
+  <div id="lista"></div>
+
+  <footer>
+    <strong>Fuentes.</strong> Sitios, tarifas, servicios y avisos de camping:
+    <a href="https://bcparks.ca/stawamus-chief-park/">BC Parks — Stawamus Chief</a>,
+    <a href="https://bcparks.ca/alice-lake-park/">Alice Lake</a> y la API pública de BC Parks.
+    Entradas: <a href="https://www.seatoskygondola.com/hours-and-prices/">Sea to Sky Gondola</a>,
+    <a href="https://www.britanniaminemuseum.ca/pages/plan-your-visit">Britannia Mine Museum</a>,
+    <a href="https://www.wcra.org/plan-your-visit/">Railway Museum of BC</a>.
+    Servicios municipales: <a href="https://squamish.ca/rec/admissions/">District of Squamish</a>.
+    Comercios y ubicaciones: OpenStreetMap. Incendios: capa oficial de incendios activos de BC.
+    Aire: modelo CAMS (pronóstico, no sensor). Datos consultados en agosto de 2026.<br><br>
+    Tarifas, horarios y avisos cambian. <strong>Verificá contra la fuente antes de viajar</strong>,
+    y si BC Parks, DriveBC o EmergencyInfoBC dicen otra cosa, esa instrucción manda sobre
+    esta guía.
+  </footer>
+</div>
+
+<script>
+(function(){
+  var GRUPOS = [
+    { t:'Dormir', por:'Las tarimas son de grava con borde de madera. En agosto la noche en Squamish refresca.', items:[
+      ['Carpa, sobretecho y estacas',1,''],
+      ['Colchonetas gruesas o inflables',1,'La grava se siente'],
+      ['Bolsas de dormir',1,''],
+      ['Almohadas',0,''],
+      ['Lona para debajo de la carpa',0,'Aísla de la humedad'],
+      ['Martillo o maza para las estacas',0,'En grava cuesta clavarlas']
+    ]},
+    { t:'Luz y energía', por:'Ninguno de los 52 sitios tiene electricidad, y no hay fogata que ilumine.', items:[
+      ['Batería externa grande, cargada de antemano',1,''],
+      ['Cargador de 12 V para el auto',1,'Cargar manejando, no con el motor parado'],
+      ['Farol a pilas para la mesa',1,''],
+      ['Una linterna o frontal por persona',1,''],
+      ['Pilas de repuesto',1,''],
+      ['Mapas y entretenimiento descargados',0,'Antes de llegar']
+    ]},
+    { t:'Cocinar sin fuego', por:'Prohibición de fogatas del Coastal Fire Centre. Sólo equipos a gas o propano certificados.', items:[
+      ['Cocina a gas o propano certificada',1,'Es la única forma legal de cocinar'],
+      ['Cartuchos o garrafa, más uno de repuesto',1,''],
+      ['Encendedor y fósforos',1,''],
+      ['Olla y sartén',0,''],
+      ['Platos, vasos y cubiertos',0,''],
+      ['Cuchillo y tabla',0,''],
+      ['Detergente biodegradable, esponja y repasador',0,''],
+      ['Bolsas de basura resistentes',1,'Por el aviso de osos']
+    ]},
+    { t:'Agua y comida', por:'Hay canillas de agua fría en el camping y no hay aviso de hervir el agua. El pueblo está a 2 km.', items:[
+      ['Bidones o botellas para el sitio',0,'Las canillas están en la entrada'],
+      ['Hielera',1,'Reemplaza a la heladera'],
+      ['Hielo del primer día',0,'Se repone en Squamish'],
+      ['Comida de los primeros días',0,'El resto se compra en el pueblo'],
+      ['Termo',0,'']
+    ]},
+    { t:'Osos — no es opcional', por:'Aviso vigente: un oso visita el camping regularmente. Hay lockers de comida en el sitio.', items:[
+      ['Contenedores herméticos para todo lo que huela',1,'Comida, basura, pasta de dientes, protector solar'],
+      ['Bolsas para juntar la basura',1,''],
+      ['Trapos para no dejar restos en la mesa',0,''],
+      ['Acordar que no entra comida a la carpa',1,'Ni un caramelo en el bolsillo']
+    ]},
+    { t:'Higiene', por:'El camping no tiene duchas. Brennan Park está a 5,4 km, o se puede nadar en Alice Lake.', items:[
+      ['Toallas',1,''],
+      ['Jabón y shampoo biodegradables',0,''],
+      ['Cepillos y pasta de dientes',0,'La pasta va al locker, no a la carpa'],
+      ['Papel higiénico propio',1,''],
+      ['Toallitas húmedas',0,'Resuelven los días sin ducha'],
+      ['Bolsa para la ropa sucia',0,'']
+    ]},
+    { t:'Ropa', por:'Días calurosos y noches frescas. Hay sendero, lago y pileta en la misma zona.', items:[
+      ['Abrigo y capas para la noche',1,''],
+      ['Campera impermeable',0,''],
+      ['Calzado cerrado para el sendero del Chief',1,'Con cadenas y escaleras, no van ojotas'],
+      ['Ojotas o sandalias para el camping',0,''],
+      ['Traje de baño',0,'Alice Lake y Brennan Park'],
+      ['Gorro y anteojos de sol',0,'']
+    ]},
+    { t:'Botiquín y seguridad', por:'El hospital está a 2,5 km y las farmacias a 2,3.', items:[
+      ['Botiquín',1,''],
+      ['Medicamentos habituales',1,'Esto no se consigue a las 3 de la mañana'],
+      ['Protector solar',1,''],
+      ['Repelente',0,''],
+      ['Teléfonos anotados en papel',0,'Conservation Officer 1-877-952-7277']
+    ]},
+    { t:'Plata y auto', por:'El sitio se paga en el lugar: $10 por persona por noche, menores de 6 gratis.', items:[
+      ['Efectivo para el camping',1,''],
+      ['Mapas offline descargados',1,'La señal no es confiable en toda la zona'],
+      ['Tanque lleno antes de llegar',0,''],
+      ['Rueda de auxilio, gato y llave',0,'']
+    ]}
+  ];
+
+  var CLAVE='guia.camping.squamish';
+  var guardado={};
+  try{ guardado=JSON.parse(localStorage.getItem(CLAVE)||'{}'); }catch(e){ guardado={}; }
+  var cont=document.getElementById('lista');
+  GRUPOS.forEach(function(g,gi){
+    var d=document.createElement('div'); d.className='grupo';
+    var lis=g.items.map(function(it,ii){
+      var id=gi+'-'+ii;
+      return '<li class="'+(it[1]?'hot':'')+'"><label>'+
+        '<input type="checkbox" data-id="'+id+'"'+(guardado[id]?' checked':'')+'>'+
+        '<span class="txt"><span class="t">'+it[0]+'</span>'+
+        (it[2]?'<span class="n">'+it[2]+'</span>':'')+'</span></label></li>';
+    }).join('');
+    d.innerHTML='<h3>'+g.t+'</h3><p class="por">'+g.por+'</p><ul>'+lis+'</ul>';
+    cont.appendChild(d);
+  });
+  cont.addEventListener('change', function(e){
+    if(e.target.type!=='checkbox') return;
+    guardado[e.target.dataset.id]=e.target.checked;
+    try{ localStorage.setItem(CLAVE, JSON.stringify(guardado)); }catch(err){}
+  });
+})();
+</script>
+<script src="leaflet/leaflet.js"></script>
+<script>
+(function(){
+  var P = [
+    ["Stawamus Chief Campground","#7E1D12",49.67756,-123.15511,"109 sitios · todos sin reserva · $10 por persona",10],
+    ["Alice Lake Campground","#7E1D12",49.78251,-123.12260,"107 sitios · 12 sin reserva · $51 · con duchas",8],
+    ["Shannon Falls","#0B6E5F",49.66944,-123.15590,"Gratis · 5 min a pie del estacionamiento",7],
+    ["Sea to Sky Gondola","#0B6E5F",49.67510,-123.15700,"36800 Highway 99",7],
+    ["Britannia Mine Museum","#0B6E5F",49.62283,-123.20400,"Sea to Sky Highway, Britannia Beach",7],
+    ["Railway Museum of BC","#0B6E5F",49.72881,-123.16003,"39645 Government Road · abre pocos días",7],
+    ["Nesters Market","#1D4E89",49.70337,-123.14701,"1200 Hunter Place · 07:00–21:00",7],
+    ["Save-On-Foods","#1D4E89",49.70323,-123.15178,"Lu–Vi 09:00–21:00 · Sá 09:00–18:00",7],
+    ["Walmart","#1D4E89",49.72104,-123.14950,"39210 Discovery Way",7],
+    ["Canadian Tire","#1D4E89",49.73573,-123.13335,"Equipo de camping",7],
+    ["Shell","#8A5A00",49.69952,-123.14477,"1580 Sea to Sky Highway",7],
+    ["Co-op","#8A5A00",49.70131,-123.15160,"38183 Cleveland Avenue",7],
+    ["Squamish General Hospital","#8B1E5E",49.69844,-123.14060,"38140 Behrner Drive",7],
+    ["Shoppers Drug Mart","#8B1E5E",49.70195,-123.15298,"1339 Pemberton Avenue",7],
+    ["Brennan Park Rec Centre","#4A5568",49.72536,-123.14227,"1009 Centennial Way · duchas y pileta · $13,65 familia",7]
+  ];
+  var map=L.map('map',{scrollWheelZoom:false}).setView([49.70,-123.15],11);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {maxZoom:18, attribution:'© OpenStreetMap'}).addTo(map);
+  P.forEach(function(p){
+    L.circleMarker([p[2],p[3]],{radius:p[5],color:'#fff',weight:2.5,fillColor:p[1],fillOpacity:1})
+     .bindPopup('<b>'+p[0]+'</b><br>'+p[4]).addTo(map);
+  });
+  map.fitBounds(L.latLngBounds(P.map(function(p){return [p[2],p[3]];})).pad(0.14));
+})();
+</script>
+</body>
+</html>
