@@ -1,0 +1,52 @@
+# Refresca los datos de DriveBC del mapa de incendios y republica el sitio.
+#
+# DriveBC no manda cabecera CORS, así que el navegador no puede pedirle nada:
+# la data se congela en web/data/ y se sirve como archivo del mismo origen.
+#
+# Deliberadamente NO commitea: baja los datos, arma el artefacto y despliega.
+# Así el sitio sale siempre con datos frescos sin llenar el historial del repo
+# de commits automáticos. Los JSON versionados quedan como respaldo por si esta
+# corrida falla.
+name: Refrescar DriveBC y republicar
+
+on:
+  schedule:
+    # Cada 30 minutos. GitHub puede atrasar las corridas programadas cuando hay
+    # cola, así que hay que leer el sello que muestra el mapa, no suponer la hora.
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Comparte grupo con deploy-web.yml: si coinciden, gana el último y no se pisan.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  refrescar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Bajar DriveBC a web/data/
+        run: python3 tools/snapshot_drivebc.py
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload web/ as the Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -80,6 +80,7 @@
         <button class="controlbtn" onclick="refreshAll()">↻ Actualizar</button>
         <button class="controlbtn" onclick="map.fitBounds([ORIGEN,MANNING],{padding:[40,40]})">🛣️ Ver ruta completa</button>
         <button class="controlbtn" onclick="map.setView(MANNING,11)">🏕️ Campings del parque</button>
+        <button class="controlbtn" id="btnCams" onclick="toggleCams()">📷 Cámaras de ruta</button>
       </div>
       <div class="legend" id="legend"><button class="legend-toggle" id="legendToggle" type="button" aria-expanded="false" aria-controls="legendBody"><span class="chev">▸</span><span>Referencias del mapa</span><span class="hint">tocá para ver</span></button><div class="legend-body" id="legendBody">
         <div><span class="dot red"></span>Incendio activo / no controlado</div>
@@ -89,6 +90,7 @@
         <div><span class="dot evacorden" style="opacity:.65"></span>Estado no reconocido — tratar como ORDEN</div>
         <div><span class="dot blue"></span>DriveBC corte/incidente</div>
         <div><span class="dot green"></span>Parada segura / agua / bencina / compra</div>
+        <div><span class="dot" style="background:#7ee0ff"></span>Cámara de DriveBC — tocá para ver la ruta</div>
         <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--line)">
           <div><b style="color:var(--ink)">🏕️ Campings — ficha con pros y contras</b></div>
           <div><span class="dot green"></span>Sirve: tomalo si hay lugar</div>
@@ -221,12 +223,18 @@ const SOURCES={
   // navegador da "Failed to fetch" y la capa de cortes de ruta NUNCA se dibuja — que es
   // justo la que importa manejando. Va por el proxy de nuestro nginx (mismo origen).
   // Ruta relativa a propósito: la página no tiene que saber en qué host la sirven.
-  drivebc:'api/drivebc'
+  drivebc:'api/drivebc',
+  // El proxy sólo existe en el nginx remoto: en el hub de casa, en el server
+  // local y en GitHub Pages da 404, y la capa de cortes —la que importa
+  // manejando— nunca se dibujaba. Instantánea estática como respaldo, generada
+  // por bin/snapshot-drivebc.py y servida desde el mismo origen.
+  drivebcRespaldo:'data/drivebc-eventos.json',
+  camaras:'data/drivebc-camaras.json'
 };
 const map=L.map('map',{zoomControl:false}).setView([49.20,-121.85],8);  // encuadre que cubre New Westminster y todo el corredor de la Hwy 3
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(map);
-const layers={fires:L.layerGroup().addTo(map),perimeters:L.layerGroup().addTo(map),evac:L.layerGroup().addTo(map),restrictions:L.layerGroup().addTo(map),drivebc:L.layerGroup().addTo(map),poi:L.layerGroup().addTo(map),camps:L.layerGroup().addTo(map)};
+const layers={fires:L.layerGroup().addTo(map),perimeters:L.layerGroup().addTo(map),evac:L.layerGroup().addTo(map),restrictions:L.layerGroup().addTo(map),drivebc:L.layerGroup().addTo(map),poi:L.layerGroup().addTo(map),camps:L.layerGroup().addTo(map),cams:L.layerGroup()};
 /* Coordenadas geocodificadas con Nominatim/OSM el 2026-08-08, no estimadas a ojo.
    'ojo' = punto que hay que mirar en las capas en vivo antes de comprometerse,
    no una parada segura. Allison Pass es 'ojo' porque es donde BC Parks ubica el
@@ -522,11 +530,55 @@ function puntoDriveBC(loc){
   const m=planos[Math.floor(planos.length/2)];                // punto medio del tramo
   return [m[1],m[0]];
 }
+
+/* ── DriveBC: proxy si existe, si no la instantánea del repo ─────────────── */
+async function traerEventos(){
+  try{
+    const r=await fetch(SOURCES.drivebc,{cache:'no-store'});
+    if(r.ok) return {datos:await r.json(), origen:'en vivo'};
+  }catch(e){ /* sin proxy en este origen: seguimos al respaldo */ }
+  const r2=await fetch(SOURCES.drivebcRespaldo,{cache:'no-store'});
+  if(!r2.ok) throw new Error('sin proxy y sin instantánea ('+r2.status+')');
+  const j=await r2.json();
+  return {datos:j.eventos||[], origen:'instantánea del '+(j.generado||'').slice(0,16).replace('T',' ')};
+}
+
+/* ── Cámaras de DriveBC ──────────────────────────────────────────────────── */
+function fichaCam(c){
+  const t=Date.now();  // sin esto el navegador muestra la foto vieja en caché
+  return `<div style="width:300px">
+    <b>📷 ${c.nombre||'Cámara'}</b> <span class="mono" style="color:var(--muted)">Hwy ${c.ruta||'—'}</span>
+    <div style="color:var(--muted);font-size:11.5px;margin:3px 0 6px">${c.detalle||''}</div>
+    ${c.imagen?`<img src="${c.imagen}?t=${t}" alt="Cámara ${c.nombre}" style="width:100%;min-height:150px;border-radius:9px;border:1px solid var(--line);display:block;background:#0d1420">`:'<i>sin imagen</i>'}
+    <div style="color:var(--muted);font-size:11px;margin-top:5px">Mira al ${c.orientacion||'—'}${c.elevacion!=null?' · '+c.elevacion+' m':''}<br>
+    Captura del ${(c.actualizada||'').slice(0,16).replace('T',' ')||'—'}</div>
+  </div>`;
+}
+async function addWebcams(){
+  layers.cams.clearLayers();
+  const r=await fetch(SOURCES.camaras,{cache:'no-store'});
+  if(!r.ok) throw new Error(r.status+' '+r.statusText);
+  const j=await r.json(); let n=0;
+  for(const c of (j.camaras||[])){
+    if(!isFinite(c.lat)||!isFinite(c.lon)) continue;
+    L.circleMarker([c.lat,c.lon],{radius:5,color:'#0b1016',weight:1.5,fillColor:'#7ee0ff',fillOpacity:.95})
+     .bindPopup(()=>fichaCam(c),{maxWidth:330,minWidth:300})
+     .addTo(layers.cams);
+    n++;
+  }
+  return n;
+}
+function toggleCams(){
+  const on=map.hasLayer(layers.cams);
+  if(on) map.removeLayer(layers.cams); else layers.cams.addTo(map);
+  const b=document.getElementById('btnCams');
+  if(b) b.classList.toggle('active',!on);
+}
+
 async function addDriveBC(){
   layers.drivebc.clearLayers();
-  const r=await fetch(SOURCES.drivebc);
-  if(!r.ok) throw new Error(r.status+' '+r.statusText);
-  const data=await r.json();
+  const {datos:data,origen:ORIGEN_DBC}=await traerEventos();
+  window.__origenDriveBC=ORIGEN_DBC;
   let count=0, saltados=0;
   for(const e of data){
     try{
@@ -551,7 +603,8 @@ async function refreshAll(){const status=[]; document.getElementById('updated').
   ['Perímetros',()=>addGeoJson('Perímetro',SOURCES.perimeters,layers.perimeters,{color:'#ffb020',weight:2,fillOpacity:.16})],
   ['Evacuaciones',()=>addGeoJson('Evacuación',SOURCES.evac,layers.evac,estiloEvac,null,popupEvac)],
   ['Restricciones',()=>addGeoJson('Restricción',SOURCES.restrictions,layers.restrictions,{color:'#ffb020',weight:1,fillOpacity:.08})],
-  ['DriveBC',addDriveBC]
+  ['DriveBC cortes',addDriveBC],
+  ['Cámaras de ruta',addWebcams]
  ];
  for(const [label,fn] of jobs){try{const n=await fn();status.push(`<div class="oktext">✓ ${label}: ${n} elementos</div>`)}catch(e){status.push(`<div class="warn">✕ ${label}: ${e.message}</div>`)}}
  document.getElementById('apiStatus').innerHTML=status.join('');
@@ -570,7 +623,7 @@ const camping={
  'Limpieza':['Bolsas de basura']
 };
 const quickBuy=['Agua extra / botellas grandes','Hielo para cooler','Snacks salados','Fruta fácil: plátanos/manzanas','Sándwiches o wraps','Leche / café listo','Electrolitos o Gatorade','Toallas húmedas','Papel higiénico / servilletas','Bolsas de basura','Cartucho de gas de repuesto (no hay fogata permitida)','Power bank si falta','Mascarillas N95 por humo'];
-const phone=['Google Maps offline descargado','Prueba en modo avión realizada','Teléfono cargado 100%','Power bank cargado','Cable de auto disponible','Ubicación/GPS activado','Dirección destino guardada','Contactos familiares guardados'];
+const phone=['Este mapa abierto y cargado ANTES de salir (guarda las capas en el teléfono)','Mapa offline de respaldo descargado (Google Maps u OsmAnd)','Prueba en modo avión realizada','Teléfono cargado 100%','Power bank cargado','Cable de auto disponible','Ubicación/GPS activado','Dirección destino guardada','Contactos familiares guardados'];
 function mkChecks(target,groups,prefix){const el=document.getElementById(target); let html=''; if(Array.isArray(groups)){html='<div class="checklist">'+groups.map((x,i)=>check(prefix+i,x)).join('')+'</div>'}else{for(const [g,items] of Object.entries(groups)){html+=`<h3>${g}</h3><div class="checklist">`+items.map((x,i)=>check(prefix+g+i,x)).join('')+'</div>'}} el.innerHTML=html; el.querySelectorAll('input').forEach(inp=>{inp.checked=localStorage.getItem(inp.id)==='1'; inp.addEventListener('change',()=>localStorage.setItem(inp.id,inp.checked?'1':'0'))})}
 function check(id,label){return `<div class="item"><input type="checkbox" id="${id.replace(/\W/g,'_')}"><label for="${id.replace(/\W/g,'_')}">${label}</label></div>`}
 function showTab(name){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name)); ['plan','lista','dany','apis'].forEach(n=>document.getElementById('tab-'+n).classList.toggle('hidden',n!==name))}
