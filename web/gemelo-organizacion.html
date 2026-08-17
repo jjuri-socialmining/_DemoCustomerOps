@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>El gemelo digital de su organización — Sigma Digital Twins</title>
+<meta name="description" content="No copiamos su planta. Copiamos a su equipo técnico: el criterio del especialista queda escrito como software y corre solo sobre su operación.">
+<!--
+  Página pública: se publica en GitHub Pages al llegar a main, y este comentario
+  se lee con ver-código-fuente igual que el resto. Regla antes de agregar nada:
+  si no lo mostrarías a un competidor, no va acá.
+-->
+<style>
+  :root{ --ink0:#04070e; --ink1:#0a1420; --ink2:#0e1c2b; --edge:#1b3044;
+         --teal:#00e0ae; --blue:#3ba7e8; --orange:#ff8a2b; --lime:#b8e04a;
+         --txt:#ffffff; --soft:#a8bece; --dim:#5b7186; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ink0);color:var(--txt);
+    font:15px/1.5 -apple-system,"SF Pro Text",Segoe UI,Roboto,Helvetica,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  a{color:var(--teal)}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 90px}
+
+  .kick{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:700;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--teal);margin:0 0 12px}
+  .kick::before{content:"";width:3px;height:13px;background:var(--teal);border-radius:2px}
+
+  .bar{display:flex;align-items:center;gap:12px;padding:14px 20px;background:var(--ink1);
+    border-bottom:1px solid var(--edge)}
+  .bar .sig{font-size:21px;color:var(--teal);font-weight:800;line-height:1}
+  .bar b{font-size:15px;font-weight:700}
+  .bar span{font-size:12px;color:var(--soft);display:block;margin-top:1px}
+
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--edge);
+    background:
+      radial-gradient(1100px 460px at 78% 18%, #0d2b34 0%, transparent 62%),
+      radial-gradient(760px 420px at 12% 88%, #07202b 0%, transparent 60%),
+      repeating-linear-gradient(0deg,transparent 0 43px,#0c1c2733 43px 44px),
+      repeating-linear-gradient(90deg,transparent 0 43px,#0c1c2733 43px 44px),
+      var(--ink0);
+    padding:64px 20px 58px}
+  .hero .wrap{padding-bottom:0}
+  .hero h1{font-size:clamp(30px,4.4vw,52px);line-height:1.03;font-weight:800;
+    letter-spacing:-.028em;margin:0 0 18px;max-width:19ch}
+  .hero h1 em{font-style:normal;color:var(--teal)}
+  .lede{font-size:clamp(15px,1.7vw,19px);line-height:1.62;color:var(--soft);
+    max-width:62ch;margin:0 0 26px}
+  .lede b{color:var(--txt);font-weight:650}
+  .rule{height:2px;background:linear-gradient(90deg,var(--teal),transparent);
+    margin:0 0 26px;max-width:520px}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px}
+  .st{border-left:3px solid var(--teal);padding:2px 0 2px 13px}
+  .st:nth-child(2){border-color:var(--blue)} .st:nth-child(3){border-color:var(--orange)}
+  .st:nth-child(4){border-color:var(--lime)}
+  .st b{display:block;font-size:27px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+  .st span{font-size:12px;color:var(--soft);line-height:1.45;display:block;margin-top:3px}
+
+  .sec{margin-top:56px}
+  .sec>h2{font-size:26px;font-weight:750;margin:0 0 10px;letter-spacing:-.015em}
+  .sec>p.intro{color:var(--soft);font-size:14.5px;line-height:1.68;max-width:74ch;margin:0 0 24px}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:15px}
+  .c{background:var(--ink1);border:1px solid var(--edge);border-radius:12px;padding:20px}
+  .c .n{font-size:11px;font-weight:800;letter-spacing:.09em;color:var(--teal);margin-bottom:9px}
+  .c h3{margin:0 0 8px;font-size:16px;font-weight:680}
+  .c p{margin:0;font-size:13.5px;line-height:1.62;color:var(--soft)}
+  .c.blue .n{color:var(--blue)} .c.orange .n{color:var(--orange)}
+
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+  @media(max-width:760px){.vs{grid-template-columns:1fr}}
+  .vs>div{border:1px solid var(--edge);border-radius:12px;padding:20px 22px;background:var(--ink1)}
+  .vs .hoy{border-top:3px solid var(--dim)}
+  .vs .clon{border-top:3px solid var(--teal);background:var(--ink2)}
+  .vs h3{margin:0 0 4px;font-size:15px;font-weight:700}
+  .vs .tag{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);margin-bottom:14px}
+  .vs .clon .tag{color:var(--teal)}
+  .vs ul{margin:0;padding:0;list-style:none}
+  .vs li{position:relative;padding:0 0 0 19px;margin-bottom:13px;font-size:13.5px;
+    line-height:1.6;color:var(--soft)}
+  .vs li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;
+    border-radius:2px;background:var(--dim)}
+  .vs .clon li::before{background:var(--teal)}
+  .vs li b{color:var(--txt);font-weight:650}
+
+  .pasos{counter-reset:p}
+  .paso{display:grid;grid-template-columns:46px 1fr;gap:17px;padding:17px 0;
+    border-top:1px solid var(--edge);align-items:start}
+  .paso:first-child{border-top:none}
+  .paso .num{counter-increment:p;width:38px;height:38px;border-radius:10px;
+    background:var(--ink2);border:1px solid var(--teal);display:grid;place-items:center;
+    font-weight:800;color:var(--teal);font-size:15px}
+  .paso .num::before{content:counter(p)}
+  .paso h3{margin:0 0 5px;font-size:15.5px;font-weight:680}
+  .paso p{margin:0;font-size:13.5px;line-height:1.62;color:var(--soft)}
+
+  .board{border:1px solid var(--edge);border-radius:12px;overflow:hidden;background:var(--ink1)}
+  .row{display:grid;grid-template-columns:1fr 128px 1fr;gap:16px;padding:14px 20px;
+    border-top:1px solid var(--edge);align-items:center;font-size:13.5px}
+  .row:first-child{border-top:none}
+  .row .q{font-weight:640}
+  .row .d{color:var(--soft);line-height:1.55}
+  @media(max-width:760px){.row{grid-template-columns:1fr;gap:6px}}
+  .pill{display:inline-block;font-size:10.5px;font-weight:750;letter-spacing:.06em;
+    text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid;white-space:nowrap}
+  .pill.ok{color:var(--teal);border-color:#00e0ae55;background:#00e0ae12}
+  .pill.mid{color:var(--orange);border-color:#ff8a2b55;background:#ff8a2b12}
+  .pill.no{color:var(--dim);border-color:var(--edge)}
+
+  .nota{border-left:3px solid var(--orange);background:#ff8a2b0f;border-radius:0 10px 10px 0;
+    padding:15px 19px;font-size:13.5px;line-height:1.65;color:var(--soft);margin-top:20px}
+  .nota b{color:var(--orange)}
+
+  .obj{border:1px solid var(--edge);border-radius:12px;padding:19px 21px;
+    background:var(--ink1);margin-bottom:13px}
+  .obj .q{font-size:14.5px;font-weight:700;margin-bottom:9px}
+  .obj .a{font-size:13.5px;line-height:1.66;color:var(--soft)}
+  .obj .a b{color:var(--txt);font-weight:650}
+
+  .cta{margin-top:34px;border:1px solid var(--teal);border-radius:14px;padding:30px 32px;
+    background:linear-gradient(135deg,#00e0ae14,transparent 62%),var(--ink1)}
+  .cta h3{margin:0 0 10px;font-size:21px;font-weight:750}
+  .cta p{margin:0 0 16px;font-size:14px;line-height:1.66;color:var(--soft);max-width:70ch}
+  .cta ol{margin:0;padding-left:20px;color:var(--soft);font-size:13.5px;line-height:1.85}
+  .cta ol b{color:var(--txt)}
+
+  footer{margin-top:52px;border-top:1px solid var(--edge);padding-top:20px;
+    font-size:12.5px;line-height:1.7;color:var(--dim)}
+  footer b{color:var(--soft)}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <span class="sig">Σ</span>
+  <div>
+    <b>Sigma Digital Twins</b>
+    <span>Consultoría en excelencia operacional · Vancouver, Canadá</span>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="kick">El producto</div>
+    <h1>No copiamos su planta.<br>Copiamos <em>a su equipo técnico</em>.</h1>
+    <div class="rule"></div>
+    <p class="lede">Un gemelo digital normal replica una máquina. Este replica <b>a la gente
+      que la hace funcionar</b>: el criterio del especialista queda escrito como software y
+      corre solo, sobre su operación, todos los días. Es un <b>clon de la empresa trabajando
+      en paralelo</b>, sincronizado con la original.</p>
+    <div class="stats">
+      <div class="st"><b>3 turnos</b><span>El clon no entra ni sale de turno</span></div>
+      <div class="st"><b>90 / 99 / 1</b><span>La IA llega al 90% del diagnóstico, el equipo al 99%, y el 1% final es humano</span></div>
+      <div class="st"><b>1 servicio</b><span>Con lo que empieza un piloto — no con toda la operación</span></div>
+      <div class="st"><b>0 licencias</b><span>No es un software que se arrienda: es su criterio, escrito</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="sec">
+    <div class="kick">Explicado sin jerga</div>
+    <h2>Tres frases, en este orden</h2>
+    <p class="intro">Funciona porque va de algo que usted ya entiende hacia lo que todavía no.</p>
+    <div class="cards">
+      <div class="c">
+        <div class="n">Primero</div>
+        <h3>Ya sabe qué es un gemelo digital</h3>
+        <p>Es una copia de la planta que corre en un computador. Se prueba un cambio ahí antes
+          de tocar la planta de verdad. Eso ya existe y no lo inventamos nosotros.</p>
+      </div>
+      <div class="c blue">
+        <div class="n">Después</div>
+        <h3>Ahora imagine que copiamos al equipo</h3>
+        <p>No a las máquinas: a las personas que las analizan. El especialista que revisa la
+          recuperación cada mañana, el que arma el informe, el que decide qué mantener primero.</p>
+      </div>
+      <div class="c orange">
+        <div class="n">Entonces</div>
+        <h3>Y ese equipo copiado trabaja en paralelo</h3>
+        <p>Sin turnos y sin olvidar nada. Cuando su equipo real llega en la mañana, el trabajo
+          de revisión ya está hecho y lo que queda es decidir.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="kick">La diferencia</div>
+    <h2>Qué cambia cuando el servicio se clona</h2>
+    <p class="intro">La consultoría tradicional no está mal hecha: está limitada por la
+      persona. Estas son las cuatro limitaciones, y qué pasa con cada una.</p>
+    <div class="vs">
+      <div class="hoy">
+        <h3>Consultoría como se hace hoy</h3>
+        <div class="tag">Depende de una persona</div>
+        <ul>
+          <li><b>El criterio se va con él.</b> El especialista viene, mira, diagnostica y se va.</li>
+          <li><b>El análisis envejece.</b> Existe mientras dura el contrato y después queda en un PDF.</li>
+          <li><b>Cubre las horas pagadas.</b> No los tres turnos, ni el fin de semana.</li>
+          <li><b>Cada faena empieza de cero.</b> Aunque el mismo problema ya se resolvió en otra.</li>
+        </ul>
+      </div>
+      <div class="clon">
+        <h3>El servicio clonado</h3>
+        <div class="tag">Queda en la empresa</div>
+        <ul>
+          <li><b>El criterio queda escrito.</b> Como agente que corre sin que nadie lo convoque.</li>
+          <li><b>El análisis se rehace solo.</b> Cada vez que llega dato nuevo. No envejece.</li>
+          <li><b>Cubre los tres turnos.</b> El feriado también, al mismo costo.</li>
+          <li><b>Lo aprendido se replica.</b> De una faena a la siguiente, el mismo día.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="kick">El método</div>
+    <h2>Cómo se clona el servicio de un consultor</h2>
+    <p class="intro">Cinco pasos. El primero es el que casi nadie hace, y es el que decide si
+      el clon sirve o es un chatbot con buen vocabulario.</p>
+    <div class="pasos">
+      <div class="paso"><div class="num"></div><div>
+        <h3>Observar al especialista trabajando</h3>
+        <p>Se lo acompaña mientras hace su trabajo y se registra qué mira, en qué orden y con
+          qué criterio decide. Es Gemba: ir al lugar real. No es una entrevista, porque nadie
+          describe bien lo que hace por costumbre.</p></div></div>
+      <div class="paso"><div class="num"></div><div>
+        <h3>Escribir ese criterio como procedimiento</h3>
+        <p>Con entradas, salidas y casos borde — no como una instrucción suelta. Si el criterio
+          no se puede escribir de forma verificable, todavía no se puede clonar, y se dice.</p></div></div>
+      <div class="paso"><div class="num"></div><div>
+        <h3>Clonar: el procedimiento se vuelve agente</h3>
+        <p>Corre sobre los datos reales de la operación, con cada corrida registrada y
+          auditable. Se puede revisar qué hizo, cuándo y con qué dato.</p></div></div>
+      <div class="paso"><div class="num"></div><div>
+        <h3>Sincronizar los clones entre sí</h3>
+        <p>Varios clones trabajan en paralelo sobre la misma operación y se contrastan entre
+          ellos, igual que un equipo que se junta a revisar. Ahí aparece lo que un analista
+          solo no ve.</p></div></div>
+      <div class="paso"><div class="num"></div><div>
+        <h3>El especialista pasa a supervisar</h3>
+        <p>Deja de ejecutar y empieza a revisar. La IA llega al 90% del diagnóstico, el equipo
+          técnico lo lleva al 99%, y el 1% final sigue siendo criterio humano. Está diseñado
+          así, no es una limitación que estemos por resolver.</p></div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="kick">Estado real</div>
+    <h2>Qué está clonado y qué todavía no</h2>
+    <p class="intro">Un servicio sólo se marca clonado cuando hay algo que corre y se puede
+      mostrar. Publicamos también lo que falta, porque un tablero donde todo está verde no se
+      le cree a nadie.</p>
+    <div class="board">
+      <div class="row">
+        <div class="q">Documentación técnica y estándares de proceso</div>
+        <div><span class="pill ok">Clonado</span></div>
+        <div class="d">Corre en producción, entregado a un cliente minero.</div>
+      </div>
+      <div class="row">
+        <div class="q">Comparación del proceso real contra su gemelo</div>
+        <div><span class="pill ok">Clonado</span></div>
+        <div class="d">Panel que contrasta cada cuatro segundos y explica la desviación.</div>
+      </div>
+      <div class="row">
+        <div class="q">Diagnóstico de la restricción con DMAIC</div>
+        <div><span class="pill mid">Parcial</span></div>
+        <div class="d">El método está escrito y probado; falta la corrida completa sin intervención.</div>
+      </div>
+      <div class="row">
+        <div class="q">Simulación antes de comprometer la inversión</div>
+        <div><span class="pill mid">Parcial</span></div>
+        <div class="d">Capacidad probada en demostración, sin caso de cliente con cifra propia.</div>
+      </div>
+      <div class="row">
+        <div class="q">Certificación de calidad y confiabilidad</div>
+        <div><span class="pill no">Sin clonar</span></div>
+        <div class="d">Hoy la ejecuta una persona. Es auditoría independiente: clonarla sin
+          resolver quién responde ante el directorio sería vender un problema.</div>
+      </div>
+      <div class="row">
+        <div class="q">Triage de incidentes y causa raíz guiada</div>
+        <div><span class="pill no">Sin clonar</span></div>
+        <div class="d">El sistema avisa que algo falló; todavía no propone la causa. Un clon que
+          propone causas equivocadas con seguridad es peor que uno que se calla.</div>
+      </div>
+    </div>
+    <div class="nota"><b>Por qué mostramos lo que falta.</b> Porque usted lo va a preguntar
+      igual, y porque preferimos que lo lea acá antes que descubrirlo en la reunión. Lo que
+      está en gris es trabajo por hacer, no una promesa disfrazada de capacidad.</div>
+  </div>
+
+  <div class="sec">
+    <div class="kick">Preguntas frecuentes</div>
+    <h2>Lo que nos preguntan siempre</h2>
+    <div class="obj">
+      <div class="q">¿Esto es un chatbot con otro nombre?</div>
+      <div class="a">No. Un chatbot responde lo que se le pregunta. Esto <b>corre sin que nadie
+        pregunte</b>, sobre sus datos, y deja registro auditable de cada corrida. La diferencia
+        se demuestra mostrando el registro, no discutiéndola.</div>
+    </div>
+    <div class="obj">
+      <div class="q">¿Y si la IA se equivoca?</div>
+      <div class="a">Se equivoca, y por eso el diseño no la deja decidir sola. Llega al
+        <b>90% del diagnóstico</b>; el equipo técnico lo lleva al 99% y el <b>1% final es
+        humano por diseño</b>. Quien le venda 100% le está vendiendo otra cosa.</div>
+    </div>
+    <div class="obj">
+      <div class="q">¿Vamos a quedar amarrados a ustedes?</div>
+      <div class="a">Al revés: el criterio queda escrito <b>en su empresa</b>, documentado y
+        auditable. No es una licencia que se arrienda. La arquitectura es independiente de
+        proveedor, y ese es un servicio declarado, no una promesa.</div>
+    </div>
+    <div class="obj">
+      <div class="q">¿Hay que cambiar el SCADA o el sistema de control?</div>
+      <div class="a">No. Se trabaja sobre los datos que la operación <b>ya genera</b> — SCADA,
+        PLC, historiador, sensores — <b>sin tocar la lógica</b> que hace funcionar la planta.</div>
+    </div>
+
+    <div class="cta">
+      <h3>Por dónde se empieza</h3>
+      <p>No vendemos «la transformación digital». Se empieza <b>clonando un servicio</b>, el
+        más repetitivo que tenga, y mostrándolo corriendo. Un problema, una solución, un primer
+        paso.</p>
+      <ol>
+        <li><b>Elegir el servicio</b> que su equipo repite cada semana y a nadie le gusta hacer.</li>
+        <li><b>Acompañar dos días</b> al especialista que lo hace, y escribir su criterio.</li>
+        <li><b>Entregar el clon corriendo</b> sobre datos reales, con el registro a la vista.</li>
+        <li><b>Medir contra la persona</b>: mismo período, mismo dato, y se compara.</li>
+        <li><b>Recién ahí</b> conversamos el segundo servicio.</li>
+      </ol>
+    </div>
+  </div>
+
+  <footer>
+    <b>Sigma Digital Twins Consulting Inc.</b> · Vancouver, Columbia Británica, Canadá ·
+    Sociedad canadiense BC1501922, desde septiembre de 2024.<br>
+    Presencia en terreno en Chile y gestión desde Canadá, con alianza técnica en geometalurgia
+    y procesos.<br><br>
+    Las cifras de estado corresponden a agosto de 2026 y se actualizan cuando cambia la
+    evidencia, no cuando cambia el discurso.
+  </footer>
+
+</div>
+</body>
+</html>
