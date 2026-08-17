@@ -9,6 +9,11 @@
   Página pública: se publica en GitHub Pages al llegar a main, y este comentario
   se lee con ver-código-fuente igual que el resto. Regla antes de agregar nada:
   si no lo mostrarías a un competidor, no va acá.
+
+  GENERADA — no editar a mano. Este archivo es la salida de prod de un texto que se
+  mantiene en otro repo, privado; editarlo acá se pierde en la próxima generación.
+  El repo de origen tiene el archivo fuente, el comando y el filtro que decide qué
+  parte del argumento sale afuera y cuál se queda adentro.
 -->
 <style>
   :root{ --ink0:#04070e; --ink1:#0a1420; --ink2:#0e1c2b; --edge:#1b3044;
@@ -65,7 +70,7 @@
   .c .n{font-size:11px;font-weight:800;letter-spacing:.09em;color:var(--teal);margin-bottom:9px}
   .c h3{margin:0 0 8px;font-size:16px;font-weight:680}
   .c p{margin:0;font-size:13.5px;line-height:1.62;color:var(--soft)}
-  .c.blue .n{color:var(--blue)} .c.orange .n{color:var(--orange)}
+  .c.blue .n{color:var(--blue)} .c.orange .n{color:var(--orange)} .c.lime .n{color:var(--lime)}
 
   .vs{display:grid;grid-template-columns:1fr 1fr;gap:15px}
   @media(max-width:760px){.vs{grid-template-columns:1fr}}
@@ -132,7 +137,7 @@
 <body>
 
 <div class="bar">
-  <span class="sig">Σ</span>
+  <span class="sig">&Sigma;</span>
   <div>
     <b>Sigma Digital Twins</b>
     <span>Consultoría en excelencia operacional · Vancouver, Canadá</span>
@@ -142,12 +147,9 @@
 <div class="hero">
   <div class="wrap">
     <div class="kick">El producto</div>
-    <h1>No copiamos su planta.<br>Copiamos <em>a su equipo técnico</em>.</h1>
+    <h1>No copiamos su planta. <br> Copiamos <em>a su equipo técnico</em>.</h1>
     <div class="rule"></div>
-    <p class="lede">Un gemelo digital normal replica una máquina. Este replica <b>a la gente
-      que la hace funcionar</b>: el criterio del especialista queda escrito como software y
-      corre solo, sobre su operación, todos los días. Es un <b>clon de la empresa trabajando
-      en paralelo</b>, sincronizado con la original.</p>
+    <p class="lede">Un gemelo digital normal replica una máquina. Este replica <b>a la gente que la hace funcionar</b>: el criterio del especialista queda escrito como software y corre solo, sobre su operación, todos los días. Es un <b>clon de la empresa trabajando en paralelo</b>, sincronizado con la original.</p>
     <div class="stats">
       <div class="st"><b>3 turnos</b><span>El clon no entra ni sale de turno</span></div>
       <div class="st"><b>90 / 99 / 1</b><span>La IA llega al 90% del diagnóstico, el equipo al 99%, y el 1% final es humano</span></div>
@@ -156,7 +158,6 @@
     </div>
   </div>
 </div>
-
 <div class="wrap">
 
   <div class="sec">
@@ -167,20 +168,17 @@
       <div class="c">
         <div class="n">Primero</div>
         <h3>Ya sabe qué es un gemelo digital</h3>
-        <p>Es una copia de la planta que corre en un computador. Se prueba un cambio ahí antes
-          de tocar la planta de verdad. Eso ya existe y no lo inventamos nosotros.</p>
+        <p>Es una copia de la planta que corre en un computador. Se prueba un cambio ahí antes de tocar la planta de verdad. Eso ya existe y no lo inventamos nosotros.</p>
       </div>
       <div class="c blue">
         <div class="n">Después</div>
         <h3>Ahora imagine que copiamos al equipo</h3>
-        <p>No a las máquinas: a las personas que las analizan. El especialista que revisa la
-          recuperación cada mañana, el que arma el informe, el que decide qué mantener primero.</p>
+        <p>No a las máquinas: a las personas que las analizan. El especialista que revisa la recuperación cada mañana, el que arma el informe, el que decide qué mantener primero.</p>
       </div>
       <div class="c orange">
         <div class="n">Entonces</div>
         <h3>Y ese equipo copiado trabaja en paralelo</h3>
-        <p>Sin turnos y sin olvidar nada. Cuando su equipo real llega en la mañana, el trabajo
-          de revisión ya está hecho y lo que queda es decidir.</p>
+        <p>Sin turnos y sin olvidar nada. Cuando su equipo real llega en la mañana, el trabajo de revisión ya está hecho y lo que queda es decidir.</p>
       </div>
     </div>
   </div>
@@ -188,8 +186,7 @@
   <div class="sec">
     <div class="kick">La diferencia</div>
     <h2>Qué cambia cuando el servicio se clona</h2>
-    <p class="intro">La consultoría tradicional no está mal hecha: está limitada por la
-      persona. Estas son las cuatro limitaciones, y qué pasa con cada una.</p>
+    <p class="intro">La consultoría tradicional no está mal hecha: está limitada por la persona. Estas son las cuatro limitaciones, y qué pasa con cada una.</p>
     <div class="vs">
       <div class="hoy">
         <h3>Consultoría como se hace hoy</h3>
@@ -217,41 +214,30 @@
   <div class="sec">
     <div class="kick">El método</div>
     <h2>Cómo se clona el servicio de un consultor</h2>
-    <p class="intro">Cinco pasos. El primero es el que casi nadie hace, y es el que decide si
-      el clon sirve o es un chatbot con buen vocabulario.</p>
+    <p class="intro">Cinco pasos. El primero es el que casi nadie hace, y es el que decide si el clon sirve o es un chatbot con buen vocabulario.</p>
     <div class="pasos">
       <div class="paso"><div class="num"></div><div>
         <h3>Observar al especialista trabajando</h3>
-        <p>Se lo acompaña mientras hace su trabajo y se registra qué mira, en qué orden y con
-          qué criterio decide. Es Gemba: ir al lugar real. No es una entrevista, porque nadie
-          describe bien lo que hace por costumbre.</p></div></div>
+        <p>Se lo acompaña mientras hace su trabajo y se registra qué mira, en qué orden y con qué criterio decide. Es Gemba: ir al lugar real. No es una entrevista, porque nadie describe bien lo que hace por costumbre.</p></div></div>
       <div class="paso"><div class="num"></div><div>
         <h3>Escribir ese criterio como procedimiento</h3>
-        <p>Con entradas, salidas y casos borde — no como una instrucción suelta. Si el criterio
-          no se puede escribir de forma verificable, todavía no se puede clonar, y se dice.</p></div></div>
+        <p>Con entradas, salidas y casos borde — no como una instrucción suelta. Si el criterio no se puede escribir de forma verificable, todavía no se puede clonar, y se dice.</p></div></div>
       <div class="paso"><div class="num"></div><div>
         <h3>Clonar: el procedimiento se vuelve agente</h3>
-        <p>Corre sobre los datos reales de la operación, con cada corrida registrada y
-          auditable. Se puede revisar qué hizo, cuándo y con qué dato.</p></div></div>
+        <p>Corre sobre los datos reales de la operación, con cada corrida registrada y auditable. Se puede revisar qué hizo, cuándo y con qué dato.</p></div></div>
       <div class="paso"><div class="num"></div><div>
         <h3>Sincronizar los clones entre sí</h3>
-        <p>Varios clones trabajan en paralelo sobre la misma operación y se contrastan entre
-          ellos, igual que un equipo que se junta a revisar. Ahí aparece lo que un analista
-          solo no ve.</p></div></div>
+        <p>Varios clones trabajan en paralelo sobre la misma operación y se contrastan entre ellos, igual que un equipo que se junta a revisar. Ahí aparece lo que un analista solo no ve.</p></div></div>
       <div class="paso"><div class="num"></div><div>
         <h3>El especialista pasa a supervisar</h3>
-        <p>Deja de ejecutar y empieza a revisar. La IA llega al 90% del diagnóstico, el equipo
-          técnico lo lleva al 99%, y el 1% final sigue siendo criterio humano. Está diseñado
-          así, no es una limitación que estemos por resolver.</p></div></div>
+        <p>Deja de ejecutar y empieza a revisar. La IA llega al 90% del diagnóstico, el equipo técnico lo lleva al 99%, y el 1% final sigue siendo criterio humano. Está diseñado así, no es una limitación que estemos por resolver.</p></div></div>
     </div>
   </div>
 
   <div class="sec">
     <div class="kick">Estado real</div>
     <h2>Qué está clonado y qué todavía no</h2>
-    <p class="intro">Un servicio sólo se marca clonado cuando hay algo que corre y se puede
-      mostrar. Publicamos también lo que falta, porque un tablero donde todo está verde no se
-      le cree a nadie.</p>
+    <p class="intro">Un servicio sólo se marca clonado cuando hay algo que corre y se puede mostrar. Publicamos también lo que falta, porque un tablero donde todo está verde no se le cree a nadie.</p>
     <div class="board">
       <div class="row">
         <div class="q">Documentación técnica y estándares de proceso</div>
@@ -276,19 +262,15 @@
       <div class="row">
         <div class="q">Certificación de calidad y confiabilidad</div>
         <div><span class="pill no">Sin clonar</span></div>
-        <div class="d">Hoy la ejecuta una persona. Es auditoría independiente: clonarla sin
-          resolver quién responde ante el directorio sería vender un problema.</div>
+        <div class="d">Hoy la ejecuta una persona. Es auditoría independiente: clonarla sin resolver quién responde ante el directorio sería vender un problema.</div>
       </div>
       <div class="row">
         <div class="q">Triage de incidentes y causa raíz guiada</div>
         <div><span class="pill no">Sin clonar</span></div>
-        <div class="d">El sistema avisa que algo falló; todavía no propone la causa. Un clon que
-          propone causas equivocadas con seguridad es peor que uno que se calla.</div>
+        <div class="d">El sistema avisa que algo falló; todavía no propone la causa. Un clon que propone causas equivocadas con seguridad es peor que uno que se calla.</div>
       </div>
     </div>
-    <div class="nota"><b>Por qué mostramos lo que falta.</b> Porque usted lo va a preguntar
-      igual, y porque preferimos que lo lea acá antes que descubrirlo en la reunión. Lo que
-      está en gris es trabajo por hacer, no una promesa disfrazada de capacidad.</div>
+    <div class="nota"><b>Por qué mostramos lo que falta.</b> Porque usted lo va a preguntar igual, y porque preferimos que lo lea acá antes que descubrirlo en la reunión. Lo que está en gris es trabajo por hacer, no una promesa disfrazada de capacidad.</div>
   </div>
 
   <div class="sec">
@@ -296,33 +278,25 @@
     <h2>Lo que nos preguntan siempre</h2>
     <div class="obj">
       <div class="q">¿Esto es un chatbot con otro nombre?</div>
-      <div class="a">No. Un chatbot responde lo que se le pregunta. Esto <b>corre sin que nadie
-        pregunte</b>, sobre sus datos, y deja registro auditable de cada corrida. La diferencia
-        se demuestra mostrando el registro, no discutiéndola.</div>
+      <div class="a">No. Un chatbot responde lo que se le pregunta. Esto <b>corre sin que nadie pregunte</b>, sobre sus datos, y deja registro auditable de cada corrida. La diferencia se demuestra mostrando el registro, no discutiéndola.</div>
     </div>
     <div class="obj">
       <div class="q">¿Y si la IA se equivoca?</div>
-      <div class="a">Se equivoca, y por eso el diseño no la deja decidir sola. Llega al
-        <b>90% del diagnóstico</b>; el equipo técnico lo lleva al 99% y el <b>1% final es
-        humano por diseño</b>. Quien le venda 100% le está vendiendo otra cosa.</div>
+      <div class="a">Se equivoca, y por eso el diseño no la deja decidir sola. Llega al <b>90% del diagnóstico</b>; el equipo técnico lo lleva al 99% y el <b>1% final es humano por diseño</b>. Quien le venda 100% le está vendiendo otra cosa.</div>
     </div>
     <div class="obj">
       <div class="q">¿Vamos a quedar amarrados a ustedes?</div>
-      <div class="a">Al revés: el criterio queda escrito <b>en su empresa</b>, documentado y
-        auditable. No es una licencia que se arrienda. La arquitectura es independiente de
-        proveedor, y ese es un servicio declarado, no una promesa.</div>
+      <div class="a">Al revés: el criterio queda escrito <b>en su empresa</b>, documentado y auditable. No es una licencia que se arrienda. La arquitectura es independiente de proveedor, y ese es un servicio declarado, no una promesa.</div>
     </div>
     <div class="obj">
       <div class="q">¿Hay que cambiar el SCADA o el sistema de control?</div>
-      <div class="a">No. Se trabaja sobre los datos que la operación <b>ya genera</b> — SCADA,
-        PLC, historiador, sensores — <b>sin tocar la lógica</b> que hace funcionar la planta.</div>
+      <div class="a">No. Se trabaja sobre los datos que la operación <b>ya genera</b> — SCADA, PLC, historiador, sensores — <b>sin tocar la lógica</b> que hace funcionar la planta.</div>
     </div>
+  </div>
 
     <div class="cta">
       <h3>Por dónde se empieza</h3>
-      <p>No vendemos «la transformación digital». Se empieza <b>clonando un servicio</b>, el
-        más repetitivo que tenga, y mostrándolo corriendo. Un problema, una solución, un primer
-        paso.</p>
+      <p>No vendemos «la transformación digital». Se empieza <b>clonando un servicio</b>, el más repetitivo que tenga, y mostrándolo corriendo. Un problema, una solución, un primer paso.</p>
       <ol>
         <li><b>Elegir el servicio</b> que su equipo repite cada semana y a nadie le gusta hacer.</li>
         <li><b>Acompañar dos días</b> al especialista que lo hace, y escribir su criterio.</li>
@@ -331,16 +305,12 @@
         <li><b>Recién ahí</b> conversamos el segundo servicio.</li>
       </ol>
     </div>
-  </div>
 
-  <footer>
-    <b>Sigma Digital Twins Consulting Inc.</b> · Vancouver, Columbia Británica, Canadá ·
-    Sociedad canadiense BC1501922, desde septiembre de 2024.<br>
-    Presencia en terreno en Chile y gestión desde Canadá, con alianza técnica en geometalurgia
-    y procesos.<br><br>
-    Las cifras de estado corresponden a agosto de 2026 y se actualizan cuando cambia la
-    evidencia, no cuando cambia el discurso.
-  </footer>
+    <footer>
+      <b>Sigma Digital Twins Consulting Inc.</b> · Vancouver, Columbia Británica, Canadá · Sociedad canadiense BC1501922, desde septiembre de 2024. <br> Presencia en terreno en Chile y gestión desde Canadá, con alianza técnica en geometalurgia y procesos.
+      <br><br>
+      Las cifras de estado corresponden a agosto de 2026 y se actualizan cuando cambia la evidencia, no cuando cambia el discurso.
+    </footer>
 
 </div>
 </body>
