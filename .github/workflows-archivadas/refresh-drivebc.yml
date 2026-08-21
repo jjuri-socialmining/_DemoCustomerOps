@@ -1,3 +1,8 @@
+# ARCHIVADO 2026-08-21: el mapa ya no necesita refresco automático. El cron
+# quedó deshabilitado también en GitHub (gh workflow disable). El sitio sirve
+# los JSON versionados en web/data/ (último snapshot: 2026-08-21). Para
+# revivirlo: mover de vuelta a .github/workflows/ y `gh workflow enable`.
+#
 # Refresca los datos de DriveBC del mapa de incendios y republica el sitio.
 #
 # DriveBC no manda cabecera CORS, así que el navegador no puede pedirle nada:

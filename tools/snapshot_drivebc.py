@@ -9,7 +9,7 @@ Lo corre .github/workflows/refresh-drivebc.yml antes de publicar, así que
 el sitio se despliega siempre con datos frescos y sin ensuciar el historial
 del repo con commits automáticos.
 """
-import json, math, pathlib, urllib.request
+import json, math, pathlib, time, urllib.request
 from datetime import datetime, timezone
 
 UA = {'User-Agent': 'DemoCustomerOps/1.0 (mapa operativo publico)'}
@@ -38,9 +38,17 @@ def cerca(lat, lon):
     return min(km(p, (lat, lon)) for p in CORREDORES) <= RADIO_KM
 
 
-def bajar(url):
-    with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=90) as r:
-        return json.load(r)
+def bajar(url, intentos=3):
+    # DriveBC a veces tarda más de 90 s en una respuesta aislada (timeout del
+    # 2026-08-21 tumbó el workflow entero); un reintento con espera lo absorbe.
+    for i in range(intentos):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=90) as r:
+                return json.load(r)
+        except Exception:
+            if i == intentos - 1:
+                raise
+            time.sleep(15 * (i + 1))
 
 
 def punto(loc):
