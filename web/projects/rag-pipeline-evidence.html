@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAGOps — RAG Pipeline Engineering Evidence</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page:      #f9f9f7;
+    --surface:   #fcfcfb;
+    --ink:       #0b0b0b;
+    --ink-2:     #52514e;
+    --muted:     #898781;
+    --grid:      #e1e0d9;
+    --border:    rgba(11,11,11,0.10);
+    --serie:     #2a78d6;
+    --good:      #0ca30c;
+    --good-text: #006300;
+    --note-bg:   #eef4fc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --page:      #0d0d0d;
+      --surface:   #1a1a19;
+      --ink:       #ffffff;
+      --ink-2:     #c3c2b7;
+      --muted:     #898781;
+      --grid:      #2c2c2a;
+      --border:    rgba(255,255,255,0.10);
+      --serie:     #3987e5;
+      --good:      #0ca30c;
+      --good-text: #0ca30c;
+      --note-bg:   #12203a;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 2rem 1rem 4rem;
+  }
+  main { max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 1.9rem; letter-spacing: -0.02em; }
+  h2 { font-size: 1.25rem; margin: 2.8rem 0 1rem; padding-top: 1.6rem; border-top: 1px solid var(--grid); }
+  h2 .n { color: var(--muted); font-weight: 500; margin-right: .4rem; }
+  .sub { color: var(--ink-2); margin-top: .4rem; max-width: 72ch; }
+  .nota {
+    display: inline-block; margin-top: .9rem; padding: .3rem .7rem;
+    border: 1px solid var(--border); border-radius: 6px;
+    background: var(--note-bg); color: var(--ink-2); font-size: .85rem; max-width: 80ch;
+  }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .75rem; margin-top: 1.4rem; }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1rem; }
+  .tile .v { font-size: 1.55rem; font-weight: 700; letter-spacing: -0.01em; }
+  .tile .l { font-size: .82rem; color: var(--ink-2); margin-top: .15rem; }
+  .tile .v .ok { color: var(--good-text); }
+
+  .pipe { display: flex; flex-wrap: wrap; align-items: stretch; gap: .5rem; }
+  .paso {
+    flex: 1 1 130px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: .7rem .8rem;
+  }
+  .paso b { display: block; font-size: .95rem; }
+  .paso code { font-size: .78rem; color: var(--serie); background: none; }
+  .paso .d { font-size: .8rem; color: var(--ink-2); margin-top: .25rem; }
+  .flecha { align-self: center; color: var(--muted); flex: 0 0 auto; }
+
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; font-size: .92rem; }
+  .scroll-x { overflow-x: auto; }
+  th { text-align: left; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; padding: .6rem .8rem; border-bottom: 1px solid var(--grid); }
+  td { padding: .6rem .8rem; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td.num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+  .verde { color: var(--good-text); font-weight: 600; white-space: nowrap; }
+  .verde::before { content: "✔ "; }
+  td code, .paso code, li code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .85em; }
+  .cp-id { font-weight: 700; white-space: nowrap; }
+
+  .bar-cell { min-width: 220px; }
+  .bar { height: 14px; border-radius: 0 4px 4px 0; background: var(--serie); min-width: 3px; }
+  .bar-wrap { display: flex; align-items: center; gap: .5rem; }
+  .bar-wrap .val { font-variant-numeric: tabular-nums; font-size: .85rem; color: var(--ink-2); white-space: nowrap; }
+  tr:hover .bar { filter: brightness(1.12); }
+
+  .decision { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: .8rem; }
+  .decision h3 { font-size: 1rem; }
+  .decision h3 .tag { color: var(--serie); margin-right: .4rem; }
+  .decision p { color: var(--ink-2); font-size: .92rem; margin-top: .4rem; max-width: 85ch; }
+  .decision .nums { margin-top: .5rem; font-size: .85rem; font-variant-numeric: tabular-nums; color: var(--ink); background: var(--page); border: 1px solid var(--grid); border-radius: 6px; padding: .5rem .7rem; overflow-x: auto; white-space: pre; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+  ul.hallazgos { padding-left: 1.2rem; color: var(--ink-2); }
+  ul.hallazgos li { margin-bottom: .5rem; max-width: 85ch; }
+  ul.hallazgos b { color: var(--ink); }
+
+  footer { margin-top: 3rem; padding-top: 1.2rem; border-top: 1px solid var(--grid); color: var(--muted); font-size: .85rem; max-width: 80ch; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>RAGOps — RAG Pipeline Engineering Evidence</h1>
+    <p class="sub"><b>RAGOps</b> is a private workshop repository holding a
+    retrieval-augmented generation pipeline built by hand in Python over a
+    private knowledge base of <b>25 repositories</b> (~35k markdown documents, ~14.8M words,
+    mostly Spanish, under active development — <b>2,684 commits</b> across those repositories
+    in 2026 so far): census → chunking → embeddings → vector index → CLI query with source
+    citations. Every number on this page was reproduced by running the script twice before
+    being written down — a non-reproducible number does not get recorded.</p>
+    <span class="nota">ℹ️ Published in aggregate by design: the corpus, the index, and all
+    repository names and paths stay private (governance decision D-007). What you see here is
+    the code-and-numbers silhouette of the system.</span>
+  </header>
+
+  <section class="tiles" aria-label="System numbers">
+    <div class="tile"><div class="v">25</div><div class="l">private repositories indexed</div></div>
+    <div class="tile"><div class="v">35,079</div><div class="l">markdown files in the corpus</div></div>
+    <div class="tile"><div class="v">14.77&nbsp;M</div><div class="l">words censused</div></div>
+    <div class="tile"><div class="v">265,661</div><div class="l">chunks embedded and indexed</div></div>
+    <div class="tile"><div class="v">174&nbsp;ms</div><div class="l">average query (budget: 2 s)</div></div>
+    <div class="tile"><div class="v"><span class="ok">5/5</span></div><div class="l">control questions in top-5 · full test suite green</div></div>
+  </section>
+
+  <h2><span class="n">01</span>Pipeline architecture</h2>
+  <div class="pipe">
+    <div class="paso"><b>Census</b><code>census</code><div class="d">sizes the corpus first: files, headers, words per repository</div></div>
+    <span class="flecha">→</span>
+    <div class="paso"><b>Chunking</b><code>chunk</code><div class="d">structure-aware split by markdown headers, with (repo, path, heading) metadata</div></div>
+    <span class="flecha">→</span>
+    <div class="paso"><b>Embeddings</b><code>embed</code><div class="d">paraphrase-multilingual-MiniLM-L12-v2, 128-token embed cap</div></div>
+    <span class="flecha">→</span>
+    <div class="paso"><b>Vector index</b><code>index</code><div class="d">sqlite-vec, one local file, kept out of git</div></div>
+    <span class="flecha">→</span>
+    <div class="paso"><b>Query</b><code>ask</code><div class="d">top-5 by cosine with source citations; exposed as an agent skill</div></div>
+  </div>
+
+  <h2><span class="n">02</span>Test cases — all green</h2>
+  <p class="sub">A living test registry, updated only by the test runner (never by hand),
+  with per-executor run counters. House rule: a milestone is not marked done without its
+  test case registered and passing. A MASTER case runs all five.</p>
+  <div class="scroll-x" style="margin-top:1rem">
+  <table>
+    <thead><tr><th>Case</th><th>What it proves</th><th>Runs (agent)</th><th>Runs (human)</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td class="cp-id">TC-001</td><td>Corpus census completes: full table, all columns, TOTAL row</td><td class="num">8</td><td class="num">2</td><td class="verde">green</td></tr>
+      <tr><td class="cp-id">TC-002</td><td>Census is reproducible: two consecutive runs produce a byte-identical table (<code>diff</code>)</td><td class="num">8</td><td class="num">2</td><td class="verde">green</td></tr>
+      <tr><td class="cp-id">TC-003</td><td>Chunking, two strategies side by side: no empty chunks, none over 1,200 tokens, all carry (repo, path, heading)</td><td class="num">6</td><td class="num">0</td><td class="verde">green</td></tr>
+      <tr><td class="cp-id">TC-004</td><td>Embeddings: 3/3 control questions return their known-in-advance source in the top-5 by cosine</td><td class="num">5</td><td class="num">0</td><td class="verde">green</td></tr>
+      <tr><td class="cp-id">TC-005</td><td>End-to-end: index the corpus, then 5/5 control questions return their expected source in the top-5, query under 2 s</td><td class="num">4</td><td class="num">0</td><td class="verde">green</td></tr>
+      <tr><td class="cp-id">MASTER</td><td>Runs all five cases against the current corpus</td><td class="num">8</td><td class="num">1</td><td class="verde">5/5 green</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2><span class="n">03</span>Scale: from 3 repositories to 25 in one day, without breaking the controls</h2>
+  <p class="sub">Same pipeline, three milestones. The 5 control questions stayed in the
+  top-5 with 135× more chunks competing; query time remains 11× under the 2-second budget.</p>
+  <div class="scroll-x" style="margin-top:1rem">
+  <table>
+    <thead><tr><th>Milestone</th><th>Repos</th><th class="bar-cell">Chunks indexed</th><th class="bar-cell">Average query</th><th>Controls</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>v0 · D-004</td><td class="num">3</td>
+        <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:1%"></div><span class="val">1,970</span></div></td>
+        <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:18%"></div><span class="val">32 ms</span></div></td>
+        <td class="verde">5/5 (all rank 1)</td>
+      </tr>
+      <tr>
+        <td>D-005</td><td class="num">24</td>
+        <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:94%"></div><span class="val">249,637</span></div></td>
+        <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:70%"></div><span class="val">122 ms</span></div></td>
+        <td class="verde">5/5 (4 at rank 1)</td>
+      </tr>
+      <tr>
+        <td>D-006 · current</td><td class="num">25</td>
+        <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:100%"></div><span class="val">265,661</span></div></td>
+        <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:100%"></div><span class="val">174 ms</span></div></td>
+        <td class="verde">5/5 (3 at rank 1)</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2><span class="n">04</span>Design decisions, with their numbers</h2>
+
+  <div class="decision">
+    <h3><span class="tag">D-001</span>Census the corpus before deciding anything</h3>
+    <p>Three seed repositories, explicit exclusions (VCS internals, virtualenvs, editor
+    config, and an embedded shared submodule — counting it would census the same corpus
+    twice). The header density (~12 per file) predicted that structure-aware chunking
+    would work — a hypothesis stated up front and tested in D-002.</p>
+    <div class="nums">192 files · 2,318 headers · 190,359 words — two runs, same numbers ✔</div>
+  </div>
+
+  <div class="decision">
+    <h3><span class="tag">D-002</span>Chunking: header-based split wins</h3>
+    <p>Side-by-side comparison on 10 real notes: the structure-aware split produces
+    natural-sized chunks with citable metadata (repo, path, full H1&nbsp;&gt;&nbsp;H2&nbsp;&gt;&nbsp;H3
+    breadcrumb); fixed-size windows cut mid-sentence and can't anchor a citation.
+    Oversized sections (long transcripts) are subdivided while keeping their heading.
+    Bug caught along the way: a suspiciously uniform µ=128 tokens exposed the tokenizer
+    silently truncating at the model's maximum — token counts now use the real tokenizer
+    with truncation disabled.</p>
+    <div class="nums">header-based: 141 chunks · µ323 tok   vs   fixed-size: 104 · µ480 — VALIDATION OK</div>
+  </div>
+
+  <div class="decision">
+    <h3><span class="tag">D-003</span>Multilingual embedding model + 128-token embed cap</h3>
+    <p>The tutorial default (all-MiniLM-L6-v2, English-trained) ranked the hardest control
+    question at position 96 on a Spanish corpus — discarded by measurement, not theory.
+    Lowering the embed cap to the model's real attention window (128 tokens) stopped
+    truncating the tail of every chunk and moved that question from rank 4 to rank 1.
+    Two separate budgets now exist: 1,200 tokens for structural chunks (reading), 128 for
+    embedding — each with its own measured number.</p>
+    <div class="nums">English model: rank 96 ✖ → multilingual, cap 1200: rank 4 → cap 128: rank 1 ✔ (3/3)</div>
+  </div>
+
+  <div class="decision">
+    <h3><span class="tag">D-004</span>Persistent index on sqlite-vec</h3>
+    <p>One local file, no server, no cloud — at this scale anything bigger is cargo cult;
+    the decision gets revisited with numbers if the corpus grows 100×. Vectors are stored
+    normalized, so L2 order is exactly cosine order with zero extra configuration. Model
+    load (~5–7 s, once per process) and query time (32 ms) are reported separately —
+    averaging them would be lying.</p>
+    <div class="nums">1,970 chunks · 4.9 MB · indexed in 1.1 s · 5/5 at rank 1 · 32 ms average query</div>
+  </div>
+
+  <div class="decision">
+    <h3><span class="tag">D-005</span>Corpus expanded to 24 repositories</h3>
+    <p>127× more competition and the controls didn't leave the top-5. Query time went from
+    32 to 122 ms: brute-force search over 250k vectors is still comfortably inside budget —
+    an ANN index here would be over-engineering. One legacy repository turned out to hold
+    65% of the corpus, flagged as a potential noise source to be measured, not guessed at.</p>
+    <div class="nums">33,631 files · 13.0 M words · 249,637 chunks · 518.6 MB · embedded in 334 s</div>
+  </div>
+
+  <div class="decision">
+    <h3><span class="tag">D-006</span>The sensitive repository joins: full coverage</h3>
+    <p>The last repository held legal documents, so it entered with written safeguards:
+    the index is a local derivative kept out of version control, querying is read-only
+    toward the owner, and the source repository remains the single source of truth — the
+    index makes material findable, it never becomes the authority. The payoff: the most
+    useful class of daily question moved from out-of-scope to answerable, with the right
+    sources at ranks 1–2.</p>
+    <div class="nums">35,079 files · 14.77 M words · 265,661 chunks · 559.9 MB · 174 ms avg query · MASTER 5/5</div>
+  </div>
+
+  <div class="decision">
+    <h3><span class="tag">D-007</span>Publication governance</h3>
+    <p>The workshop repository (RAGOps) stays private forever: it operates on real names and paths,
+    and sanitizing a live commit history is fragile — one slip leaks the internal silhouette.
+    Public evidence is curated once, reviewed, into this page: aggregated numbers and
+    decisions — never the corpus, the index, or a single real name. Every publication passes
+    explicit human review before push.</p>
+  </div>
+
+  <h2><span class="n">05</span>Honest findings (what the system does not do)</h2>
+  <ul class="hallazgos">
+    <li><b>Counting is not retrieval:</b> aggregation questions ("how many…?") need a
+    structured source, not semantic search. A paradigm limit, not a bug — declared as its
+    own question class for the evaluation set.</li>
+    <li><b>Duplicate content wastes top-k slots:</b> one legacy repository stores identical
+    files in two folders; identical pairs showed up side by side in the rankings. Candidate
+    fix: content-hash dedup at index time, to be decided with recall@k.</li>
+    <li><b>Crumb chunks:</b> sections whose content lives entirely in their subsections
+    leave a chunk that is only a title line. They pass validation but are potential noise —
+    measured in the evaluation set, not pruned for cosmetics.</li>
+    <li><b>3–5 control questions validate "by eye"</b> — they cannot compare configurations
+    finely. That's the job of the next stage: a golden set of 30–50 questions scored with
+    recall@k and MRR.</li>
+  </ul>
+
+  <footer>
+    Every number traces to RAGOps' decision log (D-001→D-007) and its
+    machine-updated test registry, with dated commits (2026-08-21). Published here in
+    aggregate under decision D-007.
+  </footer>
+</main>
+</body>
+</html>
