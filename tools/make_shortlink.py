@@ -47,6 +47,7 @@ PAGES = {
     "ds":  ("Dashboard_GemeloDigital_SIGMA.html",   "dashboard-sigma"),
     "rag": ("projects/rag-pipeline-evidence.html",  "rag-evidence"),
     "svc": ("pages/sigma-services-en.html",         "services-en"),
+    "home": ("index-en.html",                       "home-en"),
 }
 
 STUB = """<!doctype html>
@@ -66,7 +67,8 @@ DOCS_MD = GO_DIR / "README.md"
 SOURCE_LABELS = {"r": "Resume", "w": "WhatsApp", "li": "LinkedIn",
                  "web": "Internet/otro", "em": "Email"}
 PAGE_LABELS = {"ds": "Dashboard SIGMA", "rag": "Evidencia RAG",
-               "svc": "Portafolio de servicios (EN)"}
+               "svc": "Portafolio de servicios (EN)",
+               "home": "Landing SIGMA (EN)"}
 
 
 def load_registry():

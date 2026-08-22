@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DemoCustomerOps — Public Web Workspace</title>
+<title>SIGMA — Digital Twin Workspace</title>
 <style>
   :root {
     --bg: #0f1115;
@@ -37,6 +37,14 @@
     max-width: 640px;
     margin-inline: auto;
   }
+  header .lang {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  header .lang:hover { color: var(--accent); }
   main {
     max-width: 920px;
     margin: 0 auto;
@@ -78,13 +86,6 @@
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
   }
-  code {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 0.1rem 0.4rem;
-    font-size: 0.9em;
-  }
   footer {
     text-align: center;
     padding: 2rem 1.5rem;
@@ -98,68 +99,56 @@
 <body>
 
 <header>
-  <h1>SIGMA · Gemelo Digital</h1>
-  <p>Demostraciones del gemelo digital: panel interactivo de KPIs y recorrido 3D inmersivo de la propuesta.</p>
-  <p style="margin-top:0.75rem;font-size:0.85rem"><a href="index-en.html" style="text-decoration:none;color:var(--muted)">English version →</a></p>
+  <h1>SIGMA · Digital Twin</h1>
+  <p>Digital twin demonstrations: interactive KPI dashboard, immersive 3D walkthrough, and measured engineering evidence.</p>
+  <a class="lang" href="index.html">Versión en español →</a>
 </header>
 
 <main>
   <section>
-    <h2>Demostraciones</h2>
+    <h2>Demos</h2>
     <div class="grid">
       <a class="card" href="Dashboard_GemeloDigital_SIGMA.html" data-track="Dashboard Gemelo Digital">
-        <h2>Dashboard · Gemelo Digital</h2>
-        <p>Panel interactivo de KPIs del gemelo digital SIGMA.</p>
+        <h2>Dashboard · Digital Twin</h2>
+        <p>Interactive KPI dashboard of the SIGMA digital twin (Spanish UI).</p>
       </a>
       <a class="card" href="Dashboard_GemeloDigital_ADR_SIGMA.html" data-track="Dashboard Planta ADR Heap Leach">
-        <h2>Planta ADR · Heap Leach</h2>
-        <p>Gemelo digital de lixiviación en pilas + planta ADR (columnas de carbón).</p>
+        <h2>ADR Plant · Heap Leach</h2>
+        <p>Digital twin of heap leaching + ADR plant (carbon columns) (Spanish UI).</p>
       </a>
       <a class="card" href="https://framevr.io/classroomjorge" target="_blank" rel="noopener" data-track="Sala 3D (FrameVR)">
-        <h2>Aula 3D · Recorrido inmersivo</h2>
-        <p>Entorno 3D de la propuesta en FrameVR (se abre en una pestaña nueva).</p>
+        <h2>3D Room · Immersive walkthrough</h2>
+        <p>3D environment of the proposal in FrameVR (opens in a new tab).</p>
       </a>
     </div>
   </section>
 
   <section>
-    <h2>Guías</h2>
-    <div class="grid">
-      <a class="card" href="guias/camping-squamish/" data-track="Guía camping Squamish">
-        <h2>Acampar en Squamish sin reserva</h2>
-        <p>Los campings del corredor Sea to Sky que se toman por orden de llegada:
-        tarifas, servicios, avisos de osos, precios de las atracciones y checklist
-        de equipaje.</p>
-      </a>
-      <a class="card" href="mapa-incendios-hope-manning.html" data-track="Mapa incendios Hope-Manning">
-        <h2>Mapa de incendios · Hope–Manning</h2>
-        <p>Mapa en vivo del corredor: incendios activos, órdenes y alertas de
-        evacuación, cortes de la Hwy 3 y ficha de cada camping con sus pros y
-        contras.</p>
-      </a>
-      <a class="card" href="shuswap-agosto-2026.html" data-track="Shuswap agosto 2026">
-        <h2>Shuswap Lake · qué esperar</h2>
-        <p>Condiciones en Shuswap Lake Provincial Park en agosto de 2026: humo,
-        evacuaciones cercanas, prohibición de fogatas y qué revisar cada día.</p>
-      </a>
-    </div>
-  </section>
-
-  <section>
-    <h2>Ingeniería</h2>
+    <h2>Engineering</h2>
     <div class="grid">
       <a class="card" href="projects/rag-pipeline-evidence.html" data-track="RAG Pipeline Evidence">
         <h2>RAGOps · RAG Pipeline Evidence</h2>
-        <p>Retrieval-augmented generation sobre una base de conocimiento privada de
-        25 repositorios (~35k documentos): decisiones de diseño medidas, casos de
-        prueba en verde y números reproducibles. Página en inglés.</p>
+        <p>Retrieval-augmented generation over a private knowledge base of
+        25 repositories (~35k documents): measured design decisions, passing
+        test cases and reproducible numbers.</p>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Services</h2>
+    <div class="grid">
+      <a class="card" href="pages/sigma-services-en.html" data-track="Service Portfolio EN">
+        <h2>Service Portfolio</h2>
+        <p>26 services across 6 families — digital twins, Lean Six Sigma and
+        AI agents for industrial operations, each with the proof beside it.</p>
       </a>
     </div>
   </section>
 </main>
 
 <footer>
-  SIGMA · Gemelo Digital — demostración para evaluación.
+  SIGMA · Digital Twin — demonstration for evaluation.
 </footer>
 
 <!-- Registro de visitas y clicks (SIGMA tracker) -->

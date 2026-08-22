@@ -61,5 +61,26 @@
     "source": "r",
     "page": "rag",
     "client": "ai-job-search"
+  },
+  "r-home": {
+    "source": "r",
+    "page": "home"
+  },
+  "w-home": {
+    "source": "w",
+    "page": "home"
+  },
+  "li-home": {
+    "source": "li",
+    "page": "home"
+  },
+  "web-home": {
+    "source": "web",
+    "page": "home"
+  },
+  "r-aijobs-home": {
+    "source": "r",
+    "page": "home",
+    "client": "ai-job-search"
   }
 }
