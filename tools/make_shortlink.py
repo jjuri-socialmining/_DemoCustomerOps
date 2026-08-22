@@ -46,6 +46,7 @@ SOURCES = {
 # utm_content None = destino sin tracker propio: redirect limpio, sin UTM.
 PAGES = {
     "ds":  ("Dashboard_GemeloDigital_SIGMA.html",   "dashboard-sigma"),
+    "ds-en": ("Dashboard_DigitalTwin_SIGMA.html",   "dashboard-sigma-en"),
     "rag": ("projects/rag-pipeline-evidence.html",  "rag-evidence"),
     "svc": ("pages/sigma-services-en.html",         "services-en"),
     "home": ("index-en.html",                       "home-en"),
@@ -71,7 +72,8 @@ DOCS_MD = GO_DIR / "README.md"
 
 SOURCE_LABELS = {"r": "Resume", "w": "WhatsApp", "li": "LinkedIn",
                  "web": "Internet/otro", "em": "Email"}
-PAGE_LABELS = {"ds": "Dashboard SIGMA", "rag": "Evidencia RAG",
+PAGE_LABELS = {"ds": "Dashboard SIGMA", "ds-en": "Dashboard SIGMA (EN)",
+               "rag": "Evidencia RAG",
                "svc": "Portafolio de servicios (EN)",
                "home": "Landing SIGMA (EN)",
                "kpi": "Landing KPI (ES)",

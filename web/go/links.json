@@ -102,5 +102,21 @@
     "source": "r",
     "page": "3d",
     "client": "ai-job-search"
+  },
+  "r-ds-en": {
+    "source": "r",
+    "page": "ds-en"
+  },
+  "w-ds-en": {
+    "source": "w",
+    "page": "ds-en"
+  },
+  "li-ds-en": {
+    "source": "li",
+    "page": "ds-en"
+  },
+  "web-ds-en": {
+    "source": "web",
+    "page": "ds-en"
   }
 }

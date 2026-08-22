@@ -22,6 +22,7 @@ este README y `docs-4b8e2d1.html` se regeneran con el tool.
 | Clave | Página (`utm_content`) |
 |---|---|
 | `ds` | Dashboard SIGMA — `Dashboard_GemeloDigital_SIGMA.html` (`dashboard-sigma`) |
+| `ds-en` | Dashboard SIGMA (EN) — `Dashboard_DigitalTwin_SIGMA.html` (`dashboard-sigma-en`) |
 | `rag` | Evidencia RAG — `projects/rag-pipeline-evidence.html` (`rag-evidence`) |
 | `svc` | Portafolio de servicios (EN) — `pages/sigma-services-en.html` (`services-en`) |
 | `home` | Landing SIGMA (EN) — `index-en.html` (`home-en`) |
@@ -35,6 +36,7 @@ este README y `docs-4b8e2d1.html` se regeneran con el tool.
 | Código | Link corto | Fuente | Página | Campaña |
 |---|---|---|---|---|
 | `li-ds` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/li-ds | LinkedIn | Dashboard SIGMA | general |
+| `li-ds-en` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/li-ds-en | LinkedIn | Dashboard SIGMA (EN) | general |
 | `li-home` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/li-home | LinkedIn | Landing SIGMA (EN) | general |
 | `li-rag` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/li-rag | LinkedIn | Evidencia RAG | general |
 | `li-svc` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/li-svc | LinkedIn | Portafolio de servicios (EN) | general |
@@ -47,14 +49,17 @@ este README y `docs-4b8e2d1.html` se regeneran con el tool.
 | `r-aijobs-rag` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-aijobs-rag | Resume | Evidencia RAG | ai-job-search |
 | `r-aijobs-svc` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-aijobs-svc | Resume | Portafolio de servicios (EN) | ai-job-search |
 | `r-ds` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-ds | Resume | Dashboard SIGMA | general |
+| `r-ds-en` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-ds-en | Resume | Dashboard SIGMA (EN) | general |
 | `r-home` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-home | Resume | Landing SIGMA (EN) | general |
 | `r-rag` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-rag | Resume | Evidencia RAG | general |
 | `r-svc` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-svc | Resume | Portafolio de servicios (EN) | general |
 | `w-ds` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/w-ds | WhatsApp | Dashboard SIGMA | general |
+| `w-ds-en` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/w-ds-en | WhatsApp | Dashboard SIGMA (EN) | general |
 | `w-home` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/w-home | WhatsApp | Landing SIGMA (EN) | general |
 | `w-rag` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/w-rag | WhatsApp | Evidencia RAG | general |
 | `w-svc` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/w-svc | WhatsApp | Portafolio de servicios (EN) | general |
 | `web-ds` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/web-ds | Internet/otro | Dashboard SIGMA | general |
+| `web-ds-en` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/web-ds-en | Internet/otro | Dashboard SIGMA (EN) | general |
 | `web-home` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/web-home | Internet/otro | Landing SIGMA (EN) | general |
 | `web-rag` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/web-rag | Internet/otro | Evidencia RAG | general |
 | `web-svc` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/web-svc | Internet/otro | Portafolio de servicios (EN) | general |

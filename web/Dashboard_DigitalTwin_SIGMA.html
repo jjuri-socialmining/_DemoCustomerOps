@@ -1,9 +1,9 @@
-<!-- SIGMA Digital Twins — Panel de Gemelo Digital
-     Propuestas de dashboard para [PROYECTO] · Tratamiento de minerales carbonáceos (proceso RIL)
-     Datos representativos — reemplazar con KPIs reales del laboratorio/piloto. -->
+<!-- SIGMA Digital Twins — Digital Twin Panel (English)
+     Dashboard proposals for [PROJECT] · Carbonaceous ore treatment (RIL process)
+     Representative data — replace with the actual lab/pilot KPIs. -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SIGMA · Gemelo Digital — Panel de Control</title>
+<title>SIGMA · Digital Twin — Control Panel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -400,21 +400,21 @@
 
 <div id="heartPulse"></div>
 <header class="topbar">
-  <a class="brand" href="https://jjuri-socialmining.github.io/_DemoCustomerOps/Dashboard_GemeloDigital_SIGMA.html" style="text-decoration:none" title="Ir al Dashboard del Gemelo Digital"><span class="bar"></span><b>SIGMA</b><span>Digital Twins</span></a>
+  <a class="brand" href="https://jjuri-socialmining.github.io/_DemoCustomerOps/Dashboard_DigitalTwin_SIGMA.html" style="text-decoration:none" title="Go to the Digital Twin Dashboard"><span class="bar"></span><b>SIGMA</b><span>Digital Twins</span></a>
   <div class="dropdown" id="salas3d">
     <button class="btn-3d-portal" id="salas3dBtn" type="button">
       <svg class="cube-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-      Salas 3D ▾
+      3D Rooms ▾
     </button>
     <div class="dropdown-menu" id="salas3dMenu">
-      <a href="https://framevr.io/classroomjorge" target="_blank" rel="noopener" data-track="Planta 3D (FrameVR)">⬡ Planta 3D</a>
-      <a href="https://framevr.io/emptysdt#conference-3" target="_blank" rel="noopener" data-track="SalaReu 3D (FrameVR)">⬡ SalaReu 3D</a>
+      <a href="https://framevr.io/classroomjorge" target="_blank" rel="noopener" data-track="3D Plant (FrameVR) EN">⬡ 3D Plant</a>
+      <a href="https://framevr.io/emptysdt#conference-3" target="_blank" rel="noopener" data-track="3D Meeting Room (FrameVR) EN">⬡ 3D Meeting Room</a>
     </div>
   </div>
 
 
   <div class="hmon-wrap">
-    <div class="hmon" id="healthMon" title="Estado de salud de la planta">
+    <div class="hmon" id="healthMon" title="Plant health status">
       <canvas id="ecgCanvas"></canvas>
       <span class="hm-state" id="hmState">FINE</span>
       <span class="hm-scan"></span>
@@ -425,13 +425,13 @@
   <div class="status">
     <div class="hm-ctrl">
       <label for="recSlider">Rec Au</label>
-      <input type="range" id="recSlider" min="84" max="93" step="0.1" value="90.8" aria-label="Recuperación Au (control manual)">
-      <span class="hm-hint" id="hmHint">👈 Simular</span>
+      <input type="range" id="recSlider" min="84" max="93" step="0.1" value="90.8" aria-label="Au recovery (manual control)">
+      <span class="hm-hint" id="hmHint">👈 Simulate</span>
       <span class="hm-val mono" id="recSliderVal">90.8%</span>
       <button class="hm-auto on" id="recAuto" type="button">AUTO</button>
     </div>
     <span class="live"><i></i>LIVE</span>
-    <span class="chip">Turno <b id="shiftNow">A</b></span>
+    <span class="chip">Shift <b id="shiftNow">A</b></span>
     <span class="chip mono" id="clock">--:--:--</span>
   </div>
 </header>
@@ -439,60 +439,60 @@
 <div class="shell">
   <aside class="sidebar">
     <nav class="tabs" id="tabs">
-      <button data-v="control" class="active">Sala de Control</button>
-      <button data-v="turnos">Tablero de Turnos</button>
-      <button data-v="movil">Vista Móvil</button>
-      <button data-v="hud">Analítica</button>
+      <button data-v="control" class="active">Control Room</button>
+      <button data-v="turnos">Shift Board</button>
+      <button data-v="movil">Mobile View</button>
+      <button data-v="hud">Analytics</button>
     </nav>
     <div class="side-sec">Sigma Dashboards</div>
-    <a class="side-link" href="Dashboard_GemeloDigital_SIGMA.html" style="color:var(--cyan)" data-track="Dashboard: Planta Resina">◆ Planta Resina</a>
-    <a class="side-link" href="Dashboard_GemeloDigital_ADR_SIGMA.html" data-track="Dashboard: Planta ADR Heap Leach">⬡ Planta ADR · Heap Leach</a>
-    <a class="side-link" href="Dashboard_DigitalTwin_SIGMA.html" data-track="Dashboard: switch to EN">🌐 English version</a>
+    <a class="side-link" href="Dashboard_DigitalTwin_SIGMA.html" style="color:var(--cyan)" data-track="Dashboard: Resin Plant EN">◆ Resin Plant</a>
+    <a class="side-link" href="Dashboard_GemeloDigital_ADR_SIGMA.html" data-track="Dashboard: Planta ADR Heap Leach">⬡ ADR Plant · Heap Leach (ES)</a>
+    <a class="side-link" href="Dashboard_GemeloDigital_SIGMA.html" data-track="Dashboard: switch to ES">🌐 Versión en español</a>
   </aside>
   <div class="content">
 
 <div class="maturity" id="maturity">
-  <span class="ml">Madurez del gemelo</span>
-  <span class="mstep">Modelo</span><span class="msep">›</span>
-  <span class="mstep on" title="Flujo de datos real → modelo, una sola vía: la sombra digital copia la planta en tiempo real (aún sin control en lazo cerrado).">Digital Shadow</span><span class="msep">›</span>
-  <span class="mstep">Gemelo Digital</span>
-  <span class="mnote">flujo real → modelo (1 vía) · P3 · Nivel 1</span>
+  <span class="ml">Twin maturity</span>
+  <span class="mstep">Model</span><span class="msep">›</span>
+  <span class="mstep on" title="Real data flow → model, one-way: the digital shadow mirrors the plant in real time (no closed-loop control yet).">Digital Shadow</span><span class="msep">›</span>
+  <span class="mstep">Digital Twin</span>
+  <span class="mnote">real flow → model (1-way) · P3 · Level 1</span>
 </div>
 
 <main>
   <!-- ================= SALA DE CONTROL ================= -->
   <section class="view active" id="control">
-    <div class="eyebrow">Sala de Control — <b>Gemelo Digital</b> · [PROYECTO] · Proceso RIL para minerales carbonáceos</div>
+    <div class="eyebrow">Control Room — <b>Digital Twin</b> · [PROJECT] · RIL process for carbonaceous ores</div>
 
     <div class="grid kpis">
       <div class="tile">
-        <div class="top"><div class="lbl">Recuperación Au</div><span class="pill warn">−1.2 pts</span></div>
+        <div class="top"><div class="lbl">Au Recovery</div><span class="pill warn">−1.2 pts</span></div>
         <div class="val">90.8<u>%</u></div>
-        <div class="sub">Gemelo <b>92.0%</b> · Meta 92%</div>
+        <div class="sub">Twin <b>92.0%</b> · Target 92%</div>
         <div class="spark" data-spark="89.0,90.2,90.0,91.1,90.6,90.2,90.8" data-col="--cyan"></div>
       </div>
       <div class="tile">
-        <div class="top"><div class="lbl">Carbón orgánico (TOC)</div><span class="pill crit">alto</span></div>
+        <div class="top"><div class="lbl">Organic carbon (TOC)</div><span class="pill crit">high</span></div>
         <div class="val">3.6<u>%</u></div>
-        <div class="sub">Umbral 3.5% · preg-robbing</div>
+        <div class="sub">Threshold 3.5% · preg-robbing</div>
         <div class="spark" data-spark="2.9,3.1,3.0,3.4,3.6,3.5,3.6" data-col="--red"></div>
       </div>
       <div class="tile">
-        <div class="top"><div class="lbl">Carga de resina</div><span class="pill warn">86%</span></div>
+        <div class="top"><div class="lbl">Resin loading</div><span class="pill warn">86%</span></div>
         <div class="val">86<u>%</u></div>
-        <div class="sub">Saturación est. <b>4.2 h</b></div>
+        <div class="sub">Est. saturation <b>4.2 h</b></div>
         <div class="spark" data-spark="62,68,73,78,82,84,86" data-col="--amber"></div>
       </div>
       <div class="tile">
-        <div class="top"><div class="lbl">Throughput</div><span class="pill ok">en rango</span></div>
+        <div class="top"><div class="lbl">Throughput</div><span class="pill ok">in range</span></div>
         <div class="val">5 940<u>tpd</u></div>
-        <div class="sub">Meta 6 000 tpd · 99%</div>
+        <div class="sub">Target 6 000 tpd · 99%</div>
         <div class="spark" data-spark="5900,6010,5950,5880,5990,5920,5940" data-col="--green"></div>
       </div>
       <div class="tile">
-        <div class="top"><div class="lbl">Ley de cabeza Au</div><span class="pill info">2.8 g/t</span></div>
+        <div class="top"><div class="lbl">Au head grade</div><span class="pill info">2.8 g/t</span></div>
         <div class="val">2.8<u>g/t</u></div>
-        <div class="sub">Rango 2–5 g/t</div>
+        <div class="sub">Range 2–5 g/t</div>
         <div class="spark" data-spark="2.6,2.9,2.7,2.8,3.0,2.7,2.8" data-col="--blue"></div>
       </div>
     </div>
@@ -500,20 +500,20 @@
     <div class="grid two" style="margin-top:14px">
       <div>
         <div class="card">
-          <h3>Recuperación de Au — Real vs Gemelo (24 h)
-            <small class="legend"><span><i style="background:var(--white)"></i>Real</span><span><i style="background:var(--cyan)"></i>Gemelo</span></small>
+          <h3>Au Recovery — Actual vs Twin (24 h)
+            <small class="legend"><span><i style="background:var(--white)"></i>Actual</span><span><i style="background:var(--cyan)"></i>Twin</span></small>
           </h3>
           <div id="recoveryChart"></div>
-          <div class="recrate" id="recoveryRate"><span class="live"><i></i>Adquisición en vivo</span> · 1 muestra / 4 s</div>
+          <div class="recrate" id="recoveryRate"><span class="live"><i></i>Live acquisition</span> · 1 sample / 4 s</div>
         </div>
         <div class="card" style="margin-top:14px">
-          <h3>Alternativas del Trade-Off <small>recuperación · OPEX · CAPEX (relativo)</small></h3>
-          <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.5px;margin:2px 0 8px">RECUPERACIÓN DE Au (%)</div>
-          <div class="barrow"><span class="nm">Caso base (CIL)</span><div class="bartrack"><div class="barfill" style="background:#5C788F" data-w="78"></div></div><span class="vv">78%</span></div>
+          <h3>Trade-Off Alternatives <small>recovery · OPEX · CAPEX (relative)</small></h3>
+          <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.5px;margin:2px 0 8px">Au RECOVERY (%)</div>
+          <div class="barrow"><span class="nm">Base case (CIL)</span><div class="bartrack"><div class="barfill" style="background:#5C788F" data-w="78"></div></div><span class="vv">78%</span></div>
           <div class="barrow"><span class="nm">Alt 1 · RIL O/F</span><div class="bartrack"><div class="barfill" style="background:linear-gradient(90deg,var(--cyan2),var(--cyan))" data-w="91"></div></div><span class="vv">91%</span></div>
-          <div class="barrow"><span class="nm">Alt 2 · RIL U/F esp.</span><div class="bartrack"><div class="barfill" style="background:linear-gradient(90deg,var(--cyan2),var(--lime))" data-w="93"></div></div><span class="vv">93%</span></div>
-          <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.5px;margin:14px 0 8px">OPEX RELATIVO (menor es mejor)</div>
-          <div class="barrow"><span class="nm">Caso base</span><div class="bartrack"><div class="barfill" style="background:#5C788F" data-w="60"></div></div><span class="vv">1.00</span></div>
+          <div class="barrow"><span class="nm">Alt 2 · RIL thick. U/F</span><div class="bartrack"><div class="barfill" style="background:linear-gradient(90deg,var(--cyan2),var(--lime))" data-w="93"></div></div><span class="vv">93%</span></div>
+          <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.5px;margin:14px 0 8px">RELATIVE OPEX (lower is better)</div>
+          <div class="barrow"><span class="nm">Base case</span><div class="bartrack"><div class="barfill" style="background:#5C788F" data-w="60"></div></div><span class="vv">1.00</span></div>
           <div class="barrow"><span class="nm">Alt 1</span><div class="bartrack"><div class="barfill" style="background:var(--amber)" data-w="78"></div></div><span class="vv">1.30</span></div>
           <div class="barrow"><span class="nm">Alt 2</span><div class="bartrack"><div class="barfill" style="background:var(--green)" data-w="52"></div></div><span class="vv">0.87</span></div>
         </div>
@@ -521,168 +521,168 @@
 
       <div>
         <div class="card sasha">
-          <h3>Asistente IA</h3>
+          <h3>AI Assistant</h3>
           <div class="aichat">
-            <div class="aichat-head">Grupo <b>Escondida · ADR</b><span class="chip" id="grpChip">grupo…</span></div>
+            <div class="aichat-head">Group <b>Escondida · ADR</b><span class="chip" id="grpChip">group…</span></div>
             <div class="aichat-log" id="aiChatLog"></div>
             <div class="aichat-row">
-              <input id="aiChatInput" type="text" placeholder="Preguntale a Hefesto…" autocomplete="off">
-              <button id="aiChatSend" type="button" title="Enviar">➤</button>
+              <input id="aiChatInput" type="text" placeholder="Ask Hefesto…" autocomplete="off">
+              <button id="aiChatSend" type="button" title="Send">➤</button>
             </div>
           </div>
           <div class="who" style="margin-top:12px;border-top:1px solid var(--edge2);padding-top:12px">
             <div class="av"><b>H</b></div>
-            <div><b>Hefesto</b><span id="aiWho">Veredicto asistido · pendiente de validación</span></div>
+            <div><b>Hefesto</b><span id="aiWho">Assisted verdict · pending validation</span></div>
           </div>
-          <div class="verdict" id="aiVerdict">Recuperación <b>1.2 pts</b> bajo el gemelo. Causa probable: pico de carbón orgánico (3.6%) a las <b>02:10</b> en Turno B. La resina está al 86% de carga. Acción: subir dosis de resina <b>+8%</b> y verificar P80 del O/F del ciclón.</div>
-          <div class="conf">Confianza del diagnóstico <div class="track"><div class="fill" id="aiConfFill"></div></div> <span id="aiConfVal">90%</span></div>
-          <div class="confnote" id="aiConfNote">IA <b>90%</b>. La validación del Ing. de procesos la lleva a 99%; el 1% es decisión del metalurgista en terreno.</div>
-          <div class="action" id="aiAction">Acción recomendada: ajustar dosis de resina</div>
-          <div class="aivalrow"><button class="aibtn" id="aiValidate" type="button">✓ Validar (Ing. de procesos)</button><span id="aiValBadge" class="pill ok" style="display:none">Validado · 99%</span></div>
-          <div class="aivalrow"><a class="wabtn" id="waGroup" href="#" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0 0 20.465 3.488"/></svg>Pinchá aquí para ingresar al grupo desde tu teléfono</a></div>
+          <div class="verdict" id="aiVerdict">Recovery <b>1.2 pts</b> below the twin. Probable cause: organic carbon spike (3.6%) at <b>02:10</b> on Shift B. Resin at 86% loading. Action: raise resin dose <b>+8%</b> and check the cyclone O/F P80.</div>
+          <div class="conf">Diagnostic confidence <div class="track"><div class="fill" id="aiConfFill"></div></div> <span id="aiConfVal">90%</span></div>
+          <div class="confnote" id="aiConfNote">AI <b>90%</b>. Process engineer validation raises it to 99%; the final 1% is the field metallurgist’s call.</div>
+          <div class="action" id="aiAction">Recommended action: adjust resin dose</div>
+          <div class="aivalrow"><button class="aibtn" id="aiValidate" type="button">✓ Validate (Process Eng.)</button><span id="aiValBadge" class="pill ok" style="display:none">Validated · 99%</span></div>
+          <div class="aivalrow"><a class="wabtn" id="waGroup" href="#" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0 0 20.465 3.488"/></svg>Tap here to join the group from your phone</a></div>
         </div>
 
         <div class="card" style="margin-top:14px">
-          <h3>Alertas predictivas</h3>
+          <h3>Predictive alerts</h3>
           <div id="aiAlerts">
-          <div class="alert"><div class="ic c">!</div><div class="tx"><b>Resina cerca de saturación</b><span>86% de capacidad · saturación est. 4.2 h · riesgo de pérdida de Au en relaves</span></div></div>
-          <div class="alert"><div class="ic w">▲</div><div class="tx"><b>TOC sobre umbral</b><span>Alimentación 3.6% &gt; 3.5% · efecto preg-robbing</span></div></div>
-          <div class="alert"><div class="ic w">▲</div><div class="tx"><b>P80 sobre objetivo</b><span>78 µm vs 75 µm · revisar carga circulante</span></div></div>
-          <div class="alert"><div class="ic o">✓</div><div class="tx"><b>Espesador en rango</b><span>49% sólidos · objetivo 50%</span></div></div>
+          <div class="alert"><div class="ic c">!</div><div class="tx"><b>Resin near saturation</b><span>86% capacity · est. saturation 4.2 h · risk of Au loss to tailings</span></div></div>
+          <div class="alert"><div class="ic w">▲</div><div class="tx"><b>TOC above threshold</b><span>Feed 3.6% &gt; 3.5% · preg-robbing effect</span></div></div>
+          <div class="alert"><div class="ic w">▲</div><div class="tx"><b>P80 above target</b><span>78 µm vs 75 µm · check circulating load</span></div></div>
+          <div class="alert"><div class="ic o">✓</div><div class="tx"><b>Thickener in range</b><span>49% solids · target 50%</span></div></div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="sectlbl">Balance de proceso — masa · agua · reactivos · energía</div>
+    <div class="sectlbl">Process balance — mass · water · reagents · energy</div>
     <div class="grid balance">
-      <div class="bcell"><div class="l">Cianuro (NaCN)</div><div class="v">0.42<u> kg/t</u></div></div>
-      <div class="bcell"><div class="l">Reactivo elución</div><div class="v">128<u> L/día</u></div></div>
-      <div class="bcell"><div class="l">Repos. resina</div><div class="v">18<u> L/día</u></div></div>
-      <div class="bcell"><div class="l">Agua de proceso</div><div class="v">310<u> m³/h</u></div></div>
-      <div class="bcell"><div class="l">Energía</div><div class="v">11.8<u> MW</u></div></div>
-      <div class="bcell"><div class="l">P80 molienda</div><div class="v">78<u> µm</u></div></div>
-      <div class="bcell"><div class="l">Au en relaves</div><div class="v">0.28<u> g/t</u></div></div>
+      <div class="bcell"><div class="l">Cyanide (NaCN)</div><div class="v">0.42<u> kg/t</u></div></div>
+      <div class="bcell"><div class="l">Elution reagent</div><div class="v">128<u> L/day</u></div></div>
+      <div class="bcell"><div class="l">Resin make-up</div><div class="v">18<u> L/day</u></div></div>
+      <div class="bcell"><div class="l">Process water</div><div class="v">310<u> m³/h</u></div></div>
+      <div class="bcell"><div class="l">Energy</div><div class="v">11.8<u> MW</u></div></div>
+      <div class="bcell"><div class="l">Grinding P80</div><div class="v">78<u> µm</u></div></div>
+      <div class="bcell"><div class="l">Au in tailings</div><div class="v">0.28<u> g/t</u></div></div>
     </div>
   </section>
 
   <!-- ================= TABLERO DE TURNOS (DMS) ================= -->
   <section class="view" id="turnos">
-    <div class="eyebrow">Tablero de Turnos — <b>Entrega / Handover</b> · estilo Daily Management System (Lean)</div>
+    <div class="eyebrow">Shift Board — <b>Handover</b> · Daily Management System style (Lean)</div>
     <div class="shifthead">
-      <div class="big">Turno B · Noche</div>
+      <div class="big">Shift B · Night</div>
       <span class="chip">19:00 – 07:00</span>
-      <span class="arrow">→ entrega a</span>
-      <div class="big" style="color:var(--cyan)">Turno A · Día</div>
-      <span class="chip mono">15 jun 2026</span>
-      <span class="pill ok" style="margin-left:auto">0 incidentes de seguridad</span>
+      <span class="arrow">→ hands over to</span>
+      <div class="big" style="color:var(--cyan)">Shift A · Day</div>
+      <span class="chip mono">Jun 15, 2026</span>
+      <span class="pill ok" style="margin-left:auto">0 safety incidents</span>
     </div>
 
     <div class="grid dms">
-      <div class="card dcol"><h4><span class="ico">🛡️</span>Seguridad</h4>
+      <div class="card dcol"><h4><span class="ico">🛡️</span>Safety</h4>
         <div class="gaugewrap" data-gauge='{"v":100,"min":0,"max":100,"unit":"%","good":"high"}'></div>
-        <div class="dstat"><span>Cumplim.</span><b>100%</b></div>
-        <div class="prev">Turno previo: 100% <b class="up">▲</b></div>
+        <div class="dstat"><span>Compliance</span><b>100%</b></div>
+        <div class="prev">Prev. shift: 100% <b class="up">▲</b></div>
       </div>
-      <div class="card dcol"><h4><span class="ico">🥇</span>Recuperación Au</h4>
+      <div class="card dcol"><h4><span class="ico">🥇</span>Au Recovery</h4>
         <div class="gaugewrap" data-gauge='{"v":90.2,"min":84,"max":95,"unit":"%","good":"high","t1":89,"t2":92}'></div>
-        <div class="dstat"><span>Actual</span><b>90.2%</b></div>
-        <div class="dstat"><span>Meta</span><b>92%</b></div>
-        <div class="prev">Turno A: 91.4% <b class="dn">▼ 1.2</b></div>
+        <div class="dstat"><span>Current</span><b>90.2%</b></div>
+        <div class="dstat"><span>Target</span><b>92%</b></div>
+        <div class="prev">Shift A: 91.4% <b class="dn">▼ 1.2</b></div>
       </div>
       <div class="card dcol"><h4><span class="ico">⚙️</span>Throughput</h4>
         <div class="gaugewrap" data-gauge='{"v":2930,"min":0,"max":3250,"unit":"t","good":"high","t1":2600,"t2":2900}'></div>
-        <div class="dstat"><span>Tonelaje</span><b>2 930 t</b></div>
-        <div class="dstat"><span>Meta</span><b>3 000 t</b></div>
-        <div class="prev">Turno A: 3 010 t <b class="dn">▼</b></div>
+        <div class="dstat"><span>Tonnage</span><b>2 930 t</b></div>
+        <div class="dstat"><span>Target</span><b>3 000 t</b></div>
+        <div class="prev">Shift A: 3 010 t <b class="dn">▼</b></div>
       </div>
-      <div class="card dcol"><h4><span class="ico">🧪</span>Carga Resina</h4>
+      <div class="card dcol"><h4><span class="ico">🧪</span>Resin Loading</h4>
         <div class="gaugewrap" data-gauge='{"v":86,"min":0,"max":100,"unit":"%","good":"low","t1":80,"t2":90}'></div>
-        <div class="dstat"><span>Carga</span><b>86%</b></div>
-        <div class="dstat"><span>Límite</span><b>90%</b></div>
-        <div class="prev">Turno A: 74% <b class="dn">▲ 12</b></div>
+        <div class="dstat"><span>Loading</span><b>86%</b></div>
+        <div class="dstat"><span>Limit</span><b>90%</b></div>
+        <div class="prev">Shift A: 74% <b class="dn">▲ 12</b></div>
       </div>
-      <div class="card dcol"><h4><span class="ico">💧</span>Reactivos</h4>
+      <div class="card dcol"><h4><span class="ico">💧</span>Reagents</h4>
         <div class="gaugewrap" data-gauge='{"v":0.45,"min":0.30,"max":0.60,"unit":"","good":"low","t1":0.42,"t2":0.50}'></div>
         <div class="dstat"><span>NaCN</span><b>0.45 kg/t</b></div>
-        <div class="dstat"><span>Objetivo</span><b>0.42</b></div>
-        <div class="prev">Turno A: 0.41 <b class="dn">▲</b></div>
+        <div class="dstat"><span>Target</span><b>0.42</b></div>
+        <div class="prev">Shift A: 0.41 <b class="dn">▲</b></div>
       </div>
     </div>
 
     <div class="grid two" style="margin-top:16px">
       <div class="card events">
-        <h3>Eventos del turno <small>causas raíz · trazabilidad</small></h3>
-        <div class="ev"><span class="t">02:10</span><div><b>Pico de carbón orgánico (TOC 3.6%)</b><br><span style="color:var(--muted);font-size:11.5px">Lote de stockpile M3BH. Caída de recuperación de ~1.5 pts. Resina forzada a mayor carga.</span></div></div>
-        <div class="ev"><span class="t">03:40</span><div><b>P80 sube a 80 µm</b><br><span style="color:var(--muted);font-size:11.5px">Aumento de carga circulante en nido de ciclones. Ajuste de presión pendiente.</span></div></div>
-        <div class="ev"><span class="t">05:20</span><div><b>Carga de resina supera 85%</b><br><span style="color:var(--muted);font-size:11.5px">Alerta predictiva emitida. Recomendado adelantar elución.</span></div></div>
+        <h3>Shift events <small>root causes · traceability</small></h3>
+        <div class="ev"><span class="t">02:10</span><div><b>Organic carbon spike (TOC 3.6%)</b><br><span style="color:var(--muted);font-size:11.5px">Stockpile batch M3BH. Recovery drop of ~1.5 pts. Resin pushed to higher loading.</span></div></div>
+        <div class="ev"><span class="t">03:40</span><div><b>P80 rises to 80 µm</b><br><span style="color:var(--muted);font-size:11.5px">Circulating load increase in the cyclone cluster. Pressure adjustment pending.</span></div></div>
+        <div class="ev"><span class="t">05:20</span><div><b>Resin loading exceeds 85%</b><br><span style="color:var(--muted);font-size:11.5px">Predictive alert issued. Advancing the elution recommended.</span></div></div>
       </div>
       <div class="card handcard">
-        <h3>Captura de cambio de turno</h3>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5">Información fresca registrada por el turno saliente para el entrante. Alimenta el gemelo y el historial de causas.</div>
-        <textarea placeholder="Pendientes para Turno A: adelantar elución de resina; verificar dosificación tras pico de TOC; revisar presión de ciclones...">Pendiente: adelantar elución de resina (carga 86%). Verificar dosificación post-pico TOC. Revisar presión nido de ciclones (P80 a 80 µm).</textarea>
-        <div class="row"><button class="btn p">Registrar entrega</button><button class="btn s">Adjuntar lectura</button></div>
+        <h3>Shift handover capture</h3>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5">Fresh information logged by the outgoing shift for the incoming one. It feeds the twin and the root-cause history.</div>
+        <textarea placeholder="Open items for Shift A: bring resin elution forward; verify dosing after the TOC spike; check cyclone pressure...">Pending: bring resin elution forward (loading 86%). Verify dosing after the TOC spike. Check cyclone cluster pressure (P80 at 80 µm).</textarea>
+        <div class="row"><button class="btn p">Log handover</button><button class="btn s">Attach reading</button></div>
       </div>
     </div>
   </section>
 
   <!-- ================= VISTA MÓVIL ================= -->
   <section class="view" id="movil">
-    <div class="eyebrow">Vista Móvil — así se ve el dashboard <b>de verdad en un celular</b> · mismo tablero, auto-ajustado a la pantalla (no una maqueta)</div>
+    <div class="eyebrow">Mobile View — the dashboard <b>as it actually looks on a phone</b> · same board, auto-fitted to the screen (not a mockup)</div>
     <div class="phonewrap">
       <div class="phoneframe">
         <div class="phone-notch"></div>
-        <iframe id="mobileFrame" title="Vista real del dashboard en un celular"></iframe>
+        <iframe id="mobileFrame" title="Actual dashboard view on a phone"></iframe>
       </div>
-      <div class="phone-note2">Es el <b>mismo dashboard</b> renderizado a ancho de teléfono (≈390 px) dentro de un iframe: refleja exactamente cómo se ve y se auto-ajusta en el celular del gerente o jefe de turno — podés tocarlo y desplazarlo.</div>
+      <div class="phone-note2">It is the <b>same dashboard</b> rendered at phone width (≈390 px) inside an iframe: it reflects exactly how it looks and auto-fits on the manager’s or shift supervisor’s phone — you can touch and scroll it.</div>
     </div>
   </section>
 
   <!-- ================= ANALÍTICA (HUD) ================= -->
   <section class="view" id="hud">
-    <div class="eyebrow">Analítica — <b>Dominios y desempeño</b> · vista ejecutiva HUD (foto 4)</div>
+    <div class="eyebrow">Analytics — <b>Domains and performance</b> · executive HUD view</div>
     <div class="grid hudrow">
-      <div class="hudbig"><div class="l">Recuperación Au</div><div class="v">90.8<u>%</u></div></div>
-      <div class="hudbig"><div class="l">Oro recuperado</div><div class="v">486<u> oz/día</u></div></div>
-      <div class="hudbig"><div class="l">Tonelaje día</div><div class="v">5 940<u> tpd</u></div></div>
-      <div class="hudbig"><div class="l">Au en relaves</div><div class="v">0.28<u> g/t</u></div></div>
-      <div class="hudbig"><div class="l">Disponibilidad</div><div class="v">96.4<u>%</u></div></div>
+      <div class="hudbig"><div class="l">Au Recovery</div><div class="v">90.8<u>%</u></div></div>
+      <div class="hudbig"><div class="l">Gold recovered</div><div class="v">486<u> oz/day</u></div></div>
+      <div class="hudbig"><div class="l">Daily tonnage</div><div class="v">5 940<u> tpd</u></div></div>
+      <div class="hudbig"><div class="l">Au in tailings</div><div class="v">0.28<u> g/t</u></div></div>
+      <div class="hudbig"><div class="l">Availability</div><div class="v">96.4<u>%</u></div></div>
     </div>
 
     <div class="card sixsig" id="sixSig" style="margin-top:14px">
-      <h3>Capacidad de proceso · Lean Six Sigma <small>recuperación de Au vs LSL 90%</small></h3>
+      <h3>Process capability · Lean Six Sigma <small>Au recovery vs LSL 90%</small></h3>
       <div class="ssgrid">
-        <div class="sscell"><div class="ssv" id="ssSigma">—</div><div class="ssl">Nivel σ</div></div>
+        <div class="sscell"><div class="ssv" id="ssSigma">—</div><div class="ssl">σ level</div></div>
         <div class="sscell"><div class="ssv" id="ssCpk">—</div><div class="ssl">Cpk</div></div>
         <div class="sscell"><div class="ssv" id="ssDpmo">—</div><div class="ssl">DPMO</div></div>
         <div class="sscell"><div class="ssv" id="ssYield">—</div><div class="ssl">Yield</div></div>
       </div>
-      <div class="ssnote" id="ssNote">Capacidad de corto plazo calculada sobre la variación de la recuperación en vivo.</div>
+      <div class="ssnote" id="ssNote">Short-term capability computed on the live recovery variation.</div>
     </div>
 
     <div class="grid two" style="margin-top:14px">
       <div class="card">
-        <h3>Mezcla de alimentación por tipo de mineral</h3>
+        <h3>Feed blend by ore type</h3>
         <div class="donutwrap">
           <div id="feedDonut"></div>
           <div class="dlegend">
-            <div class="li"><i style="background:var(--red)"></i>M3BH · alto C (2.73 g/t)<b>34%</b></div>
-            <div class="li"><i style="background:var(--amber)"></i>M3BM · medio C (2.14 g/t)<b>41%</b></div>
-            <div class="li"><i style="background:var(--green)"></i>M3BL · bajo C (1.20 g/t)<b>25%</b></div>
+            <div class="li"><i style="background:var(--red)"></i>M3BH · high C (2.73 g/t)<b>34%</b></div>
+            <div class="li"><i style="background:var(--amber)"></i>M3BM · mid C (2.14 g/t)<b>41%</b></div>
+            <div class="li"><i style="background:var(--green)"></i>M3BL · low C (1.20 g/t)<b>25%</b></div>
           </div>
         </div>
-        <div class="sectlbl" style="margin:16px 2px 10px">Recuperación por tipo de mineral</div>
-        <div class="barrow"><span class="nm">M3BH (alto C)</span><div class="bartrack"><div class="barfill" style="background:var(--red)" data-w="82"></div></div><span class="vv">82%</span></div>
-        <div class="barrow"><span class="nm">M3BM (medio C)</span><div class="bartrack"><div class="barfill" style="background:var(--amber)" data-w="89"></div></div><span class="vv">89%</span></div>
-        <div class="barrow"><span class="nm">M3BL (bajo C)</span><div class="bartrack"><div class="barfill" style="background:var(--green)" data-w="94"></div></div><span class="vv">94%</span></div>
+        <div class="sectlbl" style="margin:16px 2px 10px">Recovery by ore type</div>
+        <div class="barrow"><span class="nm">M3BH (high C)</span><div class="bartrack"><div class="barfill" style="background:var(--red)" data-w="82"></div></div><span class="vv">82%</span></div>
+        <div class="barrow"><span class="nm">M3BM (mid C)</span><div class="bartrack"><div class="barfill" style="background:var(--amber)" data-w="89"></div></div><span class="vv">89%</span></div>
+        <div class="barrow"><span class="nm">M3BL (low C)</span><div class="bartrack"><div class="barfill" style="background:var(--green)" data-w="94"></div></div><span class="vv">94%</span></div>
       </div>
 
       <div class="card">
-        <h3>Recuperación por turno (últimos 5)</h3>
+        <h3>Recovery by shift (last 5)</h3>
         <div class="donuts3" id="shiftDonuts"></div>
-        <div class="sectlbl" style="margin:16px 2px 10px">Desempeño por dominio · recuperación (%)</div>
+        <div class="sectlbl" style="margin:16px 2px 10px">Performance by domain · recovery (%)</div>
         <table class="heat">
-          <thead><tr><th style="text-align:left">Dominio</th><th>00–06</th><th>06–12</th><th>12–18</th><th>18–24</th></tr></thead>
+          <thead><tr><th style="text-align:left">Domain</th><th>00–06</th><th>06–12</th><th>12–18</th><th>18–24</th></tr></thead>
           <tbody id="heatBody"></tbody>
         </table>
       </div>
@@ -691,8 +691,8 @@
 </main>
 
 <footer>
-  <span class="ribbon">⚠ Datos representativos</span> &nbsp; Los valores mostrados son ejemplos para ilustrar el diseño y deben reemplazarse con los KPIs reales del programa de pruebas de laboratorio y piloto.<br>
-  <b>SIGMA Digital Twins Consulting Inc.</b> · Documento confidencial sujeto a NDA · Las cuatro vistas corresponden al Producto 2 (Dashboard) y Producto 3 (Inteligencia con IA + entorno 3D) de la propuesta.
+  <span class="ribbon">⚠ Representative data</span> &nbsp; The values shown are examples to illustrate the design and must be replaced with the actual KPIs from the laboratory and pilot test program.<br>
+  <b>SIGMA Digital Twins Consulting Inc.</b> · Confidential document subject to NDA · The four views correspond to Product 2 (Dashboard) and Product 3 (AI Intelligence + 3D environment) of the proposal.
 </footer>
   </div><!-- /.content -->
 </div><!-- /.shell -->
@@ -758,7 +758,7 @@
     s+='<line x1="'+L+'" y1="'+Y(92)+'" x2="'+(W-R)+'" y2="'+Y(92)+'" stroke="'+V.cyan2+'" stroke-width="1" stroke-dasharray="2 4" opacity=".5"/>';
     // TOC spike marker at t=2
     s+='<line x1="'+X(2)+'" y1="'+T+'" x2="'+X(2)+'" y2="'+(T+ph)+'" stroke="'+V.red+'" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/>';
-    s+='<text x="'+(X(2)+6)+'" y="'+(T+14)+'" fill="'+V.red+'" font-size="10" font-family="monospace">Pico TOC 3.6%</text>';
+    s+='<text x="'+(X(2)+6)+'" y="'+(T+14)+'" fill="'+V.red+'" font-size="10" font-family="monospace">TOC spike 3.6%</text>';
     // areas + lines
     s+='<path d="'+path(real)+' L'+X(24)+' '+(T+ph)+' L'+L+' '+(T+ph)+' Z" fill="'+V.white+'" opacity=".05"/>';
     s+='<path d="'+path(gem)+'" fill="none" stroke="'+V.cyan+'" stroke-width="2.4" stroke-linejoin="round"/>';
@@ -812,7 +812,7 @@
       off+=len;
     });
     s+='<text x="'+cx+'" y="'+(cy-2)+'" fill="#EAF4FF" font-size="20" font-weight="700" text-anchor="middle" font-family="monospace">100%</text>';
-    s+='<text x="'+cx+'" y="'+(cy+15)+'" fill="'+V.muted+'" font-size="10" text-anchor="middle">alimentación</text></svg>';
+    s+='<text x="'+cx+'" y="'+(cy+15)+'" fill="'+V.muted+'" font-size="10" text-anchor="middle">feed</text></svg>';
     return s;
   }
   var fd=document.getElementById('feedDonut');
@@ -825,7 +825,7 @@
   var sd=document.getElementById('shiftDonuts');
   if(sd){
     var shifts=[['B-3',91,'--green'],['B-2',90,'--green'],['B-1',91,'--green'],['A',91.4,'--cyan'],['B',90.2,'--amber']];
-    sd.innerHTML=shifts.map(function(x){return radial(Math.round(x[1]),x[2],'Turno '+x[0]);}).join('');
+    sd.innerHTML=shifts.map(function(x){return radial(Math.round(x[1]),x[2],'Shift '+x[0]);}).join('');
   }
 
   /* ---- heatmap ---- */
@@ -925,7 +925,7 @@
     S.water=clamp(S.water+(310-S.water)*0.05+gauss()*3,295,326);
     S.elution=clamp(S.elution+(128-S.elution)*0.05+gauss()*2,118,140);
     S.resinRepo=clamp(S.resinRepo+(18-S.resinRepo)*0.06+gauss()*0.5,14,24);
-    S.goldOz=S.throughput*S.headGrade*S.recovery/100/31.1035;   // oz/día = t/d · g/t · rec / 31.1
+    S.goldOz=S.throughput*S.headGrade*S.recovery/100/31.1035;   // oz/day = t/d · g/t · rec / 31.1
     S._elute=elute;
     return elute;
   }
@@ -969,18 +969,18 @@
   function render(elute){
     /* --- Sala de Control: tiles --- */
     if(ctrl[0]){ setHTML($('.val',ctrl[0]),f1(S.recovery)+'<u>%</u>');
-      setHTML($('.sub',ctrl[0]),'Gemelo <b>'+f1(S.gemelo)+'%</b> · Meta 92%');
+      setHTML($('.sub',ctrl[0]),'Twin <b>'+f1(S.gemelo)+'%</b> · Target 92%');
       var d=S.recovery-S.gemelo; pill($('.pill',ctrl[0]), d<=-1.5?'crit':d<=-0.4?'warn':'ok', (d>=0?'+':'−')+Math.abs(d).toFixed(1)+' pts'); }
     if(ctrl[1]){ setHTML($('.val',ctrl[1]),f1(S.toc)+'<u>%</u>');
-      setHTML($('.sub',ctrl[1]),'Umbral 3.5% · '+(S.toc>3.5?'preg-robbing':'normal'));
-      pill($('.pill',ctrl[1]), S.toc>3.5?'crit':'ok', S.toc>3.5?'alto':'en rango'); }
+      setHTML($('.sub',ctrl[1]),'Threshold 3.5% · '+(S.toc>3.5?'preg-robbing':'normal'));
+      pill($('.pill',ctrl[1]), S.toc>3.5?'crit':'ok', S.toc>3.5?'high':'in range'); }
     if(ctrl[2]){ var satH=clamp((92-S.resin)/1.4,0.4,9);
       setHTML($('.val',ctrl[2]),Math.round(S.resin)+'<u>%</u>');
-      setHTML($('.sub',ctrl[2]),'Saturación est. <b>'+f1(satH)+' h</b>');
+      setHTML($('.sub',ctrl[2]),'Est. saturation <b>'+f1(satH)+' h</b>');
       pill($('.pill',ctrl[2]), S.resin>90?'crit':S.resin>80?'warn':'ok', Math.round(S.resin)+'%'); }
     if(ctrl[3]){ setHTML($('.val',ctrl[3]),thou(S.throughput)+'<u>tpd</u>');
-      setHTML($('.sub',ctrl[3]),'Meta 6 000 tpd · '+Math.round(S.throughput/6000*100)+'%');
-      pill($('.pill',ctrl[3]), S.throughput<5900?'warn':'ok', S.throughput<5900?'bajo meta':'en rango'); }
+      setHTML($('.sub',ctrl[3]),'Target 6 000 tpd · '+Math.round(S.throughput/6000*100)+'%');
+      pill($('.pill',ctrl[3]), S.throughput<5900?'warn':'ok', S.throughput<5900?'below target':'in range'); }
     if(ctrl[4]){ setHTML($('.val',ctrl[4]),f1(S.headGrade)+'<u>g/t</u>');
       pill($('.pill',ctrl[4]),'info',f1(S.headGrade)+' g/t'); }
     rollSpark(SK.recovery,S.recovery); rollSpark(SK.toc,S.toc); rollSpark(SK.resin,S.resin);
@@ -988,8 +988,8 @@
 
     /* --- Balance de proceso --- */
     if(bal[0]) setHTML($('.v',bal[0]),f2(S.nacn)+'<u> kg/t</u>');
-    if(bal[1]) setHTML($('.v',bal[1]),Math.round(S.elution)+'<u> L/día</u>');
-    if(bal[2]) setHTML($('.v',bal[2]),Math.round(S.resinRepo)+'<u> L/día</u>');
+    if(bal[1]) setHTML($('.v',bal[1]),Math.round(S.elution)+'<u> L/day</u>');
+    if(bal[2]) setHTML($('.v',bal[2]),Math.round(S.resinRepo)+'<u> L/day</u>');
     if(bal[3]) setHTML($('.v',bal[3]),thou(S.water)+'<u> m³/h</u>');
     if(bal[4]) setHTML($('.v',bal[4]),f1(S.energy)+'<u> MW</u>');
     if(bal[5]) setHTML($('.v',bal[5]),Math.round(S.p80)+'<u> µm</u>');
@@ -1015,14 +1015,14 @@
 
     /* --- Analítica (HUD) --- */
     if(hud[0]) hud[0].innerHTML=f1(S.recovery)+'<u>%</u>';
-    if(hud[1]) hud[1].innerHTML=thou(S.goldOz)+'<u> oz/día</u>';
+    if(hud[1]) hud[1].innerHTML=thou(S.goldOz)+'<u> oz/day</u>';
     if(hud[2]) hud[2].innerHTML=thou(S.throughput)+'<u> tpd</u>';
     if(hud[3]) hud[3].innerHTML=f2(S.tailAu)+'<u> g/t</u>';
     if(hud[4]) hud[4].innerHTML=f1(S.avail)+'<u>%</u>';
 
     /* eventos destacados: flash + (opcional) fila nueva en el log del turno */
     if(S.tocSpike===14 && ctrl[1]) flash(ctrl[1].closest('.tile'));   // recién disparó un pico de TOC
-    if(elute){ if(ctrl[2]) flash(ctrl[2].closest('.tile')); pushEvent('Elución de resina ejecutada — carga reiniciada'); }
+    if(elute){ if(ctrl[2]) flash(ctrl[2].closest('.tile')); pushEvent('Resin elution executed — loading reset'); }
     if(S.recManual==null && typeof syncSliders==='function') syncSliders(S.recovery);   // en AUTO los sliders siguen al estado
     renderAI();    // Hefesto + alertas reaccionan al estado (incluye el slider manual)
     renderHUD();   // Analítica con movimiento (donuts de turno, barras, heatmap)
@@ -1037,7 +1037,7 @@
     var rB=clamp(Math.round(S.recovery),84,95), rA=clamp(Math.round(S.recovery+0.6),84,95);
     var sd=$('#shiftDonuts');
     if(sd){ var shifts=[['B-3',91,'--green'],['B-2',90,'--green'],['B-1',91,'--green'],['A',rA,'--cyan'],['B',rB,rB>=91?'--green':rB>=89?'--cyan':'--amber']];
-      sd.innerHTML=shifts.map(function(x){return radial(x[1],x[2],'Turno '+x[0]);}).join(''); }
+      sd.innerHTML=shifts.map(function(x){return radial(x[1],x[2],'Shift '+x[0]);}).join(''); }
     var hf=$all('#hud .barfill'), hv=$all('#hud .barrow .vv');
     hbBase.forEach(function(base,i){ var v=clamp(Math.round(base+gauss()*1.2),base-3,base+3);
       if(hf[i])hf[i].style.width=v+'%'; if(hv[i])hv[i].textContent=v+'%'; });
@@ -1061,9 +1061,9 @@
     var elD=document.getElementById('ssDpmo'); if(elD) elD.textContent=dpmo>=1000?(Math.round(dpmo/1000)+'k'):dpmo;
     var elY=document.getElementById('ssYield'); if(elY) elY.textContent=(yld>99.9?yld.toFixed(3):yld.toFixed(1))+'%';
     var elN=document.getElementById('ssNote');
-    if(elN) elN.innerHTML = Z>=4.5 ? 'Proceso <b>capaz</b> (≥4.5σ): variación bajo control respecto al LSL 88%. Mantener.'
-      : Z>=3 ? 'Proceso <b>marginal</b> (3–4.5σ): reducir variación o desplazar la media (Kaizen / DMAIC).'
-      : '<b>Fuera de control</b> (&lt;3σ): la recuperación se acerca o cruza el LSL 90% — acción inmediata.';
+    if(elN) elN.innerHTML = Z>=4.5 ? 'Process <b>capable</b> (≥4.5σ): variation under control vs the LSL. Maintain.'
+      : Z>=3 ? 'Process <b>marginal</b> (3–4.5σ): reduce variation or shift the mean (Kaizen / DMAIC).'
+      : '<b>Out of control</b> (&lt;3σ): recovery is approaching or crossing the LSL 90% — immediate action.';
   }
 
   /* log de eventos del turno (cap 6) */
@@ -1082,49 +1082,49 @@
   function renderAlerts(){
     if(!aiAlerts)return;
     var satH=clamp((92-S.resin)/1.4,0.4,9), A=[];
-    A.push(alertRow(S.resin>88?'c':S.resin>82?'w':'o', 'Resina '+(S.resin>88?'cerca de saturación':S.resin>82?'en vigilancia':'en rango'),
-      Math.round(S.resin)+'% de capacidad · saturación est. '+satH.toFixed(1)+' h'+(S.resin>82?' · riesgo de pérdida de Au en relaves':'')));
-    A.push(alertRow(S.toc>3.7?'c':S.toc>3.5?'w':'o', 'TOC '+(S.toc>3.5?'sobre umbral':'en rango'),
-      'Alimentación '+S.toc.toFixed(1)+'% '+(S.toc>3.5?'&gt; 3.5% · efecto preg-robbing':'≤ 3.5% · normal')));
-    A.push(alertRow(S.p80>80?'c':S.p80>77?'w':'o', 'P80 '+(S.p80>77?'sobre objetivo':'en objetivo'),
-      Math.round(S.p80)+' µm vs 75 µm'+(S.p80>77?' · revisar carga circulante':' · en rango')));
-    A.push(alertRow(S.tailAu>0.32?'c':S.tailAu>0.30?'w':'o', 'Au en relaves '+(S.tailAu>0.30?'elevado':'en rango'),
-      'Cola '+S.tailAu.toFixed(2)+' g/t · objetivo ≤ 0.30 g/t'));
+    A.push(alertRow(S.resin>88?'c':S.resin>82?'w':'o', 'Resin '+(S.resin>88?'near saturation':S.resin>82?'on watch':'in range'),
+      Math.round(S.resin)+'% capacity · est. saturation '+satH.toFixed(1)+' h'+(S.resin>82?' · risk of Au loss to tailings':'')));
+    A.push(alertRow(S.toc>3.7?'c':S.toc>3.5?'w':'o', 'TOC '+(S.toc>3.5?'above threshold':'in range'),
+      'Feed '+S.toc.toFixed(1)+'% '+(S.toc>3.5?'&gt; 3.5% · preg-robbing effect':'≤ 3.5% · normal')));
+    A.push(alertRow(S.p80>80?'c':S.p80>77?'w':'o', 'P80 '+(S.p80>77?'above target':'on target'),
+      Math.round(S.p80)+' µm vs 75 µm'+(S.p80>77?' · check circulating load':' · in range')));
+    A.push(alertRow(S.tailAu>0.32?'c':S.tailAu>0.30?'w':'o', 'Au in tailings '+(S.tailAu>0.30?'high':'in range'),
+      'Tailings '+S.tailAu.toFixed(2)+' g/t · target ≤ 0.30 g/t'));
     aiAlerts.innerHTML=A.join('');
   }
-  /* Pool de supuestos del metalurgista (≥10). La IA SIEMPRE propone una causa concreta. */
+  /* Metallurgist assumption pool (>=10). The AI ALWAYS proposes a concrete cause. */
   var AIMSG={
     healthy:[
-      function(g){return {v:'Recuperación alineada con el gemelo (Δ <b>'+g+' pts</b>). <b>Supuesto:</b> alimentación estable y reactivos en dosis; sin lotes de alto carbono en cola. <b>El metalurgista debe:</b> mantener set-points y registrar la corrida como referencia.',a:'Mantener parámetros',tb:'Operación nominal.',t:'Mantener set-points; registrar como referencia.'};},
-      function(g){return {v:'Proceso en régimen (Δ <b>'+g+' pts</b> vs gemelo). <b>Supuesto:</b> molienda y adsorción en ventana óptima. <b>El metalurgista debe:</b> validar el balance metalúrgico y dejar un handover limpio.',a:'Operación en régimen',tb:'En régimen.',t:'Validar balance; handover limpio.'};}
+      function(g){return {v:'Recovery aligned with the twin (Δ <b>'+g+' pts</b>). <b>Assumption:</b> stable feed and reagents on dose; no high-carbon batches queued. <b>The metallurgist must:</b> hold set-points and log this run as a reference.',a:'Hold parameters',tb:'Nominal operation.',t:'Hold set-points; log as reference.'};},
+      function(g){return {v:'Process at steady state (Δ <b>'+g+' pts</b> vs twin). <b>Assumption:</b> grinding and adsorption in the optimal window. <b>The metallurgist must:</b> validate the metallurgical balance and leave a clean handover.',a:'Steady-state operation',tb:'At steady state.',t:'Validate balance; clean handover.'};}
     ],
     toc:[
-      function(g){return {v:'<b>Supuesto:</b> pico de carbón orgánico (TOC '+S.toc.toFixed(1)+'%) por un lote alto en C; el turno anterior <b>no segregó ni reportó</b> el cambio de mineral. <b>El metalurgista debe:</b> subir la dosis de resina y verificar el P80 del O/F del ciclón.',a:'Subir dosis de resina + segregar lote',tb:'Pico de TOC (preg-robbing).',t:'Subir resina; segregar lote alto en C.'};},
-      function(g){return {v:'<b>Supuesto:</b> preg-robbing por TOC '+S.toc.toFixed(1)+'%; blending cargado a mineral carbonáceo sin caracterizar. <b>El metalurgista debe:</b> rebalancear el blending hacia bajo C y aumentar la resina activa.',a:'Rebalancear blending + resina activa',tb:'TOC alto en alimentación.',t:'Rebalancear blending; subir resina activa.'};}
+      function(g){return {v:'<b>Assumption:</b> organic carbon spike (TOC '+S.toc.toFixed(1)+'%) from a high-C batch; the previous shift <b>did not segregate or report</b> the ore change. <b>The metallurgist must:</b> raise the resin dose and check the cyclone O/F P80.',a:'Raise resin dose + segregate batch',tb:'TOC spike (preg-robbing).',t:'Raise resin; segregate high-C batch.'};},
+      function(g){return {v:'<b>Assumption:</b> preg-robbing from TOC '+S.toc.toFixed(1)+'%; blend loaded with uncharacterized carbonaceous ore. <b>The metallurgist must:</b> rebalance the blend toward low C and increase active resin.',a:'Rebalance blend + active resin',tb:'High TOC in feed.',t:'Rebalance blend; raise active resin.'};}
     ],
     resin:[
-      function(g){return {v:'<b>Supuesto:</b> resina saturada ('+Math.round(S.resin)+'%) — el turno anterior <b>no adelantó la elución</b> pese a la alerta. <b>El metalurgista debe:</b> adelantar la elución y reponer resina fresca.',a:'Adelantar elución de resina',tb:'Resina saturada.',t:'Adelantar elución; reponer resina.'};},
-      function(g){return {v:'<b>Supuesto:</b> capacidad de adsorción al límite ('+Math.round(S.resin)+'%); cola subiendo a '+S.tailAu.toFixed(2)+' g/t. <b>El metalurgista debe:</b> rotar columnas de adsorción y revisar el inventario de resina en circuito.',a:'Rotar columnas / inventario resina',tb:'Adsorción al límite.',t:'Rotar columnas; revisar inventario.'};}
+      function(g){return {v:'<b>Assumption:</b> resin saturated ('+Math.round(S.resin)+'%) — the previous shift <b>did not bring the elution forward</b> despite the alert. <b>The metallurgist must:</b> bring the elution forward and replenish fresh resin.',a:'Bring resin elution forward',tb:'Resin saturated.',t:'Advance elution; replenish resin.'};},
+      function(g){return {v:'<b>Assumption:</b> adsorption capacity at its limit ('+Math.round(S.resin)+'%); tailings rising to '+S.tailAu.toFixed(2)+' g/t. <b>The metallurgist must:</b> rotate adsorption columns and review the resin inventory in circuit.',a:'Rotate columns / resin inventory',tb:'Adsorption at limit.',t:'Rotate columns; review inventory.'};}
     ],
     p80:[
-      function(g){return {v:'<b>Supuesto:</b> molienda gruesa (P80 '+Math.round(S.p80)+' µm) por carga circulante alta; <b>presión de ciclones sin ajustar</b> desde el turno previo. <b>El metalurgista debe:</b> ajustar la presión del nido de ciclones y revisar la densidad de pulpa.',a:'Ajustar presión de ciclones',tb:'Molienda gruesa.',t:'Ajustar ciclones; revisar densidad.'};},
-      function(g){return {v:'<b>Supuesto:</b> liberación incompleta (P80 '+Math.round(S.p80)+' µm) por lifters desgastados o tonelaje sobre diseño. <b>El metalurgista debe:</b> bajar el tonelaje al SAG y evaluar el estado de los revestimientos.',a:'Bajar tonelaje SAG / revisar lifters',tb:'Liberación incompleta.',t:'Bajar tonelaje SAG; revisar lifters.'};}
+      function(g){return {v:'<b>Assumption:</b> coarse grind (P80 '+Math.round(S.p80)+' µm) from high circulating load; <b>cyclone pressure not adjusted</b> since the previous shift. <b>The metallurgist must:</b> adjust the cyclone cluster pressure and review pulp density.',a:'Adjust cyclone pressure',tb:'Coarse grind.',t:'Adjust cyclones; review density.'};},
+      function(g){return {v:'<b>Assumption:</b> incomplete liberation (P80 '+Math.round(S.p80)+' µm) from worn lifters or tonnage above design. <b>The metallurgist must:</b> lower SAG tonnage and assess liner condition.',a:'Lower SAG tonnage / check lifters',tb:'Incomplete liberation.',t:'Lower SAG tonnage; check lifters.'};}
     ],
     tail:[
-      function(g){return {v:'<b>Supuesto:</b> pérdida de Au en relaves (cola '+S.tailAu.toFixed(2)+' g/t) por <b>subdosificación de NaCN</b>. <b>El metalurgista debe:</b> verificar la dosificación de cianuro y el ORP del circuito.',a:'Verificar NaCN / ORP',tb:'Au alto en relaves.',t:'Verificar NaCN y ORP.'};},
-      function(g){return {v:'<b>Supuesto:</b> cola alta ('+S.tailAu.toFixed(2)+' g/t) por residencia insuficiente en adsorción. <b>El metalurgista debe:</b> subir el nivel de carbón/resina activa y revisar el caudal a relaves.',a:'Subir carbón activo / revisar caudal',tb:'Residencia insuficiente.',t:'Subir carbón activo; revisar caudal.'};}
+      function(g){return {v:'<b>Assumption:</b> Au loss to tailings (tail '+S.tailAu.toFixed(2)+' g/t) from <b>NaCN under-dosing</b>. <b>The metallurgist must:</b> verify cyanide dosing and circuit ORP.',a:'Verify NaCN / ORP',tb:'High Au in tailings.',t:'Verify NaCN and ORP.'};},
+      function(g){return {v:'<b>Assumption:</b> high tail ('+S.tailAu.toFixed(2)+' g/t) from insufficient residence in adsorption. <b>The metallurgist must:</b> raise the active carbon/resin level and review the tailings flow.',a:'Raise active carbon / review flow',tb:'Insufficient residence.',t:'Raise active carbon; review flow.'};}
     ],
     rebuscado:[
-      function(g){return {v:'<b>Supuesto:</b> micro-finos de pirita consumiendo cianuro (cianicidas) aún no reflejados en el TOC. <b>El metalurgista debe:</b> subir el cianuro libre y controlar el ORP del circuito.',a:'Subir cianuro libre / controlar ORP',tb:'Cianicidas (pirita fina).',t:'Subir cianuro libre; controlar ORP.'};},
-      function(g){return {v:'<b>Supuesto:</b> arrastre de arcillas que ensucia la resina y frena la cinética de adsorción. <b>El metalurgista debe:</b> ajustar el floculante y revisar la turbidez del O/F.',a:'Ajustar floculante / revisar turbidez',tb:'Arcillas en circuito.',t:'Ajustar floculante; revisar turbidez.'};},
-      function(g){return {v:'<b>Supuesto:</b> baja temperatura en elución que reduce la desorción del oro. <b>El metalurgista debe:</b> verificar el intercambiador de calor y la temperatura de columna.',a:'Verificar temperatura de elución',tb:'Elución fría.',t:'Verificar intercambiador y T° de columna.'};},
-      function(g){return {v:'<b>Supuesto:</b> pre-aireación insuficiente que deja el oro parcialmente pasivado. <b>El metalurgista debe:</b> aumentar el caudal de aire/oxígeno al circuito de lixiviación.',a:'Aumentar aireación del circuito',tb:'Oro pasivado.',t:'Aumentar aire/O₂ al circuito.'};}
+      function(g){return {v:'<b>Assumption:</b> pyrite micro-fines consuming cyanide (cyanicides) not yet reflected in the TOC. <b>The metallurgist must:</b> raise free cyanide and control circuit ORP.',a:'Raise free cyanide / control ORP',tb:'Cyanicides (fine pyrite).',t:'Raise free cyanide; control ORP.'};},
+      function(g){return {v:'<b>Assumption:</b> clay carry-over fouling the resin and slowing adsorption kinetics. <b>The metallurgist must:</b> adjust the flocculant and check O/F turbidity.',a:'Adjust flocculant / check turbidity',tb:'Clays in circuit.',t:'Adjust flocculant; check turbidity.'};},
+      function(g){return {v:'<b>Assumption:</b> low elution temperature reducing gold desorption. <b>The metallurgist must:</b> verify the heat exchanger and column temperature.',a:'Verify elution temperature',tb:'Cold elution.',t:'Verify exchanger and column T°.'};},
+      function(g){return {v:'<b>Assumption:</b> insufficient pre-aeration leaving gold partially passivated. <b>The metallurgist must:</b> increase air/oxygen flow to the leach circuit.',a:'Increase circuit aeration',tb:'Passivated gold.',t:'Increase air/O₂ to circuit.'};}
     ],
     danger:[
-      function(g){return {v:'<b>⚠ Riesgo crítico:</b> la caída de <b>'+g+' pts</b> es compatible con <b>falla incipiente del molino de bolas</b> (vibración/temperatura de descanso). El gemelo controla pocas variables in-situ, pero <b>predice</b> el efecto en cascada: P80 disparándose, sobrecarga del nido de ciclones y fuga masiva de Au a relaves en horas. <b>El metalurgista debe:</b> inspeccionar el molino YA y bajar tonelaje para evitar parada no programada.',a:'PARO PREVENTIVO molino de bolas + bajar tonelaje',tb:'⚠ Posible falla del molino de bolas.',t:'Inspeccionar molino YA; bajar tonelaje.'};},
-      function(g){return {v:'<b>⚠ Riesgo crítico:</b> patrón consistente con <b>colapso de la cama de carbón/resina</b> en adsorción. Con las variables autorizadas el gemelo <b>proyecta</b>: Au libre directo a relaves y espesador desestabilizado. <b>El metalurgista debe:</b> detener la alimentación a adsorción y activar el circuito de contingencia.',a:'Contingencia adsorción + detener alimentación',tb:'⚠ Colapso de adsorción.',t:'Detener alimentación; activar contingencia.'};},
-      function(g){return {v:'<b>⚠ Riesgo crítico:</b> caída brusca sin causa de molienda — firma de <b>pérdida de cianuro por derrame/evento</b>. El gemelo <b>predice</b> lixiviación detenida y oro sin recuperar aguas abajo. <b>El metalurgista debe:</b> aislar el área, verificar el balance de NaCN y dar aviso a medio ambiente.',a:'Aislar área + verificar balance NaCN',tb:'⚠ Posible derrame de cianuro.',t:'Aislar área; verificar NaCN; avisar a MA.'};},
-      function(g){return {v:'<b>⚠ Riesgo crítico:</b> firma de <b>rotura de hidrociclón / obstrucción mayor</b> en el nido. Con pocas variables in-situ el gemelo <b>predice</b> cortocircuito de gruesos y caída en cascada de la recuperación. <b>El metalurgista debe:</b> conmutar a ciclones de respaldo e inspeccionar el nido de inmediato.',a:'Conmutar ciclones de respaldo',tb:'⚠ Rotura de hidrociclón.',t:'Conmutar a ciclones de respaldo.'};}
+      function(g){return {v:'<b>⚠ Critical risk:</b> the <b>'+g+' pts</b> drop is consistent with an <b>incipient ball mill failure</b> (vibration / bearing temperature). The twin controls few in-situ variables, but it <b>predicts</b> the cascade effect: P80 spiking, cyclone cluster overload and massive Au leakage to tailings within hours. <b>The metallurgist must:</b> inspect the mill NOW and lower tonnage to avoid an unplanned shutdown.',a:'PREVENTIVE ball mill STOP + lower tonnage',tb:'⚠ Possible ball mill failure.',t:'Inspect mill NOW; lower tonnage.'};},
+      function(g){return {v:'<b>⚠ Critical risk:</b> pattern consistent with a <b>carbon/resin bed collapse</b> in adsorption. With the authorized variables the twin <b>projects</b>: free Au straight to tailings and a destabilized thickener. <b>The metallurgist must:</b> stop feed to adsorption and activate the contingency circuit.',a:'Adsorption contingency + stop feed',tb:'⚠ Adsorption collapse.',t:'Stop feed; activate contingency.'};},
+      function(g){return {v:'<b>⚠ Critical risk:</b> sharp drop with no grinding cause — signature of <b>cyanide loss from a spill/event</b>. The twin <b>predicts</b> leaching stalled and gold left unrecovered downstream. <b>The metallurgist must:</b> isolate the area, verify the NaCN balance and notify environmental.',a:'Isolate area + verify NaCN balance',tb:'⚠ Possible cyanide spill.',t:'Isolate area; verify NaCN; notify env.'};},
+      function(g){return {v:'<b>⚠ Critical risk:</b> signature of a <b>hydrocyclone rupture / major blockage</b> in the cluster. With few in-situ variables the twin <b>predicts</b> coarse short-circuiting and a cascading recovery drop. <b>The metallurgist must:</b> switch to standby cyclones and inspect the cluster immediately.',a:'Switch to standby cyclones',tb:'⚠ Hydrocyclone rupture.',t:'Switch to standby cyclones.'};}
     ]
   };
   var aiVarIdx=0, aiLastBranch='';
@@ -1140,19 +1140,19 @@
     var b=aiBranch(), g=b.gap.toFixed(1);
     if(b.k!==aiLastBranch){ aiLastBranch=b.k; aiVarIdx++; S.aiValidated=false; }   // nuevo diagnóstico ⇒ re-validar
     var pool=AIMSG[b.k]||AIMSG.healthy, m=pool[aiVarIdx%pool.length](g);
-    var verdict = b.k==='healthy' ? m.v : ('Recuperación <b>'+g+' pts</b> bajo el gemelo. '+m.v);
+    var verdict = b.k==='healthy' ? m.v : ('Recovery <b>'+g+' pts</b> below the twin. '+m.v);
     var conf = S.aiValidated ? 99 : (b.k==='healthy'?95:(b.k==='rebuscado'?89:90));
     var note = S.aiValidated
-      ? '✓ Validado por Ing. de procesos → <b>99%</b>. El <b>1% restante</b> queda al criterio del metalurgista en terreno (variables in-situ, casos rebuscados).'
-      : 'IA <b>'+conf+'%</b> con los datos del gemelo. La <b>validación del Ing. de procesos</b> la lleva a <b>99%</b>; el <b>1%</b> es decisión del metalurgista en terreno.';
+      ? '✓ Validated by Process Eng. → <b>99%</b>. The <b>remaining 1%</b> stays with the field metallurgist (in-situ variables, edge cases).'
+      : 'AI <b>'+conf+'%</b> from the twin data. <b>Process engineer validation</b> raises it to <b>99%</b>; the final <b>1%</b> is the field metallurgist’s decision.';
     if(aiVerdict) aiVerdict.innerHTML=verdict;
     if(aiConfVal) aiConfVal.textContent=conf+'%';
     if(aiConfFill) aiConfFill.style.width=conf+'%';
     if(aiConfNote) aiConfNote.innerHTML=note;
-    if(aiAction) aiAction.textContent='Acción recomendada: '+m.a;
-    if(phAi) phAi.innerHTML='<b>'+m.tb+'</b> '+m.t+'<br><span style="color:var(--muted);font-size:11px">Confianza '+conf+'%'+(S.aiValidated?' · validado':'')+'</span>';
-    if(aiValidateBtn){ aiValidateBtn.textContent=S.aiValidated?'✓ Validado por Ing. de procesos':'✓ Validar (Ing. de procesos)'; aiValidateBtn.classList.toggle('done',!!S.aiValidated); }
-    if(aiWho) aiWho.textContent='Veredicto asistido · '+(S.aiValidated?'validado por Ing. de procesos':'pendiente de validación');
+    if(aiAction) aiAction.textContent='Recommended action: '+m.a;
+    if(phAi) phAi.innerHTML='<b>'+m.tb+'</b> '+m.t+'<br><span style="color:var(--muted);font-size:11px">Confidence '+conf+'%'+(S.aiValidated?' · validated':'')+'</span>';
+    if(aiValidateBtn){ aiValidateBtn.textContent=S.aiValidated?'✓ Validated by Process Eng.':'✓ Validate (Process Eng.)'; aiValidateBtn.classList.toggle('done',!!S.aiValidated); }
+    if(aiWho) aiWho.textContent='Assisted verdict · '+(S.aiValidated?'validated by Process Eng.':'pending validation');
     if(aiValBadge) aiValBadge.style.display=S.aiValidated?'inline-flex':'none';
     renderAlerts();
   }
@@ -1176,10 +1176,10 @@
   function healthColor(h){ var G='#46E07A',L='#BFE24C',O='#FFA52E',R='#FF4B4B';
     if(h>=75)return mix(L,G,(h-75)/25); if(h>=50)return mix(O,L,(h-50)/25); if(h>=25)return mix(R,O,(h-25)/25); return hx(R); }
   function healthState(h){
-    if(h>=82)return {k:'FINE',m:'Operación nominal — desviación mínima.'};
-    if(h>=60)return {k:'CAUTION',m:'Desviación moderada, no crítica.'};
-    if(h>=40)return {k:'CAUTION',m:'Desviación significativa — atención.'};
-    return {k:'DANGER',m:'Riesgo crítico — posible falla mayor de equipo; intervención inmediata.'};
+    if(h>=82)return {k:'FINE',m:'Nominal operation — minimal deviation.'};
+    if(h>=60)return {k:'CAUTION',m:'Moderate deviation, not critical.'};
+    if(h>=40)return {k:'CAUTION',m:'Significant deviation — attention.'};
+    return {k:'DANGER',m:'Critical risk — possible major equipment failure; immediate intervention.'};
   }
   function setupHealth(){
     var cv=document.getElementById('ecgCanvas'); if(!cv)return;
@@ -1220,7 +1220,7 @@
       var hX=buf.length-1, hY=buf[hX];          // cabeza: latido actual (punto brillante)
       ctx.beginPath(); ctx.fillStyle=rgb(col); ctx.shadowBlur=9; ctx.arc(Math.min(w-1.5,hX),hY,2.1,0,7); ctx.fill(); ctx.shadowBlur=0;
       if(stEl){ stEl.textContent=st.k; stEl.style.color=rgb(col); }
-      if(monEl) monEl.title='Salud de planta · '+st.k+' — '+st.m;
+      if(monEl) monEl.title='Plant health · '+st.k+' — '+st.m;
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
@@ -1272,14 +1272,14 @@
     s+='<path d="'+path('n')+' L'+X(n-1).toFixed(1)+' '+(T+ph)+' L'+L+' '+(T+ph)+' Z" fill="#EAF4FF" opacity=".05"/>';
     s+='<path d="'+path('n')+'" fill="none" stroke="#EAF4FF" stroke-width="2.4" stroke-linejoin="round"/>';
     recSeries.forEach(function(p,i){var last=i===n-1;s+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(p.n).toFixed(1)+'" r="'+(last?3.4:2.2)+'" fill="#EAF4FF"'+(last?' stroke="#2FE6D0" stroke-width="1.6"':'')+'/>';});
-    s+='<text x="'+(X(n-1)-3).toFixed(1)+'" y="'+(T+9)+'" fill="#2FE6D0" font-size="9" text-anchor="end" font-family="monospace">ahora</text>';
+    s+='<text x="'+(X(n-1)-3).toFixed(1)+'" y="'+(T+9)+'" fill="#2FE6D0" font-size="9" text-anchor="end" font-family="monospace">now</text>';
     s+='</svg>'; recEl.innerHTML=s;
   }
   drawRecovery();
   setInterval(function(){ recSeries.push({r:S.recovery, n:clamp(S.recovery+gauss()*0.7,84,95), g:S.gemelo});   // n = medición con ruido (saltos); r = valor limpio
     if(recSeries.length>16)recSeries.shift(); lastSample=Date.now(); drawRecovery(); }, SAMPLE_MS);
   setInterval(function(){ if(recRate){ var ago=Math.round((Date.now()-lastSample)/1000);
-    recRate.innerHTML='<span class="live"><i></i>Adquisición en vivo</span> · 1 muestra / '+(SAMPLE_MS/1000)+' s · '+recSeries.length+' pts · última: hace '+ago+' s'; } }, 1000);
+    recRate.innerHTML='<span class="live"><i></i>Live acquisition</span> · 1 sample / '+(SAMPLE_MS/1000)+' s · '+recSeries.length+' pts · last: '+ago+' s ago'; } }, 1000);
 
   /* ---- sincronización en tiempo real PC ⇄ celular (MQTT sobre WebSocket, broker público; sin backend) ---- */
   (function(){
@@ -1306,11 +1306,11 @@
   var WA_GROUP_URL = 'https://chat.whatsapp.com/HNBQM7xLAwRIbLedEjgL5f';
   (function(){
     var a=document.getElementById('waGroup'); if(!a)return;
-    if(WA_GROUP_URL){ a.href=WA_GROUP_URL; a.title='Abrir el grupo de WhatsApp del dashboard'; return; }
-    a.classList.add('off'); a.removeAttribute('target'); a.title='Falta cargar el link de invitación del grupo';
+    if(WA_GROUP_URL){ a.href=WA_GROUP_URL; a.title='Open the dashboard WhatsApp group'; return; }
+    a.classList.add('off'); a.removeAttribute('target'); a.title='Group invite link not configured';
     a.addEventListener('click',function(e){ e.preventDefault();
       var log=document.getElementById('aiChatLog'); if(!log)return;
-      log.innerHTML+='<div class="cmsg bot">🔗 <b>Grupo sin configurar.</b> Cargá el link de invitación en <b>WA_GROUP_URL</b> dentro de este archivo y el botón queda operativo.</div>';
+      log.innerHTML+='<div class="cmsg bot">🔗 <b>Group not configured.</b> Set the invite link in <b>WA_GROUP_URL</b> inside this file and the button becomes operational.</div>';
       log.scrollTop=log.scrollHeight; });
   })();
 
@@ -1354,7 +1354,7 @@
 <script>
 (function(){
   var isEmbed=/[?&]embed=mobile/.test(location.search), mf=document.getElementById('mobileFrame');
-  if(mf && !isEmbed) mf.src='Dashboard_GemeloDigital_SIGMA.html?embed=mobile';
+  if(mf && !isEmbed) mf.src='Dashboard_DigitalTwin_SIGMA.html?embed=mobile';
 })();
 </script>
 
