@@ -25,6 +25,10 @@ este README y `docs-4b8e2d1.html` se regeneran con el tool.
 | `rag` | Evidencia RAG — `projects/rag-pipeline-evidence.html` (`rag-evidence`) |
 | `svc` | Portafolio de servicios (EN) — `pages/sigma-services-en.html` (`services-en`) |
 | `home` | Landing SIGMA (EN) — `index-en.html` (`home-en`) |
+| `kpi` | Landing KPI (ES) — `(raíz)` (`kpi-panel`) |
+| `gh` | Perfil GitHub (externo) — `https://github.com/jjuri-socialmining` (`sin UTM`) |
+| `lin` | Perfil LinkedIn (externo) — `https://linkedin.com/in/jjuri-CI-vancouver` (`sin UTM`) |
+| `3d` | Demo 3D CIC (externo, sin tracker) — `https://jjuri-socialmining.github.io/miningops-capsule-demo/cic-adsorption-circuit-demo-v2.html` (`sin UTM`) |
 
 ## Links activos
 
@@ -34,8 +38,12 @@ este README y `docs-4b8e2d1.html` se regeneran con el tool.
 | `li-home` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/li-home | LinkedIn | Landing SIGMA (EN) | general |
 | `li-rag` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/li-rag | LinkedIn | Evidencia RAG | general |
 | `li-svc` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/li-svc | LinkedIn | Portafolio de servicios (EN) | general |
+| `r-aijobs-3d` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-aijobs-3d | Resume | Demo 3D CIC (externo, sin tracker) | ai-job-search |
 | `r-aijobs-ds` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-aijobs-ds | Resume | Dashboard SIGMA | ai-job-search |
+| `r-aijobs-gh` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-aijobs-gh | Resume | Perfil GitHub (externo) | ai-job-search |
 | `r-aijobs-home` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-aijobs-home | Resume | Landing SIGMA (EN) | ai-job-search |
+| `r-aijobs-kpi` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-aijobs-kpi | Resume | Landing KPI (ES) | ai-job-search |
+| `r-aijobs-lin` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-aijobs-lin | Resume | Perfil LinkedIn (externo) | ai-job-search |
 | `r-aijobs-rag` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-aijobs-rag | Resume | Evidencia RAG | ai-job-search |
 | `r-aijobs-svc` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-aijobs-svc | Resume | Portafolio de servicios (EN) | ai-job-search |
 | `r-ds` | https://jjuri-socialmining.github.io/_DemoCustomerOps/go/r-ds | Resume | Dashboard SIGMA | general |

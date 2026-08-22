@@ -82,5 +82,25 @@
     "source": "r",
     "page": "home",
     "client": "ai-job-search"
+  },
+  "r-aijobs-gh": {
+    "source": "r",
+    "page": "gh",
+    "client": "ai-job-search"
+  },
+  "r-aijobs-lin": {
+    "source": "r",
+    "page": "lin",
+    "client": "ai-job-search"
+  },
+  "r-aijobs-kpi": {
+    "source": "r",
+    "page": "kpi",
+    "client": "ai-job-search"
+  },
+  "r-aijobs-3d": {
+    "source": "r",
+    "page": "3d",
+    "client": "ai-job-search"
   }
 }

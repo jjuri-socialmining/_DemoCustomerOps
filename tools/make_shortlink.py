@@ -42,12 +42,17 @@ SOURCES = {
     "em":  ("email",    "email"),
 }
 
-# clave de página -> (ruta relativa al site, utm_content)
+# clave de página -> (ruta relativa al site o URL absoluta, utm_content)
+# utm_content None = destino sin tracker propio: redirect limpio, sin UTM.
 PAGES = {
     "ds":  ("Dashboard_GemeloDigital_SIGMA.html",   "dashboard-sigma"),
     "rag": ("projects/rag-pipeline-evidence.html",  "rag-evidence"),
     "svc": ("pages/sigma-services-en.html",         "services-en"),
     "home": ("index-en.html",                       "home-en"),
+    "kpi": ("",                                     "kpi-panel"),
+    "gh":  ("https://github.com/jjuri-socialmining", None),
+    "lin": ("https://linkedin.com/in/jjuri-CI-vancouver", None),
+    "3d":  ("https://jjuri-socialmining.github.io/miningops-capsule-demo/cic-adsorption-circuit-demo-v2.html", None),
 }
 
 STUB = """<!doctype html>
@@ -68,7 +73,11 @@ SOURCE_LABELS = {"r": "Resume", "w": "WhatsApp", "li": "LinkedIn",
                  "web": "Internet/otro", "em": "Email"}
 PAGE_LABELS = {"ds": "Dashboard SIGMA", "rag": "Evidencia RAG",
                "svc": "Portafolio de servicios (EN)",
-               "home": "Landing SIGMA (EN)"}
+               "home": "Landing SIGMA (EN)",
+               "kpi": "Landing KPI (ES)",
+               "gh": "Perfil GitHub (externo)",
+               "lin": "Perfil LinkedIn (externo)",
+               "3d": "Demo 3D CIC (externo, sin tracker)"}
 
 
 def load_registry():
@@ -85,6 +94,9 @@ def save_registry(reg):
 
 def dest_url(entry):
     path, content = PAGES[entry["page"]]
+    base = path if path.startswith("http") else BASE_URL + path
+    if content is None:
+        return base
     utm_source, utm_medium = SOURCES[entry["source"]]
     params = {
         "utm_source": utm_source,
@@ -92,7 +104,7 @@ def dest_url(entry):
         "utm_campaign": entry.get("client", "general"),
         "utm_content": content,
     }
-    return BASE_URL + path + "?" + urlencode(params)
+    return base + "?" + urlencode(params)
 
 
 def write_stub(code, entry):
@@ -143,7 +155,7 @@ def write_docs(reg):
         lines.append(f"| `{k}` | {SOURCE_LABELS.get(k, k)} — `{s}` / `{m}` |")
     lines += ["", "| Clave | Página (`utm_content`) |", "|---|---|"]
     for k, (path, content) in PAGES.items():
-        lines.append(f"| `{k}` | {PAGE_LABELS.get(k, k)} — `{path}` (`{content}`) |")
+        lines.append(f"| `{k}` | {PAGE_LABELS.get(k, k)} — `{path or '(raíz)'}` (`{content or 'sin UTM'}`) |")
     lines += [
         "",
         "## Links activos",
