@@ -54,6 +54,14 @@
   .bd .row{display:flex;justify-content:space-between;font-size:.85rem;padding:.2rem 0;color:var(--muted)}
   .bd .row b{color:var(--text);font-weight:600}
   .bar{height:6px;border-radius:4px;background:var(--accent);opacity:.5;margin-top:2px}
+  /* filas de desglose clickeables → filtran el listado de abajo */
+  .bd .row.sel{cursor:pointer;margin:0 -.35rem;padding:.2rem .35rem;border-radius:6px}
+  .bd .row.sel:hover{background:var(--panel2);color:var(--text)}
+  .bd .row.sel.on{background:rgba(94,177,255,.14);color:var(--text);outline:1px solid var(--accent)}
+  .chip-f{display:inline-flex;align-items:center;gap:.3rem;font-size:.78rem;color:var(--accent);
+    border:1px solid var(--accent);border-radius:20px;padding:.15rem .6rem;cursor:pointer;
+    background:rgba(94,177,255,.08);user-select:none}
+  .chip-f:hover{background:rgba(94,177,255,.18)}
   .toolbar{display:flex;gap:.6rem;align-items:center;margin-bottom:.8rem;flex-wrap:wrap}
   input[type=text]{
     background:var(--panel);border:1px solid var(--border);border-radius:8px;
@@ -110,7 +118,7 @@
 
   var LS_URL="__sigma_report_url", LS_TOK="__sigma_report_tok";
   var app = document.getElementById("app");
-  var state = { rows:[], sortKey:"ts_iso", sortDir:-1, filter:"",
+  var state = { rows:[], sortKey:"ts_iso", sortDir:-1, filter:"", dims:{},
                 vivo:(function(){ try{ return localStorage.getItem("__sigma_report_vivo")==="1"; }catch(e){ return false; } })(),
                 ultima:0, _fails:0, _loading:0 };
 
@@ -501,10 +509,30 @@
     return Object.keys(m).map(function(k){return {k:k,n:m[k]};}).sort(function(a,b){return b.n-a.n;});
   }
 
-  function breakdown(title,items,total){
+  /* Dimensiones filtrables: la clave enlaza la fila del desglose con el getter
+     que se usa para filtrar el listado. El "(n/d)" replica el de tally() para
+     que la fila "(n/d)" también sea filtrable y los números cierren. */
+  var DIMS={
+    camp:{l:"Campaña",    f:function(r){return utm(r,"utm_campaign");}},
+    cont:{l:"Aviso",      f:function(r){return utm(r,"utm_content");}},
+    week:{l:"Semana",     f:semanaDe},
+    src: {l:"Fuente",     f:function(r){return utm(r,"utm_source");}},
+    page:{l:"Página",     f:function(r){return r.page_title||r.page||r.page_url;}},
+    clk: {l:"Click",      f:function(r){return r.target_label||r.target_text||r.target_href;}},
+    pais:{l:"País",       f:function(r){return r.country;}},
+    disp:{l:"Dispositivo",f:function(r){return r.device_label||r.device_type;}},
+    nav: {l:"Navegador",  f:function(r){return r.browser;}},
+    ref: {l:"Origen",     f:function(r){return (r.params&&(r.params.utm_source))||r.referrer;}}
+  };
+
+  function breakdown(title,items,total,dim){
     var rows=items.slice(0,8).map(function(it){
       var pct=total?Math.round(it.n*100/total):0;
-      return '<div class="row"><span>'+esc(it.k)+'</span><b>'+it.n+'</b></div>'+
+      var attrs=dim
+        ? ' class="row sel'+(state.dims[dim]===it.k?' on':'')+'" data-dim="'+dim+
+          '" data-val="'+esc(it.k)+'" title="Filtrar el listado por este valor"'
+        : ' class="row"';
+      return '<div'+attrs+'><span>'+esc(it.k)+'</span><b>'+it.n+'</b></div>'+
              '<div class="bar" style="width:'+pct+'%"></div>';
     }).join("");
     return '<div class="bd"><h3>'+title+'</h3>'+(rows||'<div class="row">Sin datos</div>')+'</div>';
@@ -646,10 +674,10 @@
           '<div class="card"><div class="n">'+Math.round(camp.length*100/total)+'%</div><div class="l">Del tráfico total</div></div>'+
         '</div>'+
         '<div class="breakdowns">'+
-          breakdown("📣 Campaña (utm_campaign)",tally(camp,function(r){return utm(r,"utm_campaign");}),camp.length)+
-          breakdown("📝 Aviso (utm_content)",tally(camp,function(r){return utm(r,"utm_content");}),camp.length)+
-          breakdown("🗓 Semana",tally(camp,semanaDe),camp.length)+
-          breakdown("📡 Fuente (utm_source)",tally(camp,function(r){return utm(r,"utm_source");}),camp.length)+
+          breakdown("📣 Campaña (utm_campaign)",tally(camp,DIMS.camp.f),camp.length,"camp")+
+          breakdown("📝 Aviso (utm_content)",tally(camp,DIMS.cont.f),camp.length,"cont")+
+          breakdown("🗓 Semana",tally(camp,semanaDe),camp.length,"week")+
+          breakdown("📡 Fuente (utm_source)",tally(camp,DIMS.src.f),camp.length,"src")+
         '</div>';
     } else {
       campHTML='<div class="bd" style="margin-bottom:1rem"><h3>📣 Campañas</h3>'+
@@ -658,12 +686,12 @@
     }
 
     var bds='<div class="breakdowns">'+
-      breakdown("📄 Páginas más visitadas",pages,pageviews.length)+
-      breakdown("👆 Clicks más populares (qué les llama la atención)",clickTargets,clicks.length)+
-      breakdown("🌎 País",countries,total)+
-      breakdown("📱 Dispositivo",devices,total)+
-      breakdown("🧭 Navegador",browsers,total)+
-      breakdown("🔗 Origen / Campaña",refs,total)+
+      breakdown("📄 Páginas más visitadas",pages,pageviews.length,"page")+
+      breakdown("👆 Clicks más populares (qué les llama la atención)",clickTargets,clicks.length,"clk")+
+      breakdown("🌎 País",countries,total,"pais")+
+      breakdown("📱 Dispositivo",devices,total,"disp")+
+      breakdown("🧭 Navegador",browsers,total,"nav")+
+      breakdown("🔗 Origen / Campaña",refs,total,"ref")+
     '</div>';
 
     // Campos combinados para una tabla compacta (el detalle completo va al CSV)
@@ -673,15 +701,20 @@
       r._loc  = [r.city, r.country].filter(Boolean).join(", ");
       r._nav  = [r.browser, r.os].filter(Boolean).join(" · ");
       r._ip   = r.ipv4 || r.ip || "";   // IPv4 legible; cae a la geo-IP (puede ser IPv6) si no hay
+      r._vis  = (r.visitor_id||"").replace(/^v_/,"").slice(-6);   // id corto para distinguir personas
     });
 
     var cols=[
-      ["ts_iso","Fecha"],["event_type","Evento"],["_what","Qué"],
+      ["ts_iso","Fecha"],["event_type","Evento"],["_what","Qué"],["_vis","Visitante"],
       ["device_label","Dispositivo"],["_loc","Ubicación"],["_ip","IP"],["_nav","Navegador / SO"]
     ];
 
     var f=state.filter.toLowerCase();
     var view=rows.filter(function(r){
+      for(var dk in state.dims){                       // filtros de los desgloses (click en la fila)
+        var d=DIMS[dk]; if(!d) continue;
+        if((d.f(r)||"(n/d)")!==state.dims[dk]) return false;
+      }
       if(!f) return true;
       return JSON.stringify(r).toLowerCase().indexOf(f)>=0;
     }).slice().sort(function(a,b){
@@ -702,6 +735,7 @@
         '<td>'+esc(when)+'</td>'+
         '<td>'+evBadge(r.event_type)+'</td>'+
         '<td>'+esc(r._what)+'</td>'+
+        '<td>'+esc(r._vis||"—")+(r.returning?' <span class="pill tab" title="Visitante que ya había entrado antes">↩ vuelve</span>':'')+'</td>'+
         '<td>'+esc(r.device_label||"")+' '+devPill(r.device_type)+'</td>'+
         '<td>'+esc(r._loc)+'</td>'+
         '<td class="muted">'+esc(r._ip||"—")+'</td>'+
@@ -719,7 +753,13 @@
       tablaSemanaPost(camp)+tablaChat(rows)+builderHTML()+bds+
       '<div class="toolbar">'+
         '<input id="f" type="text" placeholder="Filtrar (país, IP, ciudad, campaña…)" value="'+esc(state.filter)+'">'+
-        '<span class="muted">'+view.length+' de '+total+'</span>'+
+        Object.keys(state.dims).map(function(k){
+          var d=DIMS[k];
+          return '<span class="chip-f" data-dim="'+k+'" title="Quitar este filtro">'+
+                 esc((d?d.l:k)+": ")+'<b>'+esc(state.dims[k])+'</b> ✕</span>';
+        }).join("")+
+        '<span class="muted">'+view.length+' de '+total+
+          (Object.keys(state.dims).length?'':' · tip: pinchá una fila de los desgloses para filtrar')+'</span>'+
       '</div>'+
       '<div class="tablewrap"><table><thead><tr>'+thead+'</tr></thead><tbody>'+body+'</tbody></table></div>'+
     '</main>';
@@ -806,6 +846,18 @@
         cp.textContent="✓ Copiado"; setTimeout(function(){ cp.textContent="⧉ Copiar"; },1500);
       }).catch(function(){ cp.textContent="⚠ Copiá a mano"; });
     };
+
+    /* filas de desglose → filtran el listado; segundo click en la misma fila lo quita */
+    document.querySelectorAll(".row.sel").forEach(function(el){
+      el.onclick=function(){
+        var d=el.getAttribute("data-dim"), v=el.getAttribute("data-val");
+        if(state.dims[d]===v) delete state.dims[d]; else state.dims[d]=v;
+        render();
+      };
+    });
+    document.querySelectorAll(".chip-f").forEach(function(el){
+      el.onclick=function(){ delete state.dims[el.getAttribute("data-dim")]; render(); };
+    });
 
     var f=document.getElementById("f"); if(f) f.oninput=function(){ state.filter=f.value; render();
       var nf=document.getElementById("f"); if(nf){ nf.focus(); nf.setSelectionRange(nf.value.length,nf.value.length);} };
