@@ -119,14 +119,69 @@
   .hm-leyenda .hm-c { width: 11px; height: 11px; }
 
   /* ── org chart ── */
-  .org-top { display: flex; justify-content: center; }
-  .org-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: .8rem 1rem; }
-  .org-card b { display: block; font-size: .92rem; }
-  .org-card span { font-size: .8rem; color: var(--ink-2); display: block; margin-top: .25rem; }
-  .org-card.lead { max-width: 460px; border-color: var(--serie); }
-  .org-card.lead b { color: var(--serie); }
-  .org-linea { width: 2px; height: 22px; background: var(--grid); margin: 0 auto; }
-  .org-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: .75rem; border-top: 2px solid var(--grid); padding-top: 1rem; }
+  :root {
+    --rol-rag:  #2a78d6;
+    --rol-qa:   #0e8f7e;
+    --rol-eval: #7a5cd0;
+    --rol-fe:   #c96a1f;
+    --rol-tw:   #c2417e;
+    --rol-ops:  #5b6472;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --rol-rag:  #5fa2ec;
+      --rol-qa:   #35b9a5;
+      --rol-eval: #a68df0;
+      --rol-fe:   #e89550;
+      --rol-tw:   #e879ac;
+      --rol-ops:  #93a0b4;
+    }
+  }
+  .org2 { margin-top: 1.2rem; }
+  .org2-card {
+    position: relative; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: .85rem 1rem .9rem; overflow: hidden;
+  }
+  .org2-card::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 3px;
+    background: var(--rol, var(--grid));
+  }
+  .org2-head { display: flex; align-items: center; gap: .6rem; }
+  .org2-ava {
+    flex: 0 0 auto; width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 1.05rem;
+    background: color-mix(in srgb, var(--rol, var(--serie)) 14%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--rol, var(--serie)) 35%, transparent);
+  }
+  .org2-card b { display: block; font-size: .92rem; line-height: 1.25; }
+  .org2-badge {
+    display: inline-block; margin-top: .1rem; font-size: .62rem; font-weight: 700;
+    letter-spacing: .07em; text-transform: uppercase; color: var(--rol, var(--muted));
+  }
+  .org2-card p { font-size: .8rem; color: var(--ink-2); margin-top: .55rem; }
+  .org2-lead-row { display: flex; justify-content: center; }
+  .org2-card.lead { max-width: 520px; --rol: var(--serie); box-shadow: 0 1px 8px rgba(0,0,0,.07); }
+  .org2-trunk { width: 2px; height: 26px; background: var(--grid); margin: 0 auto; }
+  .org2-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: .9rem; border-top: 2px solid var(--grid); }
+  .org2-col::before { content: ""; display: block; width: 2px; height: 16px; background: var(--grid); margin: 0 auto; }
+  .org2-drop { width: 2px; height: 14px; background: var(--grid); margin: 0 auto; }
+  .org2-card.junior { border-style: dashed; background: var(--page); }
+  .org2-card.junior::before { opacity: .45; }
+  .org2-card.junior .org2-ava { width: 28px; height: 28px; font-size: .85rem; }
+  .org2-card.junior b { font-size: .84rem; }
+  .org2-card.junior p { font-size: .76rem; }
+
+  /* ── agile band ── */
+  .agile { margin-top: 1.6rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.1rem 1.1rem; }
+  .agile h3 { font-size: .95rem; }
+  .agile h3 .agile-tag { color: var(--serie); margin-right: .4rem; }
+  .agile-loop { display: flex; flex-wrap: wrap; align-items: stretch; gap: .5rem; margin-top: .8rem; }
+  .agile-paso { flex: 1 1 150px; background: var(--page); border: 1px solid var(--grid); border-radius: 10px; padding: .6rem .75rem; }
+  .agile-paso b { display: block; font-size: .8rem; }
+  .agile-paso span { font-size: .75rem; color: var(--ink-2); display: block; margin-top: .2rem; }
+  .agile-flecha { align-self: center; color: var(--muted); flex: 0 0 auto; }
+  .agile-nota { font-size: .78rem; color: var(--muted); margin-top: .7rem; }
 </style>
 </head>
 <body>
@@ -310,39 +365,136 @@
     recall@k and MRR.</li>
   </ul>
 
-  <h2><span class="n">07</span>Delivery model — one human lead, a department of AI agents</h2>
+  <h2><span class="n">07</span>Delivery model — one human lead, an agile team of AI agents</h2>
   <p class="sub">The system was built by a software team of one: a human engineering lead
-  orchestrating specialized AI agents (Claude) under a written Lean discipline. Each role
-  works to documented procedures, no milestone closes without its test case green, and
-  nothing is published without explicit human review.</p>
-  <div style="margin-top:1rem">
-    <div class="org-top">
-      <div class="org-card lead">
-        <b>Engineering Lead — human (Jorge)</b>
-        <span>Product owner and final gate: sets priorities, takes every D-NNN decision,
-        runs the human-side test executions, and reviews each publication before it ships.</span>
+  acting as product owner, orchestrating specialized AI agents (Claude) under a written
+  Lean-Agile discipline — a prioritized backlog with decision gates, short working sprints,
+  and a hard definition of done. No milestone closes without its test case green, and
+  nothing is published without explicit human review. Senior roles can spawn supervised
+  junior subagents for parallel work; a junior's output only lands after its senior
+  verifies it.</p>
+
+  <div class="org2">
+    <div class="org2-lead-row">
+      <div class="org2-card lead">
+        <div class="org2-head">
+          <div class="org2-ava">🧭</div>
+          <div>
+            <b>Engineering Lead — Jorge</b>
+            <span class="org2-badge">Human · Product Owner</span>
+          </div>
+        </div>
+        <p>Final gate of the system: sets backlog priorities, takes every D-NNN decision,
+        runs the human-side test executions, and reviews each publication before it ships.</p>
       </div>
     </div>
-    <div class="org-linea"></div>
-    <div class="org-grid">
-      <div class="org-card"><b>RAG Pipeline Engineer</b>
-        <span>Corpus census, chunking, embeddings, vector indexing, query CLI.
-        Specialty: Python, sentence-transformers, sqlite-vec.</span></div>
-      <div class="org-card"><b>QA &amp; Test Harness Engineer</b>
-        <span>Machine-updated test registry, per-executor run counters, MASTER suite,
-        byte-level reproducibility checks. Specialty: test automation.</span></div>
-      <div class="org-card"><b>Evaluation &amp; Data Analyst</b>
-        <span>Control questions with known-in-advance answers, golden-set curation,
-        retrieval metrics. Specialty: IR evaluation (recall@k, MRR).</span></div>
-      <div class="org-card"><b>Frontend Engineer</b>
-        <span>Evidence pages and dashboards — vanilla JS/CSS, light and dark themes,
-        accessible data visualization. No frameworks.</span></div>
-      <div class="org-card"><b>Technical Writer</b>
-        <span>Decision log (D-001→D-007) with rationale and numbers, technical
-        dictionary, plain-language explainers of every design choice.</span></div>
-      <div class="org-card"><b>DevOps &amp; Governance</b>
-        <span>Session hooks and monitoring, static deploys via GitHub Pages, and the
-        privacy boundary: mechanical sanitization checks enforcing D-007.</span></div>
+    <div class="org2-trunk"></div>
+    <div class="org2-row">
+      <div class="org2-col" style="--rol: var(--rol-rag)">
+        <div class="org2-card">
+          <div class="org2-head">
+            <div class="org2-ava">🔎</div>
+            <div><b>RAG Pipeline Engineer</b><span class="org2-badge">AI agent</span></div>
+          </div>
+          <p>Corpus census, chunking, embeddings, vector indexing, query CLI.
+          Specialty: Python, sentence-transformers, sqlite-vec.</p>
+        </div>
+        <div class="org2-drop"></div>
+        <div class="org2-card junior">
+          <div class="org2-head">
+            <div class="org2-ava">🔎</div>
+            <div><b>Junior RAG Engineer</b><span class="org2-badge">AI subagent</span></div>
+          </div>
+          <p>Task subagent for parallel grunt work: corpus sweeps, batch re-embedding
+          runs, log collection. Reports up — never lands output unverified.</p>
+        </div>
+      </div>
+      <div class="org2-col" style="--rol: var(--rol-qa)">
+        <div class="org2-card">
+          <div class="org2-head">
+            <div class="org2-ava">🧪</div>
+            <div><b>QA &amp; Test Harness Engineer</b><span class="org2-badge">AI agent</span></div>
+          </div>
+          <p>Machine-updated test registry, per-executor run counters, MASTER suite,
+          byte-level reproducibility checks. Specialty: test automation.</p>
+        </div>
+        <div class="org2-drop"></div>
+        <div class="org2-card junior">
+          <div class="org2-head">
+            <div class="org2-ava">🧪</div>
+            <div><b>Junior QA Engineer</b><span class="org2-badge">AI subagent</span></div>
+          </div>
+          <p>Re-runs the repetitive executions: MASTER passes, byte-level diffs,
+          counter updates. Cannot mark a milestone done by itself.</p>
+        </div>
+      </div>
+      <div class="org2-col" style="--rol: var(--rol-eval)">
+        <div class="org2-card">
+          <div class="org2-head">
+            <div class="org2-ava">📊</div>
+            <div><b>Evaluation &amp; Data Analyst</b><span class="org2-badge">AI agent</span></div>
+          </div>
+          <p>Control questions with known-in-advance answers, golden-set curation,
+          retrieval metrics. Specialty: IR evaluation (recall@k, MRR).</p>
+        </div>
+      </div>
+      <div class="org2-col" style="--rol: var(--rol-fe)">
+        <div class="org2-card">
+          <div class="org2-head">
+            <div class="org2-ava">🎨</div>
+            <div><b>Frontend Engineer</b><span class="org2-badge">AI agent</span></div>
+          </div>
+          <p>Evidence pages and dashboards — vanilla JS/CSS, light and dark themes,
+          accessible data visualization. No frameworks.</p>
+        </div>
+      </div>
+      <div class="org2-col" style="--rol: var(--rol-tw)">
+        <div class="org2-card">
+          <div class="org2-head">
+            <div class="org2-ava">✍️</div>
+            <div><b>Technical Writer</b><span class="org2-badge">AI agent</span></div>
+          </div>
+          <p>Decision log (D-001→D-007) with rationale and numbers, technical
+          dictionary, plain-language explainers of every design choice.</p>
+        </div>
+      </div>
+      <div class="org2-col" style="--rol: var(--rol-ops)">
+        <div class="org2-card">
+          <div class="org2-head">
+            <div class="org2-ava">🛡️</div>
+            <div><b>DevOps &amp; Governance</b><span class="org2-badge">AI agent</span></div>
+          </div>
+          <p>Session hooks and monitoring, static deploys via GitHub Pages, and the
+          privacy boundary: mechanical sanitization checks enforcing D-007.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="agile">
+      <h3><span class="agile-tag">⟳</span>Agile, as actually practiced — the cadence behind the chart</h3>
+      <div class="agile-loop">
+        <div class="agile-paso"><b>Backlog</b>
+          <span>A prioritized challenge board; open D-NNN decision gates block dependent
+          work until the product owner decides.</span></div>
+        <span class="agile-flecha">→</span>
+        <div class="agile-paso"><b>Sprint planning</b>
+          <span>Each working session opens with a scripted kick-off that picks the next
+          unblocked priority-1 item — no time lost deciding what's next.</span></div>
+        <span class="agile-flecha">→</span>
+        <div class="agile-paso"><b>Increment</b>
+          <span>The smallest change that ships real value: small, verifiable,
+          reversible steps — never a big-bang rewrite.</span></div>
+        <span class="agile-flecha">→</span>
+        <div class="agile-paso"><b>Definition of done</b>
+          <span>A milestone closes only with its test case registered and green, and
+          its numbers reproduced twice.</span></div>
+        <span class="agile-flecha">→</span>
+        <div class="agile-paso"><b>Review &amp; retro</b>
+          <span>Every session closes with a scripted protocol: commit, session log
+          entry, board update, lessons recorded.</span></div>
+      </div>
+      <div class="agile-nota">⟳ The retro feeds the backlog and the loop repeats — the cadence
+      that took the corpus from 3 repositories to 25 in one day without breaking a control.</div>
     </div>
   </div>
 
