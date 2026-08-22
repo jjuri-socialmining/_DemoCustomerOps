@@ -1,0 +1,65 @@
+{
+  "r-ds": {
+    "source": "r",
+    "page": "ds"
+  },
+  "r-rag": {
+    "source": "r",
+    "page": "rag"
+  },
+  "w-ds": {
+    "source": "w",
+    "page": "ds"
+  },
+  "w-rag": {
+    "source": "w",
+    "page": "rag"
+  },
+  "li-ds": {
+    "source": "li",
+    "page": "ds"
+  },
+  "li-rag": {
+    "source": "li",
+    "page": "rag"
+  },
+  "web-ds": {
+    "source": "web",
+    "page": "ds"
+  },
+  "web-rag": {
+    "source": "web",
+    "page": "rag"
+  },
+  "r-svc": {
+    "source": "r",
+    "page": "svc"
+  },
+  "w-svc": {
+    "source": "w",
+    "page": "svc"
+  },
+  "li-svc": {
+    "source": "li",
+    "page": "svc"
+  },
+  "web-svc": {
+    "source": "web",
+    "page": "svc"
+  },
+  "r-aijobs-svc": {
+    "source": "r",
+    "page": "svc",
+    "client": "ai-job-search"
+  },
+  "r-aijobs-ds": {
+    "source": "r",
+    "page": "ds",
+    "client": "ai-job-search"
+  },
+  "r-aijobs-rag": {
+    "source": "r",
+    "page": "rag",
+    "client": "ai-job-search"
+  }
+}

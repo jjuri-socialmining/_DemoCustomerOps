@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Service Portfolio — Sigma Digital Twins Consulting</title>
+<meta name="description" content="Digital twins, Lean Six Sigma and AI agents for industrial operations. We clone the specialist's judgment, not the machine.">
+<link rel="icon" href="https://jjuri-socialmining.github.io/sigma-servicios/sigma-logo.png">
+<style>:root{--ink0:#04070e;--ink1:#0a1420;--ink2:#0e1c2b;--edge:#1b3044;
+  --teal:#00e0ae;--blue:#3ba7e8;--orange:#ff8a2b;--lime:#b8e04a;
+  --txt:#ffffff;--soft:#a8bece;--dim:#5b7186}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink0);color:var(--txt);
+  font:14px/1.5 -apple-system,"SF Pro Text",Segoe UI,Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+.top{display:flex;align-items:center;gap:13px;padding:13px 20px;background:var(--ink1);
+  border-bottom:1px solid var(--edge);position:sticky;top:0;z-index:5}
+.top .sig{font-size:21px;color:var(--teal);line-height:1;font-weight:700}
+.top h1{margin:0;font-size:15px;font-weight:700;letter-spacing:-.01em}
+.top p{margin:2px 0 0;font-size:12px;color:var(--soft)}
+.top .der{margin-left:auto;font-size:12.5px;color:var(--soft);text-decoration:none}
+.top .der:hover{color:var(--teal)}
+
+.kick{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:700;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--teal);margin:0 0 12px}
+.kick::before{content:"";width:3px;height:13px;background:var(--teal);border-radius:2px}
+
+.hero{border-bottom:1px solid var(--edge);padding:60px 20px 52px;
+  background:
+    radial-gradient(1100px 460px at 78% 18%,#0d2b34 0%,transparent 62%),
+    radial-gradient(760px 420px at 12% 88%,#07202b 0%,transparent 60%),
+    repeating-linear-gradient(0deg,transparent 0 43px,#0c1c2733 43px 44px),
+    repeating-linear-gradient(90deg,transparent 0 43px,#0c1c2733 43px 44px),
+    var(--ink0)}
+.hero h2{font-size:clamp(29px,4.2vw,48px);line-height:1.05;font-weight:800;
+  letter-spacing:-.028em;margin:0 0 18px;max-width:20ch}
+.hero h2 em{font-style:normal;color:var(--teal)}
+.rule{height:2px;background:linear-gradient(90deg,var(--teal),transparent);
+  margin:0 0 24px;max-width:520px}
+.hero .lede{font-size:clamp(15px,1.7vw,18.5px);line-height:1.62;color:var(--soft);
+  max-width:64ch;margin:0}
+.hero .lede b{color:var(--txt);font-weight:650}
+
+/* Producto estrella. Es la única tarjeta de ancho completo de la página: si compite en
+   la grilla con las otras treinta, deja de leerse como la puerta de entrada. */
+.estrella{margin:34px 0 0;border:1px solid var(--teal);border-radius:16px;padding:30px 32px;
+  background:linear-gradient(135deg,#00e0ae16,transparent 58%),var(--ink1)}
+.estrella h3{margin:0 0 14px;font-size:clamp(21px,2.9vw,31px);line-height:1.12;
+  font-weight:780;letter-spacing:-.02em;max-width:22ch}
+.estrella h3 em{font-style:normal;color:var(--teal)}
+.estrella .lede{margin:0 0 22px;font-size:14.5px;line-height:1.68;color:var(--soft);max-width:72ch}
+.estrella .lede b{color:var(--txt);font-weight:650}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:16px}
+.st{border-left:3px solid var(--teal);padding:2px 0 2px 13px}
+.st:nth-child(2){border-color:var(--blue)}
+.st:nth-child(3){border-color:var(--orange)}
+.st:nth-child(4){border-color:var(--lime)}
+.st b{display:block;font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.st span{display:block;margin-top:3px;font-size:12px;line-height:1.45;color:var(--soft)}
+.mas{display:inline-block;margin-top:22px;font-size:13px;font-weight:650;color:var(--teal);
+  text-decoration:none;border:1px solid var(--teal);border-radius:8px;padding:9px 16px}
+.mas:hover{background:#00e0ae14}
+
+/* Filtros. Client-side puro: la página completa ya está en el HTML, así que funciona
+   igual servida por el repo, por Pages o abierta como archivo suelto. */
+.filtros{display:flex;flex-wrap:wrap;gap:8px;margin:44px 0 8px;padding-top:34px;
+  border-top:1px solid var(--edge)}
+.f{font:inherit;font-size:12px;cursor:pointer;padding:6px 13px;border-radius:20px;
+  border:1px solid var(--edge);background:transparent;color:var(--soft)}
+.f:hover{border-color:var(--teal);color:var(--txt)}
+.f.on{border-color:var(--teal);color:var(--teal);background:#00e0ae12;font-weight:650}
+.f .n{opacity:.65;margin-left:5px}
+
+.fam{margin-top:46px}
+.fam h3{margin:0 0 6px;font-size:22px;font-weight:730;letter-spacing:-.015em;
+  display:flex;align-items:center;gap:10px}
+.fam h3 .ico{color:var(--teal);font-size:17px}
+.fam.blue h3 .ico{color:var(--blue)}
+.fam.orange h3 .ico{color:var(--orange)}
+.fam.lime h3 .ico{color:var(--lime)}
+.fam .bajada{margin:0 0 6px;font-size:14px;line-height:1.65;color:var(--soft);max-width:76ch}
+.fam .lider{margin:0 0 20px;font-size:12px;color:var(--dim);letter-spacing:.02em}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:15px}
+.c{background:var(--ink1);border:1px solid var(--edge);border-radius:12px;padding:20px 21px;
+  display:flex;flex-direction:column;gap:11px}
+.c:hover{border-color:#2a4c68}
+.c .cab{display:flex;align-items:center;gap:9px}
+.c .sid{font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--teal)}
+.fam.blue .c .sid{color:var(--blue)}
+.fam.orange .c .sid{color:var(--orange)}
+.fam.lime .c .sid{color:var(--lime)}
+.c h4{margin:0;font-size:16px;font-weight:680;line-height:1.32;letter-spacing:-.01em}
+.pill{margin-left:auto;font-size:10px;font-weight:750;letter-spacing:.05em;text-transform:uppercase;
+  padding:4px 9px;border-radius:20px;border:1px solid;white-space:nowrap}
+.pill.ok{color:var(--teal);border-color:#00e0ae55;background:#00e0ae12}
+.pill.mid{color:var(--orange);border-color:#ff8a2b55;background:#ff8a2b12}
+.pill.no{color:var(--dim);border-color:var(--edge)}
+
+/* El dolor va primero y entre comillas: es la frase del cliente, no la nuestra. Una
+   tarjeta que abre con lo que sabemos hacer se lee como folleto; una que abre con el
+   problema se lee como que alguien estuvo ahí. */
+.c .dolor{margin:0;font-size:13.5px;line-height:1.6;color:var(--txt);font-weight:600;
+  border-left:2px solid var(--edge);padding-left:12px}
+.c .quees{margin:0;font-size:13.5px;line-height:1.62;color:var(--soft)}
+.c .campo{margin:0;font-size:12.5px;line-height:1.58;color:var(--soft)}
+.c .campo b{display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--dim);font-weight:750;margin-bottom:3px}
+/* El pie de la ficha se ancla abajo aunque falte la prueba: las tarjetas de una fila
+   tienen la misma altura, y sin ancla el "Entrega:" queda flotando a media tarjeta. */
+.c .pie-c{margin-top:auto;padding-top:11px;border-top:1px solid var(--edge);
+  display:flex;flex-direction:column;gap:7px}
+.c .prueba{margin:0;font-size:12.5px;line-height:1.58;color:var(--soft)}
+.c .prueba::before{content:"✓ ";color:var(--teal);font-weight:800}
+.c .quien{margin:0;font-size:11.5px;color:var(--dim)}
+
+.nota{margin-top:22px;border-left:3px solid var(--orange);background:#ff8a2b0f;
+  border-radius:0 10px 10px 0;padding:15px 19px;font-size:13.5px;line-height:1.65;color:var(--soft)}
+.nota b{color:var(--orange)}
+
+.cierre{margin:56px 0 0;border:1px solid var(--teal);border-radius:14px;padding:30px 32px;
+  background:linear-gradient(135deg,#00e0ae14,transparent 62%),var(--ink1)}
+.cierre h3{margin:0 0 10px;font-size:21px;font-weight:750;letter-spacing:-.015em}
+.cierre p{margin:0 0 8px;font-size:14px;line-height:1.68;color:var(--soft);max-width:74ch}
+.cierre p b{color:var(--txt);font-weight:650}
+.cierre .mail{display:inline-block;margin-top:14px;font-size:14px;font-weight:650;
+  color:var(--teal);text-decoration:none}
+
+.pie{margin:44px 0 0;border-top:1px solid var(--edge);padding:18px 0 70px;
+  font-size:12.5px;line-height:1.7;color:var(--dim)}
+.pie code{background:var(--ink2);color:var(--soft);padding:1px 5px;border-radius:4px;font-size:12px}
+
+@media(max-width:620px){
+  .estrella,.cierre{padding:24px 20px}
+  .c{padding:18px}
+}</style>
+</head>
+<body>
+<div class="top">
+<span class="sig">Σ</span>
+<div><h1>Sigma Digital Twins Consulting</h1><p>Service portfolio — digital twins, Lean Six Sigma and AI agents for industrial operations</p></div>
+<a class="der" href="https://jjuri-socialmining.github.io/sigma-servicios/">Versión en español →</a>
+</div>
+<div class="hero"><div class="wrap">
+<div class="kick">Portfolio</div>
+<h2>What the team knows how to deliver, <em>with the proof right beside it</em>.</h2>
+<div class="rule"></div>
+<p class="lede">26 services across 6 families, each one with the problem in the client's own words, what you receive when it's done, and — where it exists — the number that backs it up. <b>Where there is no figure, there is no invented figure.</b></p>
+</div></div>
+<div class="wrap">
+<section class="estrella">
+<div class="kick">Flagship product</div>
+<h3>We don't copy your plant. We copy <em>your technical team</em>.</h3>
+<p class="lede">A conventional digital twin replicates a machine. This one replicates <b>the people who make it run</b>: the specialist's judgment gets written down as software and runs on its own, over your operation, every day. It is a <b>clone of the company working in parallel</b>, synchronized with the original — and the rest of the portfolio is what that clone knows how to do.</p>
+<div class="stats">
+<div class="st"><b>3 shifts</b><span>The clone never clocks in or out</span></div>
+<div class="st"><b>90 / 99 / 1</b><span>AI reaches 90% of the diagnosis, the team takes it to 99%, and the final 1% is human</span></div>
+<div class="st"><b>1 service</b><span>What a pilot starts with — not the whole operation</span></div>
+<div class="st"><b>0 licenses</b><span>It's not software you rent: it's your judgment, written down</span></div>
+</div>
+</section>
+<div class="filtros"><button class="f on" data-fam="todas">All<span class="n">26</span></button><button class="f" data-fam="gemelos">Digital twins &amp; simulation<span class="n">4</span></button><button class="f" data-fam="lean">Operational excellence — Lean Six Sigma<span class="n">5</span></button><button class="f" data-fam="agentes">AI agents &amp; automation<span class="n">4</span></button><button class="f" data-fam="proyectos">Project management &amp; execution<span class="n">6</span></button><button class="f" data-fam="calidad">Quality certification &amp; operational reliability<span class="n">4</span></button><button class="f" data-fam="ti">Application modernization &amp; industrial IT<span class="n">3</span></button></div>
+<section class="fam teal" data-fam="gemelos">
+<h3><span class="ico">◆</span>Digital twins &amp; simulation</h3>
+<p class="bajada">The operation runs in parallel: a replica that compares what is happening against what should be happening.</p>
+<p class="lider">4 services · led by Jorge Juri — Sigma</p>
+<div class="cards">
+<article class="c">
+<div class="cab">
+<span class="sid">S-01</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Plant digital twin</h4>
+<p class="dolor">"Recovery drifts and the diagnosis arrives days later, after the shift is already gone."</p>
+<p class="quees">A replica of the circuit that runs in parallel with the plant and compares what is happening against what should be happening.</p>
+<p class="campo"><b>Deliverable</b>A panel that contrasts the real process with its twin every four seconds and explains the deviation.</p>
+<div class="pie-c">
+<p class="prueba">AI reaches 90% of the diagnosis and the technical team takes it to 99%.</p>
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-02</span>
+<span class="pill mid">Proven capability</span>
+</div>
+<h4>Simulation gate before the investment</h4>
+<p class="dolor">"Budget has to be committed on assumptions nobody could test beforehand."</p>
+<p class="quees">The change is run in the twin before touching the operation or the budget, and only what survives that test gets built.</p>
+<p class="campo"><b>Deliverable</b>Simulated base case, alternative scenarios, and the threshold that releases the budget.</p>
+<div class="pie-c">
+<p class="prueba">In simulation, a wrong assumption costs one run — not one quarter.</p>
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-03</span>
+<span class="pill mid">Proven capability</span>
+</div>
+<h4>3D constructability simulation</h4>
+<p class="dolor">"The clash shows up in the field, with the crane on rent and the crew standing by."</p>
+<p class="quees">The erection sequence is walked through in 3D before the first truck arrives, with every discipline reviewing on the same model.</p>
+<p class="campo"><b>Deliverable</b>Erection-sequence animation and the list of clashes detected before construction.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-04</span>
+<span class="pill mid">Proven capability</span>
+</div>
+<h4>What-if operational scenarios</h4>
+<p class="dolor">"Every blend or setpoint decision gets defended with experience, not with evidence."</p>
+<p class="quees">The twin runs the alternatives and returns the effect of each one on recovery, grade and cost.</p>
+<p class="campo"><b>Deliverable</b>Quantified comparison of alternatives, with each one's assumption in plain sight.</p>
+<div class="pie-c">
+<p class="prueba">Demonstration case — CIL base at 78% recovery versus a RIL U/F alternative at 93% and 13% lower OPEX.</p>
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+</div>
+</section>
+<section class="fam blue" data-fam="lean">
+<h3><span class="ico">▲</span>Operational excellence — Lean Six Sigma</h3>
+<p class="bajada">Nineteen years of Lean Six Sigma applied to industrial operations: first the constraint, then the technology.</p>
+<p class="lider">5 services · led by Jorge Juri — Sigma</p>
+<div class="cards">
+<article class="c">
+<div class="cab">
+<span class="sid">S-10</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>DMAIC diagnosis of the constraint</h4>
+<p class="dolor">"We know value is being lost somewhere — we just don't know where."</p>
+<p class="quees">We start from the value stream, not from the technology: which decision arrives late, which handoff leaks, and what that costs per month.</p>
+<p class="campo"><b>Deliverable</b>The constraint identified, measured with the data the operation already generates, and its monthly cost.</p>
+<div class="pie-c">
+<p class="prueba">Nineteen years applying Lean Six Sigma to industrial operations and critical platforms.</p>
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-11</span>
+<span class="pill mid">Proven capability</span>
+</div>
+<h4>Value stream mapping (VSM)</h4>
+<p class="dolor">"Every area optimizes its own piece and the whole still runs late."</p>
+<p class="quees">The complete flow is drawn with real times, and the waste becomes visible without anyone having to point fingers.</p>
+<p class="campo"><b>Deliverable</b>Current-state map, future-state map, and the prioritized countermeasure plan.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-12</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>5S and documented process standards</h4>
+<p class="dolor">"The standards exist, but keeping them current takes more hours than there are."</p>
+<p class="quees">5S and process-standard documentation generates and maintains itself, instead of depending on someone finding the time.</p>
+<p class="campo"><b>Deliverable</b>Current, versioned, auditable standards — plus the process that keeps them up to date.</p>
+<div class="pie-c">
+<p class="prueba">Delivered to a mining client, who signed off on the quality of the result.</p>
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-13</span>
+<span class="pill mid">Proven capability</span>
+</div>
+<h4>Digitized Leader Standard Work</h4>
+<p class="dolor">"The leader's rounds get filled in by hand, filed away, and never looked at again."</p>
+<p class="quees">An assistant organizes the shift's signals and shows what needs attention, instead of asking for yet another spreadsheet.</p>
+<p class="campo"><b>Deliverable</b>LSW in operation, with the shift's exceptions prioritized and traceable.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-14</span>
+<span class="pill mid">Proven capability</span>
+</div>
+<h4>Statistical process control and limits</h4>
+<p class="dolor">"We react to variations that are noise and let through the ones that aren't."</p>
+<p class="quees">Control limits are installed on the variables that actually drive the process, so that an alarm means something.</p>
+<p class="campo"><b>Deliverable</b>Control charts in production and the documented criteria for when to intervene.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+</div>
+</section>
+<section class="fam orange" data-fam="agentes">
+<h3><span class="ico">⬢</span>AI agents &amp; automation</h3>
+<p class="bajada">The specialist's judgment written as software, running over the operation, with every run auditable.</p>
+<p class="lider">4 services · led by Jorge Juri — Sigma</p>
+<div class="cards">
+<article class="c">
+<div class="cab">
+<span class="sid">S-20</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Agent network for the operation</h4>
+<p class="dolor">"The diagnosis is clear, but implementing it by hand takes quarters."</p>
+<p class="quees">The engine is still Lean Six Sigma; the difference is that agents execute the countermeasure, and operational excellence arrives in record time.</p>
+<p class="campo"><b>Deliverable</b>The countermeasure running inside the operation — not in a slide deck.</p>
+<div class="pie-c">
+<p class="prueba">The consultancy runs its own operation on agent networks, this proposal included.</p>
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-21</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Automated technical documentation</h4>
+<p class="dolor">"Technical documentation always runs one step behind the reality of the plant."</p>
+<p class="quees">Agents read what the operation already produces and keep the documentation current with no manual work.</p>
+<p class="campo"><b>Deliverable</b>Current, versioned documentation with full traceability of who changed what, and when.</p>
+<div class="pie-c">
+<p class="prueba">Delivered to a mining client, with the quality approved by the client.</p>
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-22</span>
+<span class="pill mid">Proven capability</span>
+</div>
+<h4>AI governance</h4>
+<p class="dolor">"The board's question isn't whether it works: it's who answers when it gets it wrong."</p>
+<p class="quees">A decision partner that knows exactly where human judgment begins, with the run auditable end to end.</p>
+<p class="campo"><b>Deliverable</b>Auditable traces, access control, and the record of what the machine decided and what a person decided.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-23</span>
+<span class="pill mid">Proven capability</span>
+</div>
+<h4>Operational data integration</h4>
+<p class="dolor">"The data exists — scattered across the historian, the ERP and seven spreadsheets."</p>
+<p class="quees">The sources the operation already generates get connected and become available as one, without migrating anything.</p>
+<p class="campo"><b>Deliverable</b>A data pipeline in production, with the history consolidated and updates automatic.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+</div>
+</section>
+<section class="fam lime" data-fam="proyectos">
+<h3><span class="ico">▣</span>Project management &amp; execution</h3>
+<p class="bajada">From the master plan to the closeout dossier, with every discipline reviewing on the same model.</p>
+<p class="lider">6 services · led by Mauricio Contreras</p>
+<div class="cards">
+<article class="c">
+<div class="cab">
+<span class="sid">S-30</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Project master plan</h4>
+<p class="dolor">"Every discipline has its own schedule and none of them match the one next door."</p>
+<p class="quees">One single plan with WBS, schedule, RACI matrix, milestones and acceptance criteria agreed before starting.</p>
+<p class="campo"><b>Deliverable</b>Master plan approved by every discipline, with milestones and acceptance criteria.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Mauricio Contreras</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-31</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Technical review of P&amp;IDs and construction packages</h4>
+<p class="dolor">"Drawings get approved by discipline, and the clashes show up during erection."</p>
+<p class="quees">P&amp;IDs and packages are reviewed jointly — mechanical, piping, process, instrumentation and control — before release.</p>
+<p class="campo"><b>Deliverable</b>Drawings and packages reviewed and approved by every discipline.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Mauricio Contreras</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-32</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Constructability, HAZOP and HAZID workshops</h4>
+<p class="dolor">"Erection risk gets discovered by erecting."</p>
+<p class="quees">The team walks through the sequence and the risks in a workshop, with the client and the contractors in the same room.</p>
+<p class="campo"><b>Deliverable</b>Constructability and HAZOP/HAZID reports, with actions assigned and owned.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Mauricio Contreras</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-33</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Cloud document management with traceability</h4>
+<p class="dolor">"Nobody knows which revision is the latest — and the one installed wasn't always it."</p>
+<p class="quees">An EDMS with review workflows, version control, and traceability for every project document.</p>
+<p class="campo"><b>Deliverable</b>A cloud document system in operation, with version control and full traceability.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Mauricio Contreras</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-34</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Erection supervision and closeout with MDR dossier</h4>
+<p class="dolor">"The project gets handed over and the knowledge leaves with the contractor."</p>
+<p class="quees">Erection is supervised with checklists, ITPs and a punch list, and closes with the complete dossier in the client's hands.</p>
+<p class="campo"><b>Deliverable</b>MDR dossier with as-builts, operation and maintenance manuals, and lessons learned.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Mauricio Contreras</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-35</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Field inspection of operational risks</h4>
+<p class="dolor">"The report says it was executed as planned, but nobody went to look."</p>
+<p class="quees">What was executed is verified in the field against what was planned, and validated against the standard.</p>
+<p class="campo"><b>Deliverable</b>Inspection report with findings, photographic evidence, and corrective actions.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Mauricio Contreras</p>
+</div></article>
+</div>
+</section>
+<section class="fam blue" data-fam="calidad">
+<h3><span class="ico">✓</span>Quality certification &amp; operational reliability</h3>
+<p class="bajada">Independent certification: done by someone who did not execute the work — the only kind a board accepts.</p>
+<p class="lider">4 services · led by Juan Carlos Ramírez</p>
+<div class="cards">
+<article class="c">
+<div class="cab">
+<span class="sid">S-40</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Audit and certification under ISO standards</h4>
+<p class="dolor">"We have to prove to the board and the insurer that the work complies — not just claim it."</p>
+<p class="quees">Independent certification against ISO 9001, 14224, 19011 and 55000, performed by someone who did not execute the work.</p>
+<p class="campo"><b>Deliverable</b>Audit report and milestone-compliance certification, presented to the client.</p>
+<div class="pie-c">
+<p class="prueba">More than 300 restitution reports in large-scale mining.</p>
+<p class="quien">Delivered by: Juan Carlos Ramírez</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-41</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Progress milestone certification</h4>
+<p class="dolor">"Progress payments get disputed because progress is declared by whoever executes it."</p>
+<p class="quees">An independent third party certifies progress against the agreed acceptance criteria.</p>
+<p class="campo"><b>Deliverable</b>Signed milestone certification, with the records that back it up.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Juan Carlos Ramírez</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-42</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Quantitative analysis of operational and structural integrity</h4>
+<p class="dolor">"The decision to keep operating an asset gets made with judgment and no number."</p>
+<p class="quees">The asset's integrity is quantified and translated into operational risk and remaining life.</p>
+<p class="campo"><b>Deliverable</b>Quantitative integrity report, with prioritized gaps and a corrective plan.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Juan Carlos Ramírez</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-43</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Continuous improvement and gap-closure plans</h4>
+<p class="dolor">"Audits leave findings, and the findings stay in the report."</p>
+<p class="quees">Every gap leaves with an owner, a deadline and a closure criterion — and the closure gets verified.</p>
+<p class="campo"><b>Deliverable</b>Documented corrective plan, with follow-up and closure verification.</p>
+<div class="pie-c">
+<p class="quien">Delivered by: Juan Carlos Ramírez</p>
+</div></article>
+</div>
+</section>
+<section class="fam teal" data-fam="ti">
+<h3><span class="ico">◇</span>Application modernization &amp; industrial IT</h3>
+<p class="bajada">Shop-floor data reaches the decision layer, and the legacy system gets modernized without cutting service.</p>
+<p class="lider">3 services · led by Jorge Juri — Sigma</p>
+<div class="cards">
+<article class="c">
+<div class="cab">
+<span class="sid">S-60</span>
+<span class="pill mid">Proven capability</span>
+</div>
+<h4>OT integration — SCADA, PLC, HMI and IoT</h4>
+<p class="dolor">"The data exists in the PLC and dies in the PLC."</p>
+<p class="quees">The control layer gets connected to the decision layer, without touching the logic that keeps the plant running.</p>
+<p class="campo"><b>Deliverable</b>Shop-floor data available to the twin and the panel, with the operation untouched.</p>
+<div class="pie-c">
+<p class="prueba">SCADA, PLC, HMI and IoT in the work history — not in a vendor's catalog.</p>
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-61</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Modernization of critical applications</h4>
+<p class="dolor">"The system that keeps the business running is understood by one person — and they're about to retire."</p>
+<p class="quees">The legacy system gets modernized piece by piece, with the service up and no flag-day cutover.</p>
+<p class="campo"><b>Deliverable</b>The system in production on a maintainable base, with the knowledge documented.</p>
+<div class="pie-c">
+<p class="prueba">National platforms with public accountability, modernized while in operation.</p>
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+<article class="c">
+<div class="cab">
+<span class="sid">S-62</span>
+<span class="pill ok">Delivered to client</span>
+</div>
+<h4>Vendor-independent solution architecture</h4>
+<p class="dolor">"Every vendor proposes the architecture it happens to sell."</p>
+<p class="quees">Four industries, and the stack each one asked for: the architecture answers to the operation, not to a vendor's roadmap.</p>
+<p class="campo"><b>Deliverable</b>Documented architecture, with the rationale behind every decision written down and auditable.</p>
+<div class="pie-c">
+<p class="prueba">Mining, public sector, insurance and telecommunications.</p>
+<p class="quien">Delivered by: Jorge Juri — Sigma</p>
+</div></article>
+</div>
+</section>
+<section class="cierre">
+<h3>The first step is one service, not a transformation</h3>
+<p>We pick <b>the service your team repeats every week</b> and nobody enjoys doing. We shadow the specialist who executes it for two days, write down their judgment, and hand over the clone running on real data, with the record in plain sight. Only then do we talk about the second one.</p>
+<p>One problem, one solution, one first step — never a whole catalog.</p>
+<a class="mail" href="mailto:sigmadigitaltwins@gmail.com">sigmadigitaltwins@gmail.com</a>
+</section>
+<div class="pie">Sigma Digital Twins Consulting Inc. · Service portfolio · updated 2026-08-16.<br>Services marked <b>Proven capability</b> are built and demonstrated; those marked <b>Delivered to client</b> have already run in a real operation. The difference is declared on purpose.</div>
+</div>
+<script>
+"use strict";
+// Filtro por familia. Sin dependencias y sin estado en el servidor: se muestran u ocultan
+// las secciones que ya están en el HTML.
+document.querySelectorAll(".f").forEach(function (b) {
+  b.addEventListener("click", function () {
+    var k = b.dataset.fam;
+    document.querySelectorAll(".f").forEach(function (o) { o.classList.toggle("on", o === b); });
+    document.querySelectorAll(".fam").forEach(function (s) {
+      s.style.display = (k === "todas" || s.dataset.fam === k) ? "" : "none";
+    });
+  });
+});
+</script>
+<script src="../assets/track.js?v=8"></script>
+</body>
+</html>
