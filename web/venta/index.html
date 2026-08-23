@@ -18,7 +18,10 @@
   main { max-width:960px; margin:0 auto; padding:2rem 1.5rem 3rem; }
   .item { display:grid; grid-template-columns:260px 1fr; gap:1.25rem; background:var(--panel);
           border:1px solid var(--border); border-radius:12px; padding:1.1rem; margin-bottom:1.1rem; }
-  @media (max-width:720px) { .item { grid-template-columns:1fr; } }
+  @media (max-width:720px) {
+    .item { grid-template-columns:1fr; }
+    .fotos { max-width:300px; margin-inline:auto; }
+  }
   .fotos { display:grid; gap:.45rem; grid-template-columns:1fr; align-content:start; }
   .fotos:has(.ph:nth-child(2)) { grid-template-columns:1fr 1fr; }
   .ph img { width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:8px;
