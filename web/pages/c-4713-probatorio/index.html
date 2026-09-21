@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C-4713-2025 · Cese de goce — tablero del probatorio</title>
+<meta name="description" content="C-4713-2025 Juri con Araya, 3er Juzgado Civil de Santiago: tablero del término probatorio de 8 días — puntos de prueba, evidencia en OneDrive, testigos y tachas, riesgos cruzados con C-6511. Confidencial.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{
+  --bg:var(--papel); --border:var(--linea); --muted:var(--tinta3);
+  --papel:#F4F6F9; --sup:#FFFFFF; --sup2:#EDF0F5;
+  --tinta:#12151C; --tinta2:#4A5261; --tinta3:#79808F;
+  --linea:#D6DBE4; --linea2:#C2C9D6;
+  --sello:#2C3A8F; --sello-suave:#E7EAF8;
+  --ok:#146356; --ok-suave:#DCEDE8;
+  --abierto:#8A5605; --abierto-suave:#F7EBD5;
+  --falta:#96262B; --falta-suave:#F7E3E3;
+  --hoy:#2C3A8F;
+  --sombra:0 1px 2px rgba(18,21,28,.05),0 1px 8px rgba(18,21,28,.04);
+  --serif:Georgia,'Iowan Old Style','Times New Roman',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --papel:#0E1116; --sup:#161A22; --sup2:#1D222C;
+    --tinta:#E8EBF1; --tinta2:#A8B0BE; --tinta3:#79818F;
+    --linea:#2A303B; --linea2:#3A414F;
+    --sello:#93A0F0; --sello-suave:#1C2140;
+    --ok:#5FC7AF; --ok-suave:#12302B;
+    --abierto:#DDA33F; --abierto-suave:#332714;
+    --falta:#E58A87; --falta-suave:#361C1D;
+    --hoy:#93A0F0;
+    --sombra:0 1px 2px rgba(0,0,0,.4),0 1px 10px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --papel:#0E1116; --sup:#161A22; --sup2:#1D222C;
+  --tinta:#E8EBF1; --tinta2:#A8B0BE; --tinta3:#79818F;
+  --linea:#2A303B; --linea2:#3A414F;
+  --sello:#93A0F0; --sello-suave:#1C2140;
+  --ok:#5FC7AF; --ok-suave:#12302B;
+  --abierto:#DDA33F; --abierto-suave:#332714;
+  --falta:#E58A87; --falta-suave:#361C1D;
+  --hoy:#93A0F0;
+  --sombra:0 1px 2px rgba(0,0,0,.4),0 1px 10px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:26px 16px 80px}
+.demo{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sello);background:var(--sello-suave);border-radius:3px;padding:5px 10px;margin-bottom:18px}
+.demo i{width:7px;height:7px;border-radius:50%;background:var(--sello);display:inline-block}
+
+.cab{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;justify-content:space-between;padding-bottom:18px;border-bottom:2px solid var(--tinta)}
+.folio{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta3);margin-bottom:9px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(25px,4vw,36px);line-height:1.12;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h1 em{font-style:italic;color:var(--sello)}
+.bajada{color:var(--tinta2);max-width:64ch;margin:11px 0 0;font-size:14.5px}
+.sello{font-family:var(--mono);font-size:11px;line-height:1.5;border:1.5px solid var(--linea2);border-radius:2px;padding:8px 12px;color:var(--tinta2)}
+.sello b{display:block;color:var(--tinta);font-size:12px;letter-spacing:.08em}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:24px 0 30px}
+.tile{background:var(--sup);border:1px solid var(--linea);border-radius:5px;padding:14px 15px 13px;box-shadow:var(--sombra);border-top:2.5px solid var(--borde,var(--linea2))}
+.tile .rot{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--tinta3);display:block;margin-bottom:7px}
+.tile .cifra{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:24px;font-weight:600;letter-spacing:-.02em;display:block;line-height:1.15}
+.tile .pie{font-size:11.5px;color:var(--tinta3);margin-top:4px;display:block}
+.t-ok{--borde:var(--ok)} .t-ok .cifra{color:var(--ok)}
+.t-ab{--borde:var(--abierto)} .t-ab .cifra{color:var(--abierto)}
+.t-fa{--borde:var(--falta)} .t-fa .cifra{color:var(--falta)}
+.t-co{--borde:var(--sello)} .t-co .cifra{color:var(--sello)}
+
+section{margin-bottom:40px}
+h2{font-family:var(--serif);font-weight:400;font-size:22px;margin:0 0 4px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
+h2 .n{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--tinta3);border:1px solid var(--linea2);border-radius:2px;padding:2px 6px}
+.sub{color:var(--tinta2);font-size:13.5px;margin:0 0 15px;max-width:74ch}
+
+/* reloj */
+.reloj{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;background:var(--sup);border:1px solid var(--linea);border-radius:5px;padding:12px;box-shadow:var(--sombra)}
+.dia{border-radius:4px;padding:9px 8px 8px;background:var(--sup2);min-height:86px;display:flex;flex-direction:column;gap:3px;border:1px solid transparent}
+.dia .num{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--tinta3)}
+.dia .fecha{font-weight:600;font-size:13px}
+.dia .que{font-size:11.2px;color:var(--tinta2);line-height:1.35}
+.dia.hito{border-color:var(--falta);background:var(--falta-suave)}
+.dia.hito .num{color:var(--falta)}
+.dia.hoy{outline:2px solid var(--hoy);outline-offset:1px}
+.dia.hoy .num::after{content:" · HOY";color:var(--hoy);font-weight:600}
+.dia.pasado{opacity:.62}
+@media (max-width:760px){.reloj{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:420px){.reloj{grid-template-columns:repeat(2,1fr)}}
+
+.nota{margin:14px 0 0;padding:13px 16px;background:var(--abierto-suave);border-left:3px solid var(--abierto);border-radius:0 4px 4px 0;font-size:13.5px;color:var(--tinta2)}
+.nota b{color:var(--tinta)}
+.nota .tit{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--abierto);margin-bottom:6px}
+.nota.roja{background:var(--falta-suave);border-color:var(--falta)} .nota.roja .tit{color:var(--falta)}
+.nota.verde{background:var(--ok-suave);border-color:var(--ok)} .nota.verde .tit{color:var(--ok)}
+
+/* puntos */
+.punto{background:var(--sup);border:1px solid var(--linea);border-radius:5px;box-shadow:var(--sombra);margin-bottom:11px;border-left:3px solid var(--rail,var(--linea2));overflow:hidden}
+.punto-cab{display:flex;gap:13px;align-items:flex-start;padding:14px 16px}
+.punto-num{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--rail,var(--tinta3));flex:0 0 auto;min-width:22px;line-height:1.35}
+.punto-txt{flex:1;min-width:0}
+.punto-tit{font-weight:600;font-size:14.5px;display:block;margin-bottom:2px}
+.punto-quien{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta3);display:block;margin-bottom:8px}
+.punto-cuerpo{font-size:13px;color:var(--tinta2);line-height:1.6}
+.punto-cuerpo p{margin:0 0 8px}
+.punto-cuerpo b{color:var(--tinta)}
+.estado{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:3px;white-space:nowrap;flex:0 0 auto;font-weight:500}
+.e-ok{background:var(--ok-suave);color:var(--ok)}
+.e-ab{background:var(--abierto-suave);color:var(--abierto)}
+.e-fa{background:var(--falta-suave);color:var(--falta)}
+.r-ok{--rail:var(--ok)} .r-ab{--rail:var(--abierto)} .r-fa{--rail:var(--falta)}
+ul.piezas{margin:9px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+ul.piezas li{font-size:12.3px;color:var(--tinta2);padding-left:17px;position:relative;line-height:1.5}
+ul.piezas li::before{content:"";position:absolute;left:4px;top:7px;width:5px;height:5px;border-radius:50%;background:var(--pt,var(--tinta3))}
+li.tiene{--pt:var(--ok)} li.falta{--pt:var(--falta)} li.ojo{--pt:var(--abierto)}
+.doc{font-family:var(--mono);font-size:11px;color:var(--tinta3)}
+
+/* checklist */
+.avance{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:11px;color:var(--tinta3);margin:0 0 10px}
+.barra{flex:1;height:6px;background:var(--sup2);border-radius:3px;overflow:hidden;border:1px solid var(--linea)}
+.barra i{display:block;height:100%;background:var(--ok);width:0;transition:width .25s}
+.lista{background:var(--sup);border:1px solid var(--linea);border-radius:5px;box-shadow:var(--sombra)}
+.check{display:flex;gap:12px;align-items:flex-start;padding:13px 15px;border-bottom:1px solid var(--linea)}
+.check:last-child{border-bottom:0}
+.check input{margin-top:3px;width:16px;height:16px;flex:0 0 auto;accent-color:var(--ok)}
+.check-txt{flex:1;min-width:0}
+.check-tit{display:block;font-weight:600;font-size:13.5px}
+.check-det{display:block;font-size:12.3px;color:var(--tinta2);margin-top:2px;line-height:1.5}
+.check .tope{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--tinta3);white-space:nowrap;padding-top:3px}
+.check.hecho .check-tit{text-decoration:line-through;color:var(--tinta3)}
+.check.hecho{background:var(--sup2)}
+
+/* tablas */
+table{width:100%;border-collapse:collapse;background:var(--sup);border:1px solid var(--linea);border-radius:5px;box-shadow:var(--sombra);font-size:13px}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--linea)}
+th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta3);font-weight:500;background:var(--sup2)}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.tot{font-weight:600;color:var(--tinta)}
+.tabla-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* riesgos */
+.riesgo{background:var(--sup);border:1px solid var(--linea);border-radius:5px;box-shadow:var(--sombra);padding:13px 16px;margin-bottom:10px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.riesgo .r,.riesgo .c{font-size:13px;color:var(--tinta2);line-height:1.55}
+.riesgo .rot{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;margin-bottom:5px}
+.riesgo .r .rot{color:var(--falta)} .riesgo .c .rot{color:var(--ok)}
+.riesgo b{color:var(--tinta)}
+@media (max-width:640px){.riesgo{grid-template-columns:1fr}}
+
+footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--linea);font-size:12px;color:var(--tinta3);display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+.reset{font:inherit;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid var(--linea2);border-radius:3px;padding:6px 10px;color:var(--tinta2);cursor:pointer}
+.reset:hover{border-color:var(--tinta3);color:var(--tinta)}
+:focus-visible{outline:2px solid var(--sello);outline-offset:2px}
+
+.topbar{border-bottom:1px solid var(--linea)}
+.volver{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta3);text-decoration:none;margin-bottom:16px;padding:4px 0}
+.volver:hover{color:var(--sello)}
+.conf{margin:0 0 20px;padding:9px 12px;border:1px dashed var(--falta);border-radius:4px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--falta)}
+.ruta{font-family:var(--mono);font-size:11px;color:var(--tinta3);word-break:break-all}
+.confes{background:var(--sup);border:1px solid var(--linea);border-radius:5px;box-shadow:var(--sombra);padding:14px 16px;margin-bottom:11px;border-left:3px solid var(--ok)}
+.confes.contra{border-left-color:var(--falta)}
+.confes .t{display:block;font-weight:600;font-size:14.5px;margin-bottom:3px}
+.confes .d{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta3);display:block;margin-bottom:8px}
+.confes p{margin:0 0 8px;font-size:13px;color:var(--tinta2);line-height:1.6}
+.confes p:last-child{margin-bottom:0}
+.confes blockquote{margin:0 0 8px;padding:8px 12px;border-left:2px solid var(--linea2);font-size:12.8px;color:var(--tinta2);font-style:italic;background:var(--sup2);border-radius:0 3px 3px 0}
+.confes b{color:var(--tinta)}
+.tacha{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;white-space:nowrap;display:inline-block}
+.tacha.alta{background:var(--falta-suave);color:var(--falta)}
+.tacha.media{background:var(--abierto-suave);color:var(--abierto)}
+.tacha.baja{background:var(--ok-suave);color:var(--ok)}
+.est{font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--tinta2);display:block;line-height:1.5}
+.est b{color:var(--tinta)}
+table.testigos td{font-size:12.6px;line-height:1.5}
+table.testigos td:first-child{font-weight:600;white-space:nowrap}
+table.testigos td small{display:block;color:var(--tinta3);font-weight:400;font-family:var(--mono);font-size:10px;margin-top:2px}
+.cruce{background:var(--sup);border:1px solid var(--linea);border-radius:5px;box-shadow:var(--sombra);padding:14px 16px;margin-bottom:11px;border-left:3px solid var(--sello)}
+.cruce .t{display:block;font-weight:600;font-size:14.5px;margin-bottom:6px}
+.cruce p{margin:0 0 7px;font-size:13px;color:var(--tinta2);line-height:1.6}
+.cruce p:last-child{margin-bottom:0}
+.cruce b{color:var(--tinta)}
+.cruce .regla{display:block;margin-top:8px;padding:8px 12px;background:var(--sello-suave);border-radius:3px;font-size:12.8px;color:var(--tinta)}
+
+.fp{font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:1px 6px;border-radius:3px;white-space:nowrap;display:inline-block;vertical-align:middle;margin-left:4px;border:1px solid transparent}
+.fp.pub{background:var(--ok-suave);color:var(--ok)} .fp.conf{background:var(--sello-suave);color:var(--sello)} .fp.con{background:var(--sello-suave);color:var(--sello);border-color:var(--sello)}
+.fp.ter{background:var(--abierto-suave);color:var(--abierto)} .fp.pres{background:var(--sup2);color:var(--tinta2);border-color:var(--linea2)} .fp.prop{background:var(--falta-suave);color:var(--falta)}
+
+.tabla-scroll table{min-width:900px}
+table.testigos{min-width:1080px}
+table.testigos td:first-child{white-space:normal;min-width:150px}
+
+.dl{font-family:var(--mono);font-size:10.5px;color:var(--sello);text-decoration:none;border-bottom:1px dotted var(--sello);white-space:nowrap;margin-left:3px}
+.dl:hover{background:var(--sello-suave)}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;margin-bottom:1.5rem}.brand{font-size:15px;font-weight:500;letter-spacing:.06em}.brand-sub{font-size:11px;color:var(--tinta3);margin-left:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="topbar">
+  <div>
+    <span class="brand">LEGALOPS-OS · DemoCustomerOps</span>
+    <span class="brand-sub">Cese C-4713</span>
+  </div>
+  <div class="controls"></div>
+</header>
+
+<a class="volver" href="../../index.html">← DemoCustomerOps</a>
+
+<div class="conf">Juicio público · C-4713-2025 · publicado por decisión del demandante el 21-09-2026 · sin indexar</div>
+
+<header class="cab">
+  <div>
+    <div class="folio">C-4713-2025 · 3er Juzgado Civil de Santiago · JURI / ARAYA · sumario · demandante: Jorge Juri · patrocinante: Franco Anabalón</div>
+    <h1>C-4713-2025 — Cese de goce gratuito: <em>tablero del probatorio</em></h1>
+    <p class="bajada">Nueve puntos de prueba, ocho días. Qué cubre cada punto, dónde está cada documento en OneDrive, quién testifica y con qué riesgo de tacha, cómo se cruza con C-6511 y qué falta hasta el 29. Estado al <b>21 de septiembre de 2026</b>.</p>
+  </div>
+  <div class="sello"><b>21 SEP 2026</b>día 1 de 8 · confirmado por Franco<br>documentos hasta el 29-09</div>
+</header>
+
+<div class="tiles">
+  <div class="tile t-fa"><span class="rot">Días que quedan</span><span class="cifra" id="tDias">8</span><span class="pie">vence el martes 29-sep</span></div>
+  <div class="tile t-ok"><span class="rot">Testigos</span><span class="cifra">5 ofrecidos</span><span class="pie">según Franco, el 21 · verificar OJV el 22</span></div>
+  <div class="tile t-ab"><span class="rot">Puntos con documento</span><span class="cifra">5 / 9</span><span class="pie">5, 6 y 7 se cierran con un certificado cada uno</span></div>
+  <div class="tile t-co"><span class="rot">Frutos desde el 14-11-2020</span><span class="cifra">$187,8 M</span><span class="pie">71 meses · cuota de Jorge ≈ $62,6 M</span></div>
+  <div class="tile t-fa"><span class="rot">Drive de marzo</span><span class="cifra">Sin abrir</span><span class="pie">Franco nunca pudo entrar · reemplazado por OneDrive</span></div>
+</div>
+
+<section>
+  <h2><span class="n">§1</span>El reloj — 8 días, art. 686 → 90 CPC</h2>
+  <p class="sub">Resolución del 17-09-2026 <a class="dl" href="docs/10_Resoluciones-de-la-causa/2026-09-17%20-%20Resolucion%20que%20falla%20la%20reposicion%20del%20folio%2043%20-%20abre%20el%20probatorio.pdf" target="_blank" rel="noopener">📄</a> notificada por el estado; 18, 19 y 20 feriados; día 1 el lunes 21. El sábado cuenta (el folio 35 <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=69" target="_blank" rel="noopener">📄 ebook pág. 69</a> lo dice). Franco lo confirmó por correo el 21: «hoy es primer día del probatorio… acompañar todos los documentos a más tardar el día 29-09-2026».</p>
+  <div class="reloj" id="reloj">
+    <div class="dia" data-f="2026-09-21"><span class="num">DÍA 1</span><span class="fecha">Lun 21</span><span class="que">Franco acompaña documentos y ofrece testigos. Jorge comparte OneDrive.</span></div>
+    <div class="dia hito" data-f="2026-09-22"><span class="num">DÍA 2</span><span class="fecha">Mar 22</span><span class="que">Último día de nómina (art. 90 inc. 2), para las dos partes. Leer en la OJV el escrito del 21.</span></div>
+    <div class="dia" data-f="2026-09-23"><span class="num">DÍA 3</span><span class="fecha">Mié 23</span><span class="que">Certificados CBR (San Miguel primero) y de estado de C-6511, C-4776, RIT 1770.</span></div>
+    <div class="dia" data-f="2026-09-24"><span class="num">DÍA 4</span><span class="fecha">Jue 24</span><span class="que">Pedir exhibición (art. 349) y absolución de Aída y Christian (art. 385).</span></div>
+    <div class="dia" data-f="2026-09-25"><span class="num">DÍA 5</span><span class="fecha">Vie 25</span><span class="que">Una sola base de renta. ¿Testigos citados?</span></div>
+    <div class="dia" data-f="2026-09-26"><span class="num">DÍA 6</span><span class="fecha">Sáb 26</span><span class="que">Cuenta como día. Sin audiencia.</span></div>
+    <div class="dia hito" data-f="2026-09-28"><span class="num">DÍA 7</span><span class="fecha">Lun 28</span><span class="que">Testimonial 09:00, Huérfanos 1409 piso 17 (abogados por vía telemática, art. 77 bis).</span></div>
+    <div class="dia hito" data-f="2026-09-29"><span class="num">DÍA 8</span><span class="fecha">Mar 29</span><span class="que">Testimonial 09:00. Vence el término: documentos, exhibición y absolución hasta hoy.</span></div>
+  </div>
+  <div class="nota"><span class="tit">Lo que aún puede mover el reloj</span>El «Incidente — De Común Acuerdo» del 09-sep sigue sin leer en la Historia de la OJV. Si fuera una suspensión del art. 64 inc. 2 acogida, los plazos se suspenden. Franco dice que el probatorio «inició», lo que es incompatible con una suspensión vigente. Sigue siendo inferencia: se cierra el 22 en la OJV.</div>
+</section>
+
+<section>
+  <h2><span class="n">§2</span>Lo que ellos contestaron — y lo que se les escapó</h2>
+  <p class="sub">Contestación de 24-sep-2025 (folio 32), firmada por Eduardo Achu Moscoso y Nicolás del Real Castillo por Aída Rosemarie Laso Tirapegui y Christian Mauricio Araya Laso. Los mismos abogados litigan C-6511: todo lo que se diga aquí lo leen allá.</p>
+
+  <div class="confes"><span class="t">Confesión 1 — arriendan, y dan los roles SII</span><span class="d">§74 · también §§37, 38 y 72 · <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=66" target="_blank" rel="noopener">📄 ebook pág. 66</a> · <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=58" target="_blank" rel="noopener">pág. 58</a></span>
+    <blockquote>«el mandato conferido expresamente facultaba a nuestros representados para arrendar los bienes raíces de la causante, habiéndose celebrado en ejercicio de dicha facultad contratos de arriendo respecto de (1) inmueble Rol SII 387-383… (2) inmueble Rol SII 387-384… y el (3) inmueble Rol SII 3228-3»</blockquote>
+    <p>Tres inmuebles identificados por rol, con contratos de arriendo reconocidos por escrito. <b>Resuelve los puntos 2 y 4 con su propia firma</b> y abre la exhibición del art. 349: los contratos existen, ellos lo dicen. Cruce: SII/DEDECON 14859 <a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/2026-05-18%20-%20SII%20DEDECON%2014859%20-%20roles%20387-383%20y%20387-384%20sin%20ingresos%20por%20arriendo%20declarados.pdf" target="_blank" rel="noopener">📄</a> certifica que 387-383 y 387-384 <b>no registran ingresos por arriendo declarados</b>.</p></div>
+
+  <div class="confes"><span class="t">Confesión 2 — dicen que pagan el impuesto territorial; dos documentos dicen que no</span><span class="d">§37 <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=58" target="_blank" rel="noopener">📄 pág. 58</a> · contra <a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/2026-03-15%20-%20TGR%20-%20certificado%20de%20deuda%20de%20contribuciones%20Chile%20Espana%208316-B%20-%201.325.978.pdf" target="_blank" rel="noopener">certificado TGR</a> y <a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/2022-12-07%20-%20Comprobante%20-%20672.834%20pagados%20por%20Jorge%20por%20contribuciones%20de%20las%20bodegas.png" target="_blank" rel="noopener">comprobante</a></span>
+    <blockquote>«preocupándose de su mantención, lo que implica pagar sus servicios básicos, gastos comunes, reparaciones e impuesto territorial»</blockquote>
+    <p>Certificado TGR: Chile España 8316-B debe <b>$1.325.978</b> de contribuciones (15-mar-2026). Comprobante: <b>$672.834</b> de contribuciones de las bodegas los pagó Jorge (07-dic-2022). Mientras ellos cobran, Jorge paga. Falta el certificado TGR del resto de los roles: con uno es un ejemplo, con todos es un patrón.</p></div>
+
+  <div class="confes"><span class="t">Confesión 3 — invocan un mandato que, en su propia versión, se extinguió el 14-11-2020</span><span class="d">§§4, 36, 37 y 73 · art. 2163 N° 5 CC · <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=64" target="_blank" rel="noopener">📄 §73 pág. 64</a> · <a class="dl" href="docs/08_Mandato-y-extincion/2020-11-14%20-%20Certificado%20de%20defuncion%20-%20Marta%20Adriana%20Tirapegui%20Dominguez.pdf" target="_blank" rel="noopener">defunción</a></span>
+    <p>Ellos fijan las dos fechas: mandato del 18-feb-2019 y muerte de Marta el 14-nov-2020, y dicen administrar «hasta el día de hoy». <b>El mandato termina por la muerte del mandante.</b> Su respuesta anticipada es el §73: mandato tácito entre comuneros (arts. 2305 y 2081 CC, CS 37.999-2017). El 2081 autoriza a administrar y conservar, no a quedarse los frutos: quien cobra la renta de un bien indiviso la debe a la comunidad (arts. 2308 y 2310 CC).</p>
+    <p>⚠️ <b>Cuidado con C-6511:</b> allá la tesis es que Marta nunca compareció al mandato. Aquí se argumenta <b>«aun en la hipótesis de la contraria»</b>: si el mandato valiera, se extinguió el 14-11-2020. Nunca «el mandato válido se extinguió». Ver §6.</p></div>
+
+  <div class="confes contra"><span class="t">Sus tres excepciones y la crítica que da en el blanco</span><span class="d">Lo que hay que contestar · puntos 9 y 3 · <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=63" target="_blank" rel="noopener">📄 §62 pág. 63</a></span>
+    <p><b>1. Falta de legitimación activa</b> por indignidad pendiente en C-4776-2025 → punto 9: es su excepción, la prueban ellos (art. 1698 CC) y no existe sin sentencia (art. 974 CC). <b>2. Litispendencia por conexidad</b> con C-4776. <b>3. Ineptitud del libelo</b>, y dentro, el §62: «la demanda alega el uso y goce gratuito, lo que supone que no se percibieron frutos».</p>
+    <p>La respuesta al §62 está en su §74: si arrendaron a terceros y cobraron, el goce no es la ocupación física sino <b>la percepción de los frutos</b>. Quien arrienda y se queda la renta goza más plenamente que quien habita. Se alega así, con su párrafo al lado, no se descubre en la audiencia.</p></div>
+
+  <div class="confes contra"><span class="t">La pinza — y por qué el 17-09 la desarmó</span><span class="d">§§76-80 <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=67" target="_blank" rel="noopener">📄 pág. 67</a> + folio 43 <a class="dl" href="docs/10_Resoluciones-de-la-causa/2026-03-12%20-%20Folio%2043%20-%20Reposicion%20de%20la%20contraria%20contra%20el%20auto%20de%20prueba.pdf" target="_blank" rel="noopener">📄</a> → <a class="dl" href="docs/10_Resoluciones-de-la-causa/2026-09-17%20-%20Resolucion%20que%20falla%20la%20reposicion%20del%20folio%2043%20-%20abre%20el%20probatorio.pdf" target="_blank" rel="noopener">resolución del 17-09-2026</a></span>
+    <p>Primero pidieron que la sentencia rechace la indemnización porque el daño no se probó (§§76-80: la reserva del 173 no procede en extracontractual, CS 4325-2013). Después, en el folio 43, pidieron sacar «naturaleza y monto» del punto 3 para que no se pudiera probar. <b>El tribunal dejó el punto 3 intacto.</b> La puerta está abierta 8 días: <b>si el número entra ahora, los §§76-80 se les dan vuelta</b>. Si la Corte llegara a tocar el punto 3: la demanda se funda en la comunidad (2304 ss., 2308, 2310 CC), que no exige dolo, y la cita de Alessandri de su propio §78 admite la reserva del 173 en «relaciones jurídicas preexistentes». Una comunidad hereditaria lo es.</p></div>
+
+  <div class="confes contra"><span class="t">Contraataque: las 10 bodegas y el rol 423-429</span><span class="d">No es excepción formal · vuelve como prueba · <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=54" target="_blank" rel="noopener">📄 pág. 54</a> · <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=59" target="_blank" rel="noopener">pág. 59</a></span>
+    <p>Sostienen que Jorge ocupa sin título el rol 423-429 (uno de los que demanda), que ocupó 10 bodegas de su abuela y que percibió la renta de Chile España 8316-B. Espejo: ellos detentan cinco bodegas sin título (H-036) y el acceso a las bodegas y al mausoleo se negó el 19-ene-2023 y por requerimiento notarial el 10-sep-2025. <b>La versión de Jorge sobre cada una tiene que estar escrita antes de la absolución de posiciones, no improvisada en ella.</b></p></div>
+</section>
+
+<section>
+  <h2><span class="n">§3</span>Los nueve puntos — prueba y ruta en OneDrive</h2>
+  <p class="sub">Carpeta compartible con Franco: <span class="ruta">docs/</span> — 47 archivos con manifiesto MD5 e <a class="dl" href="docs/INDICE.md" target="_blank" rel="noopener">INDICE.md</a> · <a class="dl" href="docs/2026-09-21%20-%20C-4713-2025%20-%20Tablero%20del%20probatorio%20-%20todo%20en%20un%20documento.pdf" target="_blank" rel="noopener">📄 PDF de esta página</a> · <a class="dl" href="docs/2026-09-21%20-%20C-4713-2025%20-%20EXPEDIENTE%20PROBATORIO%20CONSOLIDADO%20-%20todo%20en%20un%20documento%20-%20dia%201%20de%208.md" target="_blank" rel="noopener">consolidado .md</a>. Sin el diagnóstico de TDAH ni el peritaje sociofamiliar (§6, cruce 5). Cada pieza lleva su <b>fuerza probatoria</b>: <span class="fp pub">público · plena fe</span> <span class="fp conf">confesión · plena prueba</span> <span class="fp con">privado de la contraria · art. 346</span> <span class="fp ter">privado de tercero · requiere ratificación</span> <span class="fp pres">presunción · art. 426</span> <span class="fp prop">cálculo propio · no es prueba</span> — detalle y norma en el desglose del 21-09 (§1 y §2).</p>
+
+  <div class="punto r-ok"><div class="punto-cab"><span class="punto-num">1</span><div class="punto-txt">
+    <span class="punto-tit">Titular o titulares del dominio de los inmuebles. Hechos y antecedentes que lo acreditan</span><span class="punto-quien">Carga: nosotros · el punto que sostiene a los otros ocho · carpeta 01_Dominio</span>
+    <div class="punto-cuerpo"><ul class="piezas">
+      <li class="tiene">Certificado de posesión efectiva, 28-02-2025 <a class="dl" href="docs/01_Dominio/2025-02-28%20-%20Certificado%20de%20posesion%20efectiva.pdf" target="_blank" rel="noopener">📄</a> <span class="doc">bee9fe7c…</span> <span class="fp pub">público · plena fe</span></li>
+      <li class="falta">Dominio vigente CBR Santiago: fs. 34771 N° 50450, 34772 N° 50451, 34773 N° 50452 (2022) <span class="fp pub">público · plena fe</span></li>
+      <li class="falta"><b>Dominio vigente CBR San Miguel, fs. 13163 vta N° 12200 — primero:</b> Chile España 8316-B no está en la posesión efectiva y es el 70 % del número <span class="fp pub">público · plena fe</span></li>
+    </ul></div></div><span class="estado e-ok">cubierto</span></div></div>
+
+  <div class="punto r-ok"><div class="punto-cab"><span class="punto-num">2</span><div class="punto-txt">
+    <span class="punto-tit">Si los demandados ocupan los inmuebles; título de la ocupación y si es a título gratuito</span><span class="punto-quien">Carga: nosotros · el título lo prueban ellos · carpeta 02_Ocupacion-y-titulo (21 archivos)</span>
+    <div class="punto-cuerpo"><ul class="piezas">
+      <li class="tiene">Cuentas de agua Chile España 8316-B a nombre de Claudia Orellana <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-03-15%20-%20Chile%20Espana%208316-B%20-%20cuentas%20de%20agua%20a%20nombre%20de%20Claudia%20Orellana.pdf#page=1" target="_blank" rel="noopener">📄 121 págs., titular en pág. 1</a>; ENEL LC30 D508 a nombre de Paula Acevedo B. <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-03-15%20-%20Lord%20Cochrane%2030%20D508%20-%20cuentas%20ENEL%20sep-2023%20a%20mar-2026%20a%20nombre%20de%20Paula%20Acevedo%20B.pdf#page=1" target="_blank" rel="noopener">📄 30 boletas, mar-2026 en pág. 1</a> y D509 <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-03-15%20-%20Lord%20Cochrane%2030%20D509%20-%20cuentas%20ENEL%20sep-2023%20a%20mar-2026.pdf#page=1" target="_blank" rel="noopener">📄</a>, sep-2023 → mar-2026 <span class="fp ter">privado de tercero · requiere ratificación</span> → plena con <b>oficio</b> a ENEL / Aguas Andinas</li>
+      <li class="tiene">WhatsApp: transferencias de Rosemarie a Marisol «por arriendo» ($100.000 / $200.000) <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-03-16%20-%20WhatsApp%20-%20transferencias%20de%20Rosemarie%20a%20Marisol%20por%20arriendos.pdf" target="_blank" rel="noopener">📄</a> y recorte donde reconoce percibir arriendos <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-03-16%20-%20WhatsApp%20-%20Rosemarie%20reconoce%20percibir%20arriendos%20%28recorte%29.pdf" target="_blank" rel="noopener">📄</a> <span class="fp con">privado de la contraria · art. 346</span></li>
+      <li class="tiene">Constatación de Rodrigo Opazo en LC30: stickers CENSO en 508 <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-05%20%28fecha%20por%20confirmar%29%20-%20Evidencia%20Ocupacion%20-%20Lord%20Cochrane%2030%20-%20Dpto%20508%20-%20sticker%20CENSO.jpeg" target="_blank" rel="noopener">🖼</a> y 509 <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-05%20%28fecha%20por%20confirmar%29%20-%20Evidencia%20Ocupacion%20-%20Lord%20Cochrane%2030%20-%20Dpto%20509%20-%20sticker%20CENSO.jpeg" target="_blank" rel="noopener">🖼</a>, portería <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-05%20%28fecha%20por%20confirmar%29%20-%20Evidencia%20Ocupacion%20-%20Lord%20Cochrane%2030%20-%20Porteria%20y%204a%20Comisaria.jpeg" target="_blank" rel="noopener">🖼</a>, instructivo de mudanzas <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-05%20%28fecha%20por%20confirmar%29%20-%20Evidencia%20Ocupacion%20-%20Lord%20Cochrane%2030%20-%20Instructivo%20Mudanzas%20Admin.jpeg" target="_blank" rel="noopener">🖼</a> (4 fotos) · 6 audios del 02-04-2026 con transcripción <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-04-02%20-%20Rodrigo%20Opazo%20-%20transcripcion%20de%206%20audios%20-%20conserje%20confirma%20arriendo%20a%20personas%20naturales.txt" target="_blank" rel="noopener">📄 transcripción</a>: el conserje Julio confirma arriendo a personas naturales <span class="fp ter">privado de tercero · requiere ratificación</span> → vale lo que valga Rodrigo declarando</li>
+      <li class="tiene">5 fotos de Chile España 8316-B (27-03-2026) <span class="fp ter">privado de tercero · requiere ratificación</span></li>
+      <li class="ojo">⚠️ Fecha de la constatación: 15-05 en el KANBAN, 23-05 en el índice de evidencia. Confirmar con Rodrigo antes de que declare</li>
+      <li class="ojo">Su §74 ya confiesa la ocupación por arrendatarios <span class="fp conf">confesión · plena prueba</span>: el punto se gana con exhibición (art. 349) + testigos</li>
+    </ul></div></div><span class="estado e-ok">cubierto</span></div></div>
+
+  <div class="punto r-ab"><div class="punto-cab"><span class="punto-num">3</span><div class="punto-txt">
+    <span class="punto-tit">Acción u omisión dolosa o culpable con perjuicios; naturaleza y monto</span><span class="punto-quien">Carga: nosotros · el punto que vale el probatorio entero · carpeta 03_Perjuicios-naturaleza-y-monto</span>
+    <div class="punto-cuerpo"><ul class="piezas">
+      <li class="tiene">TGR: deuda de contribuciones Chile España $1.325.978 (15-03-2026) <a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/2026-03-15%20-%20TGR%20-%20certificado%20de%20deuda%20de%20contribuciones%20Chile%20Espana%208316-B%20-%201.325.978.pdf" target="_blank" rel="noopener">📄</a> <span class="doc">709431fc…</span> <span class="fp pub">público · plena fe</span></li>
+      <li class="tiene">Comprobante $672.834 pagados por Jorge, contribuciones de las bodegas (07-12-2022) <a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/2022-12-07%20-%20Comprobante%20-%20672.834%20pagados%20por%20Jorge%20por%20contribuciones%20de%20las%20bodegas.png" target="_blank" rel="noopener">🖼</a> <span class="doc">ce2f14c8…</span> <span class="fp pub">público · plena fe</span></li>
+      <li class="tiene">Solicitud notarial FEA de acceso al mausoleo y bienes (10-09-2025), sin respuesta <a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/2025-09-10%20-%20Solicitud%20notarial%20FEA%20de%20acceso%20al%20mausoleo%20y%20bienes%20de%20la%20sucesion%20-%20sin%20respuesta.pdf" target="_blank" rel="noopener">📄</a> <span class="fp pub">público · plena fe</span> · el silencio: <span class="fp pres">presunción · art. 426</span></li>
+      <li class="tiene">SII/DEDECON 14859: roles 387-383 y 387-384 sin ingresos por arriendo declarados <a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/2026-05-18%20-%20SII%20DEDECON%2014859%20-%20roles%20387-383%20y%20387-384%20sin%20ingresos%20por%20arriendo%20declarados.pdf" target="_blank" rel="noopener">📄</a> <span class="fp pub">público · plena fe</span></li>
+      <li class="tiene">Serie mensual de renta de mercado por propiedad (base de cálculo, §5) <a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/2026-09-14%20-%20Serie%20mensual%20de%20renta%20de%20mercado%20por%20propiedad%20-%20UF%20por%20mes%20%28base%20de%20calculo%29.csv" target="_blank" rel="noopener">📊 CSV</a> <span class="fp prop">cálculo propio · no es prueba</span></li>
+      <li class="ojo">La base son tasaciones de corredor: se sostiene si Daniela y Virginia declaran</li>
+      <li class="falta">Certificados TGR del resto de los roles · aviso del SII a Jorge por arriendos que no percibe (ubicar)</li>
+    </ul></div></div><span class="estado e-ab">en curso</span></div></div>
+
+  <div class="punto r-ab"><div class="punto-cab"><span class="punto-num">4</span><div class="punto-txt">
+    <span class="punto-tit">Avalúo comercial de los inmuebles y valor de arriendo según ubicación</span><span class="punto-quien">Carga: nosotros · carpeta 04_Avaluo-y-renta (6 tasaciones)</span>
+    <div class="punto-cuerpo"><ul class="piezas">
+      <li class="tiene">Daniela Escanilla, RE/MAX Diamante, 11-03-2026: Chile España EV-04899 <a class="dl" href="docs/04_Avaluo-y-renta/2026-03-11%20-%20Tasacion%20Daniela%20Escanilla%20REMAX%20Diamante%20-%20Chile%20Espana%208316-B%20-%20EV-04899.pdf" target="_blank" rel="noopener">📄</a> (arriendo $2.119.580 · valor $290.485.981), D508 EV-04910 <a class="dl" href="docs/04_Avaluo-y-renta/2026-03-11%20-%20Tasacion%20Daniela%20Escanilla%20REMAX%20Diamante%20-%20LC30%20D508%20-%20EV-04910.pdf" target="_blank" rel="noopener">📄</a> y D509 EV-04907 <a class="dl" href="docs/04_Avaluo-y-renta/2026-03-11%20-%20Tasacion%20Daniela%20Escanilla%20REMAX%20Diamante%20-%20LC30%20D509%20-%20EV-04907.pdf" target="_blank" rel="noopener">📄</a> ($362.560 · $68.209.025) <span class="fp ter">privado de tercero · requiere ratificación</span></li>
+      <li class="tiene">Virginia Guiñez, RE/MAX TrueHome, 31-03-2026: La Cisterna EV-14659 <a class="dl" href="docs/04_Avaluo-y-renta/2026-03-31%20-%20Tasacion%20Virginia%20Guinez%20REMAX%20TrueHome%20-%20Chile%20Espana%208316-B%20La%20Cisterna%20-%20EV-14659.pdf" target="_blank" rel="noopener">📄</a>, D508 EV-14696 <a class="dl" href="docs/04_Avaluo-y-renta/2026-03-31%20-%20Tasacion%20Virginia%20Guinez%20REMAX%20TrueHome%20-%20LC30%20D508%20-%20EV-14696.pdf" target="_blank" rel="noopener">📄</a>, D509 EV-14701 <a class="dl" href="docs/04_Avaluo-y-renta/2026-03-31%20-%20Tasacion%20Virginia%20Guinez%20REMAX%20TrueHome%20-%20LC30%20D509%20-%20EV-14701.pdf" target="_blank" rel="noopener">📄</a> (9,7 UF/mes) — la máxima, y la base de la serie de la RE <span class="fp ter">privado de tercero · requiere ratificación</span></li>
+      <li class="ojo">Dos tasaciones por departamento con valores distintos: se acompaña <b>una sola base</b> (la máxima) y se explica por qué</li>
+      <li class="ojo">Son «tasación online» de corredor: documento privado, objetable. Las dos corredoras están en la lista para reconocerlas</li>
+      <li class="falta">Bodegas de Diagonal Paraguay 254 y estacionamiento: sin tasación (Portal Inmobiliario $150.000 en marzo; estimativo ≈ $54.750 en la serie RE). <b>Un solo número con una sola fuente antes del 29</b></li>
+    </ul></div></div><span class="estado e-ab">objetable</span></div></div>
+
+  <div class="punto r-fa"><div class="punto-cab"><span class="punto-num">5</span><div class="punto-txt">
+    <span class="punto-tit">Antecedentes y estado de la causa C-6511-2022 (6° JC Santiago)</span><span class="punto-quien">Carga: ambas · carpeta 05 vacía</span>
+    <div class="punto-cuerpo"><ul class="piezas"><li class="falta">Certificado de estado o carátula desde la OJV. Costo cero. Acompañar el estado, <b>sin comentar el informe pericial</b> (ver §6)</li></ul></div></div><span class="estado e-fa">falta</span></div></div>
+
+  <div class="punto r-fa"><div class="punto-cab"><span class="punto-num">6</span><div class="punto-txt">
+    <span class="punto-tit">Antecedentes y estado de la causa C-4776-2025 (19° JC Santiago) — indignidad</span><span class="punto-quien">Carga: ambas · es la defensa central de la contraria · carpeta 06 vacía</span>
+    <div class="punto-cuerpo"><ul class="piezas"><li class="falta">Certificado de estado: sin sentencia, demandado sin notificar (exhorto a Canadá). El mismo documento desarma el punto 9</li></ul></div></div><span class="estado e-fa">falta</span></div></div>
+
+  <div class="punto r-fa"><div class="punto-cab"><span class="punto-num">7</span><div class="punto-txt">
+    <span class="punto-tit">Antecedentes y estado de la causa RIT 1770-2024 (7° JG Santiago)</span><span class="punto-quien">Carga: ambas · carpeta 07 vacía</span>
+    <div class="punto-cuerpo"><ul class="piezas"><li class="falta">Certificado del Juzgado de Garantía. ⚠️ La contestación afirma que el MP pidió no perseverar y que se acogió: <b>verificar antes de pedirlo</b>. Si es efectivo, este punto juega en contra</li></ul></div></div><span class="estado e-fa">falta</span></div></div>
+
+  <div class="punto r-ok"><div class="punto-cab"><span class="punto-num">8</span><div class="punto-txt">
+    <span class="punto-tit">Antecedentes, términos y vigencia del mandato general de administración</span><span class="punto-quien">Carga: ellos lo invocan · nosotros probamos la extinción · carpeta 08_Mandato-y-extincion</span>
+    <div class="punto-cuerpo"><ul class="piezas">
+      <li class="tiene">Mandato general Rep. 2704-2019 (18-02-2019), copia certificada del Archivo Judicial <a class="dl" href="docs/08_Mandato-y-extincion/2019-02-18%20-%20Mandato%20general%20Rep%202704-2019%20-%20copia%20certificada%20Archivo%20Judicial.pdf" target="_blank" rel="noopener">📄</a> <span class="fp pub">público · plena fe</span></li>
+      <li class="tiene">Certificado de defunción de Marta Adriana Tirapegui Domínguez (14-11-2020) <a class="dl" href="docs/08_Mandato-y-extincion/2020-11-14%20-%20Certificado%20de%20defuncion%20-%20Marta%20Adriana%20Tirapegui%20Dominguez.pdf" target="_blank" rel="noopener">📄</a> → art. 2163 N° 5 CC <span class="fp pub">público · plena fe</span></li>
+      <li class="ojo">Formulación: «aun en la hipótesis de la contraria, se extinguió». Nunca conceder que Marta lo otorgó (C-6511)</li>
+    </ul></div></div><span class="estado e-ok">cubierto</span></div></div>
+
+  <div class="punto r-ok"><div class="punto-cab"><span class="punto-num">9</span><div class="punto-txt">
+    <span class="punto-tit">Efectividad de la falta de legitimación activa del demandante. Hechos y circunstancias que lo acrediten</span><span class="punto-quien">Carga: ellos · texto en singular desde el 17-09 · carpeta 09_Legitimacion-activa</span>
+    <div class="punto-cuerpo"><ul class="piezas">
+      <li class="tiene">Posesión efectiva: Jorge heredero en representación de su madre Marta Adriana Laso Tirapegui (†1982) <a class="dl" href="docs/09_Legitimacion-activa/2025-02-28%20-%20Certificado%20de%20posesion%20efectiva%20%28mismo%20del%20punto%201%29.pdf" target="_blank" rel="noopener">📄</a> <span class="fp pub">público · plena fe</span></li>
+      <li class="falta">Mismo certificado del punto 6: sin sentencia de indignidad no hay falta de legitimación (art. 974 CC)</li>
+    </ul></div></div><span class="estado e-ok">cubierto</span></div></div>
+</section>
+
+<section>
+  <h2><span class="n">§4</span>Testigos — quién, sobre qué, con qué tacha, y si están validados</h2>
+  <p class="sub">Lista definitiva enviada a Franco el 27-03-2026 (5 personas) <span class="doc">🖼 lista definitiva (no publicado)</span>, tras la preliminar del 20-03 <span class="doc">🖼 (no publicado)</span> y la depurada del 25-03 <span class="doc">🖼 (no publicado)</span>. El 21-09 Franco escribió que ofreció «los testigos que me indicaste». <b>Validado hoy significa: confirmado por Jorge en marzo.</b> No consta reconfirmación para el 28/29 ni citación por receptor (Franco dijo el 24-03 que los notificaría). Las tachas del art. 358 CPC no impiden declarar: se oponen antes de la declaración y el tribunal las resuelve en la sentencia.</p>
+  <div class="tabla-scroll"><table class="testigos">
+    <thead><tr><th>Testigo</th><th>Relación · comuna</th><th>Puntos</th><th>Hecho propio que aporta</th><th>Tacha art. 358</th><th>Estado</th></tr></thead>
+    <tbody>
+      <tr><td>Virginia Guiñez Cortez<small>corredora RE/MAX TrueHome · psicóloga forense</small></td><td>Corredora de Jorge (venta de bienes propios) · Las Condes</td><td>4 · 3</td><td>Sus tres tasaciones del 31-03 y el valor de arriendo de mercado. Su ítem 2 (venta por falta de liquidez, «omisión dolosa») es conclusión, no hecho: acotar a lo que tasó y vio.</td><td><span class="tacha media">N° 6 posible</span><small>interés indirecto por relación comercial vigente con Jorge; sin parentesco</small></td><td><span class="est"><b>En lista definitiva</b> · confirmada por Jorge 27-03 · reconfirmar 28/29 ⬜ · citación ⬜</span></td></tr>
+      <tr><td>Daniela Escanilla Matus<small>corredora RE/MAX Diamante · ing. ejecución</small></td><td>«Prima lejana» · Vitacura</td><td>4 · 2 · 3</td><td>Sus tres tasaciones del 11-03; visita a las propiedades para verificar ocupación (anunciada en marzo: ¿se hizo?). Su relato de «abuso patrimonial… fraude, estafa» es calificación jurídica: el tribunal no la valora. Acotar.</td><td><span class="tacha baja">N° 1 improbable</span><small>si el parentesco pasa del 4.° grado; verificar el grado exacto antes del 28</small></td><td><span class="est"><b>En lista definitiva</b> · confirmada 27-03 · reconfirmar ⬜ · visita a terreno ⬜ · citación ⬜</span></td></tr>
+      <tr><td>Rodrigo Jesús Opazo Iturra<small>ingeniero civil industrial</small></td><td>Amigo de la infancia · Machalí (O'Higgins)</td><td>2</td><td>Fue a Lord Cochrane 30, fotografió 508 y 509 (stickers CENSO), la portería y el instructivo; el conserje le dijo que están arrendados a personas naturales (audios 02-04). <b>El hecho propio más limpio del punto 2.</b></td><td><span class="tacha media">N° 7 posible</span><small>amistad íntima, si la contraria la prueba con hechos graves</small></td><td><span class="est"><b>En lista definitiva</b> · confirmada 27-03 · ⚠️ el índice de evidencia (jun) dice «no se presenta como testigo formal»: aclarar · fecha de la constatación (15 o 23-may) ⬜ · viaja desde Machalí: ¿telemático? preguntar a Franco</span></td></tr>
+      <tr><td>María Soledad Riquelme Laso<small>psicóloga clínica</small></td><td>Prima hermana · Las Condes</td><td>2 · 3 · 8</td><td>Que desde 2017 los demandados administran, arriendan y usufructúan los bienes; que Rosemarie ofreció a Marisol una suma para que desistiera «del juicio principal» y no explicó qué pasaría con los arriendos. ⚠️ Su lista dice $75 M; en C-21990 aparece otra cifra: fijarla antes de que declare.</td><td><span class="tacha alta">N° 1 segura</span><small>4.° grado colateral</small></td><td><span class="est"><b>En lista definitiva</b> · confirmada 27-03 · reconfirmar ⬜ · citación ⬜</span></td></tr>
+      <tr><td>Marisol Elizabeth Laso Tirapegui<small>profesora de castellano</small></td><td>Tía · heredera y comunera · co-demandante en C-6511 · Las Condes</td><td>2 · 3 · 1</td><td>Única heredera que recibe transferencias de Rosemarie «por arriendo», montos que estima poco transparentes; acceso al mausoleo y a las bodegas bloqueado; ha visto ocupantes en Gran Avenida. <b>Hecho propio fuerte y corroborado por los WhatsApp.</b></td><td><span class="tacha alta">N° 1 + N° 6</span><small>3.er grado colateral e interés directo como comunera</small></td><td><span class="est"><b>En lista definitiva</b> · confirmada 27-03 · reconfirmar ⬜ · citación ⬜ · persona mayor: ¿necesita comparecer telemática? preguntar a Franco</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="nota"><span class="tit">Descartados el 25-03 (no van)</span>Sofía Anais Navarrete Molina (hija de Daniela Molina; las 5 bodegas de Diagonal Paraguay 254 y el acceso negado el 19-ene-2023) y Daniela Andrea Molina Rivera (pareja; consecuencias del conflicto). Motivo declarado a Franco: falta de disponibilidad, por enfermedad crónica grave o por estar fuera de Chile. Sus hechos entran por documento (libro de visitas 22-01-2023, cartas certificadas) o por absolución de posiciones.</div>
+  <div class="nota roja"><span class="tit">Lo que decide si hay testimonial el 28</span>1) Que la nómina ofrecida el 21 sea esta y esté completa: nombre y apellido, domicilio, profesión u oficio (art. 90 inc. 2). 2) Que cada testigo esté <b>citado</b>: sin citación, el que no llega no se puede forzar y no hay segunda fecha. 3) Que Daniela y Virginia estén: sin ellas, las seis tasaciones son papel objetable. Tres preguntas a Franco, una por mensaje.</div>
+</section>
+
+<section>
+  <h2><span class="n">§5</span>El número — frutos civiles desde el 14-11-2020</h2>
+  <p class="sub">Nominal, sin reajuste ni intereses, 71 meses (nov-2020 → sep-2026), UF del día 1 de cada mes. Regla de valor (la misma de la RE): primero el documento de ellos; si no hay, el máximo de las tasaciones; si no hay tasación, estimativo con fuente y método declarados. Serie completa en la carpeta 03.</p>
+  <div class="tabla-scroll"><table>
+    <thead><tr><th>Inmueble</th><th>Rol SII</th><th>Base del valor</th><th class="num">Mensual</th><th class="num">71 meses</th><th>Estado</th></tr></thead>
+    <tbody>
+      <tr><td>Casa Chile España 8316-B, San Miguel</td><td>3228-3</td><td>tasación 53,2 UF (Daniela = Virginia)</td><td class="num">$2.119.580</td><td class="num">$134.101.821</td><td>✅ tasación · ⬜ su contrato · 🔴 no está en la posesión efectiva</td></tr>
+      <tr><td>Depto 508 Lord Cochrane 30</td><td>387-383</td><td>máx. tasación 9,7 UF (Virginia)</td><td class="num">$386.465</td><td class="num">$24.450.896</td><td>✅ tasación · ⬜ su contrato</td></tr>
+      <tr><td>Depto 509 Lord Cochrane 30</td><td>387-384</td><td>máx. tasación 9,7 UF (Virginia)</td><td class="num">$386.465</td><td class="num">$24.450.896</td><td>✅ tasación · ⬜ su contrato</td></tr>
+      <tr><td>Bodegas Diagonal Paraguay 254 (×4)</td><td>387-491 · 423-429</td><td>estimativo proporcional</td><td class="num">≈ $54.750</td><td class="num">$4.784.561</td><td>🟡 sin tasación · ⚠️ 423-429 es el rol del contraataque</td></tr>
+      <tr><td class="tot" colspan="4">Total nominal</td><td class="num tot">$187.788.174</td><td class="tot">cuota de Jorge ≈ 1/3 ≈ $62,6 M</td></tr>
+    </tbody>
+  </table></div>
+  <div class="nota"><span class="tit">La tabla de marzo no es esta</span>El correo del 16-03 a Franco decía <b>$191.660.800</b> (64 meses a $2.994.700, con D508/D509 de Daniela y bodegas a $150.000). Están a 2 %, pero con bases distintas en tres unidades. <b>Dos cifras nuestras para el mismo mes son munición de la contraria.</b> Lo que entre a C-4713 usa esta base; la de marzo queda como piso, no como segunda versión.</div>
+</section>
+
+<section>
+  <h2><span class="n">§6</span>Riesgos cruzados con C-6511-2022 — la causa madre</h2>
+  <p class="sub">Mismos demandados, mismos abogados (Achu / del Real), mismo patrocinante (Franco por Jorge y Marisol). C-6511 pide la nulidad de la compraventa del 504-D hecha con el mandato, la restitución, $50 M de perjuicios para Jorge y reserva del art. 173 inc. 2 para frutos. Cada palabra de C-4713 se lee allá.</p>
+
+  <div class="cruce"><span class="t">1 · El mandato: extinguido aquí, inexistente allá</span>
+    <p>En C-4713 el camino corto es «se extinguió por muerte» (2163 N° 5). En C-6511 la tesis es que Marta <b>no compareció</b> (huella inhábil, art. 412 N° 2 COT; CS 11774-2024): el mandato no vale desde el origen. Si en C-4713 se escribe «el mandato válido se extinguió», la contraria lo lleva a C-6511 como admisión.</p>
+    <span class="regla">Fórmula: «aun en la hipótesis de la contraria, el mandato que invocan se extinguió el 14-11-2020; sin perjuicio de lo que se discute en C-6511 sobre su otorgamiento». Y punto 8 sin adjetivos.</span></div>
+
+  <div class="cruce"><span class="t">2 · Punto 5: el estado de C-6511 entra, el informe pericial no se comenta</span>
+    <p>C-6511 está en prueba: informe de Janira (D1 inhábil, D2 sin mirar) objetado por Achu el 15-09. El certificado de estado se acompaña como está. <b>Nada de «la pericia demostró»</b>: la ampliación a D2 está pendiente y una frase de más aquí fija posición allá.</p></div>
+
+  <div class="cruce"><span class="t">3 · Una sola puerta por mes: C-4713 · C-6511 · RE</span>
+    <p>C-4713 cobra frutos desde el 14-11-2020. C-6511 reserva frutos y perjuicios (173 inc. 2) y pide $50 M por la herida de origen. La RE pedirá lucro cesante desde el 18-02-2019 de todas las propiedades. <b>Los mismos meses no se cobran dos veces:</b> lo que C-4713 conceda por 508, 509, Chile España y bodegas desde nov-2020, la RE lo descuenta; los $50 M de C-6511 se deslindan antes de presentar la RE.</p>
+    <span class="regla">Su §62 («goce gratuito supone que no hubo frutos») y una eventual excepción de litispendencia en la RE se contestan con el mismo cuadro: tres acciones, tres títulos, un solo peso por mes.</span></div>
+
+  <div class="cruce"><span class="t">4 · Absolución de posiciones: si la pedimos, la piden</span>
+    <p>Si se pide la absolución de Aída y Christian (art. 385), la contraria pedirá la de Jorge, que está en Canadá. Franco tiene poder amplio (art. 7 incs. 1° y 2°) y en C-6511 ya se litigó su autorización para absolver (reposición de la contraria, 08-08). <b>Lo que Jorge conteste en C-4713 sobre las 10 bodegas, el rol 423-429 y la renta de Chile España se lee en C-6511 y en C-4776.</b> La versión escrita de cada hecho, antes.</p></div>
+
+  <div class="cruce"><span class="t">5 · Los documentos de salud no entran a esta causa</span>
+    <p>El correo del 16-03 dejó en la carpeta de Drive el diagnóstico de TDAH y el borrador de peritaje sociofamiliar «a criterio» de Franco. El rubro de la descompensación es de la RE (ítem 11), aparte por decisión de Jorge; en C-4713 ya se rechazó «TDAH → pérdida de ingresos»; C-4776 necesita a Jorge impedido 2017-2020 y la RE lo necesita funcional 2000-2019. Un documento clínico en este expediente lo citan en los tres. <b>La carpeta de OneDrive no los incluye.</b> Franco ya desechó el peritaje socioeconómico en octubre de 2025 («no veo utilidad»).</p></div>
+
+  <div class="cruce"><span class="t">6 · Testigos compartidos</span>
+    <p>Marisol es co-demandante en C-6511 y testigo aquí; María Soledad declararía sobre la oferta de Rosemarie para que Marisol desistiera «del juicio principal», que es C-6511. Lo que digan en esta testimonial queda en un expediente que la contraria puede acompañar allá. <b>Las cifras (la oferta) y las fechas (desde 2017) se fijan con documento antes del 28, o no se dicen.</b></p></div>
+
+  <div class="cruce"><span class="t">7 · Prescripción: fundar en comunidad, no en el 2314</span>
+    <p>Demanda del 01-04-2025; frutos desde nov-2020. Si se calificara extracontractual (art. 2332, 4 años), los primeros meses (nov-2020 → mar-2021) quedarían expuestos. Fundada en la comunidad (2308, 2310 CC) la prescripción es la ordinaria de 5 años (2515). Y el abandono (152 CPC) borraría la interrupción (2503): con el probatorio abierto el reloj se reinició el 17-09 → ~17-03-2027.</p></div>
+</section>
+
+
+<section>
+  <h2><span class="n">§7</span>Escritos de la contraria donde reconocen que administran, arriendan y ocupan</h2>
+  <p class="sub">Mismas partes, mismos abogados. Lo dicho en C-6511 entra a C-4713 por el art. 398 inc. 2 CPC (confesión en juicio diverso entre las mismas partes: puede valer como prueba completa) con copia autorizada del folio y el certificado del punto 5. Once citas con página en el desglose del 21-09, §3.</p>
+  <div class="tabla-scroll"><table>
+    <thead><tr><th>#</th><th>Causa · escrito</th><th>Cita</th><th>Reconoce</th><th>Fuerza</th><th>Punto</th></tr></thead>
+    <tbody>
+      <tr><td>E-1</td><td>C-4713 · contestación folio 32 · §74 <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=66" target="_blank" rel="noopener">📄 pág. 66</a></td><td>«habiéndose celebrado… contratos de arriendo respecto de (1) Rol SII 387-383… (2) Rol SII 387-384… y el (3) Rol SII 3228-3»</td><td>Contratos de arriendo sobre tres roles, con fojas del CBR</td><td>⭐ confesión judicial · plena prueba</td><td>2 · 3 · 4</td></tr>
+      <tr><td>E-2</td><td>C-4713 · contestación · §38 <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=58" target="_blank" rel="noopener">📄 pág. 58</a></td><td>«ese uso y goce pertenece a los terceros a quienes se le han arrendado dichos inmuebles»</td><td>Ocupación por arrendatarios que ellos pusieron</td><td>confesión judicial</td><td>2</td></tr>
+      <tr><td>E-3</td><td>C-4713 · contestación · §72 <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=66" target="_blank" rel="noopener">📄 pág. 66</a></td><td>«Dicha administración no se limita a cobrar rentas»</td><td>Cobran rentas</td><td>confesión judicial</td><td>2 · 3</td></tr>
+      <tr><td>E-4</td><td>C-4713 · contestación · §37 <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=58" target="_blank" rel="noopener">📄 pág. 58</a></td><td>«pagar sus servicios básicos, gastos comunes, reparaciones e impuesto territorial» · «dar en arriendo… bajo condiciones de mercado»</td><td>Arriendan a precio de mercado (fija el estándar del punto 4); dicen pagar contribuciones y la TGR dice que no</td><td>confesión judicial; la parte falsa cae con instrumento público</td><td>3 · 4</td></tr>
+      <tr><td>E-5</td><td>C-4713 · contestación · §§4, 36, 73 <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=64" target="_blank" rel="noopener">📄 pág. 64</a></td><td>Mandato 18-02-2019 · Marta † 14-11-2020 · administran «hasta el día de hoy» · en subsidio, mandato tácito entre comuneros (2305, 2081)</td><td>Administración post-mortem; su título después de la muerte es el 2081</td><td>confesión + admisión del marco</td><td>8</td></tr>
+      <tr><td>E-6</td><td>C-4713 · contestación · §62 <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=63" target="_blank" rel="noopener">📄 pág. 63</a> y contrademanda de hecho <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=54" target="_blank" rel="noopener">📄 pág. 54</a></td><td>«el "uso y goce gratuito"… supone que no se percibieron frutos» · Jorge ocupa el rol 423-429 y 10 bodegas</td><td>Reconocen, para atacar, que el objeto son frutos percibidos</td><td>argumento; se contesta con su §74</td><td>3</td></tr>
+      <tr><td>E-7</td><td>C-6511 · dúplica folio 22 · ebook págs. 86-87 <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2022-11-21%20-%20C-6511%20folio%2022%20-%20Duplica%20de%20los%20demandados.pdf#page=16" target="_blank" rel="noopener">📄 PDF pág. 16</a></td><td>Aída «ha continuado administrando… percibiendo el producto de arriendos» (art. 2168)</td><td>Percepción de arriendos después de la muerte, por escrito, en 2022</td><td>confesión en juicio diverso · 398 inc. 2</td><td>2 · 3 · 8</td></tr>
+      <tr><td>E-8</td><td>C-6511 · dúplica · ebook págs. 81-83 <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2022-11-21%20-%20C-6511%20folio%2022%20-%20Duplica%20de%20los%20demandados.pdf#page=11" target="_blank" rel="noopener">📄 PDF pág. 11</a></td><td>Marta trasladada en 2017 a un depto arrendado (503) porque el 504-D «no disponía del espacio»</td><td>Ellos ocuparon el 504-D desde 2017 (⚠️ nuestra réplica lo admitió; el 504-D es de C-6511, no mezclar)</td><td>confesión en juicio diverso</td><td>—</td></tr>
+      <tr><td>E-9</td><td>C-6511 · dúplica · ebook pág. 84 <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2022-11-21%20-%20C-6511%20folio%2022%20-%20Duplica%20de%20los%20demandados.pdf#page=13" target="_blank" rel="noopener">📄 PDF pág. 13</a> y 3.4 pág. 90 <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2022-11-21%20-%20C-6511%20folio%2022%20-%20Duplica%20de%20los%20demandados.pdf#page=20" target="_blank" rel="noopener">📄 PDF pág. 20</a></td><td>«Jorge ocupaba gratuitamente las bodegas» · «suspender todas sus actividades profesionales por 39 meses»</td><td>Origen del contraataque de las bodegas</td><td>afirmación de parte sin documento</td><td>contraataque</td></tr>
+      <tr><td>E-10</td><td>C-6511 · pliego de posiciones folio 207 · pos. 15 y 19 (31-07-2026) <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2026-07-31%20-%20C-6511%20-%20Acta%20de%20absolucion%20de%20posiciones%202a%20citacion%20-%20Marisol%20y%20Franco%20por%20Jorge.pdf#page=4" target="_blank" rel="noopener">📄 acta, Marisol pág. ≈4</a> · <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2026-07-31%20-%20C-6511%20-%20Acta%20de%20absolucion%20de%20posiciones%202a%20citacion%20-%20Marisol%20y%20Franco%20por%20Jorge.pdf#page=11" target="_blank" rel="noopener">Franco pág. ≈11</a></td><td>«cómo es efectivo que han autorizado y consentido en que doña Aída… continúe con la administración de los bienes»</td><td>Su propia pregunta da por hecho que Aída sigue administrando en 2026</td><td>posición asertiva = afirmación del ponente</td><td>2 · 8</td></tr>
+      <tr><td>E-11</td><td>C-6511 · pliego · pos. 8 y 9 <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2026-07-31%20-%20C-6511%20-%20Acta%20de%20absolucion%20de%20posiciones%202a%20citacion%20-%20Marisol%20y%20Franco%20por%20Jorge.pdf#page=2" target="_blank" rel="noopener">📄 acta pág. ≈2</a></td><td>«ejecutó correctamente el mandato general de administración y disposición de bienes»</td><td>Administró y dispuso bajo el mandato</td><td>ídem</td><td>8</td></tr>
+    </tbody>
+  </table></div>
+  <div class="nota"><span class="tit">Por leer entero, con página</span>Contestación de C-6511 (2022) y demanda de C-4776 (indignidad, 2025), de los mismos abogados; y el folio 228 de C-6511 donde pidieron la carpeta penal.</div>
+</section>
+
+<section>
+  <h2><span class="n">§8</span>La absolución de posiciones de C-6511 (31-07-2026) — lo que ya declaramos y lo que concedimos</h2>
+  <p class="sub">Acta de la 2.ª citación, receptora Andrea Vásquez Delaunoy, pliego a folio 207. Marisol por sí; Franco por Jorge («no podrá contestar preguntas sobre hechos propios»; la contraria incidentó nulidad tras la pregunta 12; Franco alegó convalidación; el tribunal quedó en resolver). Transcripción literal en el repo; análisis en el desglose del 21-09, §4. Acta escaneada: <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2026-07-31%20-%20C-6511%20-%20Acta%20de%20absolucion%20de%20posiciones%202a%20citacion%20-%20Marisol%20y%20Franco%20por%20Jorge.pdf#page=1" target="_blank" rel="noopener">📄 Marisol págs. 1-6</a> · <a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2026-07-31%20-%20C-6511%20-%20Acta%20de%20absolucion%20de%20posiciones%202a%20citacion%20-%20Marisol%20y%20Franco%20por%20Jorge.pdf#page=7" target="_blank" rel="noopener">📄 Franco por Jorge págs. 7-12</a>.</p>
+  <div class="tabla-scroll"><table>
+    <thead><tr><th>Posición</th><th>Respuesta</th><th>En C-4713</th></tr></thead>
+    <tbody>
+      <tr><td>Marisol 4</td><td>«mi mamá tenía un patrimonio de alrededor de <b>2 millones de pesos mensuales causados por arriendos</b>… y lo del montepío»</td><td>Orden de magnitud de la renta 2017-2020 bajo juramento; es confesión de Marisol (vale contra ella) pero fija un hecho que la contraria no controvirtió → presunción, coherente con las tasaciones</td></tr>
+      <tr><td>Marisol 8 · 14</td><td>«nunca dio cuenta de lo que recibía de arriendo» · «después de un año de fallecida mi mamá le pedí cuenta yo y Jorge… nunca acreditó con boleta o factura»</td><td>Sin rendición; primer requerimiento ~nov-2021, antes del notarial de 2025</td></tr>
+      <tr><td>Marisol 15-16 + aclaratoria</td><td>«no he autorizado ni consentido, tajantemente lo digo, lo mismo mi sobrino Jorge Juri» · «Aída sola se adjudicó ese papel… después de fallecida mi mamá» · «siguió Aída administrando los bienes hasta el día de hoy»</td><td><b>Cae el mandato tácito del 2081</b> (su §73): sin consentimiento de los comuneros. Marisol lo repite el 28/29 como testigo</td></tr>
+      <tr><td>Franco 3 · 19-20</td><td>«propiedades arrendadas y montepío» · «no es efectivo [que hayan consentido], incluso <b>se inició un proceso judicial</b>»</td><td>C-4713 es el acto concreto de la negativa</td></tr>
+      <tr><td><b>Franco 18 — lo concedido</b></td><td>«<b>es efectivo</b>, había confianza en la gestión de doña Aída… nunca cuestionó la administración… durante los últimos años de vida de dicha mandante»</td><td>⚠️ Dirán: consintieron → 2081 → sin culpa. <b>Contra-posición:</b> la confianza es en vida de Marta y bajo mandato; C-4713 cobra desde el 14-11-2020, cuando el mandato terminó y la confianza también (Franco 14: «la relación se dañó… al descubrir la compraventa»). Ni un mes de vida de Marta se reclama aquí</td></tr>
+      <tr><td>Franco 2 · 11 · Marisol 4-5</td><td>Jorge no volvió a Chile desde 2015 · Marisol no contribuyó a la mantención</td><td>Alimentan C-4776 / C-21990, no C-4713. <b>No se tocan aquí</b> (regla del signo)</td></tr>
+      <tr><td>Franco (todo)</td><td>Declaró «a partir de lo que Jorge me ha informado»</td><td>Si el tribunal anula, la contraria pedirá en C-4713 la absolución de Jorge en persona o por videoconferencia. <b>Versión escrita antes:</b> 10 bodegas, rol 423-429, renta de Chile España, acceso 19-01-2023, requerimiento de cuentas 2021</td></tr>
+    </tbody>
+  </table></div>
+  <div class="nota verde"><span class="tit">El pliego que conviene pedirles a ellos (art. 385) — hechos personales, cada uno nacido de un escrito suyo</span>1) Que desde el 14-11-2020 perciben las rentas de los roles 387-383, 387-384 y 3228-3. 2) Que no han rendido cuenta a Jorge ni a Marisol. 3) Que no han pagado las contribuciones del rol 3228-3. 4) Que Jorge pagó $672.834 el 07-12-2022. 5) Que no han distribuido rentas salvo $100.000 y $200.000 a Marisol. 6) Que no declararon ante el SII ingresos por arriendo de 387-383 y 387-384. 7) Que negaron el acceso a las bodegas el 19-01-2023 y no respondieron el requerimiento notarial del 10-09-2025. 8) Que fijaron domicilio en el 504-D. Franco decide.</div>
+</section>
+
+<section>
+  <h2><span class="n">§9</span>La causa penal RIT 1770-2024 (7° JG Santiago) — punto de prueba 7</h2>
+  <p class="sub">Querella de Jorge contra Aída y Christian: apropiación indebida (470 N° 1 CP), administración desleal (470 N° 2), contrato simulado (471 N° 2). Objeto: mandato 18-02-2019 y compraventa 04-11-2020 como actos simulados, precio de $95 M nunca pagado, administración de arriendos sin rendición. RUC 2410007828-3.</p>
+  <div class="riesgo"><div class="r"><span class="rot">Estado real</span><b>Cerrada por decisión de no perseverar</b> del Ministerio Público (art. 248 c CPP), confirmado por Jorge. La contestación de C-4713 lo afirma como hecho y el certificado del punto 7 lo va a decir. <b>La fecha no está en el repo y el documento no está en la bóveda.</b></div><div class="c"><span class="rot">Contra-posición</span>El no perseverar no es sobreseimiento ni absolución: no juzga los hechos ni produce cosa juzgada; la culpa civil (2314) y la comunidad (2308, 2310) no exigen delito. Se acompaña el certificado con una línea: «la decisión de no perseverar no constituye pronunciamiento sobre los hechos ni sobre la responsabilidad civil». Nada más.</div></div>
+  <div class="riesgo"><div class="r"><span class="rot">Lo que dejó la investigación</span>El <b>Informe PDI (742 págs.; 32 en el repo)</b> contiene lo que los imputados entregaron y declararon: 34 recibos del arriendo del 503-D pagados por ellos, el cheque protestado del 27-11-2020, sus dichos sobre la administración. La contraria pidió la carpeta en C-6511 (folio 228).</div><div class="c"><span class="rot">Qué hacer</span>Pedir a la Fiscalía la carpeta completa con los anexos 01-15 (KANBAN RIT 1770): sirve a los puntos 2, 3 y 8. Conseguir acta o resolución del no perseverar con su fecha. La vía penal 2.0 (uso nuevo del mandato en cada escrito, 196 CP) <b>no se menciona en C-4713</b>: se anota.</div></div>
+</section>
+
+<section>
+  <h2><span class="n">§10</span>Cuentas de servicios hasta hoy — lo que hay y lo que falta bajar</h2>
+  <p class="sub">Las cuentas acreditan ocupación por terceros mes a mes. Hoy llegan a marzo de 2026; el probatorio necesita hasta septiembre. Ni en Gmail ni en la bóveda hay boletas posteriores. Y mejor que las boletas: un <b>oficio</b> del tribunal a cada empresa por titular, dirección y desde cuándo, que convierte el indicio en instrumento.</p>
+  <div class="tabla-scroll"><table>
+    <thead><tr><th>Inmueble</th><th>Servicio · cuenta</th><th>Titular en la cuenta</th><th>Cubierto</th><th>Falta</th><th>Cómo</th></tr></thead>
+    <tbody>
+      <tr><td>Lord Cochrane 30 D508</td><td>ENEL · cliente <b>245740-7</b> <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-03-15%20-%20Lord%20Cochrane%2030%20D508%20-%20cuentas%20ENEL%20sep-2023%20a%20mar-2026%20a%20nombre%20de%20Paula%20Acevedo%20B.pdf#page=1" target="_blank" rel="noopener">📄</a></td><td>Paula Acevedo B.</td><td>sep-2023 → 04-mar-2026 (30 boletas) · «corte en trámite» en marzo</td><td>abr → sep-2026</td><td>enel.cl → consulta de boleta por número de cliente (sin clave) · u oficio</td></tr>
+      <tr><td>Lord Cochrane 30 D509</td><td>ENEL · cliente <b>245741-5</b> <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-03-15%20-%20Lord%20Cochrane%2030%20D509%20-%20cuentas%20ENEL%20sep-2023%20a%20mar-2026.pdf#page=1" target="_blank" rel="noopener">📄</a></td><td>(ver boleta)</td><td>ago-2023 → 04-mar-2026 (30 boletas) · último pago 18-02-2026 en Caja Vecina</td><td>abr → sep-2026</td><td>ídem</td></tr>
+      <tr><td>Chile España 8316-B</td><td>Aguas Andinas · cuenta <b>493432-6</b> · medidor 25249260 <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-03-15%20-%20Chile%20Espana%208316-B%20-%20cuentas%20de%20agua%20a%20nombre%20de%20Claudia%20Orellana.pdf#page=1" target="_blank" rel="noopener">📄</a></td><td>Claudia Orellana</td><td>historial 48 meses al 12-03-2026 (activo, sin corte)</td><td>abr → sep-2026</td><td>aguasandinas.cl → historial por número de cuenta · u oficio</td></tr>
+      <tr><td>Chile España 8316-B</td><td>Electricidad</td><td>—</td><td>nada</td><td>todo</td><td>Identificar el número de cliente (boleta en el buzón de la casa o CGE/ENEL por dirección)</td></tr>
+      <tr><td>Bodegas Diagonal Paraguay 254</td><td>Gastos comunes / administración</td><td>—</td><td>libro de visitas 22-01-2023</td><td>todo</td><td>Oficio a la administración del edificio: quién paga los gastos comunes de 15D, 16D, 29D, 30D</td></tr>
+      <tr><td>Lord Cochrane 30</td><td>Administración (lordcochrane30@gmail.com)</td><td>—</td><td>instructivo de mudanzas</td><td>registro de ocupantes y autorizaciones</td><td>Oficio: ocupantes registrados de 508 y 509 y autorizaciones de mudanza desde 2020</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="n">§11</span>Qué falta hasta el 29 — marca lo que vayas cerrando</h2>
+  <p class="sub">Ordenado por lo que más mueve la aguja. Las marcas se guardan en este navegador; el cierre formal va en el KANBAN.</p>
+  <div class="avance"><span><b id="avNum">0</b>/<span id="avTot">0</span></span><div class="barra"><i id="avBarra"></i></div><span id="avPct">0%</span></div>
+  <div class="lista">
+    <label class="check"><input type="checkbox" data-k="onedrive"><span class="check-txt"><span class="check-tit">Compartir con Franco la carpeta OneDrive «Prueba-por-punto-de-prueba» y responder su correo</span><span class="check-det">Reemplaza el Drive de marzo que nunca abrió. Borrador ✂️ en la ficha del 21-09, §5. Decidir el párrafo sobre TDAH/peritaje.</span></span><span class="tope">HOY</span></label>
+    <label class="check"><input type="checkbox" data-k="ojv"><span class="check-txt"><span class="check-tit">Leer en la OJV el escrito del 21: documentos acompañados y testigos ofrecidos</span><span class="check-det">Nombre, domicilio y profesión de cada uno; que estén Daniela y Virginia; que Rodrigo esté (el índice de evidencia decía que no). Cerrar el incidente del 09-sep en la Historia.</span></span><span class="tope">22-SEP</span></label>
+    <label class="check"><input type="checkbox" data-k="citados"><span class="check-txt"><span class="check-tit">Preguntar a Franco si los cinco están citados y si Rodrigo y Marisol pueden declarar por vía telemática</span><span class="check-det">Un tema, una pregunta. Ventana 7-9 AM Chile.</span></span><span class="tope">≤ 23-SEP</span></label>
+    <label class="check"><input type="checkbox" data-k="cbr"><span class="check-txt"><span class="check-tit">Certificados de dominio vigente: CBR San Miguel (fs. 13163 vta N° 12200) y CBR Santiago (3 inscripciones de 2022)</span><span class="check-det">En línea, costo bajo. San Miguel primero.</span></span><span class="tope">≤ 25-SEP</span></label>
+    <label class="check"><input type="checkbox" data-k="certs"><span class="check-txt"><span class="check-tit">Tres certificados de estado: C-6511 (6° JC), C-4776 (19° JC), RIT 1770-2024 (7° JG)</span><span class="check-det">Antes del de RIT 1770, verificar la orden de no perseverar. Carpetas 05, 06 y 07 están vacías.</span></span><span class="tope">≤ 25-SEP</span></label>
+    <label class="check"><input type="checkbox" data-k="exhib"><span class="check-txt"><span class="check-tit">Pedir exhibición de los contratos de arriendo y de lo percibido desde el 14-11-2020 (art. 349)</span><span class="check-det">Dentro del término (art. 327). Su §74 nombra los contratos; Aída admitió en la dúplica de C-6511 que sigue percibiendo. Mensaje 2 a Franco, cuando conteste.</span></span><span class="tope">≤ 29-SEP</span></label>
+    <label class="check"><input type="checkbox" data-k="absol"><span class="check-txt"><span class="check-tit">Pedir absolución de posiciones de Aída y Christian (art. 385) y dejar escrita la versión de Jorge sobre bodegas, 423-429 y Chile España</span><span class="check-det">Porque la van a pedir de vuelta. Pliego si Franco lo pide.</span></span><span class="tope">≤ 29-SEP</span></label>
+    <label class="check"><input type="checkbox" data-k="base"><span class="check-txt"><span class="check-tit">Una sola base de renta para las cuatro unidades y un solo número para las bodegas</span><span class="check-det">La de la serie RE. Anotar en la RE los meses que cubre C-4713.</span></span><span class="tope">≤ 25-SEP</span></label>
+    <label class="check"><input type="checkbox" data-k="tgr"><span class="check-txt"><span class="check-tit">Certificados TGR de deuda de contribuciones de los roles 387-383, 387-384, 387-491 y 423-429</span><span class="check-det">Con Chile España solo es un ejemplo; con todos, un patrón contra su §37.</span></span><span class="tope">≤ 29-SEP</span></label>
+    <label class="check"><input type="checkbox" data-k="fecha"><span class="check-txt"><span class="check-tit">Confirmar con Rodrigo la fecha de su constatación (15 o 23 de mayo) y el nombre completo del conserje</span><span class="check-det">Un testigo que duda de la fecha de su propio hecho pierde el hecho.</span></span><span class="tope">≤ 27-SEP</span></label>
+    <label class="check"><input type="checkbox" data-k="tachas"><span class="check-txt"><span class="check-tit">Preparar cada testigo para su tacha y acotar sus relatos a hechos propios</span><span class="check-det">Sin calificaciones jurídicas («fraude», «omisión dolosa»); cifras y fechas con documento o no se dicen (§6, cruce 6).</span></span><span class="tope">≤ 27-SEP</span></label>
+    <label class="check"><input type="checkbox" data-k="oficios"><span class="check-txt"><span class="check-tit">Pedir oficios a ENEL (245740-7, 245741-5), Aguas Andinas (493432-6) y a las administraciones de Lord Cochrane 30 y Diagonal Paraguay 254</span><span class="check-det">Convierte las cuentas (privado de tercero) en informe oficial. Se pide dentro del término. Mientras, bajar las boletas abr→sep-2026 por número de cliente.</span></span><span class="tope">≤ 25-SEP</span></label>
+    <label class="check"><input type="checkbox" data-k="penal"><span class="check-txt"><span class="check-tit">Fecha y documento del «no perseverar» de RIT 1770-2024, y carpeta investigativa con anexos 01-15</span><span class="check-det">Antes del certificado del punto 7. La fecha decide además la acción contra el Estado (Ley 19.640 art. 5°, 4 años).</span></span><span class="tope">≤ 25-SEP</span></label>
+    <label class="check"><input type="checkbox" data-k="corte"><span class="check-txt"><span class="check-tit">Vigilar en la Corte: ing. 15942-2025 (sustitución) y la apelación del folio 43 (punto 3, ingreso sin número)</span><span class="check-det">Devolutivo: la causa no se detiene. Franco decide si pide alegatos (art. 199, 5 días desde el certificado de ingreso).</span></span><span class="tope">QUINCENAL</span></label>
+  </div>
+</section>
+
+<footer>
+  <span>C-4713-2025 · estado al 21-09-2026 · fuentes: ficha del 17-09 (resolución folio 43), ficha del 21-09 (correos de Franco), contestación folio 32, serie RE 14-09 · carpeta OneDrive <span class="ruta">docs/</span></span>
+  <button class="reset" id="btnReset" type="button">Borrar marcas</button>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var LLAVE='c4713-cese-tablero-public-v1';
+  var estado={};
+  try{ estado=JSON.parse(localStorage.getItem(LLAVE)||'{}'); }catch(e){ estado={}; }
+  var cajas=Array.prototype.slice.call(document.querySelectorAll('.check input[type=checkbox]'));
+  function pintar(){
+    var n=0;
+    cajas.forEach(function(c){ var f=c.closest('.check'); if(c.checked){f.classList.add('hecho');n++;} else {f.classList.remove('hecho');} });
+    var pct=cajas.length?Math.round(n/cajas.length*100):0;
+    document.getElementById('avNum').textContent=n;
+    document.getElementById('avTot').textContent=cajas.length;
+    document.getElementById('avPct').textContent=pct+'%';
+    document.getElementById('avBarra').style.width=pct+'%';
+  }
+  cajas.forEach(function(c){
+    if(estado[c.dataset.k]) c.checked=true;
+    c.addEventListener('change',function(){
+      if(c.checked){estado[c.dataset.k]=true;} else {delete estado[c.dataset.k];}
+      try{ localStorage.setItem(LLAVE,JSON.stringify(estado)); }catch(e){}
+      pintar();
+    });
+  });
+  document.getElementById('btnReset').addEventListener('click',function(){
+    estado={}; try{ localStorage.removeItem(LLAVE); }catch(e){}
+    cajas.forEach(function(c){c.checked=false;}); pintar();
+  });
+  pintar();
+
+  // reloj: marca el día de hoy y los pasados, y cuenta los que quedan hasta el 29-sep
+  var hoy=new Date(); var ymd=hoy.getFullYear()+'-'+String(hoy.getMonth()+1).padStart(2,'0')+'-'+String(hoy.getDate()).padStart(2,'0');
+  var dias=Array.prototype.slice.call(document.querySelectorAll('#reloj .dia'));
+  var marcado=false;
+  dias.forEach(function(d){
+    d.classList.remove('hoy');
+    if(d.dataset.f<ymd){ d.classList.add('pasado'); }
+    if(d.dataset.f===ymd){ d.classList.add('hoy'); marcado=true; }
+  });
+  if(!marcado && ymd<'2026-09-21'){ dias[0].classList.add('hoy'); }
+  var fin=new Date(2026,8,29); var ms=fin-new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate());
+  var quedan=Math.max(0,Math.round(ms/86400000)+1); if(quedan>8) quedan=8;
+  document.getElementById('tDias').textContent=quedan;
+})();
+</script>
+
+</body>
+</html>
