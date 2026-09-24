@@ -215,6 +215,14 @@ section{scroll-margin-top:70px}
   a{color:inherit}.dl::after{content:""}
   .reloj{grid-template-columns:repeat(8,1fr)}
 }
+details.prep{border:1px solid var(--linea,#d9dce3);border-radius:6px;padding:10px 14px;margin:10px 0;background:var(--papel,#fff)}
+details.prep>summary{cursor:pointer;font-weight:600}
+details.prep h4{margin:14px 0 6px;font-size:14px}
+details.prep ol,details.prep ul{margin:4px 0 8px 20px;font-size:13.5px;line-height:1.55}
+details.prep table{font-size:12.8px}
+.ver-badge{position:fixed;right:12px;bottom:10px;z-index:50;font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;padding:5px 9px;border-radius:5px;border:1px solid var(--linea,#d9dce3);background:var(--papel,#fff);color:var(--tinta3,#666);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.ver-badge.drift{border-color:#b45309;color:#b45309}
+@media print{.ver-badge{display:none}}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;margin-bottom:1.5rem}.brand{font-size:15px;font-weight:500;letter-spacing:.06em}.brand-sub{font-size:11px;color:var(--tinta3);margin-left:10px}
 </style>
 </head>
@@ -243,11 +251,12 @@ section{scroll-margin-top:70px}
 
 <div class="tiles">
   <a class="tile t-fa tile-link" href="#s1"><span class="rot">Días que quedan</span><span class="cifra" id="tDias">8</span><span class="pie">vence el martes 29-sep · ver el reloj día por día</span></a>
-  <a class="tile t-ok tile-link" href="docs/index.html#00_Testigos" target="_blank" rel="noopener"><span class="rot">Testigos</span><span class="cifra">5 ofrecidos ↗</span><span class="pie">según Franco, el 21 · verificar OJV el 22 · la lista definitiva, con RUT, teléfono y qué declara cada uno</span></a>
+  <a class="tile t-ok tile-link" href="#testigos-audiencia"><span class="rot">Testigos confirmados</span><span class="cifra">2 ✓</span><span class="pie">Daniela Escanilla y Rodrigo Opazo · listos para entrenar: teléfono, qué declara cada uno y sus preguntas</span></a>
   <a class="tile t-ab tile-link" href="docs/index.html" target="_blank" rel="noopener"><span class="rot">Puntos con documento</span><span class="cifra">5 / 9 ↗</span><span class="pie">5, 6 y 7 se cierran con un certificado cada uno · la carpeta punto por punto, con cada archivo</span></a>
   <a class="tile t-co tile-link" href="#s5"><span class="rot">Frutos desde el 14-11-2020</span><span class="cifra">$187,8 M</span><span class="pie">71 meses · cuota de Jorge ≈ $62,6 M · la tabla por inmueble con sus tasaciones</span></a>
   <a class="tile t-co tile-link" href="docs/index.html" target="_blank" rel="noopener"><span class="rot">Directorio de pruebas</span><span class="cifra">Abrir carpeta ↗</span><span class="pie">las 12 carpetas, cada archivo con su MD5 · reemplaza el Drive de marzo que Franco nunca pudo abrir</span></a>
 </div>
+<nav class="ir-directo" style="margin:14px 0 22px;font-size:14px;display:flex;flex-wrap:wrap;gap:8px 18px"><b>Ir directo:</b><a class="ref" href="#testigos-audiencia">👥 Los 2 testigos (teléfonos y qué declara)</a><a class="ref" href="#s3b">📋 Lo que tenemos y lo que falta, por inmueble</a><a class="ref" href="#s-prep">🗣️ Preparación de testigos</a><a class="ref" href="#s4">⚖️ Tachas de los testigos</a></nav>
 
 <section id="s1">
   <h2><span class="n">§1</span>El reloj — 8 días, art. <a class="art" href="https://leyes-cl.com/codigo_de_procedimiento_civil/686.htm" target="_blank" rel="noopener" title="Art. 686 CPC — texto en leyes-cl.com">686</a> → art. <a class="art" href="https://leyes-cl.com/codigo_de_procedimiento_civil/90.htm" target="_blank" rel="noopener" title="Art. 90 CPC — texto en leyes-cl.com">90</a> CPC</h2>
@@ -264,7 +273,7 @@ section{scroll-margin-top:70px}
   </div>
   <div class="nota"><span class="tit">Lo que aún puede mover el reloj</span>El «Incidente — De Común Acuerdo» del 09-sep sigue sin leer en la Historia de la OJV. Si fuera una suspensión del art. <a class="art" href="https://leyes-cl.com/codigo_de_procedimiento_civil/64.htm" target="_blank" rel="noopener" title="Art. 64 CPC — texto en leyes-cl.com">64 inc. 2</a> acogida, los plazos se suspenden. Franco dice que el probatorio «inició», lo que es incompatible con una suspensión vigente. Sigue siendo inferencia: se cierra el 22 en la OJV.</div>
 
-    <p class="sub" style="margin-top:18px"><b>Los 2 testigos de la testimonial</b> · detalle y tachas en <a class="ref" href="#s4">§4</a>.</p>
+    <p class="sub" id="testigos-audiencia" style="margin-top:18px;scroll-margin-top:16px"><b>Los 2 testigos de la testimonial</b> · detalle y tachas en <a class="ref" href="#s4">§4</a>.</p>
   <div class="tabla-scroll"><table class="testigos">
     <thead><tr><th>Testigo</th><th>Punto</th><th>Qué declara (hecho propio)</th></tr></thead>
     <tbody>
@@ -272,6 +281,128 @@ section{scroll-margin-top:70px}
       <tr><td>Rodrigo Jesús Opazo Iturra<small>ingeniero civil industrial</small></td><td>2</td><td>Su visita a Lord Cochrane 30: fotos de 508 y 509 (stickers CENSO), portería e instructivo; el conserje le dijo que están arrendados a personas naturales (audios 02-04-2026).</td></tr>
     </tbody>
   </table></div>
+</section>
+
+<section id="s3b">
+  <h2><span class="n">§3-bis</span>Lo que tenemos y lo que falta, por inmueble — la tabla simple</h2>
+  <p class="sub">Resumen de una línea por inmueble (fechas incluidas). El detalle pieza por pieza está en §3; los testigos, aparte, en §4 — una cosa es la evidencia y otra quién la sostiene. Planillas: <a class="dl" href="docs/2026-09-21%20-%20Planilla%20-%20Prueba%20por%20inmueble%20-%20tenemos%20y%20falta.csv" target="_blank" rel="noopener">📊 prueba por inmueble (CSV)</a> · <a class="dl" href="docs/2026-09-21%20-%20Planilla%20-%20Oficios%20-%20datos%20para%20el%20escrito%20%28desde%20el%2018-02-2019%29.csv" target="_blank" rel="noopener">📊 oficios (CSV)</a></p>
+  <div class="tabla-scroll"><table>
+    <thead><tr><th>Inmueble</th><th>Tenemos</th><th>Falta</th></tr></thead>
+    <tbody>
+      <tr><td><b>Casa Chile España 8316-B, La Cisterna</b></td><td>Posesión efectiva e inscripciones con vigencia (dominio 1982, herencia 2022) · ocupante identificado: <b>Pavimark</b> (fotos 27-03-2026) · agua Aguas Andinas 493432-6 a nombre de Claudia Orellana, consumo <b>mar-2022 → feb-2026</b> y comprobantes · TGR $1.325.978 impagos al 15-03-2026 · 2 tasaciones (mar-2026) · su §74</td><td>Luz ENEL 1063106-8 (titular 2006: Marta) · lo que Pavimark paga y a quién → oficio</td></tr>
+      <tr><td><b>Depto 508, Lord Cochrane 30 + bodega N° 9 + estacionamiento N° 38</b> (inscritos juntos, rol 387-491)</td><td>Inscripción de herencia 2022 con vigencia · 36 boletas ENEL <b>oct-2023 → sep-2026</b> (Paula Acevedo B.; vacío ene-2025 → ene-2026) · sticker CENSO y conserje (may-2026) · 2 tasaciones · §74 · SII sin ingresos</td><td>Contrato (exhibición) · <b>bodega 9 y estacionamiento 38: nada</b> → registro de la administración, mudanzas y patentes (oficio)</td></tr>
+      <tr><td><b>Depto 509, Lord Cochrane 30</b></td><td>36 boletas ENEL <b>oct-2023 → sep-2026</b> («Adriana Tirapeggui» = la causante; ocupado sin cortes desde abr-2024; pagada cada mes en Caja Vecina) · sticker CENSO · WhatsApp Rosemarie → Marisol «por arriendo» · 2 tasaciones · §74 · SII</td><td>Contrato (exhibición) · registro de la administración → oficio</td></tr>
+      <tr><td><b>4 bodegas, Diagonal Paraguay 254</b></td><td>$672.834 de contribuciones pagados por Jorge (07-12-2022) · acceso negado 19-01-2023 · libro de visitas 22-01-2023</td><td>Ocupantes y quién paga gastos comunes → oficio · tasación</td></tr>
+      <tr><td><b>Mausoleo Laso Correa, Cementerio General</b></td><td>Video 65 s + 12 fotos del 24-01-2023 (padre de Jorge, llaves de Marta, chapa nueva; filmó Sofía Navarrete) <a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/Mausoleo%2024-01-2023%20%28decide%20Franco%29/2023-01-24%20-%20Mausoleo%20-%2012%20fotos%20con%20pie.pdf" target="_blank" rel="noopener">📄 fotos</a> · carta FEA 10-09-2025 sin respuesta</td><td>Quién autorizó el cambio de cerradura → oficio al Cementerio · la llave (comparendo de administración, después del 29)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s-prep">
+  <h2><span class="n">§3-ter</span>Preparación de los testigos: lo que ya declararon y lo que les pueden preguntar</h2>
+  <p class="sub">No son respuestas para memorizar: son las preguntas para que no los sorprendan. La respuesta es siempre lo que cada uno sabe; si no lo sabe, «no lo sé» o «no lo recuerdo con exactitud».</p>
+
+  <details class="prep" open><summary>Daniela Escanilla Matus: lo que declaró en la C-6511 (22-12-2023, folio 105)</summary>
+    <p class="sub">6° Juzgado Civil de Santiago · jueza Rommy Muller Ugarte · por Zoom · receptor Germán Franzani · apoderados Franco Anabalón (demandante) y Gabriel Sepúlveda Triviños (demandada). Texto sacado por OCR del acta escaneada: para citar textual, abrir el PDF.</p>
+    <h4>Preguntas de tacha</h4>
+    <div class="tabla-scroll"><table><thead><tr><th>#</th><th>Pregunta</th><th>Respuesta</th></tr></thead><tbody>
+      <tr><td>1</td><td>Cómo se enteró del juicio</td><td>Por su primo Cristián Hermosilla, hijo de María Eugenia Escanilla Tirapegui, que la llamó desde Punta Arenas</td></tr>
+      <tr><td>2</td><td>Parentesco con los demandantes</td><td>«Son primos hermanos de mi padre, con tronco común por parte de la bisabuela»</td></tr>
+      <tr><td>3</td><td>Si se reunió con los abogados de la demandante</td><td>«No, sólo he hablado por WhatsApp»</td></tr>
+      <tr><td>4</td><td>Si le sugirieron cómo responder</td><td>«No»</td></tr>
+      <tr><td>5</td><td>Si le enviaron documentos o revisó el expediente</td><td>«No»</td></tr>
+      <tr><td>6</td><td>Quién quiere que gane</td><td>«Que se haga justicia»</td></tr>
+      <tr><td>7</td><td>Interés en el resultado</td><td>«Ninguno»</td></tr>
+      <tr><td>8</td><td>Si frecuentaba la casa de los demandantes</td><td>«No»</td></tr>
+      <tr><td>9</td><td>Si asistió a eventos sociales con ellos</td><td>«Antes de la pandemia sí estuve en algún evento social; después de la pandemia no, hasta el funeral»</td></tr>
+    </tbody></table></div>
+    <p class="sub">→ La demandada le opuso la <b>tacha N° 7</b> por la respuesta 9. El tribunal la dejó para la sentencia: <b>está pendiente</b>.</p>
+    <h4>Punto 3 (daños), su relato</h4>
+    <ul>
+      <li>Los dos demandantes sufrieron daños económicos y morales.</li>
+      <li>Bienes: una casa en Gran Avenida, «dos o tres» departamentos en Lord Cochrane y el departamento de la «tía Nana» en Diagonal Paraguay, con «entre 8 o 10» bodegas.</li>
+      <li>Marisol le contó que la hermana le ofreció un acuerdo de «unos 70 millones».</li>
+      <li>En marzo de 2023 viajó a Canadá y se juntó con Jorge; lo vio afectado por la relación con Christian y por haber quedado fuera del funeral.</li>
+      <li>«Desconozco el monto de los perjuicios.»</li>
+    </ul>
+    <h4>Repreguntas (Franco)</h4>
+    <ol>
+      <li>Por qué se dañó la relación: «aislaron a doña Marta, no le contaron cuando falleció, y después Jorge se entera de que había traspasado todos los bienes a Rosemarie y a Christian».</li>
+      <li>Fecha de la reunión con Jorge: «marzo de 2023».</li>
+    </ol>
+    <h4>Contrainterrogación (Sepúlveda)</h4>
+    <ol>
+      <li>Cómo le constan los daños: Marta hablaba de los bienes con su abuela, y Marisol le dijo que «no había herencia».</li>
+      <li>Cómo supo que no se avisó: «al único que no se le informó fue a Jorge; en el funeral estaba Marisol y yo estuve con ella».</li>
+      <li>Última vez que Jorge vino a Chile: «se fue en 2015 y nunca más volvió».</li>
+      <li>Cuánto estuvo en Canadá: «10 días a 2 semanas».</li>
+      <li>Si se quedó en casa de Jorge: «No».</li>
+    </ol>
+  </details>
+
+  <details class="prep"><summary>Daniela: preguntas que le pueden hacer el 28/29</summary>
+    <h4>A. Tacha (contraria, antes de declarar)</h4>
+    <ol>
+      <li>Cómo se enteró de este juicio.</li><li>Parentesco con el demandante (6.° grado colateral: la N° 1 no aplica).</li>
+      <li>Si se reunió o habló con el abogado del demandante.</li><li>Si le sugirieron cómo responder.</li>
+      <li>Si le enviaron documentos o revisó el expediente: <b>recibió un resumen de Jorge el 24-09 y tiene sus propias tasaciones; lo dice</b>.</li>
+      <li>Quién quiere que gane.</li><li>Si tiene interés, o algún encargo de venta o arriendo de estos inmuebles.</li>
+      <li>Si frecuenta la casa del demandante.</li><li>Si ha asistido a eventos sociales con él.</li>
+      <li>Si viajó a Canadá a ver a Jorge, cuánto tiempo y si se alojó en su casa.</li>
+      <li>Si declaró en otro juicio de esta familia (sí: C-6511, 22-12-2023).</li>
+    </ol>
+    <h4>B. Franco (interrogatorio)</h4>
+    <ul>
+      <li><b>Punto 4:</b> a qué se dedica y desde cuándo; si reconoce los informes EV-04899, EV-04910 y EV-04907, qué son y quién los generó; cómo se llega a 53,2 UF de la casa y 9,1 UF de cada depto.; si le parecen valores de mercado y por qué.</li>
+      <li><b>Punto 2:</b> si fue a la casa de Chile España 8316-B, cuándo, qué vio, quién estaba y quién le dijo lo de Pavimark y lo de los 4 años.</li>
+      <li><b>Punto 3:</b> cuánto se habría podido obtener arrendando estos inmuebles.</li>
+    </ul>
+    <h4>C. Contraria (contrainterrogación)</h4>
+    <ol>
+      <li>«El documento dice "Emitido por Álvaro Robles". ¿Usted lo emitió?»</li>
+      <li>¿Es una tasación o un informe automático? ¿Visitó los inmuebles por dentro?</li>
+      <li>¿Por qué el 508 y el 509 dan exactamente el mismo valor?</li>
+      <li>¿Cuánto le pagaron por las tasaciones? ¿Quién se las pidió?</li>
+      <li>¿Sabe quién es el dueño de estos inmuebles? (no opina sobre títulos)</li>
+      <li>¿Le consta que la casa esté arrendada o se lo dijo alguien? ¿Quién?</li>
+      <li>¿Entró a la casa? ¿Habló con Pavimark?</li>
+      <li>En la C-6511 dijo «8 o 10 bodegas» y «dos o tres departamentos». ¿Cuántos son? (lo que le conste)</li>
+      <li>En 2023 dijo que no le enviaron documentos. ¿Y ahora? (la verdad: el resumen del 24-09)</li>
+      <li>¿Tiene relación comercial con el demandante? ¿Le ofreció vender estas propiedades?</li>
+    </ol>
+  </details>
+
+  <details class="prep"><summary>Rodrigo Opazo Iturra: preguntas que le pueden hacer el 28/29</summary>
+    <h4>A. Tacha (contraria, antes de declarar)</h4>
+    <ol>
+      <li>Cómo se enteró de este juicio.</li><li>Qué relación tiene con el demandante y desde cuándo lo conoce.</li>
+      <li>Si son amigos cercanos, si se visitan, si asisten a eventos juntos (base de la N° 7: la verdad, sin exagerar ni minimizar).</li>
+      <li>Si se reunió o habló con el abogado del demandante.</li><li>Si le sugirieron cómo responder.</li>
+      <li>Si le enviaron documentos: <b>recibió un resumen de Jorge el 24-09; lo dice</b>.</li>
+      <li>Quién quiere que gane y si tiene interés en el resultado.</li>
+      <li>Si le pagaron u ofrecieron algo por ir al edificio o por declarar.</li>
+    </ol>
+    <h4>B. Franco (interrogatorio, punto 2)</h4>
+    <ul>
+      <li>Si fue a Lord Cochrane 30, cuándo y cuántas veces.</li>
+      <li>Qué vio en las puertas del 508 y del 509; si reconoce las cuatro fotos, si las tomó él y cuándo.</li>
+      <li>Con quién habló en el edificio, cómo se llama el conserje y qué le dijo de los deptos. 508 y 509.</li>
+      <li>Qué pasó cuando pidió información: le tomaron nombre y RUT.</li>
+      <li>Qué decía el instructivo de mudanzas que fotografió.</li>
+    </ul>
+    <h4>C. Contraria (contrainterrogación)</h4>
+    <ol>
+      <li>¿Le consta a usted que estén arrendados, o solo se lo dijo el conserje?</li>
+      <li>¿Vio a alguien entrar o salir del 508 o del 509? ¿Tocó el timbre?</li>
+      <li>¿Sabe desde cuándo están los stickers del censo y qué significan?</li>
+      <li>¿Cómo se llama exactamente el conserje? ¿Lo puede deletrear?</li>
+      <li>¿Quién lo mandó al edificio y para qué? (a pedido de Jorge, para ver si estaban ocupados)</li>
+      <li>¿Grabó audios y se los mandó a Jorge?</li>
+      <li>En un audio dice «yo como testigo voy a decir la verdad». ¿Ya sabía en abril que iba a ser testigo?</li>
+      <li>¿Las fotos son del mismo día que los audios?</li>
+      <li>¿Vive en Machalí? ¿Cuántas veces ha estado en Lord Cochrane 30?</li>
+    </ol>
+  </details>
 </section>
 
 <section id="s2">
@@ -375,21 +506,6 @@ section{scroll-margin-top:70px}
     </ul></div></div><span class="estado e-ok">cubierto</span></div></div>
 </section>
 
-
-<section id="s3b">
-  <h2><span class="n">§3-bis</span>Lo que tenemos y lo que falta, por inmueble — la tabla simple</h2>
-  <p class="sub">Resumen de una línea por inmueble (fechas incluidas). El detalle pieza por pieza está en §3; los testigos, aparte, en §4 — una cosa es la evidencia y otra quién la sostiene. Planillas: <a class="dl" href="docs/2026-09-21%20-%20Planilla%20-%20Prueba%20por%20inmueble%20-%20tenemos%20y%20falta.csv" target="_blank" rel="noopener">📊 prueba por inmueble (CSV)</a> · <a class="dl" href="docs/2026-09-21%20-%20Planilla%20-%20Oficios%20-%20datos%20para%20el%20escrito%20%28desde%20el%2018-02-2019%29.csv" target="_blank" rel="noopener">📊 oficios (CSV)</a></p>
-  <div class="tabla-scroll"><table>
-    <thead><tr><th>Inmueble</th><th>Tenemos</th><th>Falta</th></tr></thead>
-    <tbody>
-      <tr><td><b>Casa Chile España 8316-B, La Cisterna</b></td><td>Posesión efectiva e inscripciones con vigencia (dominio 1982, herencia 2022) · ocupante identificado: <b>Pavimark</b> (fotos 27-03-2026) · agua Aguas Andinas 493432-6 a nombre de Claudia Orellana, consumo <b>mar-2022 → feb-2026</b> y comprobantes · TGR $1.325.978 impagos al 15-03-2026 · 2 tasaciones (mar-2026) · su §74</td><td>Luz ENEL 1063106-8 (titular 2006: Marta) · lo que Pavimark paga y a quién → oficio</td></tr>
-      <tr><td><b>Depto 508, Lord Cochrane 30 + bodega N° 9 + estacionamiento N° 38</b> (inscritos juntos, rol 387-491)</td><td>Inscripción de herencia 2022 con vigencia · 36 boletas ENEL <b>oct-2023 → sep-2026</b> (Paula Acevedo B.; vacío ene-2025 → ene-2026) · sticker CENSO y conserje (may-2026) · 2 tasaciones · §74 · SII sin ingresos</td><td>Contrato (exhibición) · <b>bodega 9 y estacionamiento 38: nada</b> → registro de la administración, mudanzas y patentes (oficio)</td></tr>
-      <tr><td><b>Depto 509, Lord Cochrane 30</b></td><td>36 boletas ENEL <b>oct-2023 → sep-2026</b> («Adriana Tirapeggui» = la causante; ocupado sin cortes desde abr-2024; pagada cada mes en Caja Vecina) · sticker CENSO · WhatsApp Rosemarie → Marisol «por arriendo» · 2 tasaciones · §74 · SII</td><td>Contrato (exhibición) · registro de la administración → oficio</td></tr>
-      <tr><td><b>4 bodegas, Diagonal Paraguay 254</b></td><td>$672.834 de contribuciones pagados por Jorge (07-12-2022) · acceso negado 19-01-2023 · libro de visitas 22-01-2023</td><td>Ocupantes y quién paga gastos comunes → oficio · tasación</td></tr>
-      <tr><td><b>Mausoleo Laso Correa, Cementerio General</b></td><td>Video 65 s + 12 fotos del 24-01-2023 (padre de Jorge, llaves de Marta, chapa nueva; filmó Sofía Navarrete) <a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/Mausoleo%2024-01-2023%20%28decide%20Franco%29/2023-01-24%20-%20Mausoleo%20-%2012%20fotos%20con%20pie.pdf" target="_blank" rel="noopener">📄 fotos</a> · carta FEA 10-09-2025 sin respuesta</td><td>Quién autorizó el cambio de cerradura → oficio al Cementerio · la llave (comparendo de administración, después del 29)</td></tr>
-    </tbody>
-  </table></div>
-</section>
 <section id="s4">
   <h2><span class="n">§4</span>Testigos — quién, sobre qué, con qué tacha, y si están validados</h2>
   <p class="sub">Lista definitiva enviada a Franco el 27-03-2026 (5 personas) <a class="dl" href="docs/00_Testigos/2026-03-27%20-%20Lista%20definitiva%20de%20testigos%20-%205%20testigos.html" target="_blank" rel="noopener">📄 tabla HTML</a> · <a class="dl" href="docs/00_Testigos/2026-03-27%20-%20Lista%20definitiva%20de%20testigos%20enviada%20a%20Franco%20-%205%20testigos.png" target="_blank" rel="noopener">🖼 imagen enviada</a>, tras la preliminar del 20-03 y la depurada del 25-03 (versiones anteriores, fuera de la carpeta). El 21-09 Franco escribió que ofreció «los testigos que me indicaste». <b>Validado hoy significa: confirmado por Jorge en marzo.</b> No consta reconfirmación para el 28/29 ni citación por receptor (Franco dijo el 24-03 que los notificaría). Las tachas del art. <a class="art" href="https://leyes-cl.com/codigo_de_procedimiento_civil/358.htm" target="_blank" rel="noopener" title="Art. 358 CPC — texto en leyes-cl.com">358</a> CPC no impiden declarar: se oponen antes de la declaración y el tribunal las resuelve en la sentencia.</p>
@@ -397,7 +513,7 @@ section{scroll-margin-top:70px}
     <thead><tr><th>Testigo</th><th>Relación · comuna</th><th>Puntos</th><th>Hecho propio que aporta</th><th>Tacha art. <a class="art" href="https://leyes-cl.com/codigo_de_procedimiento_civil/358.htm" target="_blank" rel="noopener" title="Art. 358 CPC — texto en leyes-cl.com">358</a></th><th>Estado</th></tr></thead>
     <tbody>
       <tr><td>Virginia Guiñez Cortez<small>corredora RE/MAX TrueHome · psicóloga forense</small></td><td>Corredora de Jorge (venta de bienes propios) · Las Condes</td><td>4 · 3</td><td>Sus tres tasaciones del 31-03 y el valor de arriendo de mercado. Su ítem 2 (venta por falta de liquidez, «omisión dolosa») es conclusión, no hecho: acotar a lo que tasó y vio.</td><td><span class="tacha media">N° 6 posible</span><small>interés indirecto por relación comercial vigente con Jorge; sin parentesco</small></td><td><span class="est"><b>En lista definitiva</b> · confirmada por Jorge 27-03 · reconfirmar 28/29 ⬜ · citación ⬜</span></td></tr>
-      <tr><td>Daniela Escanilla Matus<small>corredora RE/MAX Diamante · ing. ejecución</small></td><td>«Prima lejana» · Vitacura</td><td>4 · 2 · 3</td><td>Sus tres tasaciones del 11-03; visita a las propiedades para verificar ocupación (anunciada en marzo: ¿se hizo?). Su relato de «abuso patrimonial… fraude, estafa» es calificación jurídica: el tribunal no la valora. Acotar.</td><td><span class="tacha baja">N° 1 improbable</span><small>si el parentesco pasa del 4.° grado; verificar el grado exacto antes del 28</small></td><td><span class="est"><b>En lista definitiva</b> · confirmada 27-03 · reconfirmar ⬜ · visita a terreno ⬜ · citación ⬜</span></td></tr>
+      <tr><td>Daniela Escanilla Matus<small>corredora RE/MAX Diamante · ing. ejecución</small></td><td>«Prima lejana» · Vitacura</td><td>4 · 2 · 3</td><td>Sus tres tasaciones del 11-03; visita a las propiedades para verificar ocupación (anunciada en marzo: ¿se hizo?). Su relato de «abuso patrimonial… fraude, estafa» es calificación jurídica: el tribunal no la valora. Acotar.</td><td><span class="tacha media">N° 7 posible · ya opuesta en C-6511</span><small>declaró en C-6511 el 22-12-2023 (folio 105, receptor Franzani); la demandada le opuso la N° 7 por «eventos sociales antes de la pandemia» y el tribunal la dejó para la sentencia: <b>no fue rechazada, está pendiente</b>. N° 1 no aplica: 6.° grado colateral (tronco común, la bisabuela; su padre es primo hermano de los demandantes).</small></td><td><span class="est"><b>En lista definitiva</b> · confirmada 27-03 · reconfirmar ⬜ · visita a terreno ⬜ · citación ⬜</span></td></tr>
       <tr><td>Rodrigo Jesús Opazo Iturra<small>ingeniero civil industrial</small></td><td>Amigo de la infancia · Machalí (O'Higgins)</td><td>2</td><td>Fue a Lord Cochrane 30, fotografió 508 y 509 (stickers CENSO), la portería y el instructivo; el conserje le dijo que están arrendados a personas naturales (audios 02-04). <b>El hecho propio más limpio del punto 2.</b></td><td><span class="tacha media">N° 7 posible</span><small>amistad íntima, si la contraria la prueba con hechos graves</small></td><td><span class="est"><b>En lista definitiva</b> · confirmada 27-03 · ⚠️ el índice de evidencia (jun) dice «no se presenta como testigo formal»: aclarar · fecha de la constatación (15 o 23-may) ⬜ · viaja desde Machalí: ¿telemático? preguntar a Franco</span></td></tr>
       <tr><td>María Soledad Riquelme Laso<small>psicóloga clínica</small></td><td>Prima hermana · Las Condes</td><td>2 · 3 · 8</td><td>Que desde 2017 los demandados administran, arriendan y usufructúan los bienes; que Rosemarie ofreció a Marisol una suma para que desistiera «del juicio principal» y no explicó qué pasaría con los arriendos. ⚠️ Su lista dice $75 M; en C-21990 aparece otra cifra: fijarla antes de que declare.</td><td><span class="tacha alta">N° 1 segura</span><small>4.° grado colateral</small></td><td><span class="est"><b>En lista definitiva</b> · confirmada 27-03 · reconfirmar ⬜ · citación ⬜</span></td></tr>
       <tr><td>Marisol Elizabeth Laso Tirapegui<small>profesora de castellano</small></td><td>Tía · heredera y comunera · co-demandante en C-6511 · Las Condes</td><td>2 · 3 · 1</td><td>Única heredera que recibe transferencias de Rosemarie «por arriendo», montos que estima poco transparentes; acceso al mausoleo y a las bodegas bloqueado; ha visto ocupantes en Gran Avenida. <b>Hecho propio fuerte y corroborado por los WhatsApp.</b></td><td><span class="tacha alta">N° 1 + N° 6</span><small>3.er grado colateral e interés directo como comunera</small></td><td><span class="est"><b>En lista definitiva</b> · confirmada 27-03 · reconfirmar ⬜ · citación ⬜ · persona mayor: ¿necesita comparecer telemática? preguntar a Franco</span></td></tr>
@@ -610,5 +726,15 @@ section{scroll-margin-top:70px}
 })();
 </script>
 
+<div class="ver-badge" data-ver="2026-09-24.2" data-hash="b0c0de01">PROD · v2026-09-24.2 · b0c0de01</div>
+<script>
+(function(){var b=document.querySelector('.ver-badge');if(!b||b.textContent.indexOf('DEV')!==0||!window.crypto||!crypto.subtle)return;
+fetch(location.pathname,{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){
+t=t.replace(/<div class="ver-badge"[^>]*>[\s\S]*?<\/div>/,'<div class="ver-badge"></div>');
+return crypto.subtle.digest('SHA-256',new TextEncoder().encode(t))}).then(function(h){
+var hex=Array.from(new Uint8Array(h)).map(function(x){return x.toString(16).padStart(2,'0')}).join('').slice(0,8);
+if(hex!==b.getAttribute('data-hash')){b.classList.add('drift');b.textContent+=' · ⚠ cambios sin versionar ('+hex+')';b.title='Dev cambió después de la última versión: correr scripts/publicar_democustomer.py'}
+else{b.title='Dev coincide con la versión publicada'}}).catch(function(){});})();
+</script>
 </body>
 </html>
