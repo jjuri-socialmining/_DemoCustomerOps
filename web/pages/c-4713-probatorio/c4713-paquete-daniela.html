@@ -33,7 +33,8 @@ ul,ol{padding-left:22px}li{margin:3px 0}
 table{border-collapse:collapse;width:100%;font-size:13.5px;background:var(--sup)}th,td{border:1px solid var(--linea);padding:6px 8px;text-align:left;vertical-align:top}
 th{background:var(--sup2);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.03em}
 .tabla-scroll{overflow-x:auto}details>summary{cursor:pointer;color:var(--sello);font-size:14px}
-@media print{.pieza iframe,audio,details{display:none}}
+@media print{.pieza iframe,audio,details,#mapa{display:none}}
+.leaflet-tooltip{font-size:12px}
 </style>
 </head>
 <body><main>
@@ -48,7 +49,20 @@ th{background:var(--sup2);font-family:var(--mono);font-size:11px;font-weight:500
 <li><b>Saba Moneda</b>, Teatinos 215, ~7 min a pie.</li>
 <li><b>Saba Plaza de la Ciudadanía</b>, Morandé 26, bajo La Moneda, ~9 min a pie.</li>
 <li><b>Saba Plaza de Armas</b>, 21 de Mayo 576 (entrada por Diagonal Cervantes), ~15 min a pie. Abre a las 06:30, $3.420 la hora, <b>se puede reservar</b> en saba-chile.cl o en la app MySaba.</li></ul>
-<b>Con qué margen:</b> por el taco de la mañana en el centro (07:30–09:00), la meta es <b>estar estacionado a las 08:15</b>: después hay que caminar y pasar por el control de entrada y los ascensores hasta el piso 17.<br><b>En Metro:</b> estación <b>Santa Ana</b> (líneas 2 y 5), a unas 4 cuadras del tribunal. Si vienes de fuera de Santiago, dejar el auto antes de entrar al centro evita el taco de la mañana.</div>
+<b>Con qué margen:</b> por el taco de la mañana en el centro (07:30–09:00), la meta es <b>estar estacionado a las 08:15</b>: después hay que caminar y pasar por el control de entrada y los ascensores hasta el piso 17.<br><b>En Metro:</b> estación <b>Santa Ana</b> (líneas 2 y 5), a unas 4 cuadras del tribunal. Si vienes de fuera de Santiago, dejar el auto antes de entrar al centro evita el taco de la mañana.</div><div class="nota" style="padding:0;overflow:hidden"><div id="mapa" style="height:340px;width:100%" role="img" aria-label="Mapa: tribunal en Huérfanos 1409 y estacionamiento Polipark en Agustinas 1448"></div>
+<div style="padding:8px 14px;font-size:13px">🏛️ <b>Tribunal</b>: Huérfanos 1409, piso 17 · 🅿️ <b>Polipark</b>: Agustinas 1448 (y Agustinas 1445 ♿, al frente) · unos <b>180 m a pie</b>, 1 cuadra. Mapa © colaboradores de <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>.</div></div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function(){if(!window.L)return;
+var trib=[-33.4399097,-70.6570261], park=[-33.4414871,-70.6571204];
+var m=L.map('mapa',{scrollWheelZoom:false}).setView([-33.44070,-70.65707],17);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(m);
+L.marker(trib).addTo(m).bindTooltip('🏛️ Tribunal · Huérfanos 1409, piso 17',{permanent:true,direction:'top'});
+L.marker(park).addTo(m).bindTooltip('🅿️ Polipark · Agustinas 1448 (07:30–18:00)',{permanent:true,direction:'bottom'});
+L.polyline([park,trib],{dashArray:'6 6',weight:3}).addTo(m);
+m.fitBounds([trib,park],{padding:[60,60]});})();
+</script>
 <div class="nota"><span class="tit">Importante</span>En la audiencia se declara solo lo que a usted le consta: lo que hizo, vio o sabe por su oficio. Si no sabe o no recuerda algo, se dice así. Si le preguntan si recibió estos documentos, la respuesta es sí.</div>
 <h2>Sus documentos</h2>
 <div class="pieza"><div class="t">Tasación · Casa Chile España 8316-B, La Cisterna (rol 3228-3)</div><div class="meta">04_Avaluo-y-renta/2026-03-11 - Tasacion Daniela Escanilla REMAX Diamante - Chile Espana 8316-B - EV-04899.pdf · EV-04899-M-26 · 11-03-2026 · 13 págs. · MD5 738d4863cf8313c32a1d27ddf16de6bb</div>

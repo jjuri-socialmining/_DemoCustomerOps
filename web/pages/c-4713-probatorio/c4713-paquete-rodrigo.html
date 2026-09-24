@@ -33,7 +33,8 @@ ul,ol{padding-left:22px}li{margin:3px 0}
 table{border-collapse:collapse;width:100%;font-size:13.5px;background:var(--sup)}th,td{border:1px solid var(--linea);padding:6px 8px;text-align:left;vertical-align:top}
 th{background:var(--sup2);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.03em}
 .tabla-scroll{overflow-x:auto}details>summary{cursor:pointer;color:var(--sello);font-size:14px}
-@media print{.pieza iframe,audio,details{display:none}}
+@media print{.pieza iframe,audio,details,#mapa{display:none}}
+.leaflet-tooltip{font-size:12px}
 </style>
 </head>
 <body><main>
@@ -42,7 +43,20 @@ th{background:var(--sup2);font-family:var(--mono);font-size:11px;font-weight:500
 <h1>Rodrigo Jesús Opazo Iturra</h1>
 <p>Estos son <b>sus propias fotos y audios</b> de Lord Cochrane 30, todos del <b>jueves 2 de abril de 2026, entre las 9:29 y las 9:47</b>. Revíselos para tener claro lo que vio.</p>
 <div class="nota verde"><span class="tit">Fechas</span><b>Lunes 28-09:</b> Franco lo prepara por videollamada (él lo contacta). <b>Martes 29-09, 09:00:</b> audiencia testimonial en el 3er Juzgado Civil de Santiago, <b>Huérfanos 1409, piso 17</b>. <b>Llegar a las 08:45</b>, con cédula de identidad. Punto de encuentro: lo confirma Franco.</div>
-<div class="nota"><span class="tit">Cómo llegar (con muletas)</span>Lo más cómodo: <b>que alguien lo deje en la puerta</b> de Huérfanos 1409. Si viene manejando: <b>Polipark, Agustinas 1448</b>, a una cuadra (lunes a viernes 07:30–18:00, tel. +56 2 2698 3933). En la misma cuadra, con acceso para movilidad reducida ♿: <b>Agustinas 1445</b> (tel. +56 2 2540 6145).<br><b>Con qué margen:</b> desde Machalí y con el taco de la mañana en el centro, la meta es <b>llegar a las 08:00</b>: después viene el control de entrada y los ascensores hasta el piso 17.</div>
+<div class="nota"><span class="tit">Cómo llegar (con muletas)</span>Lo más cómodo: <b>que alguien lo deje en la puerta</b> de Huérfanos 1409. Si viene manejando: <b>Polipark, Agustinas 1448</b>, a una cuadra (lunes a viernes 07:30–18:00, tel. +56 2 2698 3933). En la misma cuadra, con acceso para movilidad reducida ♿: <b>Agustinas 1445</b> (tel. +56 2 2540 6145).<br><b>Con qué margen:</b> desde Machalí y con el taco de la mañana en el centro, la meta es <b>llegar a las 08:00</b>: después viene el control de entrada y los ascensores hasta el piso 17.</div><div class="nota" style="padding:0;overflow:hidden"><div id="mapa" style="height:340px;width:100%" role="img" aria-label="Mapa: tribunal en Huérfanos 1409 y estacionamiento Polipark en Agustinas 1448"></div>
+<div style="padding:8px 14px;font-size:13px">🏛️ <b>Tribunal</b>: Huérfanos 1409, piso 17 · 🅿️ <b>Polipark</b>: Agustinas 1448 (y Agustinas 1445 ♿, al frente) · unos <b>180 m a pie</b>, 1 cuadra. Mapa © colaboradores de <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>.</div></div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function(){if(!window.L)return;
+var trib=[-33.4399097,-70.6570261], park=[-33.4414871,-70.6571204];
+var m=L.map('mapa',{scrollWheelZoom:false}).setView([-33.44070,-70.65707],17);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(m);
+L.marker(trib).addTo(m).bindTooltip('🏛️ Tribunal · Huérfanos 1409, piso 17',{permanent:true,direction:'top'});
+L.marker(park).addTo(m).bindTooltip('🅿️ Polipark · Agustinas 1448 (07:30–18:00)',{permanent:true,direction:'bottom'});
+L.polyline([park,trib],{dashArray:'6 6',weight:3}).addTo(m);
+m.fitBounds([trib,park],{padding:[60,60]});})();
+</script>
 <div class="nota"><span class="tit">Importante</span>En la audiencia se declara solo lo que a usted le consta: lo que vio y lo que le dijeron, diciendo quién se lo dijo. Si no sabe o no recuerda algo, se dice así. Si le preguntan si recibió estos documentos, la respuesta es sí.</div>
 <h2>Sus fotos y audios</h2>
 <div class="pieza"><div class="t">Foto 1 de 4 · Puerta del depto. 508 · 02-04-2026 09:29</div><div class="meta">02_Ocupacion-y-titulo/2026-04-02 - Lord Cochrane 30 - constatacion de Rodrigo Opazo - 4 fotos (PDF).pdf · 4 fotos en un PDF · MD5 040a03127e5054e58797dca5591814da</div>
