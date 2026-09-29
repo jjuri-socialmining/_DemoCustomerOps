@@ -1,0 +1,183 @@
+Delivered-To: jorge.juri.l@gmail.com
+Received: by 2002:a05:6400:25a:b0:2a8:44b2:8e5 with SMTP id hy26csp2110500ecb;
+        Thu, 9 Oct 2025 16:21:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF55AFoNvpWtZE9yF7oPM4fa0lFs6na51N8sSEdo3nWxH+g2lou7ARjMdGuFXQEITySU2ct
+X-Received: by 2002:a17:90b:3e83:b0:32e:23c9:6f41 with SMTP id 98e67ed59e1d1-33b51676ef2mr11411420a91.5.1760052090552;
+        Thu, 09 Oct 2025 16:21:30 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1760052090; cv=none;
+        d=google.com; s=arc-20240605;
+        b=BGJNDn6IM3a4oho8NoWiSvn9lBjdorSmq8wb8m83+0lhj9zp2eDyDHmnDqzYv5NRfn
+         nVTrcNw/xZvDr+cH54nw6fhDip0ANLjFE274ApdnuHGwxhTof0WTE1YRyWWI6JcpLa4L
+         qwiPr36ciMJUByHk+ZpBLG0S6oRbDlazFUcaZWzMUeU5NguWPLEf0gpvvdojabIlk/Ys
+         EG2hyo9lhvcERIPBsyjOUHt9Z0+KI5Cyf3EJMZuaqDnlrnUHORyGsU6SPk72HDLeaguJ
+         qfkwLmm1pDOHu7EVc87UlVkRF2OcOOPUT9CbAnkfjBya3JDZNoswBEo3TlVfYPthpo4i
+         BVHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=date:message-id:subject:recipients:cc:to:from
+         :content-transfer-encoding:mime-version;
+        bh=81/OrDqXcubnnFMvSn9NZFfT+tgAt8mlykvpUUzTjeQ=;
+        fh=rJ96CGd7Vm9ygts8u4gAC5pn+Knvz/3lJzAcWoRvLz0=;
+        b=RjT4SnehlOL5QEfU4Jq1RhEKYf2XF1HgxWw1kQ9RkTvAhl1Nyty3cSzXMbgtI4nQDp
+         2FeBeLm6TXQcyUdbckUqZOrOrxN7a5WfU/u/E3lQgE9j8akXt2MoQNur3JY6xpntJuny
+         9hl7d5sQ/9ZhLqzh/o6iu/ovW0swzRMsoIsfPi1g5PeAT5XtpvVNP2sjP4puaeOivX1L
+         BfKHmY8bqJq5cyahGx7aJ0j9eD3am1uRWINj98t9Kwq5SsZBxgGv3RCSshOET+TAbTp6
+         Fd5zfkFs7+bDTnhlfJCDZjQQeftjp2zGtfGQ1eYQpDas+jtb2RQzoEpAWMoAA8j8Z7hj
+         LGDg==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: domain of siau@minpublico.cl designates 190.54.138.150 as permitted sender) smtp.mailfrom=siau@minpublico.cl
+Return-Path: <siau@minpublico.cl>
+Received: from salida.minpublico.cl (salida.minpublico.cl. [190.54.138.150])
+        by mx.google.com with ESMTPS id 41be03b00d2f7-b679047e9b7si455674a12.661.2025.10.09.16.21.30
+        for <jorge.juri.l@gmail.com>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Oct 2025 16:21:30 -0700 (PDT)
+Received-SPF: pass (google.com: domain of siau@minpublico.cl designates 190.54.138.150 as permitted sender) client-ip=190.54.138.150;
+Authentication-Results: mx.google.com;
+       spf=pass (google.com: domain of siau@minpublico.cl designates 190.54.138.150 as permitted sender) smtp.mailfrom=siau@minpublico.cl
+Received: from exchange (172.18.1.144) by MBX01-2013.minpublico.cl
+ (172.18.1.137) with Microsoft SMTP Server id 15.0.1497.48; Thu, 9 Oct 2025
+ 20:22:31 -0300
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+From: Fiscalia de Chile <siau@minpublico.cl>
+To: <jorge.juri.l@gmail.com>
+CC:
+Recipients: eriverar@minpublico.cl
+Subject: =?ISO-8859-1?Q?Comunicaci=F3n Respuesta - Solicitud?=
+Content-Type: multipart/mixed; boundary="DMW.Boundary.605592468"
+Message-ID: <d176474a07f848f4bb1f5da9f6d3eb5b@MBX01-2013.minpublico.cl>
+Return-Path: siau@minpublico.cl
+Date: Thu, 9 Oct 2025 20:22:31 -0300
+
+--DMW.Boundary.605592468
+Content-Type: text/html; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3Dutf-8" /><meta name=3D"viewport" content=3D"width=3Ddevice-width; initia=
+l-scale=3D1.0; maximum-scale=3D1.0;" /><title>Fiscal=EDa de Chile</title><s=
+tyle type=3D"text/css">html { width: 100%; background-color: #F2F2F2; font-=
+family: Arial, Helvetica, sans-serif;}body { width: 100%; background-color:=
+ #F2F2F2; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif;=
+ -webkit-text-size-adjust: 100%;	-ms-text-size-adjust: 100%;} p.MsoNormal, =
+li.MsoNormal, div.MsoNormal {	font-size: 0pt;	margin: 0;}table { border-col=
+lapse: collapse; mso-table-lspace: 0pt;	mso-table-rspace: 0pt;}+td {	border=
+-collapse: collapse;	mso-table-lspace: 0pt;	mso-table-rspace: 0pt;}img {	ma=
+rgin: 0;	border: 0px; outline: none;	text-decoration: none; padding: 0;}spa=
+n {	margin: 0; border: 0px;	padding: 0;}div { margin: 0; border: 0px;	paddi=
+ng: 0;}a	{ margin: 0; border: 0px; outline: none; padding: 0;}#outlook a{ p=
+adding:0;}a:hover { text-decoration: underline;}a:visited { color: #0000FF;=
+ text-decoration: none;}.vinc { color: #0000FF; text-decoration: none;}.vin=
+c:hover { text-decoration: underline;}.vinc:visited { text-decoration: none=
+;}.wrap { background-color: #F2F2F2;	width: 100%; padding: 30px 0 30px 0;}.=
+wrapper {	width: 598px; border: solid 1px #cccccc; margin: 0 auto 0 auto;	p=
+adding: 0;}.header { width: 598px;}.main { width: 598px;}.footer { width: 5=
+98px;}.content {	width: 518px;}.lateral {	width: 40px;}.img-header-desktop =
+{ display: block; font-size: 0px;}.img-header-movil	{ display: none; max-he=
+ight: 0px; font-size: 0;	padding: 0;}.img-footer-desktop { display: block; =
+font-size: 0px;}.img-footer-movil	{ display: none; max-height: 0px; font-si=
+ze: 0;	padding: 0;}@media only screen and (max-width: 690px) { body {width:=
+auto !important;}*[class].wrapper {width: 438px !important;}*[class].header=
+ {width: 438px !important;}*[class].main {width: 438px !important;}*[class]=
+.footer {width: 438px !important;}*[class].content {width: 388px !important=
+;}*[class].lateral {width: 25px !important;} *[class].img-header-desktop {d=
+isplay: block !important; max-height: none !important; font-size: 12px !imp=
+ortant; width: 438px !important;	height: 78px !important; *[class].img-head=
+er-movil	{display: none !important;} *[class].img-footer-desktop {display: =
+block !important;  max-height: none !important;	font-size: 12px !important;=
+	width: 438px !important; height: 28px !important;} *[class].img-footer-mov=
+il {display: none !important;}*[class].txt-cuerpo {font-size: 12px !importa=
+nt; line-height: 22px !important;}*[class].txt-fluidcol {width: 291px !impo=
+rtant;}*[class].img-fluidcol {width: 97px !important;}}@media only screen a=
+nd (max-width: 479px) { body {width:auto !important;}*[class].wrapper {widt=
+h: 298px !important;}*[class].header {width: 298px !important;}*[class].mai=
+n {width: 298px !important;}*[class].footer {width: 298px !important;}*[cla=
+ss].content {width: 258px !important;}*[class].lateral {width: 20px !import=
+ant;}*[class].img-header-desktop {display: none !important;}*[class].img-he=
+ader-movil {display: block !important; max-height: none !important;	font-si=
+ze: 12px !important;}*[class].img-footer-desktop {display: none !important;=
+}*[class].img-footer-movil {display: block !important; max-height: none !im=
+portant;	font-size: 12px !important;}*[class].txt-cuerpo {font-size: 12px !=
+important; line-height: 19px !important;}*[class].txt-fluidcol {display: bl=
+ock !important; width: 258px !important;	padding: 0 0 20px 0 !important;}*[=
+class].img-fluidcol {display: block !important; width: 258px !important;}}<=
+/style></head><body style=3D"margin:0; padding:0;" ><table width=3D"100%" b=
+order=3D"0" cellpadding=3D"0" cellspacing=3D"0" class=3D"wrap"><tr><td widt=
+h=3D"100%" align=3D"center" valign=3D"top" bgcolor=3D"#F2F2F2" style=3D"mar=
+gin:0; padding:30px 0 30px 0; border:none; "><table width=3D"600" border=3D=
+"0" align=3D"center" cellpadding=3D"0" cellspacing=3D"0" class=3D"wrapper" =
+style=3D"margin:0 auto 0 auto; padding:0; border:1px solid #CCCCCC;"><tr><t=
+d align=3D"center" valign=3D"top" bgcolor=3D"#FFFFFF" style=3D"margin:0; pa=
+dding:0; border:none; "><table width=3D"598" border=3D"0" cellspacing=3D"0"=
+ cellpadding=3D"0" class=3D"header"><tr><td bgcolor=3D"#FFFFFF" class=3D"ce=
+l-header-desktop" style=3D"margin:0px; padding:0px; border:none; font-size:=
+0;"><div class=3D"img-header-desktop" style=3D"margin:0; padding:0; border:=
+none; font-size:0;" ><img src=3D"http://www.fiscaliadechile.cl/imagenes/img=
+_mail/header.jpg" width=3D"598" height=3D"106" class=3D"img-header-desktop"=
+ style=3D"margin:0px; padding:0px; border:none; "/></div></td></tr></table>=
+<table width=3D"598" border=3D"0" cellspacing=3D"0" cellpadding=3D"0" class=
+=3D"main"><tr><td width=3D"40" bgcolor=3D"#FFFFFF"=0A=
+                  class=3D"lateral" style=3D"margin:0; padding:0; border:no=
+ne; font-size:0;"></td><td width=3D"518" class=3D"content"><table=0A=
+                  width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=
+=3D"0"><tr bgcolor=3D"#FFFFFF" class=3D"txt-fluidcol" style=3D"margin:0px;=
+=0A=
+                  padding:0px; border:none; font-size:13px; line-height:18p=
+x; color:#999999; font-family:Arial, Helvetica, sans-serif;=0A=
+                  text-align:left;"><td><br/>Estimado/a Usuario/a,<br/> Jun=
+to con saludarle, informamos que la/s siguientes/s=0A=
+                  solicitud/es ingresada/s con fecha 08/10/2025, asociada/s=
+ al RUC  <b>=0A=
+                  2410007828-3</b>, con folio n=FAmero <b> 140639412474</b>=
+, se encuentra/n resuelta/s.<br><br><b><ul><li>Informaci=F3n espec=EDfica s=
+obre t=E9rmino de una causa</li></ul><br></td></tr><tr bgcolor=3D"#FFFFFF" =
+class=3D"txt-fluidcol" style=3D"margin:0px; padding:0px; border:none;=0A=
+                  font-size:13px; line-height:18px; color:#999999; font-fam=
+ily:Arial, Helvetica, sans-serif; text-align:left;"><td>=0A=
+                  <b> Respuesta: <br> </b></td></tr><tr bgcolor=3D"#FFFFFF"=
+ class=3D"txt-fluidcol" style=3D"margin:0px; padding:0px;=0A=
+                  border:none; font-size:13px; line-height:18px; color:#999=
+999; font-family:Arial, Helvetica, sans-serif;=0A=
+                  text-align:left;"><td width=3D"10px">Se informa que con f=
+echa 09-05-25 el 7 juzgado de garantia aprobo solicitud de termino toda vez=
+ que segun lo indicado mediante escrito a tribunal De conformidad con el ar=
+t=EDculo 248 letra c) del C=F3digo Procesal Penal comunico a US. que esta F=
+iscal=EDa, con fecha 21-03-2025, ha decidido cerrar investigaci=F3n y no pe=
+rseverar en este procedimiento, por cuanto durante la investigaci=F3n reali=
+zada no se han reunido antecedentes suficientes para fundar una acusaci=F3n=
+. En audiencia Tribunal rechaza solicitud de reapertura de la querellante l=
+uego de haber escuchado a las partes</td></tr></table><br><br><table width=
+=3D"100%"=0A=
+                  border=3D"0" cellspacing=3D"0" cellpadding=3D"0"><tr><td =
+width=3D"421" valign=3D"top" bgcolor=3D"#FFFFFF" class=3D"txt-fluidcol"=0A=
+                  style=3D"margin:0px; padding:0px; border:none; font-size:=
+13px; line-height:18px; color:#999999; font-family:Arial,=0A=
+                  Helvetica, sans-serif; text-align:left;">Atentamente.<br =
+/><br /><strong>Sistema de Informaci=F3n y Atenci=F3n de=0A=
+                  Usuarios<br />Fiscal=EDa de Chile.</strong></td><td width=
+=3D"97" valign=3D"top" bgcolor=3D"#FFFFFF" class=3D"img-fluidcol"=0A=
+                  style=3D"margin:0px; padding:0px; border:none; font-size:=
+0; text-align:center;">=0A=
+                  <img src=3D"http://www.fiscaliadechile.cl/imagenes/img_ma=
+il/timbre.jpg" width=3D"97" height=3D"97" /></td></tr></table>=0A=
+                  <table width=3D"100%" border=3D"0" cellspacing=3D"0" cell=
+padding=3D"0"><tr><td align=3D"center" valign=3D"top" bgcolor=3D"#FFFFFF"=
+=0A=
+                  class=3D"txt-subfooter" style=3D"margin:0px; padding:10px=
+ 0 35px 0; font-size:11px; line-height:14px; color:#999999;=0A=
+                  font-family:Arial, Helvetica, sans-serif; text-align:cent=
+er; border-top:dotted #CCCCCC 1px;">Este correo electr=F3nico=0A=
+                  es generado en forma autom=E1tica,<br />por favor no resp=
+onda a este mensaje.</td></tr></table></td><td width=3D"40"=0A=
+                  bgcolor=3D"#FFFFFF" class=3D"lateral" style=3D"margin:0; =
+padding:0; border:none; font-size:0;"></td></tr></table><table width=3D"598=
+" border=3D"0" cellspacing=3D"0" cellpadding=3D"0" class=3D"footer"><tr><td=
+ class=3D"cel-footer-desktop" style=3D"margin:0px; padding:0px; border:none=
+; font-size:0px;"><div class=3D"img-footer-desktop" style=3D"margin:0; padd=
+ing:0; border:none; font-size:0;"><img src=3D"http://www.fiscaliadechile.cl=
+/imagenes/img_mail/footer.jpg" width=3D"598" height=3D"38" class=3D"img-foo=
+ter-desktop" style=3D"margin:0px; padding:0px; border:none; "/></div></td><=
+/tr></table></td></tr></table></td></tr></table></body></html>=
+
+--DMW.Boundary.605592468--
