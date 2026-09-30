@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expediente OJV</title>
+<meta name="description" content="Réplica local de «Detalle Causa Civil» de la OJV: cada folio con su documento (el que falta, en claro), el análisis del repo, y peso, análisis y campos propios que se guardan en el repo.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="css/nav.css">
+<link rel="stylesheet" href="css/ojv.css">
+<style>.submenu-c4713{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 18px;font:11px/1.4 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase}.submenu-c4713 b{opacity:.6;margin-right:4px}.submenu-c4713 a{color:inherit;text-decoration:none;border:1px solid GrayText;border-radius:3px;padding:4px 9px}.submenu-c4713 a:hover,.submenu-c4713 a.activo{color:#3b2fa0;border-color:#3b2fa0}</style>
+</head>
+<body>
+<div class="pub-ver" title="Versión publicada de esta página · huella a4c6b667" style="position:fixed;top:10px;right:12px;z-index:60;font:600 11px/1 ui-monospace,Menlo,Consolas,monospace;padding:5px 9px;border-radius:5px;border:1px solid GrayText;background:Canvas;color:CanvasText;opacity:.9">v1</div>
+<div class="ojv">
+<header class="topbar">
+  <div>
+    <span class="brand">LEGALOPS-OS · DemoCustomerOps</span>
+    <span class="brand-sub" id="marcaCausa">Expediente OJV</span>
+  </div>
+  <div class="controls"></div>
+</header>
+<nav class="submenu-c4713"><b>C-4713</b><a href="index.html">Tablero del probatorio</a><a class="activo" href="ojv.html?causa=C-4713-2025">📁 Expediente OJV</a><a href="forense-pago-tgr.html">🧾 Forense pago TGR</a><a href="mala-fe.html">⚖️ Mala fe procesal</a></nav>
+  <a class="volver" id="volver" href="litigios.html">🏠 ← Litigios · cartera</a>
+
+  <div class="modal">
+    <div class="modal-tit">
+      <h1>⚖️ Detalle Causa Civil</h1>
+      <span class="fuente" id="fuente"></span>
+    </div>
+    <div class="cuerpo">
+      <div class="caja">
+        <div class="cab" id="cab"></div>
+        <div class="cab-enl" id="cabEnl"></div>
+      </div>
+      <div class="caja cuad">
+        <div><b>📂 Historia Causa Cuaderno</b><select id="cuaderno" disabled></select></div>
+        <div><b>📬 Información notificaciones receptor:</b><span id="infoRec"></span></div>
+      </div>
+
+      <div class="tabs" id="tabs" role="tablist"></div>
+
+      <div class="aviso" id="aviso" hidden></div>
+
+      <div class="barra" id="barra">
+        <span class="chip ok" id="cTen"></span>
+        <span class="chip fa" id="cFal"></span>
+        <span class="chip" id="cSin"></span>
+        <span class="filtros" id="filtros">
+          <button data-f="todos" class="on">📋 Todos</button>
+          <button data-f="faltan">🔴 Faltan</button>
+          <button data-f="con-analisis">🧠 Con análisis</button>
+          <button data-f="sin-peso">⚪ Sin peso</button>
+          <button data-f="riesgo-alto">⚠️ Riesgo alto</button>
+          <button data-f="propuestas">🤖 Propuestas</button>
+        </span>
+        <input type="search" id="buscar" placeholder="🔍 Buscar folio, trámite, texto…">
+        <span class="add"><input type="text" id="nuevoCampo" placeholder="Nombre del campo nuevo" maxlength="60"><button id="btnCampo">➕ Campo</button></span>
+        <span class="estado-guardado" id="estadoGuardado"></span>
+      </div>
+
+      <div class="score" id="score"></div>
+      <div id="vista"></div>
+
+      <div class="leyenda">
+        <span><span class="ic pdf" data-i="pdf"></span> documento que tenemos (abre el PDF)</span>
+        <span><span class="ic pdf falta" data-i="pdf"></span> la OJV lo tiene y nosotros no: <b>falta</b></span>
+        <span><span class="ic pdf2" data-i="pdf"></span> segundo archivo de la OJV (ícono azul)</span>
+        <span><span class="ic anexo" data-i="anexo"></span> anexo</span>
+        <span><span class="ic copia" data-i="pdf"></span> copia propia en el vault</span>
+        <span><span class="ic nulo" data-i="nulo"></span> la OJV no tiene documento</span>
+        <span><span class="peso"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span> <b>⚖️ Peso</b> = cuánto le sirve el documento al caso: <b>0</b> sin evaluar · <b>1</b> trámite sin incidencia · <b>2</b> contexto · <b>3</b> útil, apoya un punto de prueba · <b>4</b> importante, prueba un punto o fija posición · <b>5</b> decisivo, puede ganar o perder un punto. Clic en un punto para fijarlo; clic en el mismo, vuelve a 0.</span>
+        <span><span class="peso riesgo"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span> <b>⚠️ Riesgo</b> = cuánto puede dañar el documento al caso: <b>0</b> sin evaluar · <b>1</b> sin riesgo · <b>2</b> bajo · <b>3</b> medio, la contraria puede usarlo · <b>4</b> alto, daña un punto o nos fija una posición · <b>5</b> crítico, puede hacernos perder un punto. 🤖 = propuesta de Claude: al cambiarla a mano pasa a ser de ustedes.</span>
+      </div>
+      <p class="nota-pie"><b>🔢 Folio</b> = número correlativo de cada actuación en la carpeta electrónica de la OJV (una resolución y un escrito pueden compartir número si el sistema los agrupa). <b>📑 Foja</b> = número de hoja del expediente donde empieza esa pieza, heredado de la numeración en papel; <b>0</b> = actuación sin foja (receptor, certificados). No es una referencia a otro documento. Lo que sí relaciona piezas es <b>↳ provee / ↰ resuelto en</b>: qué resolución contestó qué escrito, según el índice del ebook OJV — clic para saltar.</p>
+      <p class="nota-pie" id="notaPie"></p>
+    </div>
+  </div>
+</div>
+
+<aside class="panel" id="panel" aria-hidden="true">
+  <header><div><h2 id="panelTit"></h2><small id="panelRuta"></small></div><button id="panelCerrar">Cerrar ✕</button></header>
+  <div class="md" id="panelMd"></div>
+</aside>
+
+<script src="js/ojv.js"></script>
+<script>document.addEventListener("DOMContentLoaded", () => Ojv.iniciar());</script>
+<footer class="pub-pie" style="max-width:1100px;margin:40px auto 24px;padding:14px 16px 0;border-top:1px solid GrayText;font:12px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:GrayText;text-align:center">Versión v1 · último cambio 30-09-2026: submenú C-4713: expediente OJV, forense pago TGR y mala fe procesal<br>© 2026 Sigma Digital Twins · Autor: Jorge Juri · Todos los derechos reservados.</footer>
+</body>
+</html>

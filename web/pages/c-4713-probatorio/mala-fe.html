@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mala fe procesal</title>
+<meta name="description" content="C-4713-2025: cómo funciona pedir sanción por mala fe procesal (Ley 20.886 art. 2 letra d y art. 144 CPC), explicado simple. Interno.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{--papel:#F4F6F9;--sup:#FFFFFF;--sup2:#EDF0F5;--tinta:#12151C;--tinta2:#4A5261;--tinta3:#79808F;--linea:#D6DBE4;--sello:#2C3A8F;--sello-suave:#E7EAF8;--ok:#146356;--ok-suave:#DCEDE8;--abierto:#8A5605;--abierto-suave:#F7EBD5;--falta:#96262B;--falta-suave:#F7E3E3;--serif:Georgia,'Iowan Old Style','Times New Roman',serif;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;--mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;--bg:var(--papel)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--papel:#0E1116;--sup:#161A22;--sup2:#1D222C;--tinta:#E8EBF1;--tinta2:#A8B0BE;--tinta3:#79818F;--linea:#2A303B;--sello:#93A0F0;--sello-suave:#1C2140;--ok:#5FC7AF;--ok-suave:#12302B;--abierto:#DDA33F;--abierto-suave:#332714;--falta:#E58A87;--falta-suave:#361C1D}}
+:root[data-theme="dark"]{--papel:#0E1116;--sup:#161A22;--sup2:#1D222C;--tinta:#E8EBF1;--tinta2:#A8B0BE;--tinta3:#79818F;--linea:#2A303B;--sello:#93A0F0;--sello-suave:#1C2140;--ok:#5FC7AF;--ok-suave:#12302B;--abierto:#DDA33F;--abierto-suave:#332714;--falta:#E58A87;--falta-suave:#361C1D}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--sans);font-size:16px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px 80px}
+.topbar{border-bottom:1px solid var(--linea)}
+.folio{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta3);margin:18px 0 8px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(26px,5vw,36px);line-height:1.15;margin:0}
+.bajada{color:var(--tinta2);font-size:17px;margin:12px 0 0}
+h2{font-family:var(--serif);font-weight:400;font-size:23px;margin:40px 0 10px}
+p{margin:0 0 12px}
+.caja{background:var(--sup);border:1px solid var(--linea);border-radius:6px;padding:16px 18px;margin:14px 0}
+.caja.ok{background:var(--ok-suave);border-color:var(--ok)}
+.caja.no{background:var(--falta-suave);border-color:var(--falta)}
+.caja.ojo{background:var(--abierto-suave);border-color:var(--abierto)}
+.caja b{color:var(--tinta)}
+ol.pasos{list-style:none;padding:0;margin:0;counter-reset:p}
+ol.pasos li{counter-increment:p;position:relative;padding:12px 0 12px 48px;border-bottom:1px solid var(--linea)}
+ol.pasos li::before{content:counter(p);position:absolute;left:0;top:12px;width:32px;height:32px;border-radius:50%;background:var(--sello-suave);color:var(--sello);font-family:var(--mono);font-weight:700;display:flex;align-items:center;justify-content:center}
+.dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.dicen{font-family:var(--serif);font-style:italic;color:var(--tinta2);border-left:3px solid var(--falta);padding-left:10px;margin:8px 0}
+.prueba{border-left:3px solid var(--ok);padding-left:10px;margin:8px 0;color:var(--tinta2)}
+.et{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta3);display:block}
+ul{padding-left:20px} li{margin:4px 0}
+a.dl{display:inline-block;margin:8px 8px 0 0;font-family:var(--mono);font-size:12px;color:var(--sello);text-decoration:none;border:1px solid var(--sello);border-radius:4px;padding:4px 9px}
+a.dl:hover{background:var(--sello-suave)}
+.dicen.cita{font-style:normal;font-size:15px;line-height:1.65;color:var(--tinta)}
+.dicen.cita mark{background:var(--falta-suave);color:var(--tinta);padding:1px 2px;border-radius:2px}
+.nota-cita{font-size:12px;color:var(--tinta3);margin:0 0 8px}
+code{font-family:var(--mono);font-size:12px;color:var(--tinta2);word-break:break-word}
+footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--linea);font-size:13px;color:var(--tinta3)}
+@media print{.topbar,.main-nav{display:none!important}}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;margin-bottom:1.5rem}.brand{font-size:15px;font-weight:500;letter-spacing:.06em}.brand-sub{font-size:11px;color:var(--tinta3);margin-left:10px}
+</style>
+<style>.submenu-c4713{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 18px;font:11px/1.4 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase}.submenu-c4713 b{opacity:.6;margin-right:4px}.submenu-c4713 a{color:inherit;text-decoration:none;border:1px solid GrayText;border-radius:3px;padding:4px 9px}.submenu-c4713 a:hover,.submenu-c4713 a.activo{color:#3b2fa0;border-color:#3b2fa0}</style>
+</head>
+<body>
+<div class="pub-ver" title="Versión publicada de esta página · huella 0e232761" style="position:fixed;top:10px;right:12px;z-index:60;font:600 11px/1 ui-monospace,Menlo,Consolas,monospace;padding:5px 9px;border-radius:5px;border:1px solid GrayText;background:Canvas;color:CanvasText;opacity:.9">v1</div>
+<div class="wrap">
+<header class="topbar">
+  <div>
+    <span class="brand">LEGALOPS-OS · DemoCustomerOps</span>
+    <span class="brand-sub">Mala fe procesal</span>
+  </div>
+  <div class="controls"></div>
+</header>
+<nav class="submenu-c4713"><b>C-4713</b><a href="index.html">Tablero del probatorio</a><a href="ojv.html?causa=C-4713-2025">📁 Expediente OJV</a><a href="forense-pago-tgr.html">🧾 Forense pago TGR</a><a class="activo" href="mala-fe.html">⚖️ Mala fe procesal</a></nav>
+
+<div class="folio">C-4713-2025 · 3er JC Santiago · Juicio público · 30-09-2026</div>
+<h1>Mala fe procesal: cómo funciona</h1>
+<p class="bajada">Si la otra parte afirma en el juicio algo que sus propios papeles o los tuyos desmienten, se le puede pedir al juez que lo tome en cuenta y lo sancione. No es un juicio nuevo: se pide dentro del mismo juicio.</p>
+
+<h2>1. La idea en simple</h2>
+<div class="caja">
+<p><b>La ley obliga a las partes y a sus abogados a litigar de buena fe.</b> Eso incluye no afirmar cosas falsas y no decir una cosa y hacer la contraria (los «actos propios»).</p>
+<p style="margin:0">Si no cumplen, <b>el mismo juez de la causa</b> puede corregirlo, sancionarlo y, sobre todo, <b>condenarlos a pagar las costas</b> del juicio.</p>
+</div>
+<p style="font-size:14px;color:var(--tinta3)">Normas: Ley 20.886, art. 2 letra d) (buena fe) · Código de Procedimiento Civil, art. 144 (costas).</p>
+
+<h2>2. Cómo se hace, paso a paso</h2>
+<ol class="pasos">
+<li><b>Se junta el par: lo que dijeron y el papel que lo desmiente.</b> Frase textual de su escrito, con folio y párrafo, al lado del documento que prueba lo contrario.</li>
+<li><b>Franco presenta un escrito corto en C-4713.</b> Dos hechos, sus documentos y la norma. Sin palabras como «mentira» o «delito».</li>
+<li><b>Le pide dos cosas al juez:</b> que lo tenga presente al valorar la prueba y que, al fallar, declare que no tuvieron motivo plausible para litigar (así pagan las costas).</li>
+<li><b>El juez lo resuelve en la sentencia</b> o antes, si decide corregir de inmediato.</li>
+</ol>
+<div class="caja ojo"><b>⏱ Cuándo:</b> antes de que el juez cite a las partes a oír sentencia. El término probatorio ya venció el 29-09.</div>
+
+<h2>3. Los dos hechos que tenemos</h2>
+<div class="dos">
+<div class="caja">
+<span class="et">Hecho 1 · el más fuerte</span>
+<div class="dicen cita">«14. De hecho, hasta donde tenemos conocimiento, don <b>Jorge Juri Laso</b> <b><u>continúa ocupando 10 bodegas de su abuela</u></b>, siendo una de ellas la bodega ubicada en calle Diagonal Paraguay, Rol SII 423-429, inscrita en el Conservador de Bienes Raíces de Santiago bajo fojas 34774, número 504452, del registro de propiedad del año 2022 (“<u>bodega ocupada por el Demandante</u>”), y <b>sobre la cual —curiosamente— se solicita en autos a los demandados que cesen su uso y goce gratuito, en circunstancias que es el demandante quien realiza aquello</b>. Cabe agregar que don <b>Jorge Juri Laso</b> ocupa también una bodega de don <b>Christian Araya Laso</b>. <mark>Todo lo anterior, sin pagar don <b>Jorge Juri Laso</b> gasto o impuesto alguno por dichas ocupaciones.</mark> Huelgan comentarios.»</div>
+<p class="nota-cita">Transcripción textual; negritas y subrayados del original. El resaltado es nuestro.</p>
+<span class="et">Contestación, folio 32, §14 (nombra la bodega 423-429)</span>
+<div class="prueba">Jorge pagó <b>$672.834</b> de contribuciones el <b>07-12-2022</b>, incluida la 423-429. Lo prueban el banco y 110 certificados de la TGR.</div>
+<a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=54" target="_blank">📄 Contestación §14 · pág. 54 del PDF</a><a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/2022-12-07%20-%20Santander%20comprobante%20672.834%20F698%20-%20adjunto%20original%20PDF%20del%20correo%20a%20Franco.pdf" target="_blank">📄 Comprobante Santander</a><a class="dl" href="forense-pago-tgr.html">Forense TGR (110 certificados)</a>
+</div>
+<div class="caja">
+<span class="et">Hecho 2 · actos propios</span>
+<div class="dicen">«es en ejercicio de dicho mandato, que los demandados […] se han dedicado a administrar»</div>
+<span class="et">Contestación, folio 32, §37</span>
+<div class="prueba">Ese mandato <b>murió con Marta el 14-11-2020</b>. Su propio contrato Pavmark (doc 19) es de <b>2021</b>, con Christian como arrendador.</div>
+<a class="dl" href="docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=58" target="_blank">📄 Contestación §37 · pág. 58-59 del PDF</a>
+</div>
+</div>
+
+<h2>4. Qué se gana y qué no</h2>
+<div class="dos">
+<div class="caja ok">
+<b>Sí se gana</b>
+<ul>
+<li>El juez desconfía de su versión al valorar la prueba.</li>
+<li>Condena en costas.</li>
+<li>Queda escrito en el expediente, con folio.</li>
+</ul>
+</div>
+<div class="caja no">
+<b>No es</b>
+<ul>
+<li>No es una querella. La penal (art. 207 CP) exige presentar <b>prueba</b> falsa, y hoy no hay ninguna identificada.</li>
+<li>No es un juicio aparte ni una indemnización nueva.</li>
+<li>No sirve para discutir el «abandono» ni la huella: eso va en C-4776 y C-6511.</li>
+</ul>
+</div>
+</div>
+
+<h2>5. Riesgos</h2>
+<div class="caja ojo">
+<ul style="margin:0">
+<li><b>«Hasta donde tenemos conocimiento».</b> Así empieza el §14, y Achu dirá que no sabían del pago. <i>Respuesta:</i> ellos dicen administrar esos bienes y pagar sus contribuciones (§37), así que deben saber qué está pagado.</li>
+<li><b>Reciprocidad.</b> Si acusamos mala fe, la pueden pedir contra Jorge. Antes de presentarlo, revisar que la demanda de Jorge no tenga un flanco igual.</li>
+<li><b>Ruido.</b> Un escrito con adjetivos o que mezcle otras causas le resta fuerza. Una página, dos hechos.</li>
+</ul>
+</div>
+
+<h2>6. Estado</h2>
+<div class="caja">
+<ul style="margin:0">
+<li>🔴 <b>Decide Jorge</b> si va y en qué forma (escrito separado o dentro del escrito final).</li>
+<li>🔴 Revisar la demanda de Jorge por flancos equivalentes.</li>
+<li>🔴 OJV: ¿ya hay citación a oír sentencia?</li>
+<li>El modelo de escrito para Franco está en la ficha completa.</li>
+</ul>
+</div>
+
+<footer>Ficha completa (normas verificadas, vías comparadas y modelo de escrito): <code>_vLegalOps/cases/CHL/C-4713-2025_Juri_con_Araya/2026-09-30 - 25k tok - Mala fe procesal en C-4713 - la via es el art 2 letra d Ley 20886 dentro del juicio, no la querella - interno.md</code></footer>
+</div>
+<footer class="pub-pie" style="max-width:1100px;margin:40px auto 24px;padding:14px 16px 0;border-top:1px solid GrayText;font:12px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:GrayText;text-align:center">Versión v1 · último cambio 30-09-2026: submenú C-4713: expediente OJV, forense pago TGR y mala fe procesal<br>© 2026 Sigma Digital Twins · Autor: Jorge Juri · Todos los derechos reservados.</footer>
+</body>
+</html>

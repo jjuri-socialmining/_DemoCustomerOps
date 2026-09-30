@@ -1,0 +1,236 @@
+{
+ "campos": [],
+ "filas": {
+  "f53": {
+   "peso": 2,
+   "riesgo": 2,
+   "origen": "🤖 Claude 24-09 · remite la apelación del punto 3 a la Corte"
+  },
+  "f51": {
+   "peso": 5,
+   "riesgo": 2,
+   "origen": "🤖 Claude 24-09 · fija los 9 puntos y abre el probatorio; apelación devolutiva"
+  },
+  "f49": {
+   "peso": 2,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · autos para resolver; la rebeldía no costó nada"
+  },
+  "f48": {
+   "peso": 3,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · gestión útil: el abandono vuelve a cero"
+  },
+  "f47": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · mero trámite"
+  },
+  "f46": {
+   "peso": 3,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · curso progresivo: interrumpe el abandono"
+  },
+  "f45": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · certificado"
+  },
+  "f44": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · mero trámite"
+  },
+  "f43": {
+   "peso": 4,
+   "riesgo": 3,
+   "origen": "🤖 Claude 24-09 · su reposición: quieren sacar dolo y monto del punto 3"
+  },
+  "f42": {
+   "peso": 3,
+   "riesgo": 2,
+   "origen": "🤖 Claude 24-09 · notificación del auto de prueba: base de cómputos; no la tenemo"
+  },
+  "f41": {
+   "peso": 2,
+   "origen": "🤖 Claude 24-09 · certificado de remisión; contenido sin analizar"
+  },
+  "f40": {
+   "peso": 2,
+   "origen": "🤖 Claude 24-09 · falla reposición 2025; sin analizar"
+  },
+  "f38": {
+   "peso": 2,
+   "origen": "🤖 Claude 24-09 · autos para resolver; sin analizar"
+  },
+  "f37": {
+   "peso": 2,
+   "origen": "🤖 Claude 24-09 · evacúa traslado; sin analizar"
+  },
+  "f36": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · mero trámite"
+  },
+  "f35": {
+   "peso": 5,
+   "riesgo": 3,
+   "origen": "🤖 Claude 24-09 · auto de prueba: punto 9 (legitimación) y punto 3 nos exigen pru"
+  },
+  "f34": {
+   "peso": 2,
+   "origen": "🤖 Claude 24-09 · reposición; sin analizar"
+  },
+  "f33": {
+   "peso": 3,
+   "origen": "🤖 Claude 24-09 · comparendo de contestación; sin analizar"
+  },
+  "f32": {
+   "peso": 5,
+   "riesgo": 4,
+   "origen": "🤖 Claude 24-09 · contestación: indignidad, mandato y contraataque de las 10 bode"
+  },
+  "f31": {
+   "peso": 2,
+   "origen": "🤖 Claude 24-09 · falla reposición; sin analizar"
+  },
+  "f30": {
+   "peso": 2,
+   "origen": "🤖 Claude 24-09 · reposición; sin analizar"
+  },
+  "f29": {
+   "peso": 2,
+   "origen": "🤖 Claude 24-09 · actuación de 5 páginas; sin analizar"
+  },
+  "f28": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · mero trámite"
+  },
+  "f27": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · mero trámite"
+  },
+  "f25": {
+   "peso": 2,
+   "origen": "🤖 Claude 24-09 · reposición contra el folio 24; sin analizar"
+  },
+  "f24": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · mero trámite"
+  },
+  "f23": {
+   "peso": 2,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · curso progresivo"
+  },
+  "f20": {
+   "peso": 2,
+   "origen": "🤖 Claude 24-09 · autos para resolver; sin analizar"
+  },
+  "f19": {
+   "peso": 2,
+   "origen": "🤖 Claude 24-09 · evacúa traslado; sin analizar"
+  },
+  "f18": {
+   "peso": 2,
+   "origen": "🤖 Claude 24-09 · suspende audiencia; sin analizar"
+  },
+  "f17": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · acredita poder"
+  },
+  "f16": {
+   "peso": 2,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · notificación de la demanda"
+  },
+  "f15": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · certificación del receptor"
+  },
+  "f14": {
+   "peso": 2,
+   "origen": "🤖 Claude 24-09 · patrocinio y poder de la contraria (sustitución de procedimient"
+  },
+  "f13": {
+   "peso": 2,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · notificación de la demanda"
+  },
+  "f12": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · búsqueda del receptor"
+  },
+  "f11": {
+   "peso": 2,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · notificación de la demanda"
+  },
+  "f10": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · búsqueda del receptor"
+  },
+  "f9": {
+   "peso": 2,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · da curso a la demanda"
+  },
+  "f8": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · cumple lo ordenado"
+  },
+  "f7": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · pospone inicio"
+  },
+  "f6": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · curso progresivo"
+  },
+  "f5": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · acredita poder"
+  },
+  "f4": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · pospone inicio"
+  },
+  "f3": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · cumple lo ordenado"
+  },
+  "f2": {
+   "peso": 1,
+   "riesgo": 1,
+   "origen": "🤖 Claude 24-09 · apercibimiento poder"
+  },
+  "f1": {
+   "peso": 5,
+   "riesgo": 2,
+   "origen": "🤖 Claude 24-09 · la demanda: fija lo que se pide; sumario"
+  },
+  "e-2026-09-21-franco": {
+   "peso": 4,
+   "riesgo": 2,
+   "origen": "🤖 Claude 24-09 · ofrece testigos; el 653 sigue pendiente"
+  },
+  "e-2026-09-22-achu": {
+   "peso": 4,
+   "riesgo": 3,
+   "origen": "🤖 Claude 24-09 · conserje para el contraataque de bodegas; Gálvez sin identifica"
+  }
+ }
+}

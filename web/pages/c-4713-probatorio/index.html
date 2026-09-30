@@ -157,6 +157,10 @@ footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--linea);font-s
 .topbar{border-bottom:1px solid var(--linea)}
 .volver{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta3);text-decoration:none;margin-bottom:16px;padding:4px 0}
 .volver:hover{color:var(--sello)}
+.submenu-c4713{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 18px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.submenu-c4713 b{color:var(--tinta3);margin-right:4px}
+.submenu-c4713 a{color:var(--tinta2,var(--tinta3));text-decoration:none;border:1px solid var(--tinta3);border-radius:3px;padding:4px 9px}
+.submenu-c4713 a:hover,.submenu-c4713 a.activo{color:var(--sello);border-color:var(--sello)}
 .conf{margin:0 0 20px;padding:9px 12px;border:1px dashed var(--falta);border-radius:4px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--falta)}
 .ruta{font-family:var(--mono);font-size:11px;color:var(--tinta3);word-break:break-all}
 .confes{background:var(--sup);border:1px solid var(--linea);border-radius:5px;box-shadow:var(--sombra);padding:14px 16px;margin-bottom:11px;border-left:3px solid var(--ok)}
@@ -208,7 +212,7 @@ section{scroll-margin-top:70px}
 @media print{
   :root{--papel:#fff;--sup:#fff;--sup2:#f3f4f7;--tinta:#111;--tinta2:#333;--tinta3:#666;--linea:#ccc;--linea2:#bbb;--sombra:none}
   body{font-size:12px}.wrap{max-width:none;padding:0}
-  .topbar,.volver,.imprimir,.reset,.main-nav,.controls{display:none!important}
+  .topbar,.volver,.submenu-c4713,.imprimir,.reset,.main-nav,.controls{display:none!important}
   .tabla-scroll{overflow:visible}table{min-width:0!important;font-size:10.5px}table.testigos{min-width:0!important}
   .punto,.cruce,.confes,.riesgo,.check,.tile,tr{break-inside:avoid;page-break-inside:avoid}
   section{break-before:auto}h2{break-after:avoid}
@@ -228,7 +232,7 @@ details.prep table{font-size:12.8px}
 </style>
 </head>
 <body>
-<div class="pub-ver" title="Versión publicada de esta página · huella 71ed0d7b" style="position:fixed;top:10px;right:12px;z-index:60;font:600 11px/1 ui-monospace,Menlo,Consolas,monospace;padding:5px 9px;border-radius:5px;border:1px solid GrayText;background:Canvas;color:CanvasText;opacity:.9">v4</div>
+<div class="pub-ver" title="Versión publicada de esta página · huella 071cd8d7" style="position:fixed;top:10px;right:12px;z-index:60;font:600 11px/1 ui-monospace,Menlo,Consolas,monospace;padding:5px 9px;border-radius:5px;border:1px solid GrayText;background:Canvas;color:CanvasText;opacity:.9">v5</div>
 <div class="wrap">
 <header class="topbar">
   <div>
@@ -239,6 +243,7 @@ details.prep table{font-size:12.8px}
 </header>
 
 <a class="volver" href="../../index.html">← DemoCustomerOps</a>
+<nav class="submenu-c4713"><b>C-4713</b><a class="activo" href="index.html">Tablero del probatorio</a><a href="ojv.html?causa=C-4713-2025">📁 Expediente OJV</a><a href="forense-pago-tgr.html">🧾 Forense pago TGR</a><a href="mala-fe.html">⚖️ Mala fe procesal</a></nav>
 
 <div class="conf">Juicio público · C-4713-2025 · publicado por decisión del demandante el 21-09-2026 · sin indexar</div>
 
@@ -259,7 +264,7 @@ details.prep table{font-size:12.8px}
   <a class="tile t-co tile-link" href="docs/index.html" target="_blank" rel="noopener"><span class="rot">Directorio de pruebas</span><span class="cifra">Abrir carpeta ↗</span><span class="pie">las 12 carpetas, cada archivo con su MD5 · reemplaza el Drive de marzo que Franco nunca pudo abrir</span></a>
   <a class="tile t-ok tile-link" href="mailto:jorge.juri.l@gmail.com?subject=%5BC-4713%5D%20Notas%20de%20Franco&body=Folio%20o%20tema%3A%0A%0ANota%3A%0A%0AUrgente%20%28s%C3%AD/no%29%3A%0A"><span class="rot">💬 Notas para Jorge</span><span class="cifra">Escribir ✉️</span><span class="pie">abre un correo ya dirigido a jorge.juri.l@gmail.com con el asunto «[C-4713] Notas de Franco» · si no se abre, copiar esa dirección y ese asunto</span></a>
 </div>
-<nav class="ir-directo" style="margin:14px 0 22px;font-size:14px;display:flex;flex-wrap:wrap;gap:8px 18px"><b>Ir directo:</b><a class="ref" href="#objecion">🛑 Objeción de documentos (28-09)</a><a class="ref" href="#pago-tgr">🧾 Pago TGR $672.834 al peso (29-09)</a><a class="ref" href="#s9">⚖️ Penal: no perseverar</a><a class="ref" href="#testigos-audiencia">👥 Los 2 testigos (teléfonos y qué declara)</a><a class="ref" href="#s3b">📋 Lo que tenemos y lo que falta, por inmueble</a><a class="ref" href="#s-prep">🗣️ Preparación de testigos</a><a class="ref" href="#s4">⚖️ Tachas de los testigos</a></nav>
+<nav class="ir-directo" style="margin:14px 0 22px;font-size:14px;display:flex;flex-wrap:wrap;gap:8px 18px"><b>Ir directo:</b><a class="ref" href="#objecion">🛑 Objeción de documentos (28-09)</a><a class="ref" href="#pago-tgr">🧾 Pago TGR $672.834 al peso (29-09)</a><a class="ref" href="#chile-espana-arriendos">🏠 Chile España arrendada desde 2006 (29-09)</a><a class="ref" href="#s9">⚖️ Penal: no perseverar</a><a class="ref" href="#testigos-audiencia">👥 Los 2 testigos (teléfonos y qué declara)</a><a class="ref" href="#s3b">📋 Lo que tenemos y lo que falta, por inmueble</a><a class="ref" href="#s-prep">🗣️ Preparación de testigos</a><a class="ref" href="#s4">⚖️ Tachas de los testigos</a></nav>
 
 
 <section id="s1">
@@ -309,6 +314,38 @@ details.prep table{font-size:12.8px}
   </table></div>
   <div class="nota"><span class="tit">La misma operación en todos los documentos</span>Comprobante Santander: <b>NOR 000000318285022</b>, $672.834, 07-12-2022 11:39, F698 folio 0025839003 · Cartola N° 212: cargo «PAGO EN LINEA T.G.R.» del 07/12, <b>dcto 8285022</b> (los últimos 7 dígitos del NOR) · Registro interno del banco: <b>Nor 318285022</b>, cargado 11:39:35, «Pagado» · TGR: cada una de las 110 cuotas con transacción del 07-12-2022, recaudador RUT 97036000-K (Santander) e identificador <b>CID DEL F100 12079201405222123110014416</b>. Quedan fuera, y no se suman: las cuotas dadas de baja por incobrables, el cargo COVID 1-2020 reprogramado y los pagos de la 29 D y la 30 D hechos en otras fechas (07-01-2019 y 28-03-2022). Cualquiera puede repetir la consulta en tesoreria.cl («Certificado Movimiento por Rol») con el rol y el folio.</div>
   <p><b>Los tres PDF que Jorge le mandó a Franco el 29-09 a las 17:53:</b> <a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/2026-09-29%20-%20ADJUNTAR%20AL%20CORREO%20DE%20FRANCO%20%28arrastrar%20los%203%20PDF%29/PDF%201%20-%20Banco%20Santander%20-%20pago%20672.834.pdf" target="_blank" rel="noopener">📄 PDF 1 · Banco Santander (3 págs.)</a> <a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/2026-09-29%20-%20ADJUNTAR%20AL%20CORREO%20DE%20FRANCO%20%28arrastrar%20los%203%20PDF%29/PDF%202%20-%20Certificados%20TGR%20-%20110%20cuotas%20pagadas%20el%2007-12-2022.pdf" target="_blank" rel="noopener">📄 PDF 2 · 110 certificados TGR</a> <a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/2026-09-29%20-%20ADJUNTAR%20AL%20CORREO%20DE%20FRANCO%20%28arrastrar%20los%203%20PDF%29/PDF%203%20-%20C-11347-2024%20-%2024%20JC%20-%20cese%20de%20goce%20%28Bustos%29%20-%20ebook%20OJV.pdf" target="_blank" rel="noopener">📄 PDF 3 · ebook C-11347-2024 (17 págs.)</a> · los certificados uno por uno, con su MD5, en <a class="dl" href="docs/03_Perjuicios-naturaleza-y-monto/TGR%202022-12-07%20-%20pago%20bodegas%20Diagonal%20Paraguay%20254%20-%20CID%20F100%2012079201405222123110014416/" target="_blank" rel="noopener">📁 la carpeta TGR</a>.</p>
+</section>
+
+<section id="chile-espana-arriendos" style="scroll-margin-top:16px">
+  <h2><span class="n">§1-quater</span>🏠 Chile España: arrendada desde 2006 — C-5890-2020 y los contratos que ellos mismos acompañan — 29-09-2026</h2>
+  <p class="sub">Fuentes: <b>C-5890-2020, 2.º JC de San Miguel</b>, «Araya con Constructora Altomin Ltda.», juicio de arrendamiento de <b>Christian como demandante y su propio abogado</b> (ingreso 26-10-2020, archivado el 04-06-2024) — demanda <a class="dl" href="boveda/CHL-2026-C-4713-2025/2020-10-26%20-%20C-5890-2020%202%20JC%20San%20Miguel%20-%20Demanda%20de%20Christian%20Araya%20Laso%20en%20nombre%20propio%20contra%20Constructora%20Altomin%20-%20renta%20720.000%20Chile%20Espana%20-%20texto%20demanda%20OJV.pdf" target="_blank" rel="noopener">📄</a> · Ebook completo, folios 1–42 <a class="dl" href="boveda/CHL-2026-C-4713-2025/2020-10-26%20a%202024-06-04%20-%20C-5890-2020%202%20JC%20San%20Miguel%20-%20Araya%20con%20Constructora%20Altomin%20-%20contrato%2017-10-2017%20renta%20660.000%2C%20pagos%20a%20Aida%20por%20poder%20de%20Christian%2C%20restitucion%2012-07-2021%2C%20concursal%20C-711-2022%20-%20ebook%20OJV.pdf" target="_blank" rel="noopener">📄 Ebook</a> · litigantes <a class="dl" href="boveda/CHL-2026-C-4713-2025/2026-09-29%20-%20Captura%20OJV%20-%20C-5890-2020%202%20JC%20San%20Miguel%20-%20litigantes%2C%20Christian%20demandante%20y%20abogado.png" target="_blank" rel="noopener">🖼</a>; y el <b>doc 19</b> del escrito de Achu del 29-09 (contrato Pavmark). La causa no aparecía en ninguna búsqueda nuestra: la trajo la contraria como su doc 20.</p>
+  <div class="tabla-scroll"><table>
+    <thead><tr><th>Desde</th><th>Hasta</th><th>Arrendatario</th><th>Arrendador que consta</th><th class="num">Renta</th><th>Fuente</th></tr></thead>
+    <tbody>
+      <tr><td>01-03-2006</td><td>¿?</td><td>Miguel Olmedo V.</td><td>Marta, por corredora Fuentes Lagos (gestión de Jorge)</td><td class="num">ilegible</td><td>correo a tío Fernando, 09-01-2014</td></tr>
+      <tr><td>01-10-2012</td><td>¿terminación?</td><td>Miguel Olmedo Valdivia</td><td><b>Aída</b> (demanda de terminación y cobro)</td><td class="num">$210.000</td><td>doc 18 de Achu — <b>solo su descripción</b>, rol no conocido</td></tr>
+      <tr><td>11-10-2017 (rige) · 17-10-2017 (firma)</td><td><b>12-07-2021</b> (restitución)</td><td>Constructora Altomin Ltda. · codeudor solidario Carlos Moraga Cancino</td><td><b>Christian en nombre propio</b>; <b>Aída cobraba como «mandataria del arrendador»</b> con poder notarial amplio de él</td><td class="num">$660.000 reaj. → $720.000 (jul-2020)</td><td>Ebook, folios 11, 27, 28 y 30</td></tr>
+      <tr><td><b>13-07-2021</b></td><td>vigente</td><td>Pavmark SpA (rep. Rafal Roberto Baccelliere Moles)</td><td><b>Christian</b></td><td class="num">$800.000</td><td>doc 19 de Achu</td></tr>
+    </tbody>
+  </table></div>
+  <div class="confes"><span class="t">Lo que dice Christian ante el tribunal, con sus palabras</span><span class="d">C-5890-2020 · folios 1, 27, 28 y 30</span>
+    <blockquote>«<b>Tengo dada en arrendamiento</b> la propiedad ubicada en Calle Chile España 8316 – B […] por la renta mensual de $720.000» · «<b>adeudándome</b> la suma de $2.880.000» (demanda, 26-10-2020, <b>19 días antes de la muerte de Marta</b>)</blockquote>
+    <blockquote>«la propiedad <b>le fue restituida</b> con fecha 12 de julio de 2021» (acta del comparendo, 08-09-2021)</blockquote>
+    <blockquote>«Copias de ocho pagos por concepto de canon de arriendo realizados por el arrendatario (por Constructora Altomin con sus cheques, entre los años 2019 y 2020) <b>a la mandataria del arrendador</b>» · «Copia de <b>Poder notarial amplio conferido por el arrendador a doña Aída Rosemarie Laso T.</b> el cual la faculta para recibir pagos en su representación» (folio 28)</blockquote>
+    <blockquote>«el contrato de arriendo fue firmado el día 17 de octubre de 2017» · «se pactó una renta de $660.000 mensuales reajustables» · deuda de «12 meses de arriendo (desde julio de 2020 hasta junio de 2021) […] $10.800.000» · inmueble entregado «en pésimas condiciones» (folio 30)</blockquote>
+    <p><b>En ningún escrito aparece Marta.</b> Christian litiga como arrendador y a Aída la llama «la mandataria del arrendador». El 13-07-2021, un día después de la restitución, firma con Pavmark.</p>
+  </div>
+  <div class="nota"><span class="tit">Lo que no tenemos todavía</span>Los anexos de C-5890-2020 no vienen en el Ebook: el <b>contrato con Altomin</b>, el <b>poder notarial a Aída</b>, los <b>8 cheques</b> y las actas notariales de medidores. Están en la custodia del tribunal o se remitieron a la concursal <b>C-711-2022</b> (4.º JC de San Miguel) el 22-08-2022. Tampoco los contratos de 2012 con Olmedo.</div>
+  <p class="sub" style="margin-top:14px"><b>Cuánto le corresponde a Jorge (1/3), solo Chile España, al 29-09-2026</b>: nominal, sin reajuste ni intereses. Rentas desde el 14-11-2020 con documentos de ellos (doc 19 y C-5890-2020, folio 30).</p>
+  <div class="tabla-scroll"><table>
+    <thead><tr><th>Base</th><th class="num">Total</th><th class="num">Parte de Jorge (1/3)</th></tr></thead>
+    <tbody>
+      <tr><td>Pavmark: 62 meses a $800.000</td><td class="num">$49,6 M</td><td class="num"><b>$16,5 M</b> <small>($16,8 M si pagan por adelantado: 63 cuotas)</small></td></tr>
+      <tr><td>Altomin: nov-2020 a jun-2021, impago</td><td class="num">$5,76 M</td><td class="num">$1,9 M</td></tr>
+      <tr><td class="tot"><b>Demostrado</b></td><td class="num tot"><b>$55,4 M</b></td><td class="num tot"><b>≈ $18,5 M</b></td></tr>
+      <tr><td>Según nuestra tasación (50 UF al mes)</td><td class="num">≈ $139,4 M</td><td class="num">≈ $46,5 M</td></tr>
+    </tbody>
+  </table></div>
 </section>
 
 <section id="s3b">
@@ -480,6 +517,7 @@ details.prep table{font-size:12.8px}
       <li class="tiene">Constatación de Rodrigo Opazo en LC30: stickers CENSO en 508 <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-04-02%20-%20Lord%20Cochrane%2030%20-%20constatacion%20de%20Rodrigo%20Opazo%20-%204%20fotos%20%28PDF%29.pdf#page=1" target="_blank" rel="noopener">📄 pág. 1</a> y 509 <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-04-02%20-%20Lord%20Cochrane%2030%20-%20constatacion%20de%20Rodrigo%20Opazo%20-%204%20fotos%20%28PDF%29.pdf#page=2" target="_blank" rel="noopener">pág. 2</a>, portería <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-04-02%20-%20Lord%20Cochrane%2030%20-%20constatacion%20de%20Rodrigo%20Opazo%20-%204%20fotos%20%28PDF%29.pdf#page=4" target="_blank" rel="noopener">pág. 4</a>, instructivo de mudanzas <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-04-02%20-%20Lord%20Cochrane%2030%20-%20constatacion%20de%20Rodrigo%20Opazo%20-%204%20fotos%20%28PDF%29.pdf#page=3" target="_blank" rel="noopener">pág. 3</a> (4 fotos en un PDF) · 6 audios del 02-04-2026 con transcripción <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-04-02%20-%20Rodrigo%20Opazo%20-%20transcripcion%20de%206%20audios%20-%20conserje%20confirma%20arriendo%20a%20personas%20naturales.txt" target="_blank" rel="noopener">📄 transcripción</a>: el conserje Julio confirma arriendo a personas naturales <span class="fp ter">privado de tercero · requiere ratificación</span> → vale lo que valga Rodrigo declarando</li>
       <li class="tiene">5 fotos de Chile España 8316-B (27-03-2026) <a class="dl" href="docs/02_Ocupacion-y-titulo/2026-03-27%20-%20Chile%20Espana%208316-B%20-%205%20fotos%20del%20inmueble%20%28PDF%29.pdf" target="_blank" rel="noopener">📄 PDF, 5 págs.</a> <span class="fp ter">privado de tercero · requiere ratificación</span></li>
       <li class="ojo">⚠️ Fecha de la constatación: 15-05 en el KANBAN, 23-05 en el índice de evidencia. Confirmar con Rodrigo antes de que declare</li>
+      <li class="tiene"><b>Cadena de arriendos de Chile España 2006 → hoy</b>: Altomin (Christian arrendador, 17-10-2017, $660.000; Aída cobraba con su poder) y Pavmark (13-07-2021, $800.000) — <a class="ref" href="#chile-espana-arriendos">§1-quater</a> <span class="fp conf">escritos y documentos de ellos</span></li>
       <li class="ojo">Su §74 ya confiesa la ocupación por arrendatarios <span class="fp conf">confesión · plena prueba</span>: el punto se gana con exhibición (art. <a class="art" href="https://leyes-cl.com/codigo_de_procedimiento_civil/349.htm" target="_blank" rel="noopener" title="Art. 349 CPC — texto en leyes-cl.com">349</a>) + testigos</li>
     </ul></div></div><span class="estado e-ok">cubierto</span></div></div>
 
@@ -537,7 +575,7 @@ details.prep table{font-size:12.8px}
 
 <section id="s4">
   <h2><span class="n">§4</span>Testigos — quién, sobre qué, con qué tacha, y si están validados</h2>
-  <p class="sub">Lista definitiva enviada a Franco el 27-03-2026 (5 personas) <a class="dl" href="docs/00_Testigos/2026-03-27%20-%20Lista%20definitiva%20de%20testigos%20-%205%20testigos.html" target="_blank" rel="noopener">📄 tabla HTML</a> · <a class="dl" href="docs/00_Testigos/2026-03-27%20-%20Lista%20definitiva%20de%20testigos%20enviada%20a%20Franco%20-%205%20testigos.png" target="_blank" rel="noopener">🖼 imagen enviada</a>, tras la preliminar del 20-03 y la depurada del 25-03 (versiones anteriores, fuera de la carpeta). El 21-09 Franco escribió que ofreció «los testigos que me indicaste». <b>Validado hoy significa: confirmado por Jorge en marzo.</b> No consta reconfirmación para el 28/29 ni citación por receptor (Franco dijo el 24-03 que los notificaría). Las tachas del art. <a class="art" href="https://leyes-cl.com/codigo_de_procedimiento_civil/358.htm" target="_blank" rel="noopener" title="Art. 358 CPC — texto en leyes-cl.com">358</a> CPC no impiden declarar: se oponen antes de la declaración y el tribunal las resuelve en la sentencia.</p>
+  <p class="sub">Lista definitiva enviada a Franco el 27-03-2026 (5 personas) <span class="doc">📄 tabla HTML (no publicado: datos personales de los testigos)</span> · <span class="doc">🖼 imagen enviada (no publicado: datos personales de los testigos)</span>, tras la preliminar del 20-03 y la depurada del 25-03 (versiones anteriores, fuera de la carpeta). El 21-09 Franco escribió que ofreció «los testigos que me indicaste». <b>Validado hoy significa: confirmado por Jorge en marzo.</b> No consta reconfirmación para el 28/29 ni citación por receptor (Franco dijo el 24-03 que los notificaría). Las tachas del art. <a class="art" href="https://leyes-cl.com/codigo_de_procedimiento_civil/358.htm" target="_blank" rel="noopener" title="Art. 358 CPC — texto en leyes-cl.com">358</a> CPC no impiden declarar: se oponen antes de la declaración y el tribunal las resuelve en la sentencia.</p>
   <div class="tabla-scroll"><table class="testigos">
     <thead><tr><th>Testigo</th><th>Relación · comuna</th><th>Puntos</th><th>Hecho propio que aporta</th><th>Tacha art. <a class="art" href="https://leyes-cl.com/codigo_de_procedimiento_civil/358.htm" target="_blank" rel="noopener" title="Art. 358 CPC — texto en leyes-cl.com">358</a></th><th>Estado</th></tr></thead>
     <tbody>
@@ -764,6 +802,6 @@ var hex=Array.from(new Uint8Array(h)).map(function(x){return x.toString(16).padS
 if(hex!==b.getAttribute('data-hash')){b.classList.add('drift');b.textContent+=' · ⚠ cambios sin versionar ('+hex+')';b.title='Dev cambió después de la última versión: correr scripts/publicar_democustomer.py'}
 else{b.title='Dev coincide con la versión publicada'}}).catch(function(){});})();
 </script>
-<footer class="pub-pie" style="max-width:1100px;margin:40px auto 24px;padding:14px 16px 0;border-top:1px solid GrayText;font:12px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:GrayText;text-align:center">Versión v4 · último cambio 29-09-2026: 29-09: estado al cierre del probatorio<br>© 2026 Sigma Digital Twins · Autor: Jorge Juri · Todos los derechos reservados.</footer>
+<footer class="pub-pie" style="max-width:1100px;margin:40px auto 24px;padding:14px 16px 0;border-top:1px solid GrayText;font:12px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:GrayText;text-align:center">Versión v5 · último cambio 30-09-2026: submenú C-4713: expediente OJV, forense pago TGR y mala fe procesal<br>© 2026 Sigma Digital Twins · Autor: Jorge Juri · Todos los derechos reservados.</footer>
 </body>
 </html>

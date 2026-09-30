@@ -1,0 +1,1698 @@
+{
+ "causa": "C-4713-2025",
+ "cabecera": {
+  "rol": "C-4713-2025",
+  "f_ing": "01/04/2025",
+  "caratulado": "JURI/ARAYA",
+  "est_adm": "Sin archivar",
+  "proc": "Sumario",
+  "ubicacion": "Corte de Apelaciones",
+  "estado_proc": "Tramitación",
+  "etapa": "2 Aud.Contes.y Concil./Recib. a prueba",
+  "tribunal": "3º Juzgado Civil de Santiago",
+  "cuaderno": "1 - Principal",
+  "capturado": "2026-09-24",
+  "volver": {
+   "href": "index.html",
+   "label": "🏠 ← Tablero del cese C-4713"
+  }
+ },
+ "enlaces": {
+  "texto_demanda": {
+   "estado": "tenemos",
+   "href": "boveda/CHL-2026-C-4713-2025/Cese-de-goce-COMPLETO/C-4713-2025%20-%20Cese/C-4713-2025%20-%20Demanda%20Cese%20Uso%20Gratuito%20Inmuebles%20-%20EbookCivil.pdf"
+  },
+  "anexos": {
+   "estado": "falta"
+  },
+  "certificado_envio": {
+   "estado": "falta"
+  },
+  "ebook": {
+   "estado": "tenemos",
+   "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf"
+  },
+  "info_receptor": {
+   "estado": "falta"
+  }
+ },
+ "no_aparecen": [
+  22,
+  26,
+  52
+ ],
+ "historia": [
+  {
+   "clave": "f53",
+   "folio": 53,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "",
+   "desc": "Certificado de Remisión",
+   "fecha": "22/09/2026",
+   "foja": 0,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "falta",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f51",
+   "folio": 51,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Resolución",
+   "desc": "Acoge Apelación Incidente",
+   "fecha": "17/09/2026",
+   "foja": 45,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "boveda/CHL-2026-C-4713-2025/2026-09-17%20-%20Resolucion%20folio%2043%20-%20punto%203%20intacto%2C%20punto%209%20en%20singular%2C%20apelacion%20devolutiva%2C%20probatorio%20corre%20-%20C-4713-2025.pdf",
+     "kb": 70,
+     "md5": "a57a312cc06c349814ebceaa6f6a64c5",
+     "archivo": "2026-09-17 - Resolucion folio 43 - punto 3 intacto, punto 9 en singular, apelacion devolutiva, probatorio corre - C-4713-2025.pdf",
+     "paginas": ""
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [
+    {
+     "ruta": "_vLegalOps/cases/CHL/C-4713-2025_Juri_con_Araya/2026-09-17 - 0.5k tok - Resolucion del folio 43 - punto 3 intacto, punto 9 en singular, apelacion devolutiva, probatorio de 8 dias corre - OJV 3er JC Santiago.md",
+     "nombre": "2026-09-17 - 0.5k tok - Resolucion del folio 43 - punto 3 intacto, punto 9 en singular, apelacion devolutiva, probatorio de 8 dias corre - OJV 3er JC Santiago · solo en LegalOps",
+     "existe": true
+    }
+   ],
+   "resumen": "Falla la reposición del folio 43: acoge solo el punto 9 (plural → singular); punto 3 intacto; apelación en el solo efecto devolutivo. Abre el probatorio de 8 días.",
+   "provee": [
+    43
+   ]
+  },
+  {
+   "clave": "f51-2",
+   "folio": 51,
+   "etapa": "",
+   "tramite": "",
+   "desc": "Falla recurso de reposición",
+   "fecha": "17/09/2026",
+   "foja": 45,
+   "georef": false,
+   "docs": [],
+   "copias": [],
+   "estado": "sin_doc",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f50",
+   "folio": 50,
+   "etapa": "",
+   "tramite": "",
+   "desc": "Incidente",
+   "fecha": "09/09/2026",
+   "foja": 44,
+   "georef": false,
+   "docs": [],
+   "copias": [],
+   "estado": "sin_doc",
+   "analisis": [
+    {
+     "ruta": "_vLegalOps/cases/CHL/C-4713-2025_Juri_con_Araya/2026-09-10 - Captura OJV - hay un INCIDENTE del 09-sep sin resolver, De Comun Acuerdo - analisis senior.md",
+     "nombre": "2026-09-10 - Captura OJV - hay un INCIDENTE del 09-sep sin resolver, De Comun Acuerdo - analisis senior",
+     "existe": true
+    }
+   ],
+   "resumen": "«Incidente — De Común Acuerdo» del 09-09: sin identificar.",
+   "provee": []
+  },
+  {
+   "clave": "f49",
+   "folio": 49,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Resolución",
+   "desc": "Autos para resolver",
+   "fecha": "08/09/2026",
+   "foja": 43,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "boveda/CHL-2026-C-4713-2025/2026-09-08%20-%20Resolucion%20-%20autos%20para%20resolver%2C%20rebeldia%20de%20la%20demandante.pdf",
+     "kb": 66,
+     "md5": "70cb5009dbafa20d2e744680f54c3e75",
+     "archivo": "2026-09-08 - Resolucion - autos para resolver, rebeldia de la demandante.pdf",
+     "paginas": ""
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [
+    {
+     "ruta": "_vLegalOps/cases/CHL/C-4713-2025_Juri_con_Araya/2026-09-08 - Folio 48 y resolucion - AUTOS PARA RESOLVER en rebeldia de la demandante - analisis senior.md",
+     "nombre": "2026-09-08 - Folio 48 y resolucion - AUTOS PARA RESOLVER en rebeldia de la demandante - analisis senior · solo en LegalOps",
+     "existe": true
+    }
+   ],
+   "resumen": "Autos para resolver el folio 43, en rebeldía de la demandante (traslado no evacuado).",
+   "provee": [
+    48
+   ]
+  },
+  {
+   "clave": "f48",
+   "folio": 48,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Escrito",
+   "desc": "Curso progresivo a los autos",
+   "fecha": "04/09/2026",
+   "foja": 42,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "boveda/CHL-2026-C-4713-2025/2026-09-04%20-%20Folio%2048%20-%20Escrito%20Franco%20Anabalon%20-%20solicita%20proveer%20derechamente%20folio%2043.pdf",
+     "kb": 117,
+     "md5": "7ff849c6aeaeac7224936e87fd0ad422",
+     "archivo": "2026-09-04 - Folio 48 - Escrito Franco Anabalon - solicita proveer derechamente folio 43.pdf",
+     "paginas": ""
+    },
+    {
+     "tipo": "pdf2",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "parcial",
+   "analisis": [
+    {
+     "ruta": "_vLegalOps/cases/CHL/C-4713-2025_Juri_con_Araya/2026-09-08 - Folio 48 y resolucion - AUTOS PARA RESOLVER en rebeldia de la demandante - analisis senior.md",
+     "nombre": "2026-09-08 - Folio 48 y resolucion - AUTOS PARA RESOLVER en rebeldia de la demandante - analisis senior · solo en LegalOps",
+     "existe": true
+    }
+   ],
+   "resumen": "Franco pide proveer derechamente el folio 43 (gestión útil: abandono vuelve a cero).",
+   "provee": [],
+   "resuelto_por": [
+    49
+   ]
+  },
+  {
+   "clave": "f47",
+   "folio": 47,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Resolución",
+   "desc": "Mero trámite",
+   "fecha": "21/04/2026",
+   "foja": 41,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=89",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 87–87"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": [
+    46
+   ]
+  },
+  {
+   "clave": "f46",
+   "folio": 46,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Escrito",
+   "desc": "Curso progresivo a los autos",
+   "fecha": "16/04/2026",
+   "foja": 40,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=90",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 88–90"
+    },
+    {
+     "tipo": "pdf2",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "parcial",
+   "analisis": [],
+   "resumen": "",
+   "provee": [],
+   "resuelto_por": [
+    47
+   ]
+  },
+  {
+   "clave": "f45",
+   "folio": 45,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "",
+   "desc": "Certificado.",
+   "fecha": "23/03/2026",
+   "foja": 39,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=87",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 85–86"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f44",
+   "folio": 44,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Resolución",
+   "desc": "Mero trámite",
+   "fecha": "23/03/2026",
+   "foja": 38,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=84",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 82–82"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": [
+    43
+   ]
+  },
+  {
+   "clave": "f43",
+   "folio": 43,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Escrito",
+   "desc": "Reposición",
+   "fecha": "12/03/2026",
+   "foja": 37,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=85",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 83–84"
+    },
+    {
+     "tipo": "pdf2",
+     "nota": "copia propia del escrito; no consta que sea el mismo archivo del ícono azul",
+     "estado": "tenemos",
+     "href": "docs/10_Resoluciones-de-la-causa/2026-03-12%20-%20Folio%2043%20-%20Reposicion%20de%20la%20contraria%20contra%20el%20auto%20de%20prueba.pdf",
+     "kb": 167,
+     "md5": "dc1e4ed147f2f8936c0805786effba13",
+     "archivo": "2026-03-12 - Folio 43 - Reposicion de la contraria contra el auto de prueba.pdf",
+     "paginas": ""
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [
+    {
+     "ruta": "_vLegalOps/cases/CHL/C-4713-2025_Juri_con_Araya/2026-09-17 - 0.5k tok - Resolucion del folio 43 - punto 3 intacto, punto 9 en singular, apelacion devolutiva, probatorio de 8 dias corre - OJV 3er JC Santiago.md",
+     "nombre": "2026-09-17 - 0.5k tok - Resolucion del folio 43 - punto 3 intacto, punto 9 en singular, apelacion devolutiva, probatorio de 8 dias corre - OJV 3er JC Santiago · solo en LegalOps",
+     "existe": true
+    }
+   ],
+   "resumen": "Reposición de la contraria contra el auto de prueba: suprimir «dolosa o culpable» y «naturaleza y monto» del punto 3; plural del punto 9.",
+   "provee": [],
+   "resuelto_por": [
+    51,
+    44
+   ]
+  },
+  {
+   "clave": "f42",
+   "folio": 42,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Actuación Receptor",
+   "desc": "Notificación resolución que recibe la causa a prue (Exitosa) Diligencia:09/03/2026 11:48",
+   "fecha": "11/03/2026 (09/03/2026)",
+   "foja": 0,
+   "georef": true,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "falta",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f41",
+   "folio": 41,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "",
+   "desc": "Certificado de Remisión",
+   "fecha": "07/11/2025",
+   "foja": 0,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=82",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 80–81"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f40",
+   "folio": 40,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Resolución",
+   "desc": "Falla recurso de reposición",
+   "fecha": "04/11/2025",
+   "foja": 36,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=80",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 78–79"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f40-2",
+   "folio": 40,
+   "etapa": "",
+   "tramite": "",
+   "desc": "Acoge Apelación Incidente",
+   "fecha": "04/11/2025",
+   "foja": 36,
+   "georef": false,
+   "docs": [],
+   "copias": [],
+   "estado": "sin_doc",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f39",
+   "folio": 39,
+   "etapa": "",
+   "tramite": "",
+   "desc": "Incidente",
+   "fecha": "23/10/2025",
+   "foja": 35,
+   "georef": false,
+   "docs": [],
+   "copias": [],
+   "estado": "sin_doc",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f38",
+   "folio": 38,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Resolución",
+   "desc": "Autos para resolver",
+   "fecha": "21/10/2025",
+   "foja": 34,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=77",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 75–75"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": [
+    37
+   ]
+  },
+  {
+   "clave": "f37",
+   "folio": 37,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Escrito",
+   "desc": "Evacúa traslado",
+   "fecha": "07/10/2025",
+   "foja": 33,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=78",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 76–77"
+    },
+    {
+     "tipo": "pdf2",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "parcial",
+   "analisis": [],
+   "resumen": "",
+   "provee": [],
+   "resuelto_por": [
+    38
+   ]
+  },
+  {
+   "clave": "f36",
+   "folio": 36,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Resolución",
+   "desc": "Mero trámite",
+   "fecha": "06/10/2025",
+   "foja": 32,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=71",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 69–69"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": [
+    34
+   ]
+  },
+  {
+   "clave": "f35",
+   "folio": 35,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Resolución",
+   "desc": "Recibe la causa a prueba",
+   "fecha": "01/10/2025",
+   "foja": 31,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=69",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 67–68"
+    }
+   ],
+   "copias": [
+    {
+     "tipo": "copia",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/10_Resoluciones-de-la-causa/2025-10-01%20-%20Auto%20de%20prueba%20folio%2035%20-%20los%209%20puntos%20%28copia%20del%2006-10-2025%29.pdf",
+     "kb": 73,
+     "md5": "82ef87a30ccf06d18f8b5c6b89d367d1",
+     "archivo": "2025-10-01 - Auto de prueba folio 35 - los 9 puntos (copia del 06-10-2025).pdf",
+     "paginas": ""
+    }
+   ],
+   "estado": "completo",
+   "analisis": [
+    {
+     "ruta": "_vLegalOps/cases/CHL/C-4713-2025_Juri_con_Araya/2026-09-21 - C-4713-2025 - EXPEDIENTE PROBATORIO CONSOLIDADO - todo en un documento - dia 1 de 8.md",
+     "nombre": "2026-09-21 - C-4713-2025 - EXPEDIENTE PROBATORIO CONSOLIDADO - todo en un documento - dia 1 de 8 · solo en LegalOps",
+     "existe": true
+    }
+   ],
+   "resumen": "Auto de prueba: 9 puntos (dominio, ocupación y título, perjuicios, avalúo y renta, C-6511, C-4776, RIT 1770, mandato, legitimación activa).",
+   "provee": []
+  },
+  {
+   "clave": "f34",
+   "folio": 34,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Escrito",
+   "desc": "Reposición",
+   "fecha": "29/09/2025",
+   "foja": 30,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=72",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 70–74"
+    },
+    {
+     "tipo": "pdf2",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "parcial",
+   "analisis": [],
+   "resumen": "",
+   "provee": [],
+   "resuelto_por": [
+    36
+   ]
+  },
+  {
+   "clave": "f33",
+   "folio": 33,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "(COM)Comparendo",
+   "desc": "Aud. de contestación y conciliación",
+   "fecha": "24/09/2025",
+   "foja": 29,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=48",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 46–47"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": [
+    32
+   ]
+  },
+  {
+   "clave": "f32",
+   "folio": 32,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Escrito",
+   "desc": "Contesta demanda",
+   "fecha": "24/09/2025",
+   "foja": 27,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=50",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 48–66"
+    },
+    {
+     "tipo": "pdf2",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "parcial",
+   "analisis": [
+    {
+     "ruta": "_vLegalOps/cases/CHL/C-4713-2025_Juri_con_Araya/2026-09-21 - Desglose probatorio C-4713 - fuerza probatoria de cada pieza, escritos de la contraria que reconocen la ocupacion, absolucion de posiciones de C-6511 y causa penal RIT 1770.md",
+     "nombre": "2026-09-21 - Desglose probatorio C-4713 - fuerza probatoria de cada pieza, escritos de la contraria que reconocen la ocupacion, absolucion de posiciones de C-6511 y causa penal RIT 1770 · solo en LegalOps",
+     "existe": true
+    },
+    {
+     "ruta": "_vLegalOps/cases/CHL/C-4713-2025_Juri_con_Araya/2026-09-21 - C-4713-2025 - EXPEDIENTE PROBATORIO CONSOLIDADO - todo en un documento - dia 1 de 8.md",
+     "nombre": "2026-09-21 - C-4713-2025 - EXPEDIENTE PROBATORIO CONSOLIDADO - todo en un documento - dia 1 de 8 · solo en LegalOps",
+     "existe": true
+    }
+   ],
+   "resumen": "Contestación: falta de legitimación activa (indignidad art. 968 N°3), mandato vigente, contraataque de las 10 bodegas; §74 reconoce la ocupación por arrendatarios.",
+   "provee": [],
+   "resuelto_por": [
+    33
+   ]
+  },
+  {
+   "clave": "f31",
+   "folio": 31,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Resolución",
+   "desc": "Falla recurso de reposición",
+   "fecha": "24/09/2025",
+   "foja": 27,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=45",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 43–43"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": [
+    30
+   ]
+  },
+  {
+   "clave": "f30",
+   "folio": 30,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Escrito",
+   "desc": "Reposición",
+   "fecha": "23/09/2025",
+   "foja": 26,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=46",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 44–45"
+    },
+    {
+     "tipo": "pdf2",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "parcial",
+   "analisis": [],
+   "resumen": "",
+   "provee": [],
+   "resuelto_por": [
+    31
+   ]
+  },
+  {
+   "clave": "f29",
+   "folio": 29,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "",
+   "desc": "Actuación",
+   "fecha": "23/09/2025",
+   "foja": 25,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=40",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 38–42"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f28",
+   "folio": 28,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Resolución",
+   "desc": "Mero trámite",
+   "fecha": "23/09/2025",
+   "foja": 24,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=39",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 37–37"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f27",
+   "folio": 27,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Resolución",
+   "desc": "Mero trámite",
+   "fecha": "16/09/2025",
+   "foja": 23,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=34",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 32–32"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": [
+    25
+   ]
+  },
+  {
+   "clave": "f25",
+   "folio": 25,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Escrito",
+   "desc": "Reposición",
+   "fecha": "15/09/2025",
+   "foja": 20,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=35",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 33–36"
+    },
+    {
+     "tipo": "pdf2",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "parcial",
+   "analisis": [],
+   "resumen": "",
+   "provee": [],
+   "resuelto_por": [
+    27
+   ]
+  },
+  {
+   "clave": "f24",
+   "folio": 24,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Resolución",
+   "desc": "Mero trámite",
+   "fecha": "08/08/2025",
+   "foja": 19,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=31",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 29–30"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": [
+    23
+   ]
+  },
+  {
+   "clave": "f23",
+   "folio": 23,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Escrito",
+   "desc": "Curso progresivo a los autos",
+   "fecha": "29/07/2025",
+   "foja": 16,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=33",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 31–31"
+    },
+    {
+     "tipo": "pdf2",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "parcial",
+   "analisis": [],
+   "resumen": "",
+   "provee": [],
+   "resuelto_por": [
+    24
+   ]
+  },
+  {
+   "clave": "f21",
+   "folio": 21,
+   "etapa": "",
+   "tramite": "",
+   "desc": "Incidente",
+   "fecha": "03/07/2025",
+   "foja": 14,
+   "georef": false,
+   "docs": [],
+   "copias": [],
+   "estado": "sin_doc",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f20",
+   "folio": 20,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Resolución",
+   "desc": "Autos para resolver",
+   "fecha": "01/07/2025",
+   "foja": 13,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=28",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 26–26"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": [
+    19
+   ]
+  },
+  {
+   "clave": "f19",
+   "folio": 19,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "Escrito",
+   "desc": "Evacúa traslado",
+   "fecha": "23/06/2025",
+   "foja": 12,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=29",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 27–28"
+    },
+    {
+     "tipo": "pdf2",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "parcial",
+   "analisis": [],
+   "resumen": "",
+   "provee": [],
+   "resuelto_por": [
+    20
+   ]
+  },
+  {
+   "clave": "f18",
+   "folio": 18,
+   "etapa": "Aud.Contes.y Concil./Recib. a prueba",
+   "tramite": "(COM)Comparendo",
+   "desc": "Suspende/Reprograma audiencia",
+   "fecha": "18/06/2025",
+   "foja": 11,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=22",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 20–20"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": [
+    14
+   ]
+  },
+  {
+   "clave": "f17",
+   "folio": 17,
+   "etapa": "Notificación demanda y su proveído",
+   "tramite": "",
+   "desc": "Acredita Poder",
+   "fecha": "18/06/2025",
+   "foja": 0,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=20",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 18–19"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f16",
+   "folio": 16,
+   "etapa": "Notificación demanda y su proveído",
+   "tramite": "(NOT)Notificacion",
+   "desc": "Notificación de demanda",
+   "fecha": "18/06/2025",
+   "foja": 10,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=19",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 17–17"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f15",
+   "folio": 15,
+   "etapa": "Notificación demanda y su proveído",
+   "tramite": "Actuación Receptor",
+   "desc": "Certificación (Realizada) Diligencia:17/06/2025 14:33",
+   "fecha": "17/06/2025 (17/06/2025)",
+   "foja": 0,
+   "georef": true,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "falta",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f14",
+   "folio": 14,
+   "etapa": "Notificación demanda y su proveído",
+   "tramite": "Escrito",
+   "desc": "Patrocinio y poder",
+   "fecha": "16/06/2025",
+   "foja": 9,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=23",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 21–25"
+    },
+    {
+     "tipo": "pdf2",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "parcial",
+   "analisis": [],
+   "resumen": "",
+   "provee": [],
+   "resuelto_por": [
+    18
+   ]
+  },
+  {
+   "clave": "f13",
+   "folio": 13,
+   "etapa": "Notificación demanda y su proveído",
+   "tramite": "Actuación Receptor",
+   "desc": "NOTIFICACIÓN DE DEMANDA (Exitosa) Diligencia:09/06/2025 14:36",
+   "fecha": "10/06/2025 (09/06/2025)",
+   "foja": 0,
+   "georef": true,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "falta",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f12",
+   "folio": 12,
+   "etapa": "Notificación demanda y su proveído",
+   "tramite": "Actuación Receptor",
+   "desc": "CERTIFICACIÓN BÚSQUEDAS (Búsqueda positiva) Diligencia:09/06/2025 14:35",
+   "fecha": "10/06/2025 (09/06/2025)",
+   "foja": 0,
+   "georef": true,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "falta",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f11",
+   "folio": 11,
+   "etapa": "Notificación demanda y su proveído",
+   "tramite": "Actuación Receptor",
+   "desc": "NOTIFICACIÓN DE DEMANDA (Exitosa) Diligencia:07/06/2025 18:09",
+   "fecha": "10/06/2025 (07/06/2025)",
+   "foja": 0,
+   "georef": true,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "falta",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f10",
+   "folio": 10,
+   "etapa": "Notificación demanda y su proveído",
+   "tramite": "Actuación Receptor",
+   "desc": "CERTIFICACIÓN BÚSQUEDAS (Búsqueda positiva) Diligencia:07/06/2025 18:09",
+   "fecha": "10/06/2025 (07/06/2025)",
+   "foja": 0,
+   "georef": true,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "falta",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f9",
+   "folio": 9,
+   "etapa": "Inicio tramitación",
+   "tramite": "Resolución",
+   "desc": "Da curso a la demanda y cita a comparendo",
+   "fecha": "19/05/2025",
+   "foja": 8,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=16",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 14–15"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": [
+    8
+   ]
+  },
+  {
+   "clave": "f8",
+   "folio": 8,
+   "etapa": "Inicio tramitación",
+   "tramite": "Escrito",
+   "desc": "Cumple lo ordenado",
+   "fecha": "07/05/2025",
+   "foja": 7,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=18",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 16–16"
+    },
+    {
+     "tipo": "pdf2",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    },
+    {
+     "tipo": "anexo",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "parcial",
+   "analisis": [],
+   "resumen": "",
+   "provee": [],
+   "resuelto_por": [
+    9
+   ]
+  },
+  {
+   "clave": "f7",
+   "folio": 7,
+   "etapa": "Inicio tramitación",
+   "tramite": "Resolución",
+   "desc": "Pospone inicio de la tramitación",
+   "fecha": "05/05/2025",
+   "foja": 6,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=14",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 12–12"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": [
+    6
+   ]
+  },
+  {
+   "clave": "f6",
+   "folio": 6,
+   "etapa": "Inicio tramitación",
+   "tramite": "Escrito",
+   "desc": "Curso progresivo a los autos",
+   "fecha": "22/04/2025",
+   "foja": 5,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=15",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 13–13"
+    },
+    {
+     "tipo": "pdf2",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "parcial",
+   "analisis": [],
+   "resumen": "",
+   "provee": [],
+   "resuelto_por": [
+    7
+   ]
+  },
+  {
+   "clave": "f5",
+   "folio": 5,
+   "etapa": "Inicio tramitación",
+   "tramite": "",
+   "desc": "Acredita Poder",
+   "fecha": "14/04/2025",
+   "foja": 0,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=12",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 10–11"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": []
+  },
+  {
+   "clave": "f4",
+   "folio": 4,
+   "etapa": "Inicio tramitación",
+   "tramite": "Resolución",
+   "desc": "Pospone inicio de la tramitación",
+   "fecha": "10/04/2025",
+   "foja": 4,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=10",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 8–8"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": [
+    3
+   ]
+  },
+  {
+   "clave": "f3",
+   "folio": 3,
+   "etapa": "Inicio tramitación",
+   "tramite": "Escrito",
+   "desc": "Cumple lo ordenado",
+   "fecha": "04/04/2025",
+   "foja": 3,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=11",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 9–9"
+    },
+    {
+     "tipo": "pdf2",
+     "nota": "",
+     "estado": "falta",
+     "archivo": ""
+    }
+   ],
+   "copias": [],
+   "estado": "parcial",
+   "analisis": [],
+   "resumen": "",
+   "provee": [],
+   "resuelto_por": [
+    4
+   ]
+  },
+  {
+   "clave": "f2",
+   "folio": 2,
+   "etapa": "Inicio tramitación",
+   "tramite": "Resolución",
+   "desc": "Apercibimiento poder y/o título",
+   "fecha": "02/04/2025",
+   "foja": 2,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=3",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 1–1"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [],
+   "resumen": "",
+   "provee": [
+    1
+   ]
+  },
+  {
+   "clave": "f1",
+   "folio": 1,
+   "etapa": "Inicio tramitación",
+   "tramite": "Escrito",
+   "desc": "Ingreso demanda",
+   "fecha": "01/04/2025",
+   "foja": 1,
+   "georef": false,
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "docs/11_Escritos-de-la-contraria-y-actas/2025-04-01%20a%202026-04-21%20-%20Ebook%20OJV%20C-4713-2025%20folios%201-47%20-%2090%20pags%20%28demanda%2C%20contestacion%20folio%2032%2C%20auto%20de%20prueba%20folio%2035%2C%20reposicion%20folio%2043%29.pdf#page=4",
+     "kb": 3711,
+     "md5": "fb8b0328138fda4d738c4e7d3c13edb7",
+     "archivo": "2025-04-01 a 2026-04-21 - Ebook OJV C-4713-2025 folios 1-47 - 90 pags (demanda, contestacion folio 32, auto de prueba folio 35, reposicion folio 43).pdf",
+     "paginas": "ebook págs. 2–7"
+    }
+   ],
+   "copias": [],
+   "estado": "completo",
+   "analisis": [
+    {
+     "ruta": "_vLegalOps/cases/CHL/C-4713-2025_Juri_con_Araya/Case_Summary.md",
+     "nombre": "Case_Summary",
+     "existe": true
+    }
+   ],
+   "resumen": "Demanda de cese de goce gratuito y designación de administrador proindiviso (procedimiento sumario).",
+   "provee": [],
+   "resuelto_por": [
+    2
+   ]
+  }
+ ],
+ "escritos_por_resolver": [
+  {
+   "clave": "e-2026-09-21-franco",
+   "fecha": "21/09/2026",
+   "parte": "Demandante (Franco Anabalón)",
+   "desc": "Lista de testigos, reitera dominio vigente, acompaña ebook C-6511, compraventa 2020 y mandato 2019, pide resolver el 653",
+   "resumen": "Día 1 del probatorio: ofrece testigos con RUT; el 653 (administrador proindiviso) pendiente desde la demanda.",
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "boveda/CHL-2026-C-4713-2025/2026-09-21%20-%20Escrito%20de%20Franco%20-%20lista%20de%20testigos%2C%20reitera%20dominio%20vigente%2C%20acompana%20ebook%20C-6511%2C%20compraventa%202020%20y%20mandato%202019%2C%20pide%20resolver%20el%20653%20%28administrador%20proindiviso%29.pdf",
+     "kb": 208,
+     "md5": "d50d6e88e1a25c9db8c9523591a65f3c",
+     "archivo": "2026-09-21 - Escrito de Franco - lista de testigos, reitera dominio vigente, acompana ebook C-6511, compraventa 2020 y mandato 2019, pide resolver el 653 (administrador proindiviso).pdf",
+     "paginas": ""
+    }
+   ],
+   "estado": "completo",
+   "analisis": [
+    {
+     "ruta": "_vLegalOps/cases/CHL/C-4713-2025_Juri_con_Araya/2026-09-21 - 1.5k tok - Escrito de Franco del dia 1 - testigos con RUT, dominio vigente ya reiterado, traer a la vista C-6511 incluido el peritaje, y el 653 pendiente desde la demanda - OJV 3er JC Santiago.md",
+     "nombre": "2026-09-21 - 1.5k tok - Escrito de Franco del dia 1 - testigos con RUT, dominio vigente ya reiterado, traer a la vista C-6511 incluido el peritaje, y el 653 pendiente desde la demanda - OJV 3er JC Santiago",
+     "existe": true
+    }
+   ]
+  },
+  {
+   "clave": "e-2026-09-22-achu",
+   "fecha": "22/09/2026",
+   "parte": "Demandada (Eduardo Achu)",
+   "desc": "Lista de testigos: Juan Patricio Carte Garrido (conserje, Diagonal Paraguay 254) y Cristina María Gálvez Sánchez (pensionada, Quinta Normal); pide citación art. 380",
+   "resumen": "El conserje ya declaró para ellos en C-6511 (folio 112): lo llevó Christian; «el edificio donde ellos viven». Gálvez: sin identificar.",
+   "docs": [
+    {
+     "tipo": "pdf",
+     "nota": "",
+     "estado": "tenemos",
+     "href": "boveda/CHL-2026-C-4713-2025/2026-09-22%20-%20Escrito%20demandada%20%28Achu%29%20-%20lista%20de%20testigos%20Carte%20Garrido%20y%20Galvez%20Sanchez%2C%20pide%20citacion%20art.%20380%20-%20C-4713-2025.pdf",
+     "kb": 81,
+     "md5": "82a0d14447e1396b89fd35cfa535c4b9",
+     "archivo": "2026-09-22 - Escrito demandada (Achu) - lista de testigos Carte Garrido y Galvez Sanchez, pide citacion art. 380 - C-4713-2025.pdf",
+     "paginas": ""
+    }
+   ],
+   "estado": "completo",
+   "analisis": [
+    {
+     "ruta": "_vLegalOps/cases/CHL/C-4713-2025_Juri_con_Araya/2026-09-24 - 1k tok - Lista de testigos de la contraria - el conserje Carte Garrido ya declaro para ellos en C-6511 y Cristina Galvez sin identificar - OJV 3er JC Santiago.md",
+     "nombre": "2026-09-24 - 1k tok - Lista de testigos de la contraria - el conserje Carte Garrido ya declaro para ellos en C-6511 y Cristina Galvez sin identificar - OJV 3er JC Santiago · solo en LegalOps",
+     "existe": true
+    }
+   ]
+  }
+ ],
+ "litigantes": [
+  {
+   "participante": "Demandante",
+   "rut": "",
+   "persona": "Natural",
+   "nombre": "Jorge Juri"
+  },
+  {
+   "participante": "Demandado",
+   "rut": "",
+   "persona": "Natural",
+   "nombre": "Aída Rosemarie Laso Tirapegui"
+  },
+  {
+   "participante": "Demandado",
+   "rut": "",
+   "persona": "Natural",
+   "nombre": "Christian Mauricio Adrián Araya Laso"
+  },
+  {
+   "participante": "Ab. Demandante",
+   "rut": "",
+   "persona": "Natural",
+   "nombre": "Franco Anabalón Chacana"
+  },
+  {
+   "participante": "Ab. Demandado",
+   "rut": "",
+   "persona": "Natural",
+   "nombre": "Eduardo Achu Moscoso"
+  }
+ ],
+ "resumen": {
+  "filas": 52,
+  "docs_ojv": 64,
+  "tenemos": 43,
+  "faltan": 21,
+  "sin_doc": 5
+ }
+}
