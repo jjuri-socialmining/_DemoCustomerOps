@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Best Panoramas — FamiliaOps</title>
+
+<style>
+  :root{
+    --bg:#0f1115; --surface:#171a21; --surface2:#1e222b; --border:#2a2f3a;
+    --text:#e6e8ec; --muted:#9aa1ad; --hint:#6b727f;
+    --blue:#3b82f6; --green:#34d399; --amber:#fbbf24; --red:#f87171;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f7f8fa; --surface:#ffffff; --surface2:#f0f2f5; --border:#dfe3e9;
+      --text:#15181d; --muted:#5b6270; --hint:#8b929e;
+      --green:#059669; --amber:#b45309; --red:#dc2626;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+  .wrap{max-width:1120px;margin:0 auto;padding:1.6rem 1rem 4rem}
+  .back{color:var(--muted);font-size:.8rem;text-decoration:none}
+  h1{font-size:1.65rem;font-weight:800;letter-spacing:-.02em;margin:.4rem 0 .3rem}
+  .sub{color:var(--muted);font-size:.84rem;margin-bottom:.35rem}
+  .sub b{color:var(--text)}
+  .stamp{color:var(--hint);font-size:.74rem;margin-bottom:1.3rem}
+  h2{font-size:1rem;font-weight:700;margin:2rem 0 .8rem}
+  h2 .n{color:var(--hint);font-weight:500;font-size:.8rem;margin-left:.4rem}
+
+  .tips{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .tip{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);
+       border-radius:10px;padding:.7rem .9rem;font-size:.8rem;color:var(--muted)}
+  .tip b{color:var(--text)}
+
+  .bar{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin:1.4rem 0 .4rem}
+  .chip{background:var(--surface);border:1px solid var(--border);color:var(--muted);
+        border-radius:999px;padding:.4rem .85rem;font-size:.78rem;cursor:pointer;user-select:none}
+  .chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+  .count{margin-left:auto;color:var(--hint);font-size:.74rem}
+
+  .grid{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+        padding:1rem 1.05rem;display:flex;flex-direction:column;gap:.45rem}
+  .top{display:flex;justify-content:space-between;gap:.6rem;align-items:baseline}
+  .nm{font-size:1.05rem;font-weight:700}
+  .km{font-variant-numeric:tabular-nums;color:var(--hint);font-size:.78rem;white-space:nowrap}
+  .what{color:var(--muted);font-size:.8rem}
+  .st{font-size:.78rem;font-weight:600}
+  .st.g{color:var(--green)} .st.a{color:var(--amber)} .st.r{color:var(--red)}
+  dl{display:grid;grid-template-columns:auto 1fr;gap:.15rem .7rem;margin:0;font-size:.78rem}
+  dt{color:var(--hint)} dd{margin:0}
+  .acts{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:auto;padding-top:.4rem}
+  .btn{display:inline-flex;align-items:center;gap:.3rem;text-decoration:none;font-size:.8rem;font-weight:600;
+       padding:.5rem .8rem;border-radius:8px;border:1px solid var(--border);color:var(--text);background:var(--surface2)}
+  .btn.p{background:var(--blue);border-color:var(--blue);color:#fff}
+  .btn:hover{filter:brightness(1.1)}
+  .hidden{display:none}
+  .tblwrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+  table.rk{border-collapse:collapse;width:100%;min-width:900px}
+  .rk th,.rk td{text-align:left;padding:.6rem .7rem;font-size:.8rem;border-bottom:1px solid var(--border);vertical-align:top}
+  .rk th{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--hint);background:var(--surface2)}
+  .rk tr:last-child td{border-bottom:none}
+  .rk .pos{font-weight:800;font-size:1rem;color:var(--blue)}
+  .rk .dia{font-weight:700;white-space:nowrap}
+  .rk .cost{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .rk .cost small{display:block;font-weight:400;color:var(--hint)}
+  .rk code{background:var(--surface2);padding:.05rem .35rem;border-radius:4px;font-weight:700;color:var(--green)}
+  .rk .of{display:flex;flex-direction:column;gap:.3rem}
+  .rk .of a{font-size:.74rem;color:var(--blue);text-decoration:none;white-space:nowrap}
+  .rk .of a.btn{color:#fff;justify-content:center}
+  .rk tr.done td{opacity:.45}
+  .rk tr.done .lg{text-decoration:line-through}
+  .rk input{width:18px;height:18px;cursor:pointer}
+  footer{margin-top:2.4rem;color:var(--hint);font-size:.74rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="ofertas-comida.html">🍽️ Comer con ofertas</a>
+  <h1>🗺️ The Best Panoramas</h1>
+  <div class="sub">Granjas, zoo, piscina y VR — con el botón para <b>reservar</b>, <b>cómo llegar</b> y el sitio oficial.</div>
+  <div class="stamp">Verificado el 30-sep-2026. "Abierto" es a esa fecha, no en vivo: antes de salir, abrir el sitio. Distancias en franjas, en línea recta.</div>
+
+  <div class="tips">
+    <div class="tip"><b>Para el chico (2), cerca y barato:</b> Maplewood; Southlands desde noviembre.</div>
+    <div class="tip"><b>Que el grande también se entretenga:</b> Silverbrook (pesca) o Maan Farms.</div>
+    <div class="tip"><b>Octubre se acaba:</b> Aldor, Maan, Silverbrook y los pumpkin patches cierran a fin de mes.</div>
+    <div class="tip"><b>Menor de 3 gratis por escrito:</b> el zoo (2 años o menos), Aldor y Maan (menores de 3).</div>
+  </div>
+
+  <h2>🏆 Ranking: a dónde ir y qué día <span class="n">ordenado por fecha · marcá "ya fuimos" y baja al final</span></h2>
+  <div class="tblwrap">
+    <table class="rk">
+      <thead><tr><th>#</th><th>Día</th><th>Lugar</th><th>Costo los 4</th><th>Cómo pagar menos</th><th>Por qué ese día</th><th></th><th>¿Fuimos?</th></tr></thead>
+      <tbody id="rk"></tbody>
+    </table>
+  </div>
+  <div class="stamp" style="margin-top:.6rem">Costos leídos el 30-sep en los sistemas de reserva (Amelia de Silverbrook, tienda de Aldor, FareHarbor de Maan). Familia de cuatro: dos adultos, uno de 12 y uno de 2. En Groupon, BCAA y Costco no apareció ninguna oferta para estos lugares (Groupon bloquea la lectura automática, así que el botón <b>Ofertas</b> abre la búsqueda para mirarla vos). Si tenés beneficios de empleador (Perkopolis y similares), mirar su sección de zoos antes de comprar.</div>
+
+  <div class="bar" id="bar">
+    <span class="chip on" data-f="all">Todos</span>
+    <span class="chip" data-f="m">Para el chico (2)</span>
+    <span class="chip" data-f="j">Para el grande (12)</span>
+    <span class="chip" data-f="open">Abierto en octubre</span>
+    <span class="chip" data-f="near">Menos de 20 km</span>
+    <span class="btn cp" id="cpAll" style="cursor:pointer">📱 Copiar todos los links de Maps</span>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>Datos del 30-sep-2026, leídos de los sistemas de reserva de cada lugar, Uber Eats y Groupon.</footer>
+</div>
+
+<script>
+const banda = k => k < 2 ? '< 2 km' : k < 10 ? '2–10 km' : k < 30 ? '10–30 km' : '30+ km';
+const maps = q => 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(q);
+const L = [
+  {n:'təməsew̓txʷ (piscina)', q:'Piscina techada: recreativa + carriles', km:1, tags:['m','j','open','near'],
+   precio:'Drop-in — ver folleto de otoño', micah:'sin dato', quien:'M (con adulto en el agua) · J · P',
+   hor:'Carriles L–D; public swim en el folleto', st:['g','Recreativa reabre el 30-sep, 8:00'],
+   a:[['Reservar drop-in','https://www.newwestcity.ca/activeliving',1],['Folleto otoño','https://online.flippingbook.com/view/715060304/'],
+      ['Llamar','tel:+16047775100'],['Cómo llegar',maps('65 East Sixth Avenue, New Westminster, BC')],
+      ['Sitio','https://www.newwestcity.ca/parks-and-recreation/facilities/temesewtx-aquatic-and-community-centre']]},
+  {n:'Sandbox VR', q:'Realidad virtual, salas de hasta 6, ~30 min', km:5, tags:['j','open','near'],
+   precio:'desde ~$39 por persona', micah:'⛔ no juega (mín. 1,20 m)', quien:'J (+ un padre presente para firmar)',
+   hor:'Con reserva', st:['g','Todo el año'],
+   a:[['Reservar','https://sandboxvr.com/ca/surrey/king-george-hub',1],['Cómo llegar',maps('Sandbox VR King George Hub, Surrey, BC')],
+      ['FAQ','https://sandboxvr.com/faq']]},
+  {n:'Maplewood Farm', q:'Granja con ~200 animales, se les da de comer', km:20, tags:['m','j','open','near'],
+   precio:'~$3 adulto / ~$2 niño (dato viejo)', micah:'sin dato', quien:'M ⭐ · J',
+   hor:'10–16 h', st:['g','Todo el año'],
+   a:[['Sitio','https://maplewoodfarm.bc.ca/',1],['Cómo llegar',maps('405 Seymour River Pl, North Vancouver, BC')]]},
+  {n:'Port Kells Pumpkin Patch', q:'Zapallos, gallinero, cabras', km:20, tags:['m','j','open','near'],
+   precio:'sin dato', micah:'sin dato', quien:'M · J',
+   hor:'Temporada de octubre', st:['a','Sólo octubre'],
+   a:[['Buscar entradas','https://www.google.com/search?q='+encodeURIComponent('Port Kells Pumpkin Patch Surrey 2026 tickets'),1],
+      ['Cómo llegar',maps('18730 88 Ave, Surrey, BC')],['Nota de prensa','https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026']]},
+  {n:'Southlands Heritage Farm', q:'Caballos, cabras, gallinas, ponis', km:20, tags:['m','near'],
+   precio:'Gratis / a voluntad', micah:'🟢 visita libre', quien:'M ⭐',
+   hor:'L–V desde 16 h · S–D 9–17 h', st:['r','Visita libre suspendida en octubre (Pumpkin Fest)'],
+   a:[['Sitio','https://southlandsfarm.pike13.com/',1],['Cómo llegar',maps('Southlands Heritage Farm, Vancouver, BC')]]},
+  {n:'Gabriel Farms', q:'Animales para tocar, paseo en carreta de heno', km:20, tags:['m','j','open'],
+   precio:'sin dato', micah:'sin dato', quien:'M · J',
+   hor:'Temporada de octubre', st:['a','Sólo octubre'],
+   a:[['Buscar entradas','https://www.google.com/search?q='+encodeURIComponent('Gabriel Farms Surrey pumpkin patch 2026'),1],
+      ['Cómo llegar',maps('18507 20 Ave, Surrey, BC')],['Nota de prensa','https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026']]},
+  {n:'Aldor Acres', q:'Zapallos + cerdos, burros, vacas, caballos', km:20, tags:['m','j','open'],
+   precio:'$21 por persona (Family Pass $120 no conviene)', micah:'🟢 sí, menores de 3', quien:'M ⭐ · J',
+   hor:'9–17 h', st:['g','Hasta el 31-oct'],
+   a:[['Comprar entradas','https://aldoracresfamilyfarm.ca/tickets-2/',1],['Cómo llegar',maps('24990 84 Ave, Langley, BC')],
+      ['Sitio','https://aldoracresfamilyfarm.ca/pumpkin-patch/']]},
+  {n:'Greater Vancouver Zoo', q:'Zoo con animales exóticos (se miran, no se tocan)', km:40, tags:['m','j','open'],
+   precio:'$38 adulto · $27 de 3 a 17 · parking $8', micah:'🟢 sí, 2 años o menos', quien:'J · M · P',
+   hor:'sep–abr 9–16 h', st:['g','Todo el año'],
+   a:[['Entradas y horarios','https://www.gvzoo.com/visit/hours-rates-getting-here/',1],['Cómo llegar',maps('5048 264 St, Aldergrove, BC')]]},
+  {n:'Silverbrook Farm', q:'Pesca de truchas + animales para tocar + huevos', km:40, tags:['m','j','open'],
+   precio:'$5 turno 08:00 · $10 resto / 2 h · código MaanFarms −10% · pescado $13+', micah:'⚪ no consta (cobra por cabeza)', quien:'J ⭐ (pesca) · M (animales)',
+   hor:'Turnos de 2 h desde las 8, con reserva — sin reembolso', st:['g','Hasta fin de octubre'],
+   a:[['Reservar turno','https://silverbrookfarms.ca/general-admission/',1],['Cómo llegar',maps('1364 Bradner Rd, Abbotsford, BC')],
+      ['Sitio','https://silverbrookfarms.ca/']]},
+  {n:'Maan Farms', q:'Zapallos, vacas Highland, alpacas, ponis, tirolesa, laberinto', km:40, tags:['m','j','open'],
+   precio:'en el checkout; +$4–5 si se compra el mismo día', micah:'🟢 sí, menores de 3', quien:'M · J (tirolesa, laberinto)',
+   hor:'9–18 h', st:['g','Hasta el 1-nov'],
+   a:[['Comprar entradas','https://fareharbor.com/embeds/book/maanfarms/?full-items=yes',1],['Cómo llegar',maps('790 McKenzie Rd, Abbotsford, BC')],
+      ['Otoño en la granja','https://maanfarms.com/pages/fall-at-the-farm']]},
+];
+const gp = q => 'https://www.groupon.com/search?query=' + encodeURIComponent(q);
+const promo = q => 'https://www.google.com/search?q=' + encodeURIComponent(q + ' promo code OR coupon OR discount 2026');
+// Ranking: ordenado por el día que conviene. id = clave de "ya fuimos" en localStorage.
+const R = [
+  {id:'silverbrook', dia:'Sáb 3-oct · 08:00', lg:'Silverbrook Farm', cost:'$14,18', nota:'3 personas, como tu carrito · $18,90 si el chico paga',
+   como:'Turno de las <b>08:00 a $5</b> (no el doble de 4 h a $14) + código <code>MaanFarms</code> = 10% menos. El código sólo vale para la entrada general de 2 h. Tu carrito de $44,10 queda en $14,18.',
+   por:'El turno más barato de la agenda. Hay turnos publicados sólo hasta el 18-oct, y la reserva no tiene reembolso. La trucha se paga aparte ($13+).',
+   go:'https://silverbrookfarms.ca/general-admission/', q:'Silverbrook Farm Abbotsford'},
+  {id:'maan', dia:'Sáb 10 o dom 11-oct', lg:'Maan Farms', cost:'ver checkout', nota:'3 personas; el chico gratis (menores de 3)',
+   como:'Comprar online <b>el día anterior</b>: desde las 22 h de la víspera cada entrada sube $4–5. El Fall VIP Pass trae un pase para volver un día de semana.',
+   por:'El corral para entrar con las vacas Highland, alpacas y cabras sólo abre los fines de semana. Cierra el 1-nov.',
+   go:'https://fareharbor.com/embeds/book/maanfarms/items/408867/?full-items=yes', q:'Maan Farms Abbotsford'},
+  {id:'aldor', dia:'Sáb 17-oct', lg:'Aldor Acres', cost:'$63', nota:'3 × $21; el chico gratis (menores de 3)',
+   como:'Entradas <b>sueltas</b> ($21), <b>no</b> el Family Day Pass ($120): para nosotros sale $57 más caro. Sin reembolso.',
+   por:'Cobra lo mismo todos los días; va en fin de semana porque hay colegio. Cierra el 31-oct.',
+   go:'https://aldoracresfamilyfarm.ca/tickets-2/', q:'Aldor Acres Langley'},
+  {id:'portkells', dia:'Sáb 24-oct', lg:'Port Kells o Gabriel Farms', cost:'sin dato', nota:'no tienen sitio que responda',
+   como:'Mirar Ofertas antes de ir; sin precio publicado.',
+   por:'Último fin de semana de zapallos. Sólo si todavía quedan ganas después de Aldor y Maan.',
+   go:'https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026', q:'Port Kells pumpkin patch Surrey'},
+  {id:'maplewood', dia:'Dom 1-nov', lg:'Maplewood Farm', cost:'~$10', nota:'precio de fuentes viejas',
+   como:'Barato de por sí; confirmar precio en la web.',
+   por:'Abre todo el año, así que no compite con octubre. Es el mejor para el chico.',
+   go:'https://maplewoodfarm.bc.ca/', q:'Maplewood Farm North Vancouver'},
+  {id:'southlands', dia:'Sáb 7-nov', lg:'Southlands Heritage Farm', cost:'donación', nota:'visita libre',
+   como:'Gratis, a voluntad.',
+   por:'En octubre la visita libre está suspendida por el Pumpkin Fest; vuelve en noviembre.',
+   go:'https://southlandsfarm.pike13.com/', q:'Southlands Heritage Farm Vancouver'},
+  {id:'zoo', dia:'Sáb 14-nov', lg:'Greater Vancouver Zoo', cost:'$111', nota:'2 × $38 + $27 niño + $8 parking; el chico gratis',
+   como:'Antes de comprar, mirar la sección de zoos de <b>Perkopolis</b> si tenés beneficios de empleador.',
+   por:'Abre todo el año y es el más caro: no hay apuro. De sep a abr cierra a las 16 h.',
+   go:'https://www.gvzoo.com/visit/hours-rates-getting-here/', q:'Greater Vancouver Zoo', perk:1},
+  {id:'sandbox', dia:'Cuando el grande quiera', lg:'Sandbox VR', cost:'~$39', nota:'sólo juega el grande; el chico no entra (1,20 m)',
+   como:'El código de apertura (KGH30) venció en febrero. Mirar Ofertas.',
+   por:'Es para el grande, no para salir los cuatro. Abre todo el año.',
+   go:'https://sandboxvr.com/ca/surrey/king-george-hub', q:'Sandbox VR Surrey'},
+  {id:'piscina', dia:'Cualquier tarde', lg:'təməsew̓txʷ (piscina)', cost:'drop-in', nota:'ver folleto de otoño',
+   como:'Precio de residente; el drop-in con cupo se reserva 72 h antes.',
+   por:'Queda en el centro de New West: no hace falta programarla.',
+   go:'https://www.newwestcity.ca/activeliving', q:''},
+];
+let fuimos = {};
+try { fuimos = JSON.parse(localStorage.getItem('lugares-fuimos') || '{}'); } catch (e) {}
+function pintarRanking(){
+  const rows = R.map((r, i) => ({...r, pos: i + 1})).sort((a, b) => (!!fuimos[a.id] - !!fuimos[b.id]) || a.pos - b.pos);
+  document.getElementById('rk').innerHTML = rows.map(r => `
+    <tr class="${fuimos[r.id] ? 'done' : ''}">
+      <td class="pos">${r.pos}</td><td class="dia">${r.dia}</td><td class="lg"><b>${r.lg}</b></td>
+      <td class="cost">${r.cost}<small>${r.nota}</small></td><td>${r.como}</td><td>${r.por}</td>
+      <td><div class="of"><a class="btn p" href="${r.go}" target="_blank" rel="noopener">Reservar ↗</a>
+        ${r.q ? `<a href="${gp(r.q)}" target="_blank" rel="noopener">Ofertas en Groupon ↗</a>
+        <a href="${promo(r.q)}" target="_blank" rel="noopener">Buscar códigos ↗</a>` : ''}
+        ${r.perk ? '<a href="https://perkopolis.com/" target="_blank" rel="noopener">Perkopolis ↗</a>' : ''}</div></td>
+      <td><input type="checkbox" data-id="${r.id}" ${fuimos[r.id] ? 'checked' : ''} title="Ya fuimos"></td>
+    </tr>`).join('');
+}
+document.getElementById('rk').addEventListener('change', e => {
+  const id = e.target.dataset.id; if (!id) return;
+  if (e.target.checked) fuimos[id] = new Date().toISOString().slice(0, 10); else delete fuimos[id];
+  try { localStorage.setItem('lugares-fuimos', JSON.stringify(fuimos)); } catch (e) {}
+  pintarRanking();
+});
+pintarRanking();
+const mapsLink = p => { const d = (p.a.find(x => x[0] === 'Cómo llegar') || [])[1] || '';
+  const q = decodeURIComponent((d.split('destination=')[1] || p.n));
+  return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q); };
+async function copiar(txt, el){
+  try { await navigator.clipboard.writeText(txt); }
+  catch (e) { const t = document.createElement('textarea'); t.value = txt; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
+  if (el) { const o = el.textContent; el.textContent = '✓ Copiado'; setTimeout(() => { el.textContent = o; }, 1400); }
+}
+document.addEventListener('click', e => { const b = e.target.closest('.cp'); if (b) copiar(b.dataset.u, b); });
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const grid = document.getElementById('grid');
+grid.innerHTML = L.map(p => `
+  <div class="card" data-tags="${p.tags.join(' ')}">
+    <div class="top"><span class="nm">${esc(p.n)}</span><span class="km">${banda(p.km)}</span></div>
+    <div class="what">${esc(p.q)}</div>
+    <div class="st ${p.st[0]}">● ${esc(p.st[1])}</div>
+    <dl><dt>Precio</dt><dd>${esc(p.precio)}</dd><dt>Menor de 3</dt><dd>${esc(p.micah)}</dd>
+        <dt>Para</dt><dd>${esc(p.quien)}</dd><dt>Horario</dt><dd>${esc(p.hor)}</dd></dl>
+    <div class="acts">${p.a.map(([t,u,pri]) =>
+      `<a class="btn${pri?' p':''}" href="${esc(u)}" ${u.startsWith('tel:')?'':'target="_blank" rel="noopener"'}>${esc(t)}${u.startsWith('tel:')?'':' ↗'}</a>`).join('')}
+      <span class="btn cp" data-u="${esc(mapsLink(p))}">Copiar Maps</span></div>
+  </div>`).join('');
+const cards = [...grid.children], count = document.getElementById('count');
+function filtrar(f){
+  let n = 0;
+  cards.forEach(c => { const ok = f==='all' || c.dataset.tags.split(' ').includes(f); c.classList.toggle('hidden', !ok); n += ok; });
+  count.textContent = n + ' de ' + cards.length;
+}
+document.getElementById('bar').addEventListener('click', e => {
+  const c = e.target.closest('.chip'); if (!c) return;
+  document.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === c));
+  filtrar(c.dataset.f);
+});
+filtrar('all');
+document.getElementById('cpAll').dataset.u = L.map(p => p.n + '\n' + mapsLink(p)).join('\n\n');
+</script>
+</body>
+</html>

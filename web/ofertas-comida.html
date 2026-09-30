@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comer con ofertas — FamiliaOps</title>
+
+<style>
+  :root{
+    --bg:#0f1115; --surface:#171a21; --surface2:#1e222b; --border:#2a2f3a;
+    --text:#e6e8ec; --muted:#9aa1ad; --hint:#6b727f;
+    --blue:#3b82f6; --green:#34d399; --amber:#fbbf24; --red:#f87171; --purple:#a78bfa;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f7f8fa; --surface:#ffffff; --surface2:#f0f2f5; --border:#dfe3e9;
+      --text:#15181d; --muted:#5b6270; --hint:#8b929e;
+      --green:#059669; --amber:#b45309; --red:#dc2626; --purple:#7c3aed;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+  .wrap{max-width:1160px;margin:0 auto;padding:1.6rem 1rem 4rem}
+  .back{color:var(--muted);font-size:.8rem;text-decoration:none}
+  h1{font-size:1.65rem;font-weight:800;letter-spacing:-.02em;margin:.4rem 0 .3rem}
+  .sub{color:var(--muted);font-size:.84rem;margin-bottom:.35rem}
+  .sub b{color:var(--text)}
+  .stamp{color:var(--hint);font-size:.74rem;margin-bottom:1.3rem}
+  h2{font-size:1rem;font-weight:700;margin:2.2rem 0 .8rem}
+  h2 .n{color:var(--hint);font-weight:500;font-size:.8rem;margin-left:.4rem}
+
+  .picks{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+  .pick{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:12px;padding:.9rem 1rem}
+  .pick .tag{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--hint)}
+  .pick .nm{font-size:1rem;font-weight:700;margin:.15rem 0}
+  .pick .why{font-size:.8rem;color:var(--muted)}
+
+  .bar{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin-bottom:.8rem}
+  .chip{background:var(--surface);border:1px solid var(--border);color:var(--muted);
+        border-radius:999px;padding:.4rem .85rem;font-size:.78rem;cursor:pointer;user-select:none}
+  .chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+  .count{margin-left:auto;color:var(--hint);font-size:.74rem}
+
+  .tblwrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+  table{border-collapse:collapse;width:100%;min-width:860px}
+  th,td{text-align:left;padding:.55rem .7rem;font-size:.8rem;border-bottom:1px solid var(--border);vertical-align:top}
+  th{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--hint);background:var(--surface2)}
+  tbody tr:last-child td{border-bottom:none}
+  .pos{font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums}
+  .nm2{font-weight:700}
+  .cu{display:block;color:var(--hint);font-size:.72rem}
+  .ad{display:block;color:var(--muted);font-size:.74rem}
+  .promo{font-weight:700;white-space:nowrap}
+  .promo.b{color:var(--green)} .promo.f{color:var(--purple)} .promo.p{color:var(--amber)}
+  .num{font-variant-numeric:tabular-nums;white-space:nowrap}
+  .acts{display:flex;flex-wrap:wrap;gap:.3rem}
+  .btn{display:inline-flex;align-items:center;text-decoration:none;font-size:.74rem;font-weight:600;cursor:pointer;
+       padding:.38rem .6rem;border-radius:7px;border:1px solid var(--border);color:var(--text);background:var(--surface2);white-space:nowrap}
+  .btn.p{background:var(--blue);border-color:var(--blue);color:#fff}
+  .btn.ok{background:var(--green);border-color:var(--green);color:#fff}
+  .hidden{display:none}
+  .note{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.9rem 1.1rem;font-size:.8rem;color:var(--muted)}
+  .note b{color:var(--text)} .note li{margin:.25rem 0}
+  textarea{width:100%;min-height:90px;background:var(--surface2);color:var(--text);border:1px solid var(--border);
+           border-radius:8px;padding:.6rem;font:12px/1.4 ui-monospace,Menlo,monospace}
+  footer{margin-top:2.4rem;color:var(--hint);font-size:.74rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="best-panoramas.html">🗺️ The Best Panoramas</a>
+  <h1>🍽️ Comer con ofertas</h1>
+  <div class="sub">Locales con promoción en New Westminster (New Westminster), ordenados por <b>popularidad</b>: nota × cantidad de reseñas. Fuentes: <b>Uber Eats</b> (pickup) y <b>Groupon</b>.</div>
+  <div class="stamp">Capturado el 30-sep-2026. Las promos de Uber cambian a diario: lo que vale es lo que muestre la app al pedir. Distancia en línea recta, según Uber.</div>
+
+  <h2>⭐ Lo que elegiría</h2>
+  <div class="picks">
+    <div class="pick"><div class="tag">Para los cuatro · 2x1</div><div class="nm">Cockney Kings Fish &amp; Chips</div>
+      <div class="why">4,7 con +4.000 reseñas. Pescado con papas le sirve a los dos niños; el 2x1 hace la cena de dos por el precio de uno.</div></div>
+    <div class="pick"><div class="tag">Más sano · 2x1</div><div class="nm">Steve's Poke Bar</div>
+      <div class="why">4,7 con +4.000 reseñas. Bowl de poke: nada frito.</div></div>
+    <div class="pick"><div class="tag">Más cerca · 2x1</div><div class="nm">The Peri Peri Shack</div>
+      <div class="why">4,7 con +3.000 reseñas. Pollo a la parrilla.</div></div>
+    <div class="pick"><div class="tag">Groupon · cerca</div><div class="nm">Quiznos New West</div>
+      <div class="why">Dos subs + dos papas + dos bebidas por <b>$17,99</b> (en vez de $26,56).</div></div>
+  </div>
+
+  <h2>🏆 Ranking Uber Eats <span class="n">41 locales con promo a ≤7 km · pickup</span></h2>
+  <div class="bar" id="bar">
+    <span class="chip on" data-f="all">Todos</span>
+    <span class="chip" data-f="b">2x1</span>
+    <span class="chip" data-f="f">Ítem gratis</span>
+    <span class="chip" data-f="p">% o $ de descuento</span>
+    <span class="chip" data-f="near">≤ 2 km</span>
+    <span class="chip" data-f="local">Sin cadenas</span>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>#</th><th>Local</th><th>Promo</th><th>Nota</th><th>Reseñas</th><th>km</th><th>Abrir</th></tr></thead>
+    <tbody id="tb"></tbody>
+  </table></div>
+
+  <h2>🟢 Groupon <span class="n">Food &amp; Drink, lo que queda a menos de ~20 km</span></h2>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Local</th><th>Oferta</th><th>Precio</th><th>Nota</th><th>Distancia (Groupon, desde el centro de New West)</th><th>Abrir</th></tr></thead>
+    <tbody id="gp"></tbody>
+  </table></div>
+
+  <h2>👶 Días en que comen gratis o más barato los niños <span class="n">a confirmar en el local antes de ir</span></h2>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Día</th><th>Dónde</th><th>Qué</th><th>Sirve para</th><th>Fuente</th></tr></thead>
+    <tbody>
+      <tr><td class="num"><b>Lunes</b></td><td class="nm2">Trattoria (Burnaby)</td><td>Family night: niños de 8 años o menos comen gratis</td><td>el chico</td><td><a class="btn" href="https://milesopedia.com/en/guide/free-discounted-restaurants-kids-canada/" target="_blank" rel="noopener">guía ↗</a></td></tr>
+      <tr><td class="num"><b>Miércoles</b></td><td class="nm2">Red Robin (BC)</td><td>50% en el menú infantil; online con el código <b>KIDSMEAL50</b></td><td>el chico (el grande si le aceptan menú infantil)</td><td><a class="btn" href="https://milesopedia.com/en/guide/free-discounted-restaurants-kids-canada/" target="_blank" rel="noopener">guía ↗</a></td></tr>
+      <tr><td class="num"><b>Viernes</b></td><td class="nm2">Smitty's (BC)</td><td>Menores de 10 comen gratis con un plato de adulto de $13,99 o más</td><td>el chico</td><td><a class="btn" href="https://milesopedia.com/en/guide/free-discounted-restaurants-kids-canada/" target="_blank" rel="noopener">guía ↗</a></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>📱 Llevarlo al teléfono <span class="n">Google Maps</span></h2>
+  <div class="note">
+    <ul>
+      <li><b>Un local:</b> el botón <b>Copiar</b> de cada fila copia su link de Google Maps. Lo pegás en el teléfono y abre el lugar.</li>
+      <li><b>Todos los que estás viendo:</b> este botón copia la lista con el filtro de arriba aplicado, un link por línea, para mandártela por WhatsApp o Notas. <button class="btn p" id="copyAll">Copiar todos los links</button></li>
+      <li><b>Un mapa con todos los pines:</b> descargá el <a href="data/ofertas-comida.csv" download>CSV</a> y en <a href="https://www.google.com/maps/d/" target="_blank" rel="noopener">Google My Maps</a>, desde la computadora: <i>Crear mapa → Importar → elegir el CSV → columna "Direccion" para ubicar y "Local" para el título</i>. Después aparece en el teléfono, en Google Maps → Guardados → Mapas.</li>
+    </ul>
+    <textarea id="allLinks" readonly></textarea>
+  </div>
+
+  <h2>⚠️ Antes de pedir</h2>
+  <div class="note"><ul>
+    <li><b>El cartel "Buy 1, get 1" es del local, no del menú entero</b>: adentro suele valer para un solo plato. Mirá cuál antes de elegir.</li>
+    <li><b>"Free item on $20+"</b> exige llegar a ese monto <b>antes</b> de impuestos y tarifas.</li>
+    <li>En modo <b>pickup</b> no hay envío, pero puede haber tarifa de servicio. Uber Eats One ya no aplica en pickup.</li>
+    <li>Las cadenas (Subway, Pizza Hut, KFC…) se repiten con la misma promo en varias sucursales: el ranking muestra cada una por separado.</li>
+  </ul></div>
+
+  <footer>Datos del 30-sep-2026, leídos de los sistemas de reserva de cada lugar, Uber Eats y Groupon.</footer>
+</div>
+
+<script>
+const banda = k => k < 2 ? '< 2 km' : k < 10 ? '2–10 km' : k < 30 ? '10–30 km' : '30+ km';
+// [nombre, promo, nota, reseñas, km, dirección, ciudad, cocina, slug de Uber ("" = buscar), cadena?]
+const U = [
+ ["Pizza Hut","Buy 1, get 1",4.5,1000,1,"#20-800 McBride Blvd","New Westminster","Pizza","pizza-hut-20-800-mcbride-blvd/5BHcfofsT06HCgpmav-UPw",1],
+ ["Subway","Free item on $20+",4.6,1000,1,"800 McBride Blvd","New Westminster","Sándwiches","subway-mcbride-%26-eighth/vQwOUHNnTqyjYOTcXNWz6w",1],
+ ["Papa John's Pizza","$5 off $20+",4.6,4000,1,"512A 6th Ave","New Westminster","Pizza","papa-johns-pizza-6th-ave/7AGllGdmQwWXcJsBhzU0tQ",1],
+ ["Wendy's","Buy 1, get 1",4.5,5000,1,"715 Sixth Street","New Westminster","Hamburguesas","wendys-new-westminster/j7qIU3pFXDWddL5zN-WL3Q",1],
+ ["Subway","Free item on $20+",4.6,700,1,"6th Street","New Westminster","Sándwiches","subway-6th-street-new-west/TeNTCqtFTNeGlmH8RvbvgA",1],
+ ["Burger King","Buy 1, get 1",4.5,3000,1,"530 Sixth St","New Westminster","Hamburguesas","burger-king-530-sixth-st/NQ4CfkyjR4-RyG7zlKcmNg",1],
+ ["KFC","Buy 1, get 1",4.3,6000,1,"726 6th Street","New Westminster","Pollo","kfc-726-6th-street/B5rCvbuWTrKy0zqcbJH6OQ",1],
+ ["4 Seasons Chaat House","Buy 1, get a free item",4.6,3000,1,"","New Westminster","India","4-seasons-chaat-house/VTo1V6CYXrepva5yOdPSAw",0],
+ ["Freshslice Pizza","Buy 1, get 1",4.5,1000,1,"610 6th St","New Westminster","Pizza","freshslice-pizza-610-6th-st/ZWk0XEyNV0eWDS8HynuQjw",1],
+ ["The Peri Peri Shack","Buy 1, get 1",4.7,3000,1,"344 6th Street","New Westminster","Pollo a la parrilla","the-peri-peri-shack-new-westminister/tA-fqYgvVQi_lcRpWrojRA",0],
+ ["Sushi Farm","Free item on $40+",4.7,260,1,"780 Princess St","New Westminster","Sushi","sushi-farm/p37RzDP6Qfe0OHz4wfngxA",0],
+ ["Quesada Burritos & Tacos","25% off select items",4.3,800,1,"208 E Columbia St","New Westminster","Mexicana","quesada-burritos-%26-tacos-208-east-columbia-st/C_pUKGGGVRutZHewprFbCw",1],
+ ["Steve's Poke Bar","Buy 1, get 1",4.7,4000,1,"237 Nelson's Crescent","New Westminster","Poke","steves-poke-bar-new-westminster/NzNZb8A-TmG78DL0SO-IBg",0],
+ ["Subway","Free item on $20+",4.7,330,1,"435 Columbia St","New Westminster","Sándwiches","subway-435-columbia-st-suite-100/CoDJPuE5Qfq_ghzWWH7k9w",1],
+ ["Freshslice Pizza","Buy 1, get 1",4.5,6000,1,"417 E Columbia St","New Westminster","Pizza","freshslice-pizza-417-e-columbia-st/J-2hDpUhTV6iwhZE7qqAtw",1],
+ ["Indian Courtyard Restaurant","20% off select items",4.4,4000,1,"609 12th Street","New Westminster","India","indian-courtyard-restaurant-12th-st/xcS8x5lxQIauvAAmTNWNzg",0],
+ ["Chicko Chicken (Sapperton)","Free item on $30+",4.8,2000,1,"450 East Columbia Street","New Westminster","Pollo coreano","chicko-chickennew-westminster-sapperton/XtRXtrZQTX6Qnhv2iYRVNA",0],
+ ["A&W","Buy 1, get 1",4.6,3000,1,"888 Carnarvon St","New Westminster","Hamburguesas","a%26w-new-west-station/FRwxSLuQRDK60tvitUTiuw",1],
+ ["Donair Dude","20% off select items",4.6,5000,5,"800 Carnarvon St Unit 230","New Westminster","Donair","donair-dude-new-westminster/2YkIXMccTiCP5D3ALzgk-A",0],
+ ["Panago Pizza","Free item on $30+",4.7,800,5,"485 E Columbia St","New Westminster","Pizza","",1],
+ ["Freshslice Pizza","Buy 1, get 1",4.5,2000,5,"8th St","New Westminster","Pizza","",1],
+ ["Quesada Burritos and Tacos","25% off select items",4.2,1500,5,"800 Carnarvon Street #231","New Westminster","Mexicana","quesada-burritos-and-tacos-new-westminster/rsvbW4JeVy-7p6gMDb5nQQ",1],
+ ["Subway","Free item on $20+",4.4,320,5,"800 Carnarvon St Unit 235","New Westminster","Sándwiches","subway-new-west-station/ewgUuG1VRneG8C7rNoCWRg",1],
+ ["Cockney Kings Fish & Chips","Buy 1, get 1",4.7,4000,5,"66 10th Street","New Westminster","Fish & chips","cockney-kings-fish-%26-chips-new-west/fptvF26PRN62UEI1H1MMkQ",0],
+ ["Popeyes Louisiana Kitchen","Buy 1, get a free item",4.5,15000,5,"7855 Kingsway","Burnaby","Pollo","popeyes-louisiana-kitchen-7855-kingsway/L9c5hbB2RfyQ1pr4M7lMbQ",1],
+ ["Chicko Chicken (Carnarvon)","20% off select items",4.7,2000,5,"800 Carnarvon Street","New Westminster","Pollo coreano","chicko-chicken-new-west-carnarvon/zj9bjMyeQDabWuZbua88cw",0],
+ ["Subway","Free item on $20+",4.7,420,5,"1005 Columbia Street","New Westminster","Sándwiches","subway-columbia-square/1w37BgAiTQ2fsRs7FmJGCg",1],
+ ["Mineiros Brazilian and Bistro","Buy 1, get a free item",4.5,600,5,"7542 Edmonds St","Burnaby","Brasileña, brunch","mineiros-brazilian-and-bistro/emXNE0cbVceCfhfvt4ZH0g",0],
+ ["Pizza Hut","Buy 1, get 1",4.5,700,5,"7350 Kingsway","Burnaby","Pizza","pizza-hut-7350-kingsway/-pwdD8YwXRuWjtl5_ILYmA",1],
+ ["Chicko Chicken (Edmonds)","Free item on $30+",4.8,1500,5,"7343 Edmonds St","Burnaby","Pollo coreano","chicko-chicken-burnaby-edmonds/tBMPSwXOVW2jd8bXnxZGVQ",0],
+ ["Subway","Free item on $20+",4.8,230,5,"103-12355 Pattullo Pl","Surrey","Sándwiches","subway-103-12355-pattullo-pl/uB-dOU5VQO6RW_N7GEBr5w",1],
+ ["Sushi Mura","Buy 1, get 1",4.7,1000,5,"","Burnaby","Sushi","sushi-mura-lougheed/5wJ-v0sfVgOt1PH3R2qZWQ",0],
+ ["Burger King","Buy 1, get 1",4.4,4000,5,"CRU 145 - 7155 Kingsway","Burnaby","Hamburguesas","burger-king-cru-145-7155-kingsway/jtxA9GeTQLmg78kN3BoMfg",1],
+ ["Quesada Burritos and Tacos","$5 off $35+",4.3,3000,5,"7155 Kingsway","Burnaby","Mexicana","quesada-burritos-and-tacos-kingsway/iXYT67kZVLuKHm5kf5OIVA",1],
+ ["Bbong Korean Restaurant","Buy 1, get 1",4.7,3000,5,"329 North Rd","Coquitlam","Coreana","bbong-korean-restaurant/HLC_GyPlQBWUUabaOjt0AA",0],
+ ["Subway","Free item on $20+",4.5,440,5,"7155 Kingsway","Burnaby","Sándwiches","subway-highgate/K5YwuzQWTySLptFkZ71Q1A",1],
+ ["Rice and Noodle","Buy 1, get a free item",4.7,4000,5,"7155 Kingsway","Burnaby","Tailandesa","rice-and-noodle-highgate/cJD52zXXSWua5hJpeKyeSw",0],
+ ["MUCHO Burrito","Buy 1, get 1",4.6,3000,5,"7515 Market Crossing","Burnaby","Mexicana","",1],
+ ["Freshslice Pizza","Buy 1, get 1",4.5,1500,5,"","Burnaby","Pizza","",1],
+ ["Steve's Poke Bar","Buy 1, get 1",4.7,1000,5,"8931 Cornerstone Mews","Burnaby","Poke","",0],
+ ["A&W","Buy 1, get 1",4.4,9000,5,"8605 Glenlyon Pkwy","Burnaby","Hamburguesas","",1],
+];
+// [local, oferta, precio antes, precio Groupon, nota, reseñas-texto, distancia, zona]
+const G = [
+ ["Quiznos (New Westminster)","Dos subs, dos papas y dos bebidas","$26,56","$17,99",4.3,"2 mi","North Arm South, New Westminster"],
+ ["Zubu Ramen Metrotown","Cena de ramen de 4 pasos para 2 o 4, con vino o sake","$93,10","$74",4.6,"4,2 mi","Metrotown, Burnaby"],
+ ["LuLu Island Winery","Tour y degustación para 2 o 4","$50","$35",4.7,"6,2 mi","East Richmond"],
+ ["Cat & Fiddle Sports Pub","Pizza y alitas, hasta 32% menos","$28","$19",4.4,"7,3 mi","Port Coquitlam"],
+ ["Wasawas Indian Restaurant","Comida india para 2 o 4, o crédito","$30","$20",4.6,"8,2 mi","Sunset, Vancouver"],
+ ["Quiznos Richmond","Hasta 42% en sándwiches","$22,36","$13",4.5,"9,8 mi","Ironwood, Richmond"],
+ ["The Lobby (Pinnacle Hotel)","Almuerzo con bebida + 2 h de parking","$23","$18",4.5,"10,4 mi","North Vancouver"],
+];
+
+const maps = (n, a, c) => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent([n, a, c, 'BC'].filter(Boolean).join(', '));
+const uber = (slug, n) => slug ? 'https://www.ubereats.com/ca/store/' + slug + '?diningMode=PICKUP'
+                              : 'https://www.ubereats.com/ca/search?q=' + encodeURIComponent(n);
+const kind = p => /get 1$/.test(p) ? 'b' : /free item/i.test(p) ? 'f' : 'p';
+const promoEs = p => p.replace('Buy 1, get 1','2x1').replace('Buy 1, get a free item','Comprá 1, llevá un ítem gratis')
+  .replace(/Free item on \$(\d+)\+/,'Ítem gratis desde $$$1').replace(/(\d+)% off select items/,'$1% en platos elegidos')
+  .replace(/\$(\d+) off \$(\d+)\+/,'$$$1 menos desde $$$2');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const rows = U.map(r => ({n:r[0],p:r[1],r:r[2],v:r[3],km:r[4],a:r[5],c:r[6],cu:r[7],slug:r[8],chain:r[9]}))
+  .map(x => ({...x, score: x.r * Math.log10(x.v), k: kind(x.p), m: maps(x.n, x.a, x.c)}))
+  .sort((a, b) => b.score - a.score);
+
+const tb = document.getElementById('tb');
+tb.innerHTML = rows.map((x, i) => `
+  <tr data-k="${x.k}" data-km="${x.km}" data-chain="${x.chain}">
+    <td class="pos">${i + 1}</td>
+    <td><span class="nm2">${esc(x.n)}</span><span class="cu">${esc(x.cu)}</span><span class="ad">${esc(x.a || 'dirección no publicada')} · ${esc(x.c)}</span></td>
+    <td class="promo ${x.k}">${esc(promoEs(x.p))}</td>
+    <td class="num">★ ${x.r.toLocaleString('es')}</td>
+    <td class="num">+${x.v.toLocaleString('de-DE')}</td>
+    <td class="num">${banda(x.km)}</td>
+    <td><div class="acts">
+      <a class="btn p" href="${uber(x.slug, x.n)}" target="_blank" rel="noopener">Uber ↗</a>
+      <a class="btn" href="${x.m}" target="_blank" rel="noopener">Maps ↗</a>
+      <span class="btn cp" data-u="${x.m}">Copiar</span></div></td>
+  </tr>`).join('');
+
+document.getElementById('gp').innerHTML = G.map(g => {
+  const m = maps(g[0], '', g[6]);
+  return `<tr><td><span class="nm2">${esc(g[0])}</span><span class="ad">${esc(g[6])}</span></td><td>${esc(g[1])}</td>
+    <td class="num"><s style="color:var(--hint)">${g[2]}</s> <b>${g[3]}</b></td><td class="num">★ ${g[4].toLocaleString('es')}</td><td class="num">${g[5]}</td>
+    <td><div class="acts"><a class="btn p" href="https://www.groupon.com/search?query=${encodeURIComponent(g[0])}" target="_blank" rel="noopener">Groupon ↗</a>
+      <a class="btn" href="${m}" target="_blank" rel="noopener">Maps ↗</a><span class="btn cp" data-u="${m}">Copiar</span></div></td></tr>`;
+}).join('');
+
+async function copiar(txt, el){
+  try { await navigator.clipboard.writeText(txt); }
+  catch (e) { const t = document.getElementById('allLinks'); t.value = txt; t.select(); document.execCommand('copy'); }
+  if (el) { const o = el.textContent; el.classList.add('ok'); el.textContent = '✓ Copiado'; setTimeout(() => { el.classList.remove('ok'); el.textContent = o; }, 1400); }
+}
+document.addEventListener('click', e => { const b = e.target.closest('.cp'); if (b) copiar(b.dataset.u, b); });
+
+const trs = [...tb.children], count = document.getElementById('count'), all = document.getElementById('allLinks');
+let filtro = 'all';
+function aplicar(){
+  let vis = [];
+  trs.forEach((tr, i) => {
+    const f = filtro, ok = f === 'all' || tr.dataset.k === f || (f === 'near' && +tr.dataset.km <= 2) || (f === 'local' && tr.dataset.chain === '0');
+    tr.classList.toggle('hidden', !ok); if (ok) vis.push(rows[i]);
+  });
+  count.textContent = vis.length + ' de ' + rows.length;
+  all.value = vis.map(x => `${x.n} — ${promoEs(x.p)}\n${x.m}`).join('\n\n');
+}
+document.getElementById('bar').addEventListener('click', e => {
+  const c = e.target.closest('.chip'); if (!c) return;
+  document.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === c));
+  filtro = c.dataset.f; aplicar();
+});
+document.getElementById('copyAll').addEventListener('click', e => copiar(all.value, e.target));
+aplicar();
+</script>
+</body>
+</html>
